@@ -1,0 +1,11 @@
+---
+# Deploy do cPanel (Git Version Control): copia o repositório para o site.
+# Ajuste DEPLOYPATH se a pasta do site for outra.
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home1/simul637/public_html/previdenciariopro/
+    - /bin/mkdir -p ${DEPLOYPATH}data ${DEPLOYPATH}pages
+    - /bin/cp -f index.php .htaccess deploy-hook.php ${DEPLOYPATH}
+    - /bin/cp -f data/site.php data/infracoes.php data/questoes.json ${DEPLOYPATH}data/
+    - /bin/cp -Rf pages/. ${DEPLOYPATH}pages/
+    - /bin/date +%s > ${DEPLOYPATH}deploy-version.txt

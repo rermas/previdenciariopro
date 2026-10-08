@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# /analise-cnis/ usa noindex enquanto está em desenvolvimento.
+# Não bloqueie por aqui: o Google precisa ler o noindex.
+
+Sitemap: https://www.seudominio.com.br/sitemap.xml
