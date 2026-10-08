@@ -264,6 +264,14 @@ assert.equal(ci.vinculos[0].faltantes, 0);
 assert.match(ci.pendencias.map(p => p.msg).join(' | '), /IREC-MEI.* em 3 competência\(s\): 01\/2025 a 03\/2025/);
 assert.match(ci.pendencias.map(p => p.msg).join(' | '), /IREC-LC123: recolhimento/);
 
+// ---------- Valores por competência (um por vínculo; mesmo vínculo soma) ----------
+assert.equal(CNIS.formatarValor(1234.5), '1.234,50');
+assert.equal(CNIS.formatarValor(0.05), '0,05');
+assert.deepEqual(r.valores[CNIS.mesDe(2000, 6)], [{ seq: 3, nome: 'OFICINA MODELO ME', valor: 450 }], '400,00 + 50,00 no mesmo vínculo viram um valor');
+assert.deepEqual(r.valores[CNIS.mesDe(2010, 8)].map(x => [x.seq, x.valor]), [[2, 1000], [4, 500]], 'dois vínculos na mesma competência: dois valores');
+assert.equal(r.valores[CNIS.mesDe(2000, 3)], undefined, 'valor zerado não aparece');
+assert.equal(r.valores[CNIS.mesDe(2010, 5)], undefined);
+
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);
 assert.equal(vazio.resumo.totalVinculos, 0);

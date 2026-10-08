@@ -183,6 +183,12 @@
     return partes.join(', ');
   }
 
+  // 1234.5 -> "1.234,50"
+  function formatarValor(n) {
+    var p = (Math.round(n * 100) / 100).toFixed(2).split('.');
+    return p[0].replace(/\B(?=(\d{3})+$)/g, '.') + ',' + p[1];
+  }
+
   // Dias -> "1 ano, 1 mês e 3 dias" (365 dias por ano, 30 por mês).
   function formatarDuracao(dias) {
     var a = Math.floor(dias / 365), r = dias % 365, m = Math.floor(r / 30), d = r % 30;
@@ -339,7 +345,7 @@
     var hojeOrd = ordemDe(hoje.y, hoje.m, hoje.d);
     var hojeMes = mesDe(hoje.y, hoje.m);
     var itens = [], validos = [], faltantes = [];
-    var ok = {}, falta = {}, pre94 = {};
+    var ok = {}, falta = {}, pre94 = {}, valores = {};
     var totalRem = lido.orfas.length;
     lido.vinculos.forEach(function (v) { totalRem += v.remuneracoes.length; });
     var semLeitura = lido.vinculos.length > 0 && totalRem === 0;
@@ -421,7 +427,10 @@
       Object.keys(somas).forEach(function (k) {
         if (somas[k] > 0) presentes[k] = true; else zeradas.push(+k);
       });
-      Object.keys(presentes).forEach(function (k) { ok[k] = true; });
+      Object.keys(presentes).forEach(function (k) {
+        ok[k] = true;
+        (valores[k] = valores[k] || []).push({ seq: v.seq, nome: v.nome, valor: Math.round(somas[k] * 100) / 100 });
+      });
       item.comRemuneracao = Object.keys(presentes).length;
 
       // Fim contado. Sem data de fim, vale até o fim do mês da última remuneração (nunca depois de hoje).
@@ -541,6 +550,7 @@
       beneficios: bens,
       eventos: evs,
       mapa: mapa,
+      valores: valores,
       resumo: {
         totalVinculos: itens.length,
         validos: validos.length,
@@ -611,11 +621,12 @@
 
   var ROTULO_MAPA = { ok: 'com remuneração', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994' };
 
-  function desenharMapa(mapa) {
+  function desenharMapa(mapa, valores) {
+    valores = valores || {};
     var ks = Object.keys(mapa).map(Number);
     if (!ks.length) return null;
     var ini = Math.floor(Math.min.apply(null, ks) / 12), fim = Math.floor(Math.max.apply(null, ks) / 12);
-    var t = el('table', 'mapa');
+    var t = el('table', 'mapa mapa-valores');
     t.appendChild(el('caption', 'so-leitor', 'Mapa de competências por ano e mês'));
     var th = el('thead'), trh = el('tr');
     trh.appendChild(el('th', 'ano', ''));
@@ -628,8 +639,15 @@
       for (var m = 0; m < 12; m++) {
         var k = y * 12 + m, est = mapa[k];
         var td = el('td', 'c-' + (est || 'vazio'));
+        var vs = valores[k];
         td.title = pad(m + 1) + '/' + y + (est ? ': ' + ROTULO_MAPA[est] : '');
-        if (est) td.appendChild(el('span', 'so-leitor', ROTULO_MAPA[est]));
+        if (vs && vs.length) {
+          // Um valor por vínculo; o mesmo vínculo com várias remunerações na competência já vem somado.
+          vs.forEach(function (x) { td.appendChild(el('span', 'valor', formatarValor(x.valor))); });
+          td.title += ' - ' + vs.map(function (x) { return 'Seq. ' + x.seq + ' ' + x.nome + ': ' + formatarValor(x.valor); }).join('; ');
+        } else if (est) {
+          td.appendChild(el('span', 'so-leitor', ROTULO_MAPA[est]));
+        }
         tr.appendChild(td);
       }
       tb.appendChild(tr);
@@ -695,9 +713,9 @@
     acoes.appendChild(bCopiar); acoes.appendChild(bImp);
     saida.appendChild(acoes);
 
-    var mapa = desenharMapa(r.mapa);
+    var mapa = desenharMapa(r.mapa, r.valores);
     if (mapa) {
-      var sm = sec('Mapa de competências', 'Cada quadrado é um mês. Passe o mouse para ver a competência.');
+      var sm = sec('Mapa de competências', 'Cada quadrado é um mês e mostra o valor lançado. Com mais de um vínculo na competência, aparece um valor por vínculo (passe o mouse para ver quais); no mesmo vínculo, os lançamentos são somados. Em recolhimentos, é o salário de contribuição.');
       sm.appendChild(mapa);
       saida.appendChild(sm);
     }
@@ -880,7 +898,7 @@
 
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
-    formatarDuracao: formatarDuracao, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
+    formatarDuracao: formatarDuracao, formatarValor: formatarValor, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
     resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

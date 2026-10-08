@@ -141,11 +141,15 @@ p { margin: 0 0 1rem; }
 .dica { color: var(--grafite); font-size: 0.93rem; margin: 0.2rem 0 0.9rem; }
 .vazio-msg { color: var(--grafite); }
 
-.mapa-box { max-width: 46rem; }
+.mapa-box { max-width: 46rem; position: relative; }
 .mapa { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 3px; }
 .mapa th { padding: 0; font-weight: 400; font-size: 0.72rem; color: var(--grafite); text-align: center; }
 .mapa th.ano { width: 3rem; padding-right: 0.4rem; text-align: right; font-size: 0.8rem; }
 .mapa td { height: 1.1rem; border-radius: 3px; padding: 0; }
+.mapa-valores { min-width: 40rem; }
+.mapa-box:has(.mapa-valores) { max-width: 100%; overflow-x: auto; }
+.mapa-valores td { height: auto; min-height: 1.1rem; text-align: center; vertical-align: middle; padding: 2px 1px; }
+.mapa-valores .valor { display: block; font-size: 0.68rem; line-height: 1.2; color: var(--tinta); font-variant-numeric: tabular-nums; }
 .c-ok { background: var(--verde); }
 .c-parcial { background: var(--ambar); }
 .c-falta { background: var(--coral); }
