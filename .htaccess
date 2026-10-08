@@ -1,0 +1,17 @@
+Options -Indexes
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# Força HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Bloqueia acesso direto a arquivos internos
+RewriteRule ^(includes|tests|blog/conteudo)/ - [F]
+
+# Sitemap
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# Artigo do blog: /blog/slug/ -> blog/index.php?p=slug
+RewriteRule ^blog/([a-z0-9-]+)/?$ blog/index.php?p=$1 [L,QSA]
