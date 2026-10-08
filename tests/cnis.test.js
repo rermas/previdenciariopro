@@ -218,7 +218,51 @@ assert.equal(fim.orfas.length, 0);
 // ---------- Texto sem remunerações: não inventa salários faltantes ----------
 const sem = CNIS.analisar(vinc(1, 'EMPRESA Z', '01/03/2015', '31/12/2015'), HOJE);
 assert.equal(sem.faltantes.length, 0);
-assert.match(sem.pendencias.map(p => p.msg).join(' | '), /Nenhuma remuneração foi reconhecida/);
+assert.match(sem.pendencias.map(p => p.msg).join(' | '), /não traz remunerações nem recolhimentos/);
+
+// ---------- Resumo "Relações Previdenciárias" (sem remunerações) ----------
+const resumoPdf = CNIS.textoDaPagina({ items: [
+  it('1', 49, 349.1, 5), it(NIT, 69, 349.1, 60), it('42.894.733/0001-67', 140, 349.1, 70), it('LOJA UM LTDA', 227, 349.1, 60), it('Empregado', 417, 349.1, 40),
+  it('20/09/2005', 572, 349.1, 40), it('05/08/2006', 623, 349.1, 40), it('08/2006', 683, 349.1, 30),
+  it('2', 49, 333.1, 5), it(NIT, 69, 333.1, 60), it('046.450.966-13', 147, 333.1, 60), it('PESSOA DOIS', 219, 333.1, 60), it('Empregado', 417, 333.1, 40),
+  it('45', 523, 333.1, 10), it('19/05/2014', 572, 333.1, 40), it('04/01/2021', 623, 333.1, 40), it('11/2020', 683, 333.1, 30),
+  it('IVIN-PROC-TRAB', 736, 337.7, 60), it('IREM-INDPEND', 739, 328.4, 60),
+  it('3', 49, 317.1, 5), it(NIT, 69, 317.1, 60), it('2387621080', 153, 317.1, 50), it('31 - AUXILIO DOENCA PREVIDENCIARIO', 226, 317.1, 150), it('Não Informado', 412, 317.1, 60),
+  it('17/09/2020', 572, 317.1, 40), it('21/10/2020', 623, 317.1, 40),
+  it('4', 49, 304.1, 5), it(NIT, 69, 304.1, 60), it('RECOLHIMENTO', 271, 304.1, 60), it('Contribuinte Individual', 398, 304.1, 90),
+  it('01/01/2025', 572, 304.1, 40), it('31/07/2026', 623, 304.1, 40), it('IREC-INDPEND', 740, 304.1, 60)
+] });
+const rs = CNIS.analisar(resumoPdf, HOJE);
+assert.equal(rs.resumo.semRemuneracoes, true);
+assert.deepEqual(rs.vinculos.map(x => x.seq), [1, 2, 4]);
+assert.equal(rs.vinculos[1].nome, 'PESSOA DOIS', 'matrícula "45" não entra no nome');
+assert.equal(rs.vinculos[0].dias, 320);
+assert.equal(rs.vinculos[1].dias, 2423);
+assert.equal(rs.vinculos[2].dias, 577);
+assert.equal(rs.resumo.diasUnicos, 3320);
+assert.equal(rs.beneficios.length, 1, 'benefício com tipo "Não Informado" e sem a palavra Benefício');
+assert.equal(rs.beneficios[0].nb, '2387621080');
+const rsm = rs.pendencias.map(p => (p.ref || '') + ' ' + p.msg).join(' | ');
+assert.match(rsm, /Seq\. 2 .*IVIN-PROC-TRAB/, 'indicador solto entre duas linhas vai para o vínculo mais próximo');
+assert.match(rsm, /Seq\. 2 .*IREM-INDPEND/);
+assert.match(rsm, /Seq\. 4 .*IREC-INDPEND/);
+assert.doesNotMatch(rsm, /Seq\. 1 .*IVIN-PROC-TRAB/);
+assert.match(rsm, /Última remuneração informada em 11\/2020.*12\/2020 a 01\/2021/);
+
+// ---------- Contribuições de contribuinte individual (competência, pagamento, contribuição, salário) ----------
+const ci = CNIS.analisar(texto(
+  `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2025 31/03/2025`,
+  'Indicadores: IREC-INDPEND',
+  'Contribuições',
+  'Compet. Data Pgto. Contribuição Salário Contrib. Indicadores Compet. Data Pgto. Contribuição Salário Contrib. Indicadores',
+  '01/2025 20/02/2025 75,90 1.518,00 IREC-MEI 02/2025 24/03/2025 75,90 1.518,00 IREC-MEI',
+  'IREC-LC123 IREC-LC123',
+  '03/2025 22/04/2025 75,90 1.518,00 IREC-MEI'
+), HOJE);
+assert.equal(ci.vinculos[0].comRemuneracao, 3);
+assert.equal(ci.vinculos[0].faltantes, 0);
+assert.match(ci.pendencias.map(p => p.msg).join(' | '), /IREC-MEI.* em 3 competência\(s\): 01\/2025 a 03\/2025/);
+assert.match(ci.pendencias.map(p => p.msg).join(' | '), /IREC-LC123: recolhimento/);
 
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);
