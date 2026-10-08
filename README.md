@@ -1,57 +1,48 @@
-# Análise CNIS: site
+# Análise CNIS
 
-Site leve em PHP puro, sem banco de dados. Tem a ferramenta de análise do extrato CNIS (contagem de tempo, meses sem remuneração e pendências), um blog de guias e política de privacidade.
+Site em PHP puro, sem banco de dados, com um único roteador (`index.php`). O foco é a ferramenta que analisa o extrato do CNIS: tempo contado, competências com remuneração, salários faltantes e pendências. Inclui blog, página de legislação e política de privacidade.
 
 ## Estrutura
 
 ```
-index.php                 página inicial (sem link para a ferramenta)
-analise-cnis/index.php    ferramenta de análise (oculta: noindex, sem rastreadores)
-assets/js/cnis.js         lógica de análise e interface (sem dependências, exceto pdf.js)
-assets/css/style.css      estilo claro
-blog/index.php            listagem e leitura de artigos (?p=slug)
-blog/posts.php            lista de artigos com data de publicação
-blog/conteudo/*.html      texto de cada artigo
-legislacao/index.php      links oficiais: Lei 8.213/91, Decreto 3.048/99, IN PRES/INSS 128/2022
-privacidade/index.php     política de privacidade
-includes/layout.php       cabeçalho, rodapé, Analytics e AdSense
-config.php                domínio, IDs de Analytics e AdSense
-tests/cnis.test.js        testes da lógica de análise
+index.php            roteador, configuração e todas as páginas
+assets/style.css     visual
+assets/cnis.js       leitura e análise do CNIS, mais a interface da ferramenta
+assets/vendor/       pdf.js (hospedado aqui, nada vem de domínio externo)
+assets/fonts/        Atkinson Hyperlegible
+posts/*.html         texto de cada artigo do blog
+tests/cnis.test.js   testes da análise (node tests/cnis.test.js)
+.htaccess            HTTPS, URLs limpas, bloqueio de posts/ e tests/
 ```
 
-## Configuração antes de publicar
+## Antes de publicar
 
-1. Em `config.php`, ajuste `SITE_URL` para o domínio final.
-2. Em `privacidade/index.php`, preencha o responsável e o contato (há um `TODO` no código). Revise o texto com um profissional jurídico.
-3. Em `sitemap.php` e `robots.txt`, troque `www.seudominio.com.br` pelo domínio.
+1. Em `index.php`, ajuste `SITE_URL` para o domínio final. Faça o mesmo em `robots.txt`.
+2. Em "Política de privacidade" (`index.php`), preencha o responsável e o contato e revise o texto com um profissional jurídico.
+3. Troque o domínio de exemplo e confira os links da página de legislação.
 
 ## Analytics e AdSense
 
-- Analytics: preencha `GA_ID` em `config.php`. Sem ID, nada é carregado.
-- AdSense: preencha `ADSENSE_CLIENT`, mantenha `ADS_ENABLED = false` até a aprovação, depois mude para `true`.
-- Após aprovação, troque a linha de `ads.txt` pelo seu ID de editor.
-- Os anúncios aparecem só nos artigos. A página da ferramenta nunca carrega rastreadores nem anúncios.
+- Analytics: preencha `GA_ID`. Vazio, nada é carregado.
+- AdSense: preencha `ADSENSE`, mantenha `ADS_ATIVOS = false` até a aprovação e depois mude para `true`. Coloque a linha do seu painel em `ads.txt`.
+- Anúncios aparecem só nos artigos. A página da ferramenta nunca carrega Analytics nem anúncios.
 
-## Agendar um artigo
+## Blog
 
-Adicione uma entrada em `blog/posts.php` com `date` futura. O artigo fica oculto até a data e aparece sozinho no dia, sem nenhuma alteração no servidor. O texto vai em `blog/conteudo/<slug>.html`.
+Cada artigo é uma entrada em `$POSTS` (`index.php`) e um arquivo `posts/{slug}.html`. A `data` no futuro mantém o artigo oculto até o dia, sem tocar no servidor.
 
-## Ferramenta de análise
+## Ferramenta
 
-- Processamento 100% no navegador. Nenhum arquivo ou texto é enviado ao servidor.
-- Lê PDF com texto selecionável pelo pdf.js (carregado do cdnjs). PDFs escaneados precisam que o texto seja colado manualmente.
-- Os cálculos estão em `assets/js/cnis.js`. Rode os testes com `node tests/cnis.test.js`.
-- Os testes usam um extrato sintético. Antes de considerar a leitura confiável, valide com extratos reais, de layouts diferentes.
-- Não há verificação de carência nesta versão. Ela entra em uma etapa posterior.
+- Fica em `/analise-cnis/`, sem links no site. Mantém `noindex` e fora do sitemap enquanto `FERRAMENTA_PUBLICA = false`. Para lançar, mude para `true`: o menu, a home e o sitemap passam a incluí-la.
+- O processamento é todo no navegador. A página envia uma Content-Security-Policy com `connect-src 'none'`, então ela não consegue abrir conexões de saída.
+- PDFs escaneados (imagem) não têm texto: a pessoa precisa colar o texto do extrato.
+- Meses anteriores a 07/1994 sem remuneração não entram na contagem de faltantes, porque o CNIS costuma não trazer salários desse período.
+- Os significados dos indicadores vêm de artigos de escritórios de advocacia previdenciária e estão em `INDICADORES` (`assets/cnis.js`). O código original sempre aparece junto.
 
-## Antes de liberar a ferramenta
+### O que ainda falta validar
 
-Quando for hora de abrir `/analise-cnis/` ao público:
-
-1. Remova `'noindex' => true` de `analise-cnis/index.php`.
-2. Adicione o link da ferramenta na página inicial e no menu.
-3. Inclua a página no `sitemap.php`.
+Os testes usam um extrato fictício, escrito a partir do que se conhece do layout do CNIS. Antes de confiar nos resultados, teste com uns vinte extratos reais, de origens diferentes. O ponto mais sensível é a leitura de vínculos e remunerações em PDFs com layouts distintos.
 
 ## Deploy
 
-Mesmo fluxo do projeto de placas: repositório no GitHub com deploy via Git Version Control do cPanel. O `.htaccess` cuida das URLs limpas (`/blog/slug/`, `/sitemap.xml`) e força HTTPS.
+Mesmo fluxo do site de placas: repositório no GitHub e deploy pelo Git Version Control do cPanel, com o site na raiz do domínio.

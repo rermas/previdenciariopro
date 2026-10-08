@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# A página /analise-cnis/ usa noindex (meta robots) enquanto está em desenvolvimento.
-# Não bloqueie por robots.txt, senão o Google não vê o noindex.
+# /analise-cnis/ usa noindex enquanto está em desenvolvimento.
+# Não bloqueie por aqui: o Google precisa ler o noindex.
 
 Sitemap: https://www.seudominio.com.br/sitemap.xml
