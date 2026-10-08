@@ -213,6 +213,19 @@ button:hover { background: var(--primaria-escura); }
 
 .nota { color: var(--suave); font-size: 0.85rem; margin-top: 20px; }
 
+.lista-normas { list-style: none; padding: 0; margin: 0; }
+.lista-normas li {
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--primaria);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+.lista-normas a { text-decoration: none; font-size: 1.05rem; }
+.lista-normas p { margin: 6px 0; color: var(--suave); }
+.fonte { font-size: 0.82rem; color: var(--suave); }
+
 /* Rodapé */
 .rodape {
   border-top: 1px solid var(--borda);

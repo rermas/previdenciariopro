@@ -48,6 +48,7 @@ function page_head(string $titulo, string $descricao, array $o = []): void
     <a class="marca" href="/"><?= e(SITE_NAME) ?></a>
     <nav>
       <a href="/blog/">Blog</a>
+      <a href="/legislacao/">Legislação</a>
       <a href="/privacidade/">Privacidade</a>
     </nav>
   </div>

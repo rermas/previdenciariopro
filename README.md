@@ -12,6 +12,7 @@ assets/css/style.css      estilo claro
 blog/index.php            listagem e leitura de artigos (?p=slug)
 blog/posts.php            lista de artigos com data de publicação
 blog/conteudo/*.html      texto de cada artigo
+legislacao/index.php      links oficiais: Lei 8.213/91, Decreto 3.048/99, IN PRES/INSS 128/2022
 privacidade/index.php     política de privacidade
 includes/layout.php       cabeçalho, rodapé, Analytics e AdSense
 config.php                domínio, IDs de Analytics e AdSense

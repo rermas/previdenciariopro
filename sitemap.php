@@ -7,7 +7,7 @@ $posts = require __DIR__ . '/blog/posts.php';
 $hoje = date('Y-m-d');
 
 // A página da ferramenta (/analise-cnis/) fica fora do sitemap enquanto estiver em desenvolvimento.
-$urls = [['/', null], ['/blog/', null], ['/privacidade/', null]];
+$urls = [['/', null], ['/blog/', null], ['/legislacao/', null], ['/privacidade/', null]];
 foreach ($posts as $p) {
     if ($p['date'] <= $hoje) {
         $urls[] = ['/blog/' . $p['slug'] . '/', $p['date']];
