@@ -45,4 +45,9 @@ Os testes usam um extrato fictício, escrito a partir do que se conhece do layou
 
 ## Deploy
 
-Mesmo fluxo do site de placas: repositório no GitHub e deploy pelo Git Version Control do cPanel, com o site na raiz do domínio.
+Git Version Control do cPanel, com o site em `/home1/simul637/public_html/previdenciariopro/`.
+
+- O `.cpanel.yml` copia para a pasta do site apenas `index.php`, `.htaccess`, `robots.txt`, `ads.txt`, `assets/` e `posts/`. Use **Deploy HEAD Commit** depois de **Update from Remote**.
+- Se o repositório foi clonado dentro da própria pasta do site, o `.cpanel.yml` não faz nada e basta **Update from Remote**.
+- Envie sempre pelo Git, com as pastas. O upload pelo navegador do GitHub não leva pastas e deixa o site sem `assets/` (sem CSS) e sem `posts/`.
+- O domínio precisa de certificado SSL válido, porque o `.htaccess` redireciona tudo para HTTPS. No cPanel: SSL/TLS Status, **Run AutoSSL**.

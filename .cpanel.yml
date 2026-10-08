@@ -1,0 +1,8 @@
+---
+# Deploy do cPanel (Git Version Control) para o site Análise CNIS.
+# Copia só o que o site usa. tests/, README e THIRD-PARTY ficam fora do site.
+# Se o repositório foi clonado dentro da própria pasta do site, não há o que copiar.
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home1/simul637/public_html/previdenciariopro/
+    - '[ "$(pwd -P)" = "$(cd ${DEPLOYPATH} && pwd -P)" ] || { /bin/mkdir -p ${DEPLOYPATH}assets ${DEPLOYPATH}posts && /bin/cp -f index.php .htaccess robots.txt ads.txt ${DEPLOYPATH} && /bin/cp -Rf assets/. ${DEPLOYPATH}assets/ && /bin/cp -Rf posts/. ${DEPLOYPATH}posts/; }'
