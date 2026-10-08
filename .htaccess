@@ -9,8 +9,9 @@ RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-Proto} !https
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Textos dos artigos só são lidos pelo PHP
+# Textos dos artigos só são lidos pelo PHP; .git nunca é servido
 RewriteRule ^(posts|tests)/ - [F]
+RewriteRule (^|/)\.git - [F]
 
 # Tudo que não for arquivo vai para o roteador
 RewriteCond %{REQUEST_FILENAME} !-f
