@@ -1,6 +1,12 @@
 /*
  * Análise de CNIS: tempo contado, competências, salários faltantes e pendências.
  * Todo o processamento acontece no navegador. Nada é enviado, gravado ou lembrado.
+ *
+ * Layout lido (extrato do Portal CNIS):
+ *   - cada registro começa por "Seq. NIT ..." e pode ser vínculo, benefício ou evento previdenciário;
+ *   - as remunerações vêm em grade de até 3 pares "competência valor [indicadores]" por linha;
+ *   - "Remunerações Décimo Terceiro" é uma seção à parte e não entra na contagem de competências;
+ *   - o fim do extrato traz a tabela de salários consolidados e a legenda, que são ignoradas.
  */
 (function (root) {
   'use strict';
@@ -13,14 +19,17 @@
 
   var MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 
-  // Indicadores do CNIS. Resumos conferidos em artigos de escritórios de advocacia
-  // previdenciária; o código original sempre aparece junto. Conferir no INSS em caso de dúvida.
+  // Indicadores do CNIS. Os da legenda oficial do extrato usam o texto dela; os demais vêm de
+  // artigos de escritórios de advocacia previdenciária. O código original sempre aparece junto.
   var INDICADORES = {
+    'AVRC-DEF': ['info', 'acerto confirmado pelo INSS'],
+    'IREM-ACD': ['info', 'remuneração possui parcela de acordo, convenção ou dissídio coletivo'],
+    'IREM-INDPEND': ['atencao', 'remunerações com indicadores ou pendências'],
+    'PSC-MEN-SM-EC103': ['atencao', 'salário de contribuição menor que o mínimo mensal; a competência pode ser complementada, utilizada ou agrupada conforme a EC 103/2019'],
     'PREC-MENOR-MIN': ['atencao', 'contribuição abaixo do salário mínimo'],
     'PREM-EXT': ['atencao', 'remuneração informada fora do prazo'],
     'PEXT': ['atencao', 'vínculo extemporâneo (registrado fora do prazo)'],
     'IREC-INDPEND': ['atencao', 'contribuições com pendência a regularizar'],
-    'IREM-INDPEND': ['atencao', 'remuneração com pendência a regularizar'],
     'PREM-FVIN': ['atencao', 'remuneração depois do fim do vínculo'],
     'PREM-IVIN': ['atencao', 'remuneração antes do início do vínculo'],
     'PADM-EMPR': ['atencao', 'admissão anterior ao início da atividade do empregador'],
@@ -36,72 +45,94 @@
 
   var RE_IND = /\b(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|IREC|IREM|IVIN|ISE|AEXTV|AEXT|AVRC|ACNIS|IGFIP)(?:-[A-Z0-9]+)+\b|\b(?:IEAN|PEXT|PRPPS|ACNISVR)\b/g;
   var RE_DATA = /\b\d{2}\/\d{2}\/\d{4}\b/g;
-  var RE_COMP = /^(0[1-9]|1[0-2])\/(\d{4})\b/;
   var RE_VALOR = /(?:^|[^\d.,])((?:\d{1,3}(?:\.\d{3})+|\d+),\d{2})(?!\d)/;
-  var RE_BENEFICIO = /\bNB\b/;
-  var RE_IGNORAR = /nascimento|emitid|emiss[ãa]o|impress|consulta|gerad|p[áa]gina|data\/hora/i;
-  var RE_CNPJ = /\b\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}\b/;
-  var RE_NB = /\b\d{3}\.?\d{3}\.?\d{3}-?\d\b/;
+  var NIT = '(?:\\d{1,3}(?:\\.\\d{3}){2,3}-\\d|\\d{3}\\.\\d{5}\\.\\d{2}-\\d)';
+  var RE_CAB = new RegExp('^(\\d{1,3})\\s+' + NIT + '(?:\\s+(.*))?$');
+  var RE_FIM = /Sal[áa]rios\s+de\s+Contribui[çc][ãa]o\s+Consolidados|Legenda\s+de\s+Indicadores/i;
+  var RE_COLUNAS = /^(Seq\.|Matr[íi]cula|Trabalhador\b|Compet[êe]ncia\s+Remunera|Dt\.|Data\s+In[íi]cio|NIT\b)/i;
+  var RE_TIPO = /\b(Empregado\s+Dom[ée]stico|Empregado|Contribuinte\s+Individual|Trabalhador\s+Avulso|Facultativo|Segurado\s+Especial|Servidor\s+P[úu]blico|Agente\s+P[úu]blico|Contribuinte\s+em\s+Dobro|Dom[ée]stico|Benefici[áa]rio)\b/i;
+  var RE_CODIGO = /^[\d.\/-]{6,}$/;
+  var RE_CONTINUACAO = /^[A-ZÀ-Ý0-9][A-ZÀ-Ý0-9 .,&'\/()\-]*$/;
   var PALAVRAS = [
     [/sem\s+informa[çc][aã]o/i, 'Registro marcado como "sem informação"'],
-    [/n[ãa]o\s+confirmad/i, 'Registro marcado como não confirmado'],
-    [/\bpendente\b/i, 'Registro marcado como pendente']
+    [/n[ãa]o\s+confirmad/i, 'Registro marcado como não confirmado']
   ];
 
+  // Extrato fictício, no formato do Portal CNIS. Vínculos fora de ordem de propósito.
   var EXEMPLO = [
-    'EXTRATO PREVIDENCIÁRIO (EXEMPLO FICTÍCIO)',
-    'Nome: PESSOA DE EXEMPLO    Data de nascimento: 10/05/1970',
+    'CNIS - Cadastro Nacional de Informações Sociais',
+    'Extrato Previdenciário - Portal CNIS (EXEMPLO FICTÍCIO)',
+    'Identificação do Filiado',
+    'Nit: 1.234.567.890-1 CPF: 000.000.000-00 Nome: PESSOA DE EXEMPLO',
+    'Data de Nascimento: 10/05/1970 Nome da Mãe: MÃE DE EXEMPLO',
     'Relações Previdenciárias',
-    'Seq. NIT Código Emp. Origem do Vínculo Tipo Filiado no Vínculo Data Início Data Fim Últ. Remun.',
-    '1 123.45678.90-1 12.345.678/0001-90 MERCADO EXEMPLO LTDA Empregado 01/04/1994 31/12/1994 12/1994',
+    'Matrícula do',
+    'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim',
+    '1 1.234.567.890-1 12.345.678/0001-90 MERCADO EXEMPLO LTDA Empregado 01/04/1994 31/12/1994',
+    'Indicadores:',
     'Remunerações',
-    'Competência Remuneração Indicadores',
-    '07/1994 120,00',
-    '08/1994 120,00',
-    '09/1994 120,00',
-    '10/1994 120,00',
-    '11/1994 120,00',
-    '12/1994 120,00',
-    '2 123.45678.90-1 98.765.432/0001-10 OFICINA MODELO ME Empregado 02/01/2000 30/06/2001 06/2001',
-    '01/2000 400,00',
-    '02/2000 400,00',
-    '03/2000 0,00',
-    '04/2000 400,00',
-    '05/2000 400,00',
-    '06/2000 400,00 PREM-EXT',
-    '07/2000 400,00',
-    '08/2000 400,00',
-    '09/2000 400,00',
-    '10/2000 400,00',
-    '11/2000 400,00',
-    '12/2000 400,00',
-    '01/2001 410,00',
-    '02/2001 410,00',
-    '03/2001 410,00',
-    '04/2001 410,00',
-    '05/2001 410,00',
-    '06/2001 410,00',
-    '3 123.45678.90-1 11.222.333/0001-44 SERVIÇOS ALFA LTDA Empregado 01/03/2010 31/12/2010 12/2010',
-    '03/2010 1.000,00',
-    '04/2010 1.000,00',
-    '06/2010 1.000,00 PREC-MENOR-MIN',
-    '07/2010 1.000,00',
-    '08/2010 1.000,00',
-    '09/2010 1.000,00',
-    '10/2010 1.000,00',
-    '11/2010 1.000,00',
-    '12/2010 1.000,00',
-    '4 123.45678.90-1 55.666.777/0001-88 COMERCIAL BETA S.A. Empregado 01/10/2010 31/12/2010 12/2010',
-    '10/2010 500,00',
-    '11/2010 500,00',
-    '12/2010 500,00',
-    '5 123.45678.90-1 33.444.555/0001-66 LOJA GAMA LTDA Empregado 01/02/2020 15/05/2020 04/2020 PEXT',
-    '02/2020 1.045,00',
-    '03/2020 1.045,00',
-    '04/2020 1.045,00',
-    'Benefícios',
-    '1 NB 123.456.789-0 Auxílio por Incapacidade Temporária 15/08/2015 20/11/2015',
-    '2 NB 987.654.321-0 Auxílio por Incapacidade Temporária'
+    'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
+    '07/1994 120,00 08/1994 120,00 09/1994 120,00',
+    '10/1994 120,00 11/1994 120,00 12/1994 120,00',
+    'O INSS poderá rever a qualquer tempo as informações constantes deste extrato.',
+    'Matrícula do',
+    'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim',
+    '2 1.234.567.890-1 11.222.333/0001-44 SERVIÇOS ALFA LTDA AB1234567 Empregado 01/03/2010 31/08/2010',
+    'FILIAL SUL',
+    'Indicadores:',
+    'Remunerações',
+    'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
+    '03/2010 1.000,00 04/2010 1.000,00 06/2010 1.000,00 PREC-MENOR-MIN',
+    '07/2010 1.000,00 08/2010 1.000,00',
+    'Remunerações Décimo Terceiro',
+    'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
+    '08/2010 500,00',
+    'Matrícula do',
+    'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim',
+    '3 1.234.567.890-1 98.765.432/0001-10 OFICINA MODELO ME Empregado 02/01/2000 30/06/2001',
+    'Indicadores:',
+    'Remunerações',
+    'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
+    '01/2000 400,00 02/2000 400,00 03/2000 0,00',
+    '04/2000 400,00 05/2000 400,00 06/2000 400,00 PREM-EXT',
+    '06/2000 50,00 07/2000 400,00 09/2000 400,00',
+    '10/2000 400,00 11/2000 400,00 12/2000 400,00',
+    '01/2001 410,00 02/2001 410,00 03/2001 410,00',
+    '04/2001 410,00 05/2001 410,00 06/2001 410,00',
+    'Matrícula do',
+    'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim',
+    '4 1.234.567.890-1 55.666.777/0001-88 COMERCIAL BETA S.A. Empregado 01/08/2010 31/10/2010',
+    'Indicadores:',
+    'Remunerações',
+    'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
+    '08/2010 500,00 09/2010 500,00 10/2010 500,00',
+    'Matrícula do',
+    'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim',
+    '5 1.234.567.890-1 33.444.555/0001-66 LOJA GAMA LTDA Empregado 01/02/2020 15/05/2020',
+    'Indicadores: PEXT',
+    'Remunerações',
+    'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
+    '02/2020 1.045,00 03/2020 1.045,00',
+    'Seq. NIT NB Origem do Vínculo Espécie Data Início Data Fim',
+    '6 1.234.567.890-1 1234567890 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO 15/04/2020 20/05/2020',
+    'Seq. NIT NB Origem do Vínculo Espécie Data Início Data Fim',
+    '7 1.234.567.890-1 0987654321 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO',
+    'Seq. NIT Origem do Vínculo Tipo Filiado Vínculo Data Início Data Fim',
+    '8 1.234.567.890-1 SEGURO DESEMPREGO/SINE Possuidor de evento previdenciário 01/11/2012 31/03/2013',
+    'Indicadores: AVRC-DEF',
+    'Matrícula do',
+    'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim',
+    '9 1.234.567.890-1 24.162.618 EXEMPLO TECNOLOGIA LTDA Empregado 01/06/2023',
+    'Indicadores:',
+    'Remunerações',
+    'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
+    '06/2023 2.000,00 07/2023 2.000,00 08/2023 2.000,00',
+    'Salários de Contribuição Consolidados por Ano Civil',
+    'Ano Jan Fev Mar Abr Mai Jun Jul Ago Set Out Nov Dez',
+    '2023 2.000,00 2.000,00 2.000,00',
+    'Legenda de Indicadores',
+    'Indicador Descrição',
+    'AVRC-DEF Acerto confirmado pelo INSS'
   ].join('\n');
 
   // ---------- Utilidades de data e mês ----------
@@ -111,6 +142,11 @@
   function mesDe(y, m) { return y * 12 + m - 1; }
   function rotuloMes(k) { return pad((k % 12) + 1) + '/' + Math.floor(k / 12); }
   function rotuloData(d) { return pad(d.d) + '/' + pad(d.m) + '/' + d.y; }
+  function ultimoDiaDoMes(k) { return ordemDe(Math.floor(k / 12), (k % 12) + 2, 0); }
+  function dataDeOrd(ord) {
+    var t = new Date(ord * 86400000);
+    return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate(), ord: ord };
+  }
 
   // "dd/mm/aaaa" -> { y, m, d, ord } ou null se a data não existe.
   function dataDe(s) {
@@ -130,14 +166,16 @@
     var faixas = [];
     meses.slice().sort(function (a, b) { return a - b; }).forEach(function (k) {
       var u = faixas[faixas.length - 1];
-      if (u && k === u.fim + 1) { u.fim = k; u.qtd++; } else { faixas.push({ ini: k, fim: k, qtd: 1 }); }
+      if (u && k === u.fim + 1) { u.fim = k; u.qtd++; } else if (!u || k !== u.fim) { faixas.push({ ini: k, fim: k, qtd: 1 }); }
     });
     return faixas.map(function (f) { return { de: rotuloMes(f.ini), ate: rotuloMes(f.fim), qtd: f.qtd }; });
   }
 
+  function textoFaixa(x) { return x.de === x.ate ? x.de : x.de + ' a ' + x.ate; }
+
   function textoFaixas(meses, limite) {
     var f = agrupar(meses);
-    var partes = f.slice(0, limite || 6).map(function (x) { return x.de === x.ate ? x.de : x.de + ' a ' + x.ate; });
+    var partes = f.slice(0, limite || 6).map(textoFaixa);
     if (f.length > partes.length) partes.push('e mais ' + (f.length - partes.length) + ' faixa(s)');
     return partes.join(', ');
   }
@@ -150,80 +188,125 @@
 
   // ---------- Leitura do texto ----------
 
-  function indicadoresDe(linha) { return linha.match(RE_IND) || []; }
+  function indicadoresDe(trecho) { return trecho.match(RE_IND) || []; }
 
-  function rotuloVinculo(linha, n) {
-    var antes = linha.split(RE_DATA)[0]
-      .replace(RE_CNPJ, ' ')
-      .replace(/\b\d{1,3}\.\d{4,5}\.\d{2}-\d\b/g, ' ')
-      .replace(/^\s*\d{1,3}\s+/, '')
-      .replace(/\s+/g, ' ').trim();
-    return antes.length > 2 ? antes.slice(0, 70) : 'Vínculo ' + n;
+  // Pares "competência valor [indicadores]" de uma linha, até 3 por linha no CNIS.
+  function lerGrade(linha) {
+    var re = /(^|[^\d\/])(0[1-9]|1[0-2])\/(\d{4})(?![\d\/])/g;
+    var achados = [], m;
+    while ((m = re.exec(linha))) {
+      var ini = m.index + m[1].length;
+      achados.push({ ini: ini, fim: ini + 7, mes: mesDe(+m[3], +m[2]) });
+      re.lastIndex = ini + 7;
+    }
+    var saida = [];
+    achados.forEach(function (a, i) {
+      var seg = linha.slice(a.fim, i + 1 < achados.length ? achados[i + 1].ini : linha.length);
+      var v = RE_VALOR.exec(seg);
+      if (!v && a.ini !== 0) return;
+      saida.push({ mes: a.mes, valor: v ? valorDe(v[1]) : null, indicadores: indicadoresDe(seg) });
+    });
+    return saida;
+  }
+
+  function limparNome(antes) {
+    var t = antes.split(/\s+/).filter(Boolean);
+    if (t.length && RE_CODIGO.test(t[0])) t.shift();
+    // Matrícula do trabalhador: última palavra com dígitos, colada ao tipo de filiado.
+    if (t.length > 1 && /\d/.test(t[t.length - 1]) && t[t.length - 1].length >= 6) t.pop();
+    return t.join(' ');
+  }
+
+  function novoRegistro(tipoRegistro, seq, resto) {
+    var datas = resto.match(RE_DATA) || [];
+    var r = {
+      tipoRegistro: tipoRegistro, seq: seq, nome: '', tipo: '', nb: '',
+      datasBrutas: datas,
+      inicio: datas[0] ? dataDe(datas[0]) : null,
+      fim: datas[1] ? dataDe(datas[1]) : null,
+      indicadores: [], remuneracoes: [], decimos: [], continuacoes: 0
+    };
+    var idx = resto.search(RE_DATA);
+    var antes = (idx >= 0 ? resto.slice(0, idx) : resto).trim();
+
+    if (tipoRegistro === 'beneficio') {
+      var nb = /\b(\d{10}|\d{3}\.\d{3}\.\d{3}-\d)\s+Benef[ií]cio\b\s*(.*)$/i.exec(antes);
+      if (nb) { r.nb = nb[1]; r.nome = nb[2].trim(); } else { r.nome = antes.replace(/\bNB\b/i, '').trim(); }
+    } else if (tipoRegistro === 'evento') {
+      r.nome = antes.split(/Possuidor/i)[0].trim() || 'Evento previdenciário';
+      r.tipo = 'evento previdenciário';
+    } else {
+      var t = RE_TIPO.exec(antes);
+      if (t) { r.tipo = t[1]; antes = antes.slice(0, t.index); }
+      r.nome = limparNome(antes) || 'Vínculo ' + seq;
+    }
+    r.indicadores = indicadoresDe(resto);
+    return r;
   }
 
   function interpretar(texto) {
     var linhas = String(texto || '').split(/\r?\n/);
-    var vinculos = [], beneficios = [], orfas = [], notas = [];
-    var atual = null;
+    var vinculos = [], beneficios = [], eventos = [], orfas = [], orfas13 = [], notas = [];
+    var atual = null, modo = null, aceitaNome = false;
 
     linhas.forEach(function (bruta) {
       var linha = bruta.replace(/\s+/g, ' ').trim();
-      if (!linha || RE_IGNORAR.test(linha)) return;
+      if (!linha) return;
 
-      var comp = RE_COMP.exec(linha);
-      if (comp) {
-        var v = RE_VALOR.exec(linha.slice(7));
-        var rem = {
-          mes: mesDe(+comp[2], +comp[1]),
-          valor: v ? valorDe(v[1]) : null,
-          indicadores: indicadoresDe(linha)
-        };
-        (atual ? atual.remuneracoes : orfas).push(rem);
+      if (RE_FIM.test(linha)) { modo = 'fim'; atual = null; aceitaNome = false; return; }
+
+      var h = RE_CAB.exec(linha);
+      if (h) {
+        var resto = h[2] || '';
+        var tipoReg = /\b(?:\d{10}|\d{3}\.\d{3}\.\d{3}-\d)\s+Benef[ií]cio\b|\bNB\b/i.test(resto) ? 'beneficio'
+          : /evento\s+previdenci/i.test(resto) ? 'evento' : 'vinculo';
+        atual = novoRegistro(tipoReg, +h[1], resto);
+        (tipoReg === 'beneficio' ? beneficios : tipoReg === 'evento' ? eventos : vinculos).push(atual);
+        modo = 'rem';
+        aceitaNome = tipoReg === 'vinculo';
         return;
       }
+      if (modo === 'fim') return;
 
-      PALAVRAS.forEach(function (p) { if (p[0].test(linha)) notas.push({ sev: 'atencao', ref: atual ? atual.rotulo : '', msg: p[1] }); });
+      if (/^Indicadores\b/i.test(linha)) {
+        if (atual) atual.indicadores = atual.indicadores.concat(indicadoresDe(linha));
+        aceitaNome = false;
+        return;
+      }
+      if (/^Remunera[çc][õo]es\s+D[ée]cimo\s+Terceiro/i.test(linha)) { modo = '13'; aceitaNome = false; return; }
+      if (/^Remunera[çc][õo]es\s*$/i.test(linha)) { modo = 'rem'; aceitaNome = false; return; }
+      if (RE_COLUNAS.test(linha)) return;
 
-      var datas = linha.match(RE_DATA) || [];
-
-      if (RE_BENEFICIO.test(linha)) {
-        var nb = RE_NB.exec(linha);
-        beneficios.push({
-          nb: nb ? nb[0] : '',
-          texto: linha.split(RE_DATA)[0].replace(/^\s*\d{1,3}\s+/, '').trim(),
-          inicio: datas[0] ? dataDe(datas[0]) : null,
-          fim: datas[1] ? dataDe(datas[1]) : null,
-          semDatas: datas.length === 0
+      var grade = lerGrade(linha);
+      if (grade.length) {
+        aceitaNome = false;
+        grade.forEach(function (g) {
+          if (atual) (modo === '13' ? atual.decimos : atual.remuneracoes).push(g);
+          else (modo === '13' ? orfas13 : orfas).push(g);
         });
-        atual = null;
         return;
       }
 
-      if (datas.length) {
-        atual = {
-          rotulo: rotuloVinculo(linha, vinculos.length + 1),
-          datasBrutas: datas,
-          inicio: dataDe(datas[0]),
-          fim: datas[1] ? dataDe(datas[1]) : null,
-          indicadores: indicadoresDe(linha),
-          remuneracoes: []
-        };
-        vinculos.push(atual);
-        return;
-      }
+      PALAVRAS.forEach(function (p) {
+        if (p[0].test(linha)) notas.push({ sev: 'atencao', ref: atual ? rotuloDe(atual) : '', msg: p[1] });
+      });
 
-      // Linha só com indicadores logo abaixo de um vínculo.
-      if (atual && indicadoresDe(linha).length && linha.replace(RE_IND, '').replace(/[\s,;]|Indicadores/gi, '') === '') {
-        atual.indicadores = atual.indicadores.concat(indicadoresDe(linha));
+      // Nome do empregador que passou para a linha de baixo.
+      if (aceitaNome && atual && atual.continuacoes < 2 && linha.length <= 60 && linha !== 'INSS' && RE_CONTINUACAO.test(linha) && /[A-ZÀ-Ý]{2}/.test(linha)) {
+        atual.nome += ' ' + linha;
+        atual.continuacoes++;
       }
     });
 
-    return { vinculos: vinculos, beneficios: beneficios, orfas: orfas, notas: notas };
+    return { vinculos: vinculos, beneficios: beneficios, eventos: eventos, orfas: orfas, orfas13: orfas13, notas: notas };
   }
+
+  function rotuloDe(r) { return 'Seq. ' + r.seq + ' - ' + (r.nome || 'sem nome').slice(0, 60); }
 
   // ---------- Análise ----------
 
-  // hoje: { y, m, d }. Devolve resumo, vínculos, faltantes, pendências, benefícios e mapa.
+  // hoje: { y, m, d }. Devolve resumo, vínculos (em ordem de início), faltantes, pendências,
+  // benefícios, eventos e mapa de competências.
   function analisar(texto, hoje) {
     var lido = interpretar(texto);
     var pend = lido.notas.slice();
@@ -235,111 +318,158 @@
     lido.vinculos.forEach(function (v) { totalRem += v.remuneracoes.length; });
     var semLeitura = lido.vinculos.length > 0 && totalRem === 0;
 
+    function nova(sev, ref, msg) { pend.push({ sev: sev, ref: ref, msg: msg, n: pend.length }); }
+    pend.forEach(function (p, i) { p.n = i; });
+
     if (semLeitura) {
-      pend.push({ sev: 'atencao', ref: '', msg: 'Nenhuma remuneração foi reconhecida. O PDF pode ter outro layout ou a seção de remunerações não foi incluída. Os salários faltantes não foram avaliados.' });
+      nova('atencao', '', 'Nenhuma remuneração foi reconhecida. O PDF pode ter outro layout ou a seção de remunerações não foi incluída. Os salários faltantes não foram avaliados.');
     }
     if (lido.orfas.length) {
-      pend.push({ sev: 'atencao', ref: '', msg: lido.orfas.length + ' remuneração(ões) sem vínculo identificado acima delas (a partir de ' + rotuloMes(lido.orfas[0].mes) + ').' });
+      nova('atencao', '', lido.orfas.length + ' remuneração(ões) sem vínculo identificado acima delas (a partir de ' + rotuloMes(lido.orfas[0].mes) + ').');
       lido.orfas.forEach(function (r) { if (r.valor > 0) ok[r.mes] = true; });
     }
 
-    lido.vinculos.forEach(function (v) {
+    // Benefícios e eventos, em ordem de início.
+    function porInicio(a, b) {
+      var x = a.inicio ? a.inicio.ord : Infinity, y = b.inicio ? b.inicio.ord : Infinity;
+      return x - y || a.seq - b.seq;
+    }
+    var periodosBen = [];
+    var bens = lido.beneficios.slice().sort(porInicio).map(function (b) {
+      var semDatas = b.datasBrutas.length === 0;
+      var indef = /indeferid/i.test(b.nome) || semDatas;
+      if (b.inicio) {
+        var fimBen = b.fim || dataDeOrd(hojeOrd);
+        periodosBen.push({ nb: b.nb, de: mesDe(b.inicio.y, b.inicio.m), ate: mesDe(fimBen.y, fimBen.m) });
+      }
+      b.indicadores.forEach(function (c) { avisoIndicador(rotuloBen(b), c, []); });
+      return {
+        tipoRegistro: 'beneficio', seq: b.seq, nb: b.nb, texto: b.nome, inicio: b.inicio, fim: b.fim,
+        nota: indef ? 'Benefício indeferido.' : semDatas ? 'Sem datas de início e fim: sem período informado.' : 'Fora da contagem desta análise.',
+        indeferido: indef
+      };
+    });
+    var evs = lido.eventos.slice().sort(porInicio).map(function (e) {
+      e.indicadores.forEach(function (c) { avisoIndicador('Seq. ' + e.seq + ' - ' + e.nome, c, []); });
+      return {
+        tipoRegistro: 'evento', seq: e.seq, nb: '', texto: e.nome, inicio: e.inicio, fim: e.fim,
+        nota: 'Evento previdenciário: fora da contagem desta análise.', indeferido: false
+      };
+    });
+    function rotuloBen(b) { return 'Seq. ' + b.seq + ' - benefício' + (b.nb ? ' ' + b.nb : ''); }
+
+    function avisoIndicador(ref, c, meses) {
+      var d = INDICADORES[c];
+      var sev = d ? d[0] : 'info';
+      var desc = d ? d[1] : 'indicador do INSS, confira o significado na legenda do próprio extrato';
+      var onde = meses.length ? ' em ' + meses.length + ' competência(s): ' + textoFaixas(meses, 4) : '';
+      nova(sev, ref, c + ': ' + desc + onde + '.');
+    }
+
+    // Vínculos em ordem cronológica de início (empate: ordem do extrato; datas inválidas no fim).
+    var ordenados = lido.vinculos.slice().sort(porInicio);
+
+    ordenados.forEach(function (v) {
+      var rotulo = rotuloDe(v);
       var item = {
-        rotulo: v.rotulo, inicio: v.inicio, fim: v.fim, emAberto: false, valido: false, dias: 0,
-        remuneracoes: v.remuneracoes.length, comRemuneracao: 0, faltantes: 0, anteriores94: 0
+        seq: v.seq, nome: v.nome, tipo: v.tipo, rotulo: rotulo, inicio: v.inicio, fim: v.fim, emAberto: false, valido: false,
+        dias: 0, remuneracoes: v.remuneracoes.length, decimos: v.decimos.length, comRemuneracao: 0, faltantes: 0, anteriores94: 0
       };
       itens.push(item);
 
-      if (!v.inicio) { pend.push({ sev: 'erro', ref: v.rotulo, msg: 'Data de início inválida ou não reconhecida.' }); return; }
-      if (v.datasBrutas.length > 1 && !v.fim) { pend.push({ sev: 'erro', ref: v.rotulo, msg: 'Data de fim inválida.' }); return; }
-      if (v.inicio.ord > hojeOrd || v.inicio.y < 1900) { pend.push({ sev: 'erro', ref: v.rotulo, msg: 'Data de início fora do intervalo esperado (' + rotuloData(v.inicio) + ').' }); return; }
+      if (!v.inicio) { nova('erro', rotulo, 'Data de início inválida ou não reconhecida.'); return; }
+      if (v.datasBrutas.length > 1 && !v.fim) { nova('erro', rotulo, 'Data de fim inválida.'); return; }
+      if (v.inicio.ord > hojeOrd || v.inicio.y < 1900) { nova('erro', rotulo, 'Data de início fora do intervalo esperado (' + rotuloData(v.inicio) + ').'); return; }
+      if (v.fim && v.fim.ord < v.inicio.ord) { nova('erro', rotulo, 'Data de fim anterior à data de início.'); return; }
 
+      var mIni = mesDe(v.inicio.y, v.inicio.m);
+      var somas = {}, vistos = {}, repetidas = [], zeradas = [], semValor = [], indic = {};
+      v.indicadores.forEach(function (c) { indic[c] = indic[c] || []; });
+      v.remuneracoes.forEach(function (r) {
+        if (vistos[r.mes]) repetidas.push(r.mes);
+        vistos[r.mes] = true;
+        if (r.valor === null) { semValor.push(r.mes); } else { somas[r.mes] = (somas[r.mes] || 0) + r.valor; }
+        r.indicadores.forEach(function (c) { (indic[c] = indic[c] || []).push(r.mes); });
+      });
+      var presentes = {};
+      Object.keys(somas).forEach(function (k) {
+        if (somas[k] > 0) presentes[k] = true; else zeradas.push(+k);
+      });
+      Object.keys(presentes).forEach(function (k) { ok[k] = true; });
+      item.comRemuneracao = Object.keys(presentes).length;
+
+      // Fim contado. Sem data de fim, vale até o fim do mês da última remuneração (nunca depois de hoje).
       var fim = v.fim;
       if (!fim) {
-        fim = { y: hoje.y, m: hoje.m, d: hoje.d, ord: hojeOrd };
         item.emAberto = true;
-        pend.push({ sev: 'info', ref: v.rotulo, msg: 'Vínculo sem data de fim: período contado até hoje.' });
+        var ultima = -1;
+        Object.keys(presentes).forEach(function (k) { if (+k > ultima && +k <= hojeMes) ultima = +k; });
+        if (ultima < 0) {
+          nova('atencao', rotulo, 'Vínculo sem data de fim e sem remuneração: não foi contado.');
+          return;
+        }
+        fim = dataDeOrd(Math.max(v.inicio.ord, Math.min(hojeOrd, ultimoDiaDoMes(ultima))));
+        nova('info', rotulo, 'Vínculo sem data de fim: contado até ' + rotuloData(fim) + ' (fim do mês da última remuneração, ' + rotuloMes(ultima) + '). Confira se ele continua ativo.');
       }
-      if (fim.ord < v.inicio.ord) { pend.push({ sev: 'erro', ref: v.rotulo, msg: 'Data de fim anterior à data de início.' }); return; }
+      var mFim = mesDe(fim.y, fim.m);
 
       item.valido = true;
-      item.fim = fim;
+      item.fimContado = fim;
       item.inicioOrd = v.inicio.ord;
       item.fimOrd = fim.ord;
       item.dias = fim.ord - v.inicio.ord + 1;
       validos.push(item);
 
-      var mIni = mesDe(v.inicio.y, v.inicio.m);
-      var mFim = mesDe(fim.y, fim.m);
-      var presentes = {}, vistos = {}, repetidas = [], fora = [], zeradas = [], semValor = [];
-      var indic = {};
+      var fora = [];
+      Object.keys(vistos).forEach(function (k) { if (+k < mIni || +k > mFim) fora.push(+k); });
 
-      v.indicadores.forEach(function (c) { (indic[c] = indic[c] || { meses: [] }); });
-
-      v.remuneracoes.forEach(function (r) {
-        if (vistos[r.mes]) repetidas.push(r.mes);
-        vistos[r.mes] = true;
-        if (r.mes < mIni || r.mes > mFim) fora.push(r.mes);
-        if (r.valor === null) semValor.push(r.mes);
-        else if (r.valor === 0) zeradas.push(r.mes);
-        else presentes[r.mes] = true;
-        r.indicadores.forEach(function (c) { (indic[c] = indic[c] || { meses: [] }).meses.push(r.mes); });
-      });
-
-      Object.keys(presentes).forEach(function (k) { ok[k] = true; });
-      item.comRemuneracao = Object.keys(presentes).length;
-
-      if (repetidas.length) pend.push({ sev: 'atencao', ref: v.rotulo, msg: 'Competência repetida: ' + textoFaixas(repetidas, 6) + '.' });
-      if (fora.length) pend.push({ sev: 'atencao', ref: v.rotulo, msg: 'Remuneração fora do período do vínculo: ' + textoFaixas(fora, 6) + '.' });
-      if (semValor.length) pend.push({ sev: 'atencao', ref: v.rotulo, msg: 'Competência sem valor lido: ' + textoFaixas(semValor, 6) + '.' });
-
-      Object.keys(indic).forEach(function (c) {
-        var d = INDICADORES[c];
-        var sev = d ? d[0] : 'info';
-        var desc = d ? d[1] : 'indicador do INSS, confira o significado na fonte oficial';
-        var onde = indic[c].meses.length ? ' em ' + indic[c].meses.length + ' competência(s): ' + textoFaixas(indic[c].meses, 4) : '';
-        pend.push({ sev: sev, ref: v.rotulo, msg: c + ': ' + desc + onde + '.' });
-      });
+      if (repetidas.length) nova('info', rotulo, 'Competência com mais de uma remuneração (valores somados): ' + textoFaixas(repetidas, 6) + '.');
+      if (fora.length) nova('atencao', rotulo, 'Remuneração fora do período do vínculo: ' + textoFaixas(fora, 6) + '.');
+      if (semValor.length) nova('atencao', rotulo, 'Competência sem valor lido: ' + textoFaixas(semValor, 6) + '.');
+      Object.keys(indic).forEach(function (c) { avisoIndicador(rotulo, c, indic[c]); });
 
       if (semLeitura) return;
 
       // Salários faltantes: meses do vínculo sem remuneração (ou com valor zero).
-      var ultima = -1;
-      Object.keys(presentes).forEach(function (k) { if (+k > ultima && +k <= hojeMes) ultima = +k; });
-      var mFimEsp = mFim;
-      if (item.emAberto) {
-        mFimEsp = ultima >= mIni ? ultima : mFim;
-        if (ultima >= mIni && hojeMes - ultima >= 2) {
-          pend.push({ sev: 'info', ref: v.rotulo, msg: 'Vínculo em aberto: última remuneração em ' + rotuloMes(ultima) + '. Os meses seguintes não foram tratados como faltantes.' });
-        }
-      }
-
       var sem = [], ant = [];
-      for (var k = mIni; k <= mFimEsp; k++) {
+      for (var k = mIni; k <= mFim; k++) {
         if (presentes[k]) continue;
         if (k < INICIO_PBC) { ant.push(k); pre94[k] = true; } else { sem.push(k); falta[k] = true; }
       }
       item.faltantes = sem.length;
       item.anteriores94 = ant.length;
+      item.mesesFaltantes = sem;
       item.faixasFaltantes = agrupar(sem);
-      item.zeradas = zeradas.filter(function (k) { return k >= INICIO_PBC; }).length;
+      item.zeradas = zeradas.filter(function (z) { return z >= INICIO_PBC && z >= mIni && z <= mFim; }).length;
 
-      if (v.remuneracoes.length === 0 && sem.length) {
-        pend.push({ sev: 'atencao', ref: v.rotulo, msg: 'Vínculo sem nenhuma remuneração listada.' });
-      }
-      if (sem.length) {
-        faltantes.push({ rotulo: v.rotulo, meses: sem.length, faixas: item.faixasFaltantes, zeradas: item.zeradas, listadas: v.remuneracoes.length });
-      }
+      if (v.remuneracoes.length === 0 && sem.length) nova('atencao', rotulo, 'Vínculo sem nenhuma remuneração listada.');
     });
 
-    // Concomitância
-    for (var i = 0; i < validos.length; i++) {
+    // Faltantes: coincidência com benefício e com remuneração de outro vínculo.
+    itens.forEach(function (item) {
+      if (!item.mesesFaltantes || !item.mesesFaltantes.length) return;
+      var emBen = item.mesesFaltantes.filter(function (k) {
+        return periodosBen.some(function (p) { return k >= p.de && k <= p.ate; });
+      });
+      var outro = item.mesesFaltantes.filter(function (k) { return ok[k]; });
+      item.emBeneficio = emBen.length;
+      item.comOutroVinculo = outro.length;
+      faltantes.push({
+        seq: item.seq, rotulo: item.rotulo, meses: item.faltantes, faixas: item.faixasFaltantes,
+        zeradas: item.zeradas, listadas: item.remuneracoes, emBeneficio: emBen.length, comOutroVinculo: outro.length
+      });
+    });
+
+    // Concomitância: uma nota por vínculo, listando os que começam depois e se sobrepõem.
+    validos.forEach(function (a, i) {
+      var lista = [];
       for (var j = i + 1; j < validos.length; j++) {
-        var a = validos[i], b = validos[j];
+        var b = validos[j];
         var s = Math.max(a.inicioOrd, b.inicioOrd), e = Math.min(a.fimOrd, b.fimOrd);
-        if (s <= e) pend.push({ sev: 'info', ref: a.rotulo, msg: 'Período concomitante com "' + b.rotulo + '" (' + (e - s + 1) + ' dias em comum). O tempo é contado uma vez.' });
+        if (s <= e) lista.push('Seq. ' + b.seq + ' (' + (e - s + 1) + ' dias)');
       }
-    }
+      if (lista.length) nova('info', a.rotulo, 'Período concomitante com ' + lista.join(', ') + '. O tempo é contado uma vez.');
+    });
 
     // Tempo contado: união dos períodos, sem somar duas vezes o que se sobrepõe.
     var segs = validos.map(function (v) { return [v.inicioOrd, v.fimOrd]; }).sort(function (x, y) { return x[0] - y[0]; });
@@ -351,13 +481,6 @@
     });
     if (cI !== null) diasUnicos += cF - cI + 1;
     var diasBrutos = validos.reduce(function (t, v) { return t + v.dias; }, 0);
-
-    // Benefícios: listados, fora da contagem.
-    var bens = lido.beneficios.map(function (b) {
-      var nota = b.semDatas ? 'Sem datas de início e fim: indica benefício indeferido.' :
-        'Fora da contagem desta análise.';
-      return { nb: b.nb, texto: b.texto, inicio: b.inicio, fim: b.fim, nota: nota, indeferido: b.semDatas };
-    });
 
     // Mapa de competências
     var mapa = {};
@@ -372,7 +495,7 @@
     var mesesSem = faltantes.reduce(function (t, f) { return t + f.meses; }, 0);
     var mesesAnt = itens.reduce(function (t, v) { return t + v.anteriores94; }, 0);
     var rank = { erro: 0, atencao: 1, info: 2 };
-    pend.sort(function (x, y) { return rank[x.sev] - rank[y.sev]; });
+    pend.sort(function (x, y) { return rank[x.sev] - rank[y.sev] || x.n - y.n; });
     var cont = { erro: 0, atencao: 0, info: 0 };
     pend.forEach(function (p) { cont[p.sev]++; });
 
@@ -381,6 +504,7 @@
       faltantes: faltantes,
       pendencias: pend,
       beneficios: bens,
+      eventos: evs,
       mapa: mapa,
       resumo: {
         totalVinculos: itens.length,
@@ -394,9 +518,15 @@
         erros: cont.erro,
         atencoes: cont.atencao,
         infos: cont.info,
-        beneficios: bens.length
+        beneficios: bens.length,
+        eventos: evs.length
       }
     };
+  }
+
+  function fimDoItem(v) {
+    if (v.emAberto) return v.valido ? 'sem data de fim (contado até ' + rotuloData(v.fimContado) + ')' : 'sem data de fim';
+    return v.fim ? rotuloData(v.fim) : '-';
   }
 
   function resumoEmTexto(r) {
@@ -404,10 +534,20 @@
     l.push('Análise do CNIS (pontos de atenção para conferência, não é parecer)');
     l.push('Vínculos: ' + s.totalVinculos + ' | Tempo contado: ' + s.duracao + ' (' + s.diasUnicos + ' dias)');
     l.push('Competências com remuneração: ' + s.competencias + ' | Meses sem remuneração: ' + s.mesesSemRemuneracao);
+    if (r.vinculos.length) {
+      l.push('', 'Vínculos em ordem de início:');
+      r.vinculos.forEach(function (v) {
+        l.push('- ' + v.rotulo + ': ' + (v.inicio ? rotuloData(v.inicio) : '?') + ' a ' + fimDoItem(v) +
+          (v.valido ? ' | ' + v.dias + ' dias' : ' | não contado') + ' | ' + v.comRemuneracao + ' com remuneração | ' + v.faltantes + ' faltante(s)');
+      });
+    }
     if (r.faltantes.length) {
       l.push('', 'Salários faltantes:');
       r.faltantes.forEach(function (f) {
-        l.push('- ' + f.rotulo + ': ' + f.meses + ' mês(es) - ' + f.faixas.map(function (x) { return x.de === x.ate ? x.de : x.de + ' a ' + x.ate; }).join(', '));
+        var extra = [];
+        if (f.emBeneficio) extra.push(f.emBeneficio + ' em período de benefício');
+        if (f.comOutroVinculo) extra.push(f.comOutroVinculo + ' com remuneração em outro vínculo');
+        l.push('- ' + f.rotulo + ': ' + f.meses + ' mês(es) - ' + f.faixas.map(textoFaixa).join(', ') + (extra.length ? ' (' + extra.join('; ') + ')' : ''));
       });
     }
     if (r.pendencias.length) {
@@ -526,14 +666,15 @@
       saida.appendChild(sm);
     }
 
-    var sv = sec('Vínculos');
+    var sv = sec('Vínculos', 'Em ordem pela data de início do vínculo. "Seq." é o número do vínculo no extrato.');
     if (r.vinculos.length) {
-      sv.appendChild(tabela(['Vínculo', 'Início', 'Fim', 'Dias', 'Com remuneração', 'Faltantes'],
+      sv.appendChild(tabela(['Seq.', 'Empregador / origem', 'Início', 'Fim', 'Dias contados', 'Com remuneração', 'Faltantes'],
         r.vinculos.map(function (v) {
           return [
-            v.rotulo,
+            String(v.seq),
+            v.nome,
             v.inicio ? rotuloData(v.inicio) : '-',
-            v.emAberto ? 'em aberto' : (v.fim ? rotuloData(v.fim) : '-'),
+            fimDoItem(v),
             v.valido ? String(v.dias) : 'não contado',
             String(v.comRemuneracao),
             String(v.faltantes)
@@ -544,14 +685,16 @@
     }
     saida.appendChild(sv);
 
-    var sf = sec('Salários faltantes', 'Meses dentro do vínculo sem remuneração lançada ou com valor zerado, a partir de 07/1994.');
+    var sf = sec('Salários faltantes', 'Meses dentro do vínculo sem remuneração lançada ou com valor zerado, a partir de 07/1994. O décimo terceiro não entra nesta conta.');
     if (r.faltantes.length) {
       var ul = el('ul', 'lista-linhas');
       r.faltantes.forEach(function (f) {
         var li = el('li');
         li.appendChild(el('strong', null, f.rotulo + ': ' + f.meses + (f.meses === 1 ? ' mês' : ' meses')));
-        li.appendChild(el('span', 'faixas', f.faixas.map(function (x) { return x.de === x.ate ? x.de : x.de + ' a ' + x.ate; }).join(', ')));
+        li.appendChild(el('span', 'faixas', f.faixas.map(textoFaixa).join(', ')));
         if (f.zeradas) li.appendChild(el('span', 'faixas', 'Inclui ' + f.zeradas + ' competência(s) com valor zerado.'));
+        if (f.emBeneficio) li.appendChild(el('span', 'faixas', f.emBeneficio + ' mês(es) dentro de período de benefício por incapacidade (veja a tabela de benefícios).'));
+        if (f.comOutroVinculo) li.appendChild(el('span', 'faixas', f.comOutroVinculo + ' mês(es) com remuneração em outro vínculo.'));
         ul.appendChild(li);
       });
       sf.appendChild(ul);
@@ -581,10 +724,21 @@
     }
     saida.appendChild(sp);
 
-    if (r.beneficios.length) {
-      var sb = sec('Benefícios no extrato');
-      sb.appendChild(tabela(['Benefício', 'Início', 'Fim', 'Observação'], r.beneficios.map(function (b) {
-        return [(b.nb ? 'NB ' + b.nb : 'NB') + (b.texto ? ' - ' + b.texto.replace(/^.*?NB\s*[\d.\-]*\s*/, '') : ''), b.inicio ? rotuloData(b.inicio) : '-', b.fim ? rotuloData(b.fim) : '-', b.nota];
+    var outros = r.beneficios.concat(r.eventos).sort(function (a, b) {
+      var x = a.inicio ? a.inicio.ord : Infinity, y = b.inicio ? b.inicio.ord : Infinity;
+      return x - y || a.seq - b.seq;
+    });
+    if (outros.length) {
+      var sb = sec('Benefícios e eventos', 'Listados em ordem de início. Ficam fora da contagem de tempo desta análise.');
+      sb.appendChild(tabela(['Seq.', 'Tipo', 'Descrição', 'Início', 'Fim', 'Observação'], outros.map(function (b) {
+        return [
+          String(b.seq),
+          b.tipoRegistro === 'beneficio' ? 'Benefício' : 'Evento',
+          (b.nb ? 'NB ' + b.nb + (b.texto ? ' - ' : '') : '') + b.texto,
+          b.inicio ? rotuloData(b.inicio) : '-',
+          b.fim ? rotuloData(b.fim) : '-',
+          b.nota
+        ];
       })));
       saida.appendChild(sb);
     }
@@ -592,16 +746,28 @@
     saida.appendChild(el('p', 'aviso', 'Estes resultados apontam pontos para conferência com o documento original. Não são parecer jurídico nem previdenciário. Tempo calculado com 365 dias por ano e 30 por mês.'));
   }
 
-  // Junta os itens de cada página pela posição vertical e ordena da esquerda para a direita.
+  // Junta os itens de cada página por linha (tolerando pequenas diferenças de altura) e
+  // ordena cada linha da esquerda para a direita. O CNIS tem 3 colunas de remuneração por linha.
+  var TOLERANCIA_Y = 3;
   function textoDaPagina(conteudo) {
-    var porY = {};
-    conteudo.items.forEach(function (it) {
-      if (!it.str) return;
-      var y = Math.round(it.transform[5]);
-      (porY[y] = porY[y] || []).push({ x: it.transform[4], s: it.str });
+    var itens = conteudo.items.filter(function (it) { return it.str && it.str.trim(); }).map(function (it) {
+      return { x: it.transform[4], y: it.transform[5], w: it.width || 0, s: it.str };
     });
-    return Object.keys(porY).map(Number).sort(function (a, b) { return b - a; }).map(function (y) {
-      return porY[y].sort(function (a, b) { return a.x - b.x; }).map(function (o) { return o.s; }).join(' ');
+    itens.sort(function (a, b) { return b.y - a.y || a.x - b.x; });
+    var linhas = [], cur = null;
+    itens.forEach(function (it) {
+      if (!cur || Math.abs(cur.y - it.y) > TOLERANCIA_Y) { cur = { y: it.y, itens: [] }; linhas.push(cur); }
+      cur.itens.push(it);
+    });
+    return linhas.map(function (l) {
+      l.itens.sort(function (a, b) { return a.x - b.x; });
+      var out = '', prev = null;
+      l.itens.forEach(function (it) {
+        if (prev) out += (prev.w > 0 && it.x - (prev.x + prev.w) <= 1) ? '' : ' ';
+        out += it.s.trim();
+        prev = it;
+      });
+      return out;
     }).join('\n');
   }
 
@@ -663,7 +829,7 @@
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
     formatarDuracao: formatarDuracao, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
-    resumoEmTexto: resumoEmTexto, EXEMPLO: EXEMPLO
+    resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.CNIS = api;
