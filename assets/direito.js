@@ -370,7 +370,7 @@
         }
         q.linhas.push('Sem vínculo ou recolhimento ativo na data. Última cobertura: Seq. ' + ultimo.seq + ' (' + ultimo.nome + '), ' + ultimo.origem + '.');
         if (notaFac) q.linhas.push(notaFac);
-        q.linhas.push('Categoria considerada: ' + q.graca.categoria.toLowerCase() + '. Prazo-base: ' + base + ' meses' + (facult ? ' (facultativa)' : ' (art. 15, II, da Lei 8.213/91)') + '.');
+        q.linhas.push('Categoria considerada: ' + (viaDes && viaDes.aplicado ? 'empregada (último vínculo, com seguro-desemprego/SINE), mesmo com contribuições posteriores como ' + CLASSES[ultimoOrig.classe].toLowerCase() : q.graca.categoria.toLowerCase()) + '. Prazo-base: ' + base + ' meses' + (facult ? ' (facultativa)' : ' (art. 15, II, da Lei 8.213/91)') + '.');
         q.linhas.push('Contagem: a qualidade se mantém até o vencimento da contribuição do mês seguinte ao fim do prazo (dia ' + DIA_VENCIMENTO + ', passando para o dia útil seguinte se cair em fim de semana): até ' + rotulo(dObj(ate)) + ' no prazo-base. Não é somar 12 meses à data da última contribuição.');
         if (!facult) {
           q.linhas.push('Contribuições seguidas sem perda da qualidade até a cessação: ' + sq.total + (sq.presumidos ? ' (inclui ' + sq.presumidos + ' mês(es) de vínculo anteriores a 07/1994, presumidos)' : '') + '. ' +
@@ -524,7 +524,7 @@
     var viavel = (q.status === 'confirmada' || q.status === 'provavel' || q.status === 'indeterminada') && res.carencia.status !== 'nao_cumprida';
     var vl = { calculado: false, linhas: [] };
     res.valor = vl;
-    var classeValor = (usada && usada !== 'desempregada') ? usada : (q.graca ? Object.keys(CLASSES).filter(function (k) { return CLASSES[k] === q.graca.categoria; })[0] : null);
+    var classeValor = (usada && usada !== 'desempregada') ? usada : (q.graca ? q.graca.classe : null);
     if (!viavel) {
       vl.linhas.push('Valor não calculado: a qualidade de segurado não foi demonstrada pelos dados.');
     } else if (analise.resumo.semRemuneracoes) {
@@ -555,15 +555,19 @@
         }
       } else {
         // Empregada, doméstica e avulsa: remuneração do mês anterior; com variação, média dos 6 últimos.
-        var k6 = Object.keys(todos).map(Number).filter(function (k) { return k < mesRef && k >= mesRef - 12 && todos[k] > 0; }).sort(function (a, b) { return b - a; }).slice(0, 6);
+        var k6 = Object.keys(todos).map(Number).filter(function (k) { return k < mesRef && (usada === 'desempregada' || k >= mesRef - 12) && todos[k] > 0; }).sort(function (a, b) { return b - a; }).slice(0, 6);
         if (!k6.length) vl.linhas.push('Valor não calculado: não há remuneração nos 12 meses anteriores.');
         else {
+          if (usada === 'desempregada') vl.linhas.push('Desempregada em período de graça: foram usadas as últimas remunerações anteriores ao fato gerador, mesmo fora dos 12 meses. Confira a regra aplicável.');
           var ult = todos[k6[0]];
           var vals = k6.map(function (k) { return todos[k]; });
           var media6 = vals.reduce(function (t, x) { return t + x; }, 0) / vals.length;
           var variavel = Math.max.apply(null, vals) / Math.min.apply(null, vals) > 1.1;
           var ref = (classeValor === 'domestica') ? ult : (variavel ? media6 : ult);
+          var mnE = C.minimoDe(mesRef), elevado = false;
+          if (mnE && ref < mnE) { ref = mnE; elevado = true; }
           vl.calculado = true; vl.mensal = Math.round(ref * 100) / 100;
+          if (elevado) vl.linhas.push('A referência ficou abaixo do salário mínimo e foi elevada ao piso (' + dinheiro(mnE) + ').');
           vl.linhas.push(CLASSES[classeValor] + ': ' + (classeValor === 'domestica' ? 'último salário de contribuição' : 'remuneração integral') + '. Última competência considerada: ' + rotuloMes(k6[0]) + ' (' + dinheiro(ult) + ').');
           if (classeValor !== 'domestica') vl.linhas.push('Média das últimas ' + k6.length + ' remunerações: ' + dinheiro(media6) + '. ' + (variavel ? 'Há variação acima de 10%, então a média foi usada como referência (remuneração variável).' : 'Remuneração estável: usada a última.'));
         }
