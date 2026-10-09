@@ -870,6 +870,7 @@
       sm.appendChild(mapa);
       saida.appendChild(sm);
     }
+    if (root.DIREITO) root.DIREITO.montar(saida, r);
 
     var sv = sec('Vínculos', 'Em ordem pela data de início do vínculo. "Seq." é o número do vínculo no extrato.');
     if (r.vinculos.length) {
@@ -1059,8 +1060,6 @@
 
     function limpar() {
       texto.value = ''; arquivo.value = ''; saida.textContent = ''; msg.textContent = '';
-      var det = document.getElementById('cnis-direito');
-      if (det) { det.querySelectorAll('input').forEach(function (i) { if (i.type === 'checkbox') i.checked = false; else i.value = ''; }); det.querySelectorAll('select').forEach(function (s) { s.selectedIndex = 0; }); }
     }
 
     form.addEventListener('submit', function (ev) {
@@ -1073,7 +1072,6 @@
         if (!conteudo || !conteudo.trim()) throw new Error('Não encontrei texto. Se o PDF for uma imagem escaneada, copie o texto do extrato e cole no campo.');
         var analise = analisar(conteudo, hoje());
         renderizar(saida, analise);
-        if (root.DIREITO) root.DIREITO.aplicar(saida, analise, hoje());
         msg.textContent = '';
         texto.value = ''; arquivo.value = '';
         var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

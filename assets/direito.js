@@ -516,9 +516,22 @@
 
   // ---------- Interface ----------
 
+  function campo(rotulo, controle) {
+    var l = C.el('label', 'campo', rotulo);
+    l.appendChild(controle);
+    return l;
+  }
+  function selecao(id, opcoes) {
+    var s = C.el('select'); s.id = id;
+    opcoes.forEach(function (o) { var op = C.el('option', null, o[1]); op.value = o[0]; s.appendChild(op); });
+    return s;
+  }
+  function entrada(id, tipo) { var i = C.el('input'); i.type = tipo; i.id = id; return i; }
+  function marca(id, texto) {
+    var l = C.el('label'); var i = entrada(id, 'checkbox'); l.appendChild(i); l.appendChild(document.createTextNode(' ' + texto)); return l;
+  }
   function lerCampos() {
     var g = function (id) { return document.getElementById(id); };
-    if (!g('dir-beneficio') || !g('dir-beneficio').value) return null;
     return {
       beneficio: g('dir-beneficio').value, tipo: g('dir-tipo').value, data: g('dir-data').value, afastamento: g('dir-afast').value,
       categoria: g('dir-categoria').value, desemprego: g('dir-desemprego').checked, internacao: g('dir-internacao').checked,
@@ -534,9 +547,9 @@
     return ul;
   }
 
-  function renderizar(saida, r) {
+  function renderizar(r) {
     var topo = C.el('div', 'direito');
-    topo.appendChild(C.el('h2', null, 'Verificação de direito: salário-maternidade'));
+    topo.appendChild(C.el('h3', null, 'Verificação de direito: salário-maternidade'));
     topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. Mostra os dados usados, as regras aplicadas e o que ainda falta comprovar.'));
 
     var c = r.conclusao;
@@ -623,19 +636,45 @@
     s9.appendChild(C.tabela(['Norma', 'Vigência / conferência'], r.normas.map(function (n) { return [n.nome, n.vigencia]; })));
     topo.appendChild(s9);
 
-    saida.insertBefore(topo, saida.firstChild);
     return topo;
   }
 
-  function aplicar(saida, analise, hoje) {
-    var campos = lerCampos();
-    if (!campos) return null;
-    var r = salarioMaternidade(analise, campos, hoje);
-    renderizar(saida, r);
-    return r;
+  function hojeAgora() { var a = new Date(); return { y: a.getFullYear(), m: a.getMonth() + 1, d: a.getDate() }; }
+
+  // Bloco "Verificar direito", logo abaixo do mapa de competências. Usa a análise já feita, sem reenviar o extrato.
+  function montar(saida, analise) {
+    var bloco = C.sec('Verificar direito a um benefício', 'Escolha o benefício e a data do fato gerador e clique em Verificar direito. A conferência usa o extrato já lido.');
+    bloco.id = 'cnis-direito';
+    var grade = C.el('div', 'grade-campos');
+    grade.appendChild(campo('Benefício', selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']])));
+    grade.appendChild(campo('Fato gerador', selecao('dir-tipo', [['parto', 'Parto'], ['natimorto', 'Natimorto'], ['aborto', 'Aborto não criminoso'], ['adocao', 'Adoção'], ['guarda', 'Guarda judicial para adoção'], ['outro', 'Outra hipótese']])));
+    grade.appendChild(campo('Data do fato gerador', entrada('dir-data', 'date')));
+    grade.appendChild(campo('Início do afastamento (se houver)', entrada('dir-afast', 'date')));
+    grade.appendChild(campo('Categoria na data', selecao('dir-categoria', [['auto', 'Identificar pelo CNIS'], ['empregada', 'Empregada'], ['domestica', 'Empregada doméstica'], ['avulsa', 'Trabalhadora avulsa'], ['ci', 'Contribuinte individual'], ['mei', 'MEI'], ['facultativa', 'Facultativa'], ['especial', 'Segurada especial']])));
+    bloco.appendChild(grade);
+    var marcas = C.el('div', 'marcas');
+    marcas.appendChild(marca('dir-desemprego', 'Desemprego involuntário comprovado'));
+    marcas.appendChild(marca('dir-internacao', 'Internação prolongada (mãe ou bebê)'));
+    marcas.appendChild(marca('dir-falecimento', 'Falecimento de quem teria direito'));
+    marcas.appendChild(marca('dir-anterior', 'Há requerimento anterior pelo mesmo fato'));
+    bloco.appendChild(marcas);
+    var acoes = C.el('div', 'acoes');
+    var botao = C.el('button', 'btn', 'Verificar direito'); botao.type = 'button'; botao.id = 'dir-verificar';
+    acoes.appendChild(botao);
+    bloco.appendChild(acoes);
+    var resultado = C.el('div'); resultado.id = 'dir-resultado'; resultado.setAttribute('aria-live', 'polite');
+    bloco.appendChild(resultado);
+    botao.addEventListener('click', function () {
+      var campos = lerCampos();
+      if (!campos.data) { resultado.textContent = ''; resultado.appendChild(C.el('p', 'msg', 'Informe a data do fato gerador.')); return; }
+      resultado.textContent = '';
+      resultado.appendChild(renderizar(salarioMaternidade(analise, campos, hojeAgora())));
+    });
+    saida.appendChild(bloco);
+    return bloco;
   }
 
-  var api = { salarioMaternidade: salarioMaternidade, aplicar: aplicar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

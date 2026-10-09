@@ -50,7 +50,7 @@ Cada artigo é uma entrada em `$POSTS` (`index.php`) e um arquivo `posts/{slug}.
 - Os significados dos indicadores vêm de artigos de escritórios de advocacia previdenciária e estão em `INDICADORES` (`assets/cnis.js`). O código original sempre aparece junto.
 
 ### Verificar direito (salário-maternidade)
-Opcional, no formulário. Etapas: fato gerador, categoria, qualidade de segurado (período de graça), carência, validade do CNIS, situações especiais e valor estimado. Normas em `NORMAS` (`assets/direito.js`), com vigência.
+Bloco logo abaixo do Mapa de competências, com botão "Verificar direito" (usa o extrato já lido). Etapas: fato gerador, categoria, qualidade de segurado (período de graça), carência, validade do CNIS, situações especiais e valor estimado. Normas em `NORMAS` (`assets/direito.js`), com vigência.
 - Período de graça: vale até o vencimento da contribuição do mês seguinte ao fim do prazo (dia 15; fim de semana passa para a segunda). Prazo 12 meses (6 na facultativa), 24 com mais de 120 contribuições sem perda, +12 com desemprego involuntário informado. Meses de vínculo anteriores a 07/1994 entram na contagem como presumidos.
 - Carência dispensada (ADIs 2.110/2.111 e regulamento do INSS). Confirmar a norma e a vigência antes de usar em peça.
 - Nunca presume facultativa ou desempregada pela falta de vínculo, nem fecha vínculo pela última remuneração.

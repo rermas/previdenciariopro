@@ -211,9 +211,9 @@ p { margin: 0 0 1rem; }
 }
 
 /* Verificar direito */
-.verificar { border: 1px solid var(--linha); border-radius: 8px; padding: 0.7rem 1rem; background: var(--papel); }
-.verificar summary { cursor: pointer; font-weight: 700; color: var(--azul-texto); }
-.verificar[open] summary { margin-bottom: 0.9rem; }
+
+
+
 .grade-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; }
 .campo select, .campo input[type="date"] { width: 100%; max-width: 100%; font: inherit; font-weight: 400; padding: 0.55rem; border: 1px solid var(--linha); border-radius: 6px; background: var(--branco); color: var(--tinta); }
 .marcas { display: grid; gap: 0.5rem; margin-top: 0.9rem; font-size: 0.95rem; }
