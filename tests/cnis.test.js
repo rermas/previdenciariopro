@@ -122,7 +122,7 @@ assert.equal(s.mesesSemRemuneracao, 5);
 assert.equal(s.mesesAnteriores94, 3);
 assert.equal(s.erros, 0);
 assert.equal(s.atencoes, 3, 'PREM-EXT, PREC-MENOR-MIN e PEXT');
-assert.equal(s.infos, 4, 'AVRC-DEF, competência repetida, vínculo em aberto e concomitância');
+assert.equal(s.infos, 5, 'AVRC-DEF, competência repetida, vínculo em aberto, concomitância e lacunas longas');
 
 const msgs = r.pendencias.map(p => p.msg).join(' | ');
 assert.match(msgs, /PREM-EXT: remuneração informada fora do prazo em 1 competência\(s\): 06\/2000/);
@@ -132,7 +132,7 @@ assert.match(msgs, /AVRC-DEF: acerto confirmado pelo INSS/);
 assert.match(msgs, /Competência com mais de uma remuneração \(valores somados\): 06\/2000/);
 assert.match(msgs, /contado até 31\/08\/2023/);
 assert.match(msgs, /Período concomitante com Seq\. 4 \(31 dias\)/);
-assert.deepEqual(r.pendencias.map(p => p.sev), ['atencao', 'atencao', 'atencao', 'info', 'info', 'info', 'info'], 'atenção antes de nota');
+assert.deepEqual(r.pendencias.map(p => p.sev), ['atencao', 'atencao', 'atencao', 'info', 'info', 'info', 'info', 'info'], 'atenção antes de nota');
 assert.match(r.pendencias[0].ref, /Seq\. 3/, 'dentro do grupo, ordem cronológica');
 
 assert.equal(r.beneficios.length, 2);
@@ -267,10 +267,87 @@ assert.match(ci.pendencias.map(p => p.msg).join(' | '), /IREC-LC123: recolhiment
 // ---------- Valores por competência (um por vínculo; mesmo vínculo soma) ----------
 assert.equal(CNIS.formatarValor(1234.5), '1.234,50');
 assert.equal(CNIS.formatarValor(0.05), '0,05');
-assert.deepEqual(r.valores[CNIS.mesDe(2000, 6)], [{ seq: 3, nome: 'OFICINA MODELO ME', valor: 450 }], '400,00 + 50,00 no mesmo vínculo viram um valor');
-assert.deepEqual(r.valores[CNIS.mesDe(2010, 8)].map(x => [x.seq, x.valor]), [[2, 1000], [4, 500]], 'dois vínculos na mesma competência: dois valores');
+assert.deepEqual(r.valores[CNIS.mesDe(2000, 6)], [{ seq: 3, nome: 'OFICINA MODELO ME', tipo: 'Empregado', valor: 450 }], '400,00 + 50,00 no mesmo vínculo viram um valor');
+assert.deepEqual(r.valores[CNIS.mesDe(2010, 8)].map(x => [x.seq, x.valor]), [[2, 1000], [4, 600]], 'dois vínculos na mesma competência: dois valores');
 assert.equal(r.valores[CNIS.mesDe(2000, 3)], undefined, 'valor zerado não aparece');
 assert.equal(r.valores[CNIS.mesDe(2010, 5)], undefined);
+
+// ---------- Salário mínimo ----------
+assert.equal(CNIS.minimoDe(CNIS.mesDe(1994, 6)), null, 'antes do Plano Real');
+assert.equal(CNIS.minimoDe(CNIS.mesDe(1994, 8)), 64.79);
+assert.equal(CNIS.minimoDe(CNIS.mesDe(2005, 4)), 260);
+assert.equal(CNIS.minimoDe(CNIS.mesDe(2005, 5)), 300);
+assert.equal(CNIS.minimoDe(CNIS.mesDe(2020, 1)), 1039);
+assert.equal(CNIS.minimoDe(CNIS.mesDe(2020, 2)), 1045);
+assert.equal(CNIS.minimoDe(CNIS.mesDe(2026, 10)), 1621);
+
+const minAnt = CNIS.analisar(texto(
+  vinc(1, 'A', '01/01/2015', '31/05/2015'), '01/2015 300,00 02/2015 300,00 03/2015 1.000,00', '04/2015 1.000,00 05/2015 300,00'
+), HOJE);
+assert.deepEqual(minAnt.abaixoMinimo.map(a => [CNIS.rotuloMes(a.mes), a.proporcional, a.posEC103, a.ci]),
+  [['01/2015', true, false, false], ['02/2015', false, false, false], ['05/2015', true, false, false]], 'início e fim podem ser proporcionais');
+assert.equal(minAnt.carencia.validas, 2, 'março e abril valem; mínimo de 2015 é 788');
+assert.equal(minAnt.carencia.todas, 5);
+assert.equal(minAnt.carencia.linhas[0].faltamValidas, 10, '12 menos 2');
+assert.equal(minAnt.carencia.linhas[0].faltamTodas, 7);
+assert.equal(minAnt.pendencias.filter(p => p.sev === 'atencao').length, 0, 'antes da EC 103 e em mês proporcional é só nota');
+
+const minPos = CNIS.analisar(texto(vinc(1, 'A', '01/01/2021', '30/06/2021'), '01/2021 1.100,00 02/2021 500,00 03/2021 1.100,00', '04/2021 1.100,00 05/2021 1.100,00 06/2021 1.100,00'), HOJE);
+assert.equal(minPos.abaixoMinimo.length, 1);
+assert.equal(minPos.abaixoMinimo[0].posEC103, true);
+assert.match(minPos.pendencias.map(p => p.sev + ' ' + p.msg).join(' | '), /atencao Valor total da competência abaixo do salário mínimo.*02\/2021/);
+const somaMes = CNIS.analisar(texto(
+  vinc(1, 'A', '01/01/2021', '31/03/2021'), '01/2021 1.100,00 02/2021 600,00 03/2021 1.100,00',
+  vinc(2, 'B', '01/02/2021', '28/02/2021'), '02/2021 600,00'
+), HOJE);
+assert.equal(somaMes.abaixoMinimo.length, 0, 'dois vínculos somam 1.200 e passam do mínimo de 1.100');
+
+const ciMin = CNIS.analisar(texto(
+  `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2025 31/03/2025`, 'Contribuições',
+  '01/2025 20/02/2025 50,00 1.000,00 02/2025 24/03/2025 50,00 1.000,00', '03/2025 22/04/2025 75,90 1.518,00'
+), HOJE);
+assert.equal(ciMin.abaixoMinimo.length, 2);
+assert.equal(ciMin.abaixoMinimo[0].ci, true, 'janeiro conta como contribuinte individual, mesmo sendo o primeiro mês');
+assert.match(ciMin.pendencias.map(p => p.sev + ' ' + p.msg).join(' | '), /atencao Contribuinte individual ou facultativo/);
+
+// ---------- Lacunas ----------
+assert.equal(r.lacunas.length, 6);
+assert.equal(r.lacunas[0].dias, 1827, '01/01/1995 a 01/01/2000');
+assert.deepEqual([r.lacunas[0].antes, r.lacunas[0].depois], [1, 3]);
+assert.equal(r.lacunas[2].dias, 731, 'o seguro-desemprego de 2012/2013 divide a lacuna');
+assert.equal(r.lacunas[4].dias, 1106, 'o benefício até 20/05/2020 conta como cobertura');
+assert.equal(r.lacunas[5].atual, true);
+assert.equal(r.lacunas[5].dias, 1134, '01/09/2023 a 08/10/2026');
+assert.equal(r.resumo.lacunasLongas, 6);
+const curta = CNIS.analisar(texto(vinc(1, 'A', '01/01/2020', '31/01/2020'), '01/2020 1.100,00', vinc(2, 'B', '10/02/2020', '29/02/2020'), '02/2020 1.100,00'), { y: 2020, m: 3, d: 1 });
+assert.equal(curta.lacunas.length, 1, 'o dia entre 29/02 e hoje (01/03) é curto demais para listar');
+assert.equal(curta.lacunas[0].dias, 9, '01 a 09/02/2020');
+const trocas = CNIS.analisar(texto(vinc(1, 'A', '01/01/2020', '31/01/2020'), '01/2020 1.100,00', vinc(2, 'B', '05/02/2020', '29/02/2020'), '02/2020 1.100,00'), { y: 2020, m: 2, d: 29 });
+assert.equal(trocas.lacunas.length, 0, '3 dias entre empregos não é lacuna');
+assert.equal(CNIS.duracaoCurta(9), '9 dias');
+assert.equal(CNIS.duracaoCurta(400), '1 ano, 1 mês e 5 dias');
+assert.equal(CNIS.duracaoCurta(365), '1 ano');
+assert.equal(CNIS.duracaoCurta(1457), '3 anos, 11 meses e 32 dias', 'nunca 12 meses');
+assert.equal(CNIS.formatarDuracao(1457), '3 anos, 11 meses e 32 dias');
+
+// ---------- Carência no exemplo ----------
+assert.equal(r.carencia.validas, 34, 'todas as 34 competências estão no mínimo ou acima');
+assert.equal(r.carencia.linhas[2].faltamValidas, 146);
+assert.equal(r.abaixoMinimo.length, 0);
+assert.equal(r.carencia.linhas[2].exigido, 180);
+assert.equal(r.carencia.mesesAntes94, 3, 'abr a jun/1994');
+
+// ---------- Alertas ----------
+const salto = CNIS.analisar(texto(
+  vinc(1, 'A', '01/01/2020', '31/12/2020'),
+  '01/2020 1.500,00 02/2020 1.500,00 03/2020 1.500,00', '04/2020 1.500,00 05/2020 4.000,00 06/2020 1.500,00',
+  '07/2020 1.500,00 08/2020 1.500,00 09/2020 1.500,00', '10/2020 600,00 11/2020 1.500,00 12/2020 1.500,00'
+), HOJE);
+const sm = salto.pendencias.map(p => p.msg).join(' | ');
+assert.match(sm, /Valor muito diferente dos meses vizinhos.*05\/2020 \(4\.000,00 contra cerca de 1\.500,00\).*10\/2020 \(600,00/);
+assert.doesNotMatch(sm, /01\/2020 \(|12\/2020 \(/, 'primeiro e último mês não entram na comparação');
+const dupl = CNIS.analisar(texto(vinc(1, 'MESMA EMPRESA', '01/01/2020', '31/03/2020'), '01/2020 1.100,00', vinc(2, 'MESMA EMPRESA', '01/02/2020', '31/03/2020'), '02/2020 1.100,00'), HOJE);
+assert.match(dupl.pendencias.map(p => p.sev + ' ' + p.msg).join(' | '), /atencao Mesmo empregador em vínculos concomitantes \(Seq\. 2\)/);
 
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);

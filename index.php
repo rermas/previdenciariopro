@@ -1,7 +1,7 @@
 <?php
 /*
  * Análise CNIS: PHP puro, sem banco de dados, com um único roteador.
- * Rotas: /  /blog/  /blog/{slug}/  /legislacao/  /privacidade/  /analise-cnis/  /sitemap.xml
+ * Rotas: /  /blog/  /blog/{slug}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /privacidade/  /analise-cnis/  /sitemap.xml
  */
 
 // ---------- Configuração ----------
@@ -38,6 +38,138 @@ $NORMAS = [
      'url' => 'https://www.gov.br/inss/pt-br/centrais-de-conteudo/legislacao/instrucao-normativa/2022/instrucao-normativa-pres-inss-no-128-de-28-de-marco-de-2022', 'fonte' => 'gov.br/inss'],
 ];
 const NORMAS_CONFERIDAS_EM = '07/10/2026';
+
+// Indicadores do CNIS: uma página por código em /indicadores/{codigo}/.
+// 'oficial' é o texto da legenda do extrato (quando conferido em extratos reais). Os demais vêm da prática previdenciária: confirme na legenda do seu extrato.
+const INDICADORES_REVISADOS = '2026-10-09';
+$INDICADORES = [
+    'PSC-MEN-SM-EC103' => ['grupo' => 'Pendência', 'oficial' => 'Pendência na competência em que o salário de contribuição é menor que o salário mínimo mensal. A competência pode ser passível de complementação, utilização ou agrupamento, de acordo com a EC 103/2019.',
+        'curto' => 'Competência com valor abaixo do salário mínimo.',
+        'sig' => 'A soma dos salários de contribuição da competência ficou abaixo do salário mínimo mensal. O INSS marca o mês como pendente porque, desde a Emenda Constitucional 103/2019, uma competência nessa situação só é aproveitada em condições específicas.',
+        'imp' => 'Sem tratamento, o mês pode não contar como contribuição para carência e tempo. A regra permite complementar a diferença, utilizar o valor para completar outro mês ou agrupar competências, e cada caminho tem requisitos próprios.',
+        'conf' => ['Some todos os vínculos da mesma competência: o total é que deve ser comparado ao mínimo.', 'Veja se é mês de início ou fim de vínculo, quando o valor proporcional é esperado.', 'Verifique se houve complementação ou agrupamento e se aparece no extrato.'],
+        'base' => 'EC 103/2019, art. 29; Constituição, art. 195, § 14; Decreto 3.048/99 (confira a versão vigente sobre complementação, utilização e agrupamento).'],
+    'IREM-INDPEND' => ['grupo' => 'Pendência', 'oficial' => 'Remunerações com indicadores/pendências.',
+        'curto' => 'O vínculo tem remunerações com indicadores ou pendências.',
+        'sig' => 'É um aviso no cabeçalho do vínculo: ao menos uma das remunerações dele traz outro indicador ou pendência. O código não diz qual competência, então é preciso olhar a lista de remunerações.',
+        'imp' => 'Remunerações com pendência podem ser desconsideradas ou exigir comprovação antes de entrar no cálculo do benefício.',
+        'conf' => ['Localize as competências que têm indicador na lista de remunerações.', 'Veja o significado de cada indicador na legenda do extrato.', 'Reúna holerites, GFIP ou eSocial das competências marcadas.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F (dados do CNIS).'],
+    'IREC-INDPEND' => ['grupo' => 'Pendência', 'oficial' => 'Recolhimentos com indicadores/pendências.',
+        'curto' => 'O vínculo de recolhimentos tem indicadores ou pendências.',
+        'sig' => 'Aparece em vínculos de contribuinte individual ou facultativo, quando algum recolhimento traz indicador ou pendência. Funciona como o IREM-INDPEND, só que para guias pagas pelo próprio segurado.',
+        'imp' => 'Recolhimentos pendentes podem não ser reconhecidos até serem regularizados ou comprovados.',
+        'conf' => ['Identifique as competências com indicador na lista de contribuições.', 'Confira se a guia foi paga, no valor e na categoria corretos.', 'Guarde os comprovantes de pagamento.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F; Lei 8.212/91 (contribuição do segurado).'],
+    'IREM-ACD' => ['grupo' => 'Informativo', 'oficial' => 'Remuneração possui parcela de Acordo, Convenção ou Dissídio Coletivo.',
+        'curto' => 'Parte da remuneração vem de acordo, convenção ou dissídio coletivo.',
+        'sig' => 'A competência tem um valor extra, lançado em separado, decorrente de acordo, convenção ou dissídio coletivo. Por isso o mesmo mês pode aparecer duas vezes na lista, com valores diferentes.',
+        'imp' => 'As duas parcelas somam o salário de contribuição do mês. Se uma delas estiver errada ou ausente, o total muda.',
+        'conf' => ['Some as parcelas da competência e compare com o consolidado do extrato.', 'Confira se o valor extra tem relação com reajuste retroativo da categoria.'],
+        'base' => 'Lei 8.212/91, art. 28 (salário de contribuição).'],
+    'AVRC-DEF' => ['grupo' => 'Informativo', 'oficial' => 'Acerto confirmado pelo INSS.',
+        'curto' => 'O INSS confirmou o acerto feito no registro.',
+        'sig' => 'O dado foi corrigido a pedido e o INSS confirmou o acerto. É um indicador favorável: mostra que a informação passou por validação.',
+        'imp' => 'Dados com acerto confirmado tendem a gerar menos dúvida no cálculo do benefício.',
+        'conf' => ['Veja se o acerto cobre todo o período que você pediu.', 'Guarde o protocolo do pedido e os documentos enviados.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'IVIN-PROC-TRAB' => ['grupo' => 'Pendência', 'oficial' => 'Vínculo possui Processo Trabalhista.',
+        'curto' => 'O vínculo foi incluído ou alterado por processo trabalhista.',
+        'sig' => 'O registro do vínculo, ou parte dele, tem origem em uma ação trabalhista. O INSS costuma tratar esses dados com cautela até confirmar a base documental.',
+        'imp' => 'Vínculos reconhecidos em juízo podem exigir prova material do período e das verbas, e as contribuições devem ter sido recolhidas.',
+        'conf' => ['Guarde sentença, acordo, cálculos de liquidação e guias das contribuições.', 'Confira se as competências e valores lançados batem com a decisão.', 'Veja se há outros indicadores no mesmo vínculo.'],
+        'base' => 'Lei 8.213/91, art. 55, § 3º (início de prova material); Decreto 3.048/99, arts. 19 a 19-F.'],
+    'IREC-MEI' => ['grupo' => 'Informativo', 'oficial' => 'Indica que a contribuição da competência foi recolhida com código MEI.',
+        'curto' => 'Contribuição recolhida como Microempreendedor Individual.',
+        'sig' => 'A competência foi paga pela guia do MEI, com alíquota reduzida sobre o salário mínimo.',
+        'imp' => 'A contribuição reduzida dá acesso a parte dos benefícios, e para alguns deles, como a aposentadoria por tempo de contribuição, a lei exige complementação.',
+        'conf' => ['Confira se todas as competências do período aparecem pagas.', 'Verifique se houve complementação quando o benefício pretendido exige.'],
+        'base' => 'LC 123/2006, art. 18-A (confira os parágrafos sobre complementação).'],
+    'IREC-LC123' => ['grupo' => 'Informativo', 'oficial' => 'Recolhimento no Plano Simplificado de Previdência Social (LC 123/2006).',
+        'curto' => 'Recolhimento no plano simplificado de previdência.',
+        'sig' => 'A contribuição foi paga em alíquota reduzida, no plano simplificado previsto na LC 123/2006. Costuma aparecer junto com IREC-MEI nos recolhimentos do microempreendedor.',
+        'imp' => 'Esse plano não dá acesso a todos os benefícios sem complementação. O que conta depende do benefício pedido.',
+        'conf' => ['Veja qual benefício você pretende e se ele exige complementar a contribuição.', 'Confira as competências e as datas de pagamento.'],
+        'base' => 'LC 123/2006; Lei 8.212/91, art. 21.'],
+    'PREM-EXT' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Remuneração informada fora do prazo.',
+        'sig' => 'A remuneração da competência chegou ao CNIS depois do prazo normal de informação, por exemplo por declaração tardia do empregador.',
+        'imp' => 'Informações extemporâneas podem exigir documentos que as sustentem antes de serem aceitas em cálculos.',
+        'conf' => ['Reúna holerites, recibos e a CTPS do período.', 'Peça ao empregador a retificação ou a comprovação, se for o caso.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'PEXT' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Vínculo registrado fora do prazo.',
+        'sig' => 'O vínculo foi inserido no CNIS depois do prazo, em vez de ter sido informado na época pelo empregador.',
+        'imp' => 'O INSS pode pedir prova do vínculo, como CTPS, ficha de registro e recibos, para considerar o período.',
+        'conf' => ['Junte CTPS, contrato, ficha de registro e comprovantes de pagamento.', 'Verifique se as datas do vínculo estão corretas.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F; Lei 8.213/91, art. 55.'],
+    'PREC-MENOR-MIN' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Contribuição abaixo do salário mínimo.',
+        'sig' => 'O recolhimento da competência ficou abaixo do mínimo exigido para a categoria do segurado.',
+        'imp' => 'A competência pode não ser reconhecida como contribuição enquanto não houver complementação.',
+        'conf' => ['Compare o valor pago com o salário mínimo da competência.', 'Veja se ainda é possível complementar e dentro de que regras.'],
+        'base' => 'Lei 8.212/91, art. 28 e art. 21; EC 103/2019, art. 29.'],
+    'PREM-FVIN' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Remuneração depois do fim do vínculo.',
+        'sig' => 'Há remuneração em competência posterior à data de término do vínculo.',
+        'imp' => 'Pode ser verba rescisória lançada em mês seguinte, ou erro na data de saída. A diferença muda o tempo contado.',
+        'conf' => ['Confira a data de rescisão na CTPS e no termo de rescisão.', 'Veja se o valor posterior é de verbas finais.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'PREM-IVIN' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Remuneração antes do início do vínculo.',
+        'sig' => 'Há remuneração em competência anterior à data de admissão registrada.',
+        'imp' => 'Costuma indicar data de admissão lançada errada, o que pode reduzir o tempo do vínculo.',
+        'conf' => ['Confira a data de admissão na CTPS e na ficha de registro.', 'Peça a retificação ao empregador, se a data estiver errada.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'PADM-EMPR' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Admissão anterior ao início de atividade do empregador.',
+        'sig' => 'A data de admissão é anterior à data de início de atividade do empregador no cadastro.',
+        'imp' => 'A divergência pode vir do cadastro do empregador ou da data de admissão, e o INSS pode exigir comprovação.',
+        'conf' => ['Compare a admissão com a data de abertura da empresa.', 'Guarde provas de que o trabalho ocorreu na data informada.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'PREM-EMPR' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Remuneração anterior ao início de atividade do empregador.',
+        'sig' => 'Há remuneração em competência anterior ao início de atividade do empregador no cadastro.',
+        'imp' => 'Pode ser erro no cadastro da empresa ou nas competências lançadas, e pede comprovação.',
+        'conf' => ['Verifique a data de abertura do empregador.', 'Reúna holerites e documentos do período.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'PRES-EMPR' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Rescisão anterior ao início de atividade do empregador.',
+        'sig' => 'A data de saída é anterior ao início de atividade do empregador no cadastro.',
+        'imp' => 'Aponta inconsistência entre o vínculo e o cadastro da empresa, e pode exigir comprovação.',
+        'conf' => ['Compare as datas do vínculo com as do cadastro da empresa.', 'Guarde o termo de rescisão e a CTPS.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'PEMP-CAD' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Dados cadastrais do empregador ausentes ou inconsistentes.',
+        'sig' => 'O cadastro do empregador tem informações faltando ou que não batem com as bases oficiais.',
+        'imp' => 'O vínculo pode ficar sem validação até o cadastro ser regularizado.',
+        'conf' => ['Confira o CNPJ ou CPF do empregador no vínculo.', 'Solicite a correção ao empregador ou ao INSS, com documentos.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+    'PREC-FACULTCONC' => ['grupo' => 'Pendência', 'oficial' => null,
+        'curto' => 'Contribuição facultativa junto com atividade obrigatória.',
+        'sig' => 'Há recolhimento como facultativo em competência em que também existe vínculo obrigatório com a Previdência.',
+        'imp' => 'O facultativo é para quem não exerce atividade obrigatória, então o recolhimento pode não ser reconhecido naquele mês.',
+        'conf' => ['Compare as competências do recolhimento com os vínculos ativos.', 'Veja se o recolhimento deveria ter sido na categoria de contribuinte individual.'],
+        'base' => 'Lei 8.213/91, arts. 11 e 13.'],
+    'IEAN' => ['grupo' => 'Informativo', 'oficial' => null,
+        'curto' => 'Exposição a agente nocivo informada pelo empregador.',
+        'sig' => 'O empregador informou que o trabalhador esteve exposto a agente nocivo à saúde na competência.',
+        'imp' => 'A informação pode ser relevante para o reconhecimento de tempo especial, que depende de comprovação adequada.',
+        'conf' => ['Peça o PPP e o laudo que embasam a informação.', 'Compare o período com o cargo e o local de trabalho.'],
+        'base' => 'Lei 8.213/91, arts. 57 e 58.'],
+    'PRPPS' => ['grupo' => 'Informativo', 'oficial' => null,
+        'curto' => 'Período em regime próprio de previdência.',
+        'sig' => 'O período está ligado a um regime próprio de previdência, como o de servidores públicos.',
+        'imp' => 'Para somar esse tempo ao do INSS, normalmente é preciso a certidão de tempo de contribuição.',
+        'conf' => ['Solicite a CTC ao órgão do regime próprio.', 'Evite contar o mesmo período nos dois regimes.'],
+        'base' => 'Lei 8.213/91, art. 94 (contagem recíproca).'],
+    'AEXT-VT' => ['grupo' => 'Informativo', 'oficial' => null,
+        'curto' => 'Correção de vínculo extemporâneo validada.',
+        'sig' => 'Indica que um vínculo extemporâneo passou por correção e foi validado pelo INSS.',
+        'imp' => 'Geralmente é um sinal favorável: o INSS aceitou os documentos que sustentam o vínculo.',
+        'conf' => ['Guarde o protocolo e os documentos do pedido.', 'Confira se datas e remunerações ficaram corretas.'],
+        'base' => 'Decreto 3.048/99, arts. 19 a 19-F.'],
+];
 
 // ---------- Funções ----------
 function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
@@ -103,6 +235,7 @@ function topo(string $titulo, string $desc, string $caminho, array $o = []): voi
     <nav class="menu" aria-label="Principal">
       <?php if (FERRAMENTA_PUBLICA): ?><a href="<?= e(u('/analise-cnis/')) ?>">Analisar CNIS</a><?php endif; ?>
       <a href="<?= e(u('/blog/')) ?>">Blog</a>
+      <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a>
       <a href="<?= e(u('/legislacao/')) ?>">Legislação</a>
       <a href="<?= e(u('/privacidade/')) ?>">Privacidade</a>
     </nav>
@@ -226,6 +359,14 @@ if ($rota === '/') {
   </section>
 
   <section class="faixa">
+    <h2>Indicadores do CNIS</h2>
+    <div class="texto">
+      <p>PSC-MEN-SM-EC103, IREM-INDPEND, PEXT e outros códigos que aparecem no extrato, com o que cada um significa e o que conferir.</p>
+      <a class="mais" href="<?= e(u('/indicadores/')) ?>">Ver os indicadores</a>
+    </div>
+  </section>
+
+  <section class="faixa">
     <h2>Legislação de referência</h2>
     <div class="texto">
       <p>Lei 8.213/91, Decreto 3.048/99 e IN PRES/INSS 128/2022, com links para as fontes oficiais.</p>
@@ -281,6 +422,80 @@ if ($rota === '/') {
     <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
     <?php anuncio(); ?>
     <a class="voltar" href="<?= e(u('/blog/')) ?>">Todos os artigos</a>
+  </article>
+</main>
+<?php
+    rodape();
+
+} elseif ($rota === '/indicadores') {
+    topo('Indicadores do CNIS: significado e o que conferir | ' . SITE_NOME, 'Lista dos indicadores do extrato do CNIS, como PSC-MEN-SM-EC103, IREM-INDPEND e PEXT, com o significado e o que conferir em cada um.', '/indicadores/');
+    ?>
+<main class="wrap pagina">
+  <h1>Indicadores do CNIS</h1>
+  <p class="lead texto">Os códigos que aparecem ao lado de vínculos e remunerações no extrato. Cada página explica o que o indicador quer dizer e o que conferir.</p>
+  <?php foreach (['Pendência' => 'Pendências', 'Informativo' => 'Informativos'] as $g => $titulo): ?>
+    <h2 class="grupo-indic"><?= e($titulo) ?></h2>
+    <ul class="lista-indic">
+      <?php foreach ($INDICADORES as $cod => $i): if ($i['grupo'] !== $g) continue; ?>
+        <li><a href="<?= e(u('/indicadores/' . strtolower($cod) . '/')) ?>"><code class="cod"><?= e($cod) ?></code></a> <span><?= e($i['curto']) ?></span></li>
+      <?php endforeach; ?>
+    </ul>
+  <?php endforeach; ?>
+  <p class="meta texto">Os textos oficiais vêm da legenda do extrato e as demais explicações da prática previdenciária. Confira sempre a legenda do seu extrato e a legislação vigente.</p>
+</main>
+<?php
+    rodape();
+
+} elseif (preg_match('#^/indicadores/([a-z0-9-]+)$#', $rota, $m) && isset($INDICADORES[strtoupper($m[1])])) {
+    $cod = strtoupper($m[1]);
+    $i = $INDICADORES[$cod];
+    $caminho = '/indicadores/' . strtolower($cod) . '/';
+    $titulo = $cod . ' no CNIS: o que significa';
+    $desc = $cod . ': ' . $i['curto'] . ' Veja o que significa e o que conferir no extrato do CNIS.';
+    topo($titulo . ' | ' . SITE_NOME, $desc, $caminho, [
+        'artigo' => true,
+        'jsonld' => [
+            '@context' => 'https://schema.org', '@type' => 'Article',
+            'headline' => $titulo, 'description' => $desc,
+            'datePublished' => INDICADORES_REVISADOS, 'dateModified' => INDICADORES_REVISADOS,
+            'author' => ['@type' => 'Organization', 'name' => SITE_NOME],
+            'mainEntityOfPage' => SITE_URL . $caminho,
+        ],
+    ]);
+    $parecidos = array_slice(array_keys(array_filter($INDICADORES, fn($x, $k) => $k !== $cod && $x['grupo'] === $i['grupo'], ARRAY_FILTER_USE_BOTH)), 0, 4);
+    ?>
+<main class="wrap pagina">
+  <article class="artigo">
+    <p class="migalha"><a href="<?= e(u('/indicadores/')) ?>">Indicadores do CNIS</a></p>
+    <h1><code class="cod"><?= e($cod) ?></code> no CNIS: o que significa</h1>
+    <p class="meta"><?= e($i['grupo']) ?>. Revisado em <?= e(data_br(INDICADORES_REVISADOS)) ?>.</p>
+    <p class="lead"><?= e($i['curto']) ?></p>
+    <?php if ($i['oficial']): ?>
+      <p class="oficial"><strong>Legenda do extrato:</strong> <?= e($i['oficial']) ?></p>
+    <?php else: ?>
+      <p class="oficial">Este código nem sempre vem explicado na legenda do extrato. A descrição abaixo segue a prática previdenciária, então confira também a legenda do seu documento.</p>
+    <?php endif; ?>
+    <h2>O que significa</h2>
+    <p><?= e($i['sig']) ?></p>
+    <h2>Por que importa</h2>
+    <p><?= e($i['imp']) ?></p>
+    <h2>O que conferir</h2>
+    <ul>
+      <?php foreach ($i['conf'] as $c): ?><li><?= e($c) ?></li><?php endforeach; ?>
+    </ul>
+    <h2>Base normativa</h2>
+    <p><?= e($i['base']) ?> Veja os links oficiais em <a href="<?= e(u('/legislacao/')) ?>">Legislação</a>; os textos mudam, então confira a versão vigente.</p>
+    <?php if ($parecidos): ?>
+      <h2>Veja também</h2>
+      <ul class="lista-indic">
+        <?php foreach ($parecidos as $k): ?>
+          <li><a href="<?= e(u('/indicadores/' . strtolower($k) . '/')) ?>"><code class="cod"><?= e($k) ?></code></a> <span><?= e($INDICADORES[$k]['curto']) ?></span></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
+    <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
+    <?php anuncio(); ?>
+    <a class="voltar" href="<?= e(u('/indicadores/')) ?>">Todos os indicadores</a>
   </article>
 </main>
 <?php
@@ -378,7 +593,8 @@ if ($rota === '/') {
 
 } elseif ($rota === '/sitemap.xml') {
     header('Content-Type: application/xml; charset=utf-8');
-    $urls = [['/', null], ['/blog/', null], ['/legislacao/', null], ['/privacidade/', null]];
+    $urls = [['/', null], ['/blog/', null], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', null], ['/privacidade/', null]];
+    foreach (array_keys($INDICADORES) as $k) $urls[] = ['/indicadores/' . strtolower($k) . '/', INDICADORES_REVISADOS];
     if (FERRAMENTA_PUBLICA) $urls[] = ['/analise-cnis/', null];
     foreach (publicados() as $p) $urls[] = ['/blog/' . $p['slug'] . '/', $p['revisado'] ?? $p['data']];
     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";

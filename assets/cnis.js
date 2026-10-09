@@ -45,6 +45,25 @@
     'IREC-LC123': ['info', 'recolhimento no Plano Simplificado de Previdência Social (LC 123/2006)']
   };
 
+  // Salário mínimo nacional por competência: [ano, mês de início da vigência, valor]. Conferir antes de usar em peça.
+  var MINIMOS = [
+    [1994, 7, 64.79], [1994, 9, 70], [1995, 5, 100], [1996, 5, 112], [1997, 5, 120], [1998, 5, 130], [1999, 5, 136],
+    [2000, 4, 151], [2001, 4, 180], [2002, 4, 200], [2003, 4, 240], [2004, 5, 260], [2005, 5, 300], [2006, 4, 350],
+    [2007, 4, 380], [2008, 3, 415], [2009, 2, 465], [2010, 1, 510], [2011, 1, 540], [2011, 3, 545], [2012, 1, 622],
+    [2013, 1, 678], [2014, 1, 724], [2015, 1, 788], [2016, 1, 880], [2017, 1, 937], [2018, 1, 954], [2019, 1, 998],
+    [2020, 1, 1039], [2020, 2, 1045], [2021, 1, 1100], [2022, 1, 1212], [2023, 1, 1302], [2023, 5, 1320],
+    [2024, 1, 1412], [2025, 1, 1518], [2026, 1, 1621]
+  ];
+  var EC103 = 2019 * 12 + 10; // competência 11/2019: a EC 103/2019 passou a valer em 13/11/2019
+
+  // Carência (Lei 8.213/91, art. 25), em número de contribuições mensais.
+  var LACUNA_MINIMA = 7; // dias; intervalos menores são troca normal de emprego
+  var CARENCIAS = [
+    ['Auxílio por incapacidade temporária e aposentadoria por incapacidade permanente', 12],
+    ['Salário-maternidade (contribuinte individual, facultativa e segurada especial)', 10],
+    ['Aposentadoria por idade, por tempo de contribuição e especial', 180]
+  ];
+
   var RE_IND = /\b(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|IREC|IREM|IVIN|ISE|AEXTV|AEXT|AVRC|ACNIS|IGFIP)(?:-[A-Z0-9]+)+\b|\b(?:IEAN|PEXT|PRPPS|ACNISVR)\b/g;
   var RE_SO_IND = /^(?:(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|IREC|IREM|IVIN|ISE|AEXTV|AEXT|AVRC|ACNIS|IGFIP)(?:-[A-Z0-9]+)+|IEAN|PEXT|PRPPS|ACNISVR)(?:[\s,]+(?:(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|IREC|IREM|IVIN|ISE|AEXTV|AEXT|AVRC|ACNIS|IGFIP)(?:-[A-Z0-9]+)+|IEAN|PEXT|PRPPS|ACNISVR))*$/;
   var RE_DATA = /\b\d{2}\/\d{2}\/\d{4}\b/g;
@@ -108,7 +127,7 @@
     'Indicadores:',
     'Remunerações',
     'Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração',
-    '08/2010 500,00 09/2010 500,00 10/2010 500,00',
+    '08/2010 600,00 09/2010 600,00 10/2010 600,00',
     'Matrícula do',
     'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim',
     '5 1.234.567.890-1 33.444.555/0001-66 LOJA GAMA LTDA Empregado 01/02/2020 15/05/2020',
@@ -183,15 +202,31 @@
     return partes.join(', ');
   }
 
+  // Salário mínimo vigente na competência (índice de mês); null antes de 07/1994.
+  function minimoDe(k) {
+    var v = null;
+    MINIMOS.forEach(function (m) { if (mesDe(m[0], m[1]) <= k) v = m[2]; });
+    return v;
+  }
+
   // 1234.5 -> "1.234,50"
   function formatarValor(n) {
     var p = (Math.round(n * 100) / 100).toFixed(2).split('.');
     return p[0].replace(/\B(?=(\d{3})+$)/g, '.') + ',' + p[1];
   }
 
+  // Dias -> "1 ano, 2 meses e 3 dias" sem as partes zeradas (365 dias por ano, 30 por mês).
+  function duracaoCurta(dias) {
+    var a = Math.floor(dias / 365), r = dias % 365, m = Math.min(11, Math.floor(r / 30)), d = r - m * 30, p = [];
+    if (a) p.push(a + (a === 1 ? ' ano' : ' anos'));
+    if (m) p.push(m + (m === 1 ? ' mês' : ' meses'));
+    if (d || !p.length) p.push(d + (d === 1 ? ' dia' : ' dias'));
+    return p.length > 1 ? p.slice(0, -1).join(', ') + ' e ' + p[p.length - 1] : p[0];
+  }
+
   // Dias -> "1 ano, 1 mês e 3 dias" (365 dias por ano, 30 por mês).
   function formatarDuracao(dias) {
-    var a = Math.floor(dias / 365), r = dias % 365, m = Math.floor(r / 30), d = r % 30;
+    var a = Math.floor(dias / 365), r = dias % 365, m = Math.min(11, Math.floor(r / 30)), d = r - m * 30;
     return a + (a === 1 ? ' ano, ' : ' anos, ') + m + (m === 1 ? ' mês e ' : ' meses e ') + d + (d === 1 ? ' dia' : ' dias');
   }
 
@@ -429,7 +464,7 @@
       });
       Object.keys(presentes).forEach(function (k) {
         ok[k] = true;
-        (valores[k] = valores[k] || []).push({ seq: v.seq, nome: v.nome, valor: Math.round(somas[k] * 100) / 100 });
+        (valores[k] = valores[k] || []).push({ seq: v.seq, nome: v.nome, tipo: v.tipo, valor: Math.round(somas[k] * 100) / 100 });
       });
       item.comRemuneracao = Object.keys(presentes).length;
 
@@ -472,6 +507,21 @@
       if (semValor.length) nova('atencao', rotulo, 'Competência sem valor lido: ' + textoFaixas(semValor, 6) + '.');
       Object.keys(indic).forEach(function (c) { avisoIndicador(rotulo, c, indic[c]); });
 
+      // Valor muito diferente dos vizinhos. Os meses de início e fim do vínculo ficam de fora (podem ser proporcionais).
+      var mesesVal = Object.keys(somas).map(Number).filter(function (k) { return somas[k] > 0 && k > mIni && k < mFim; }).sort(function (a, b) { return a - b; });
+      var dif = [];
+      mesesVal.forEach(function (k, i) {
+        var viz = mesesVal.slice(Math.max(0, i - 3), i).concat(mesesVal.slice(i + 1, i + 4)).map(function (x) { return somas[x]; }).sort(function (a, b) { return a - b; });
+        if (viz.length < 4) return;
+        var med = (viz[(viz.length - 1) >> 1] + viz[viz.length >> 1]) / 2;
+        if (somas[k] >= 2 * med || somas[k] <= 0.5 * med) dif.push({ k: k, v: somas[k], med: med });
+      });
+      if (dif.length) {
+        nova('info', rotulo, 'Valor muito diferente dos meses vizinhos (pode ser erro de lançamento ou verba eventual): ' +
+          dif.slice(0, 5).map(function (x) { return rotuloMes(x.k) + ' (' + formatarValor(x.v) + ' contra cerca de ' + formatarValor(x.med) + ')'; }).join('; ') +
+          (dif.length > 5 ? ' e mais ' + (dif.length - 5) : '') + '.');
+      }
+
       if (semLeitura) return;
 
       // Salários faltantes: meses do vínculo sem remuneração (ou com valor zero).
@@ -506,12 +556,16 @@
 
     // Concomitância: uma nota por vínculo, listando os que começam depois e se sobrepõem.
     validos.forEach(function (a, i) {
-      var lista = [];
+      var lista = [], dup = [];
       for (var j = i + 1; j < validos.length; j++) {
         var b = validos[j];
         var s = Math.max(a.inicioOrd, b.inicioOrd), e = Math.min(a.fimOrd, b.fimOrd);
-        if (s <= e) lista.push('Seq. ' + b.seq + ' (' + (e - s + 1) + ' dias)');
+        if (s <= e) {
+          lista.push('Seq. ' + b.seq + ' (' + (e - s + 1) + ' dias)');
+          if (a.nome && a.nome === b.nome) dup.push('Seq. ' + b.seq);
+        }
       }
+      if (dup.length) nova('atencao', a.rotulo, 'Mesmo empregador em vínculos concomitantes (' + dup.join(', ') + '): possível duplicidade de registro.');
       if (lista.length) nova('info', a.rotulo, 'Período concomitante com ' + lista.join(', ') + '. O tempo é contado uma vez.');
     });
 
@@ -525,6 +579,75 @@
     });
     if (cI !== null) diasUnicos += cF - cI + 1;
     var diasBrutos = validos.reduce(function (t, v) { return t + v.dias; }, 0);
+
+    // ---- Salário mínimo, carência e lacunas ----
+    var tipoPorSeq = {};
+    itens.forEach(function (it) { tipoPorSeq[it.seq] = it.tipo || ''; });
+    var totais = {}, extremos = {};
+    Object.keys(valores).forEach(function (k) {
+      totais[k] = Math.round(valores[k].reduce(function (t, x) { return t + x.valor; }, 0) * 100) / 100;
+    });
+    validos.forEach(function (v) {
+      extremos[mesDe(v.inicio.y, v.inicio.m)] = true;
+      extremos[mesDe(v.fimContado.y, v.fimContado.m)] = true;
+    });
+    var abaixo = [], validas = 0;
+    Object.keys(totais).forEach(function (ks) {
+      var k = +ks, min = minimoDe(k);
+      if (min === null) return;
+      if (totais[k] + 0.004 >= min) { validas++; return; }
+      var ci = valores[k].every(function (x) { return /individual|facultativ/i.test(tipoPorSeq[x.seq] || ''); });
+      abaixo.push({
+        mes: k, total: totais[k], minimo: min, seqs: valores[k].map(function (x) { return x.seq; }),
+        ci: ci, proporcional: !ci && !!extremos[k], posEC103: k >= EC103
+      });
+    });
+    abaixo.sort(function (x, y) { return x.mes - y.mes; });
+    function mesesDe(f) { return abaixo.filter(f).map(function (a) { return a.mes; }); }
+    var gCI = mesesDe(function (a) { return a.ci; });
+    var gPos = mesesDe(function (a) { return !a.ci && !a.proporcional && a.posEC103; });
+    var gAnt = mesesDe(function (a) { return !a.ci && !a.proporcional && !a.posEC103; });
+    var gProp = mesesDe(function (a) { return a.proporcional; });
+    if (gCI.length) nova('atencao', '', 'Contribuinte individual ou facultativo com salário de contribuição abaixo do salário mínimo em ' + gCI.length + ' competência(s): ' + textoFaixas(gCI, 4) + '. Em regra a competência não conta sem complementação até o mínimo.');
+    if (gPos.length) nova('atencao', '', 'Valor total da competência abaixo do salário mínimo em ' + gPos.length + ' competência(s) a partir da EC 103/2019: ' + textoFaixas(gPos, 4) + '. Pode ser complementada, utilizada ou agrupada com outras competências.');
+    if (gAnt.length) nova('info', '', 'Valor total da competência abaixo do salário mínimo da época em ' + gAnt.length + ' competência(s) antes da EC 103/2019: ' + textoFaixas(gAnt, 4) + '. O efeito depende da categoria do segurado; confira.');
+    if (gProp.length) nova('info', '', 'Valor abaixo do mínimo em mês de início ou fim de vínculo (' + gProp.length + '): ' + textoFaixas(gProp, 4) + '. Pode ser proporcional aos dias trabalhados.');
+
+    var carencia = null;
+    if (!semLeitura) {
+      var antes94 = {};
+      validos.forEach(function (v) {
+        var a = mesDe(v.inicio.y, v.inicio.m), b = Math.min(mesDe(v.fimContado.y, v.fimContado.m), INICIO_PBC - 1);
+        for (var k = a; k <= b; k++) antes94[k] = true;
+      });
+      var todas = Object.keys(ok).length;
+      carencia = {
+        validas: validas, todas: todas, mesesAntes94: Object.keys(antes94).length,
+        linhas: CARENCIAS.map(function (c) {
+          return { nome: c[0], exigido: c[1], faltamValidas: Math.max(0, c[1] - validas), faltamTodas: Math.max(0, c[1] - todas) };
+        })
+      };
+    }
+
+    // Lacunas: períodos sem vínculo, benefício nem evento, entre o primeiro registro e hoje.
+    var cob = validos.map(function (v) { return { ini: v.inicioOrd, fim: v.fimOrd, seq: v.seq }; });
+    lido.beneficios.concat(lido.eventos).forEach(function (b) {
+      if (!b.inicio) return;
+      var f = b.fim ? Math.max(b.fim.ord, b.inicio.ord) : (b.tipoRegistro === 'beneficio' ? Math.max(hojeOrd, b.inicio.ord) : b.inicio.ord);
+      cob.push({ ini: b.inicio.ord, fim: f, seq: b.seq });
+    });
+    cob.sort(function (x, y) { return x.ini - y.ini; });
+    var lacunas = [];
+    if (cob.length) {
+      var cur = cob[0].fim, curSeq = cob[0].seq;
+      cob.slice(1).forEach(function (c) {
+        if (c.ini - 1 - cur >= LACUNA_MINIMA) lacunas.push({ ini: dataDeOrd(cur + 1), fim: dataDeOrd(c.ini - 1), dias: c.ini - 1 - cur, antes: curSeq, depois: c.seq, atual: false });
+        if (c.fim > cur) { cur = c.fim; curSeq = c.seq; }
+      });
+      if (hojeOrd - cur >= LACUNA_MINIMA) lacunas.push({ ini: dataDeOrd(cur + 1), fim: dataDeOrd(hojeOrd), dias: hojeOrd - cur, antes: curSeq, depois: null, atual: true });
+    }
+    var longas = lacunas.filter(function (g) { return g.dias > 365; }).length;
+    if (longas) nova('info', '', longas + ' período(s) com mais de 12 meses sem vínculo nem benefício (veja "Lacunas entre vínculos"). Pode haver perda da qualidade de segurado, salvo prorrogação do período de graça (art. 15 da Lei 8.213/91).');
 
     // Mapa de competências
     var mapa = {};
@@ -551,6 +674,9 @@
       eventos: evs,
       mapa: mapa,
       valores: valores,
+      abaixoMinimo: abaixo,
+      carencia: carencia,
+      lacunas: lacunas,
       resumo: {
         totalVinculos: itens.length,
         validos: validos.length,
@@ -565,6 +691,8 @@
         infos: cont.info,
         beneficios: bens.length,
         eventos: evs.length,
+        abaixoMinimo: abaixo.length,
+        lacunasLongas: longas,
         semRemuneracoes: semLeitura
       }
     };
@@ -596,6 +724,15 @@
         l.push('- ' + f.rotulo + ': ' + f.meses + ' mês(es) - ' + f.faixas.map(textoFaixa).join(', ') + (extra.length ? ' (' + extra.join('; ') + ')' : ''));
       });
     }
+    if (r.carencia) {
+      l.push('', 'Carência: ' + r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo; ' + r.carencia.todas + ' com qualquer remuneração.');
+      r.carencia.linhas.forEach(function (c) { l.push('- ' + c.nome + ' (' + c.exigido + '): faltam ' + c.faltamValidas + ' (' + c.faltamTodas + ' contando todas)'); });
+    }
+    if (r.lacunas.length) {
+      l.push('', 'Lacunas sem vínculo nem benefício:');
+      r.lacunas.forEach(function (g) { l.push('- ' + rotuloData(g.ini) + ' a ' + rotuloData(g.fim) + ': ' + duracaoCurta(g.dias) + (g.atual ? ' (até hoje)' : '')); });
+    }
+    if (r.abaixoMinimo.length) l.push('', 'Competências abaixo do salário mínimo: ' + r.abaixoMinimo.length);
     if (r.pendencias.length) {
       l.push('', 'Pendências:');
       r.pendencias.forEach(function (p) { l.push('- [' + p.sev + '] ' + (p.ref ? p.ref + ': ' : '') + p.msg); });
@@ -762,6 +899,44 @@
     }
     saida.appendChild(sf);
 
+    var sa = sec('Abaixo do salário mínimo', 'Competências cujo valor total (somando os vínculos do mês) ficou abaixo do mínimo vigente. Tabela de mínimos embutida; confira antes de usar em peça.');
+    if (s.semRemuneracoes) {
+      sa.appendChild(el('p', 'vazio-msg', 'Não avaliado: o documento não traz remunerações nem recolhimentos.'));
+    } else if (r.abaixoMinimo.length) {
+      sa.appendChild(tabela(['Competência', 'Valor total', 'Mínimo da época', 'Origem', 'Observação'], r.abaixoMinimo.slice(0, 80).map(function (a) {
+        return [rotuloMes(a.mes), formatarValor(a.total), formatarValor(a.minimo), 'Seq. ' + a.seqs.join(', '),
+          a.ci ? 'Contribuinte individual ou facultativo' : a.proporcional ? 'Início ou fim de vínculo: pode ser proporcional' : a.posEC103 ? 'Pode ser complementada ou agrupada (EC 103/2019)' : 'Antes da EC 103/2019'];
+      })));
+      if (r.abaixoMinimo.length > 80) sa.appendChild(el('p', 'dica', 'Mostrando 80 de ' + r.abaixoMinimo.length + ' competências.'));
+    } else {
+      sa.appendChild(el('p', 'vazio-msg', 'Nenhuma competência abaixo do salário mínimo.'));
+    }
+    saida.appendChild(sa);
+
+    var sl = sec('Lacunas entre vínculos', 'Períodos de 7 dias ou mais sem vínculo, benefício nem evento, do primeiro registro até hoje. Benefícios sem data de início ficam fora.');
+    if (r.lacunas.length) {
+      sl.appendChild(tabela(['Período', 'Duração', 'Entre', 'Observação'], r.lacunas.map(function (g) {
+        return [rotuloData(g.ini) + ' a ' + rotuloData(g.fim), duracaoCurta(g.dias),
+          g.atual ? 'Seq. ' + g.antes + ' e hoje' : 'Seq. ' + g.antes + ' e Seq. ' + g.depois,
+          (g.dias > 365 ? 'Mais de 12 meses: verifique a qualidade de segurado. ' : '') + (g.atual ? 'Até hoje.' : '')];
+      })));
+    } else {
+      sl.appendChild(el('p', 'vazio-msg', 'Nenhuma lacuna encontrada.'));
+    }
+    saida.appendChild(sl);
+
+    var sc = sec('Carência', 'Contagem de competências, não de tempo. Confira cada caso: não considera períodos anteriores a 07/1994, benefícios intercalados nem a regra de 1/3 após perda da qualidade de segurado (art. 27-A da Lei 8.213/91).');
+    if (r.carencia) {
+      sc.appendChild(tabela(['Benefício', 'Exigido', 'Faltam (valor ≥ mínimo)', 'Faltam (qualquer remuneração)'], r.carencia.linhas.map(function (c) {
+        return [c.nome, String(c.exigido), String(c.faltamValidas), String(c.faltamTodas)];
+      })));
+      sc.appendChild(el('p', 'dica', r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo e ' + r.carencia.todas + ' com qualquer remuneração.' +
+        (r.carencia.mesesAntes94 ? ' Há ' + r.carencia.mesesAntes94 + ' mês(es) de vínculo antes de 07/1994 sem remuneração no CNIS, que podem contar se comprovados.' : '')));
+    } else {
+      sc.appendChild(el('p', 'vazio-msg', 'Não avaliada: o documento não traz remunerações nem recolhimentos.'));
+    }
+    saida.appendChild(sc);
+
     var sp = sec('Pendências');
     if (r.pendencias.length) {
       var lp = el('ul', 'lista-pend');
@@ -898,7 +1073,7 @@
 
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
-    formatarDuracao: formatarDuracao, formatarValor: formatarValor, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
+    formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
     resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

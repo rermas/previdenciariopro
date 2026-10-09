@@ -15,6 +15,10 @@ tests/cnis.test.js   testes da análise (node tests/cnis.test.js)
 .htaccess            HTTPS, URLs limpas, bloqueio de posts/ e tests/
 ```
 
+## Indicadores do CNIS
+
+Cada indicador tem uma página em `/indicadores/{codigo}/` (lista em `/indicadores/`), geradas do array `$INDICADORES` em `index.php`. Textos marcados com "Legenda do extrato" foram conferidos em extratos reais; os demais seguem a prática previdenciária e devem ser revisados por um advogado antes de divulgar. Para acrescentar um indicador, basta incluir uma entrada no array; ele entra no sitemap sozinho.
+
 ## Antes de publicar
 
 1. Em `index.php`, ajuste `SITE_URL` para o domínio final. Faça o mesmo em `robots.txt`.
@@ -38,6 +42,7 @@ Cada artigo é uma entrada em `$POSTS` (`index.php`) e um arquivo `posts/{slug}.
 - PDFs escaneados (imagem) não têm texto: a pessoa precisa colar o texto do extrato.
 - Lê o layout do Portal CNIS: remunerações em grade de 3 colunas, 13º em seção separada (não entra na contagem), benefícios e eventos em tabela própria. Vínculos aparecem em ordem de data de início.
 - Aceita também o resumo "Relações Previdenciárias" (sem remunerações): conta o tempo, lista benefícios e indicadores, usa "Últ. Remun." para apontar possíveis meses finais sem salário e avisa que os faltantes só podem ser avaliados no Extrato completo. Recolhimentos de contribuinte individual ("Contribuições") usam o salário de contribuição.
+- Seções novas: competências abaixo do salário mínimo (tabela de mínimos em `MINIMOS`, a conferir), lacunas de 7 dias ou mais sem vínculo nem benefício, carência por competências (12, 10 e 180) e alertas de valor muito diferente dos vizinhos e de empregador duplicado.
 - Vínculo sem data de fim é contado até o fim do mês da última remuneração (nunca depois de hoje) e recebe uma nota.
 - Mês faltante dentro de período de benefício por incapacidade, ou com remuneração em outro vínculo, é sinalizado como tal.
 - Meses anteriores a 07/1994 sem remuneração não entram na contagem de faltantes, porque o CNIS costuma não trazer salários desse período.
