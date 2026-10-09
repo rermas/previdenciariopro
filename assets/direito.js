@@ -461,6 +461,46 @@
     cl.push('Uma única contribuição, mesmo paga depois do fato gerador, não garante o benefício por si só.');
     if (atrasosAtivos.length) res.carencia.linhas.push('Há recolhimentos em atraso (' + atrasosAtivos.length + '): verifique se são válidos para demonstrar filiação e cobertura na situação analisada.');
 
+    // Sem carência como CI/MEI/facultativa: confere se algum vínculo de empregado anterior ainda mantém a qualidade (desempregada, sem carência).
+    var classeEfet = null;
+    if (res.carencia.status === 'nao_cumprida' && ['ci', 'mei', 'facultativa'].indexOf(classeCar) >= 0) {
+      var empC = null;
+      itens.forEach(function (v) {
+        var cl2 = classes[v.seq];
+        if (!(DE_EMPREGO[cl2] || cl2 === 'rpps') || v.inicio.ord > fgOrd) return;
+        var fimC = null, mcC = null, orig = null;
+        if (v.fim && v.fim.ord < fgOrd) { fimC = v.fim.ord; mcC = mesDe(v.fim); orig = 'vínculo encerrado em ' + rotulo(v.fim); }
+        else if (!v.fim) {
+          var u2 = ultimaCompetencia(v), ref2 = u2 >= 0 ? u2 : mesDe(v.inicio);
+          if (fgMes - ref2 >= 3) { fimC = C.ultimoDiaDoMes(ref2); mcC = ref2; orig = 'vínculo sem data de fim, tratado como encerrado em ' + rotuloMes(ref2); }
+        }
+        if (fimC !== null && (!empC || fimC > empC.fim)) empC = { fim: fimC, mc: mcC, seq: v.seq, nome: v.nome, classe: cl2, origem: orig };
+      });
+      if (empC) {
+        var sqE = sequencia(analise, classes, empC.mc, !!entrada.desemprego);
+        var e120 = sqE.total > 120;
+        var ateE = ultimoDiaDaQualidade(empC.mc, e120 ? 24 : 12);
+        var ateEDes = ultimoDiaDaQualidade(empC.mc, (e120 ? 24 : 12) + 12);
+        var porNormal = fgOrd <= ateE, porSeguro = !porNormal && fgOrd <= ateEDes;
+        if (porNormal || (porSeguro && entrada.desemprego)) {
+          classeEfet = empC.classe;
+          usada = 'desempregada'; res.categoria.usada = usada;
+          res.categoria.motivo = 'Pelos recolhimentos como ' + CLASSES[classeCar].toLowerCase() + ' não havia carência. O benefício é analisado pela qualidade de desempregada, com base no vínculo de empregado (Seq. ' + empC.seq + ', ' + empC.origem + '), que ainda mantém a qualidade e não exige carência.';
+          q.status = porNormal ? 'confirmada' : 'provavel';
+          q.rotulo = porNormal ? 'Confirmada pelos dados disponíveis' : 'Provável, dependendo de validação documental';
+          q.linhas.push('Concedido pelo desemprego: como ' + CLASSES[classeCar].toLowerCase() + ' não havia carência, mas o vínculo de empregado da Seq. ' + empC.seq + ' (' + empC.origem + ') mantém a qualidade até ' + rotulo(dObj(porNormal ? ateE : ateEDes)) + (porNormal ? ' (período de graça' + (e120 ? ' de 24 meses, com mais de 120 contribuições' : ' de 12 meses') + ')' : ' (prazo normal mais 12 meses de seguro-desemprego/SINE)') + '. A carência não é exigida de quem tem essa filiação.');
+          if (porSeguro) doc('Comprovante do seguro-desemprego ou registro no SINE');
+          doc('CTPS e termo de rescisão do vínculo de empregado da Seq. ' + empC.seq);
+          res.concessaoDesemprego = { vinculo: empC.seq, categoriaAnterior: classeCar, ate: dObj(porNormal ? ateE : ateEDes), porSeguro: porSeguro };
+          res.carencia.status = 'dispensada'; res.carencia.rotulo = 'Dispensada (concedido pela qualidade de desempregada)';
+          res.carencia.linhas.unshift('Como ' + CLASSES[classeCar].toLowerCase() + ', as ' + validasAte + ' contribuição(ões) válida(s) não completam a carência de ' + CARENCIA + '. O benefício passa a ser analisado como desempregada, sem carência.');
+        } else if (porSeguro) {
+          res.carencia.linhas.push('Com seguro-desemprego/SINE, o vínculo de empregado da Seq. ' + empC.seq + ' (' + empC.origem + ') manteria a qualidade até ' + rotulo(dObj(ateEDes)) + ', e o benefício poderia ser concedido como desempregada, sem carência. Marque seguro-desemprego/SINE se houve.');
+          doc('Comprovante do seguro-desemprego ou registro no SINE, se houver');
+        }
+      }
+    }
+
     // ----- Etapa 5: validade do CNIS -----
     var relevantes = ativos.map(function (a) { return a.item; });
     var ultimoSeq = q.graca ? null : null;
@@ -521,7 +561,7 @@
     var viavel = (q.status === 'confirmada' || q.status === 'provavel' || q.status === 'indeterminada') && res.carencia.status !== 'nao_cumprida';
     var vl = { calculado: false, linhas: [] };
     res.valor = vl;
-    var classeValor = (usada && usada !== 'desempregada') ? usada : (q.graca ? q.graca.classe : null);
+    var classeValor = usada === 'desempregada' ? (classeEfet || (q.graca ? q.graca.classe : null)) : (usada || (q.graca ? q.graca.classe : null));
     if (!viavel) {
       vl.linhas.push('Valor não calculado: a qualidade de segurado não foi demonstrada pelos dados.');
     } else if (analise.resumo.semRemuneracoes) {
@@ -610,6 +650,7 @@
       conc = { status: 'prescrito', rotulo: 'Sem direito: prescrição', texto: 'O fato gerador (' + rotulo(fgD) + ') tem mais de 5 anos: o prazo para requerer terminou em ' + rotulo(fg.prazoRequerer) + ' (art. 357, § 5º, da IN 128/2022). Pelos dados informados, o benefício está prescrito. A análise abaixo é apenas informativa.' };
       pend = [];
     }
+    if (res.concessaoDesemprego && conc.status !== 'prescrito') conc.texto += ' Observação: concedido pela qualidade de desempregada, pois pelos recolhimentos como ' + CLASSES[res.concessaoDesemprego.categoriaAnterior].toLowerCase() + ' não havia carência.';
     conc.pendencias = pend;
     res.conclusao = conc;
     return res;

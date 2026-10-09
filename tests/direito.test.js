@@ -120,11 +120,18 @@ assert.equal(r.carencia.status, 'nao_cumprida', 'sem seguro-desemprego: houve pe
 assert.equal(r.conclusao.status, 'nao_demonstrado');
 assert.match(r.qualidade.linhas.join(' '), /Com seguro-desemprego\/SINE, a qualidade desse vínculo iria até 15\/03\/2021/);
 r = D.salarioMaternidade(C.analisar(rex, { y: 2021, m: 6, d: 1 }), { tipo: 'parto', data: '2021-02-01', desemprego: true }, { y: 2021, m: 6, d: 1 });
-assert.equal(r.categoria.usada, 'ci', 'a filiação do último recolhimento é a categoria');
-assert.equal(r.qualidade.status, 'confirmada');
 assert.doesNotMatch(r.qualidade.linhas.join(' '), /Interrupções.*01\/2019/, 'o seguro-desemprego evita a perda entre o vínculo e o CI');
-assert.equal(r.carencia.exigida, 10);
-assert.equal(r.carencia.status, 'nao_cumprida', 'sem a regra de 1/3, mas com 6 contribuições das 10 do CI');
-assert.match(r.qualidade.linhas.join(' '), /até 15\/03\/2021/);
+// Como CI não há carência (6 de 10), mas o vínculo de empregado ainda mantém a qualidade: concede como desempregada
+assert.equal(r.categoria.usada, 'desempregada');
+assert.equal(r.carencia.status, 'dispensada');
+assert.equal(r.concessaoDesemprego.categoriaAnterior, 'ci');
+assert.notEqual(r.conclusao.status, 'nao_demonstrado');
+assert.match(r.conclusao.texto, /Observação: concedido pela qualidade de desempregada/);
+assert.match(r.qualidade.linhas.join(' '), /Concedido pelo desemprego.*15\/03\/2021/);
+// Vínculo de empregado já vencido: continua sem direito, como CI
+r = D.salarioMaternidade(C.analisar(rex, { y: 2022, m: 6, d: 1 }), { tipo: 'parto', data: '2021-06-01', desemprego: true }, { y: 2022, m: 6, d: 1 });
+assert.equal(r.categoria.usada, 'ci');
+assert.equal(r.carencia.status, 'nao_cumprida');
+assert.equal(r.concessaoDesemprego, undefined);
 
 console.log('direito.test.js: ok');
