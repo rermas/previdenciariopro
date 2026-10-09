@@ -370,7 +370,7 @@
         }
         q.linhas.push('Sem vínculo ou recolhimento ativo na data. Última cobertura: Seq. ' + ultimo.seq + ' (' + ultimo.nome + '), ' + ultimo.origem + '.');
         if (notaFac) q.linhas.push(notaFac);
-        q.linhas.push('Categoria considerada: ' + (viaDes && viaDes.aplicado ? 'empregada (último vínculo, com seguro-desemprego/SINE), mesmo com contribuições posteriores como ' + CLASSES[ultimoOrig.classe].toLowerCase() : q.graca.categoria.toLowerCase()) + '. Prazo-base: ' + base + ' meses' + (facult ? ' (facultativa)' : ' (art. 15, II, da Lei 8.213/91)') + '.');
+        q.linhas.push('Categoria considerada: ' + q.graca.categoria.toLowerCase() + '. Prazo-base: ' + base + ' meses' + (facult ? ' (facultativa)' : ' (art. 15, II, da Lei 8.213/91)') + '.');
         q.linhas.push('Contagem: a qualidade se mantém até o vencimento da contribuição do mês seguinte ao fim do prazo (dia ' + DIA_VENCIMENTO + ', passando para o dia útil seguinte se cair em fim de semana): até ' + rotulo(dObj(ate)) + ' no prazo-base. Não é somar 12 meses à data da última contribuição.');
         if (!facult) {
           q.linhas.push('Contribuições seguidas sem perda da qualidade até a cessação: ' + sq.total + (sq.presumidos ? ' (inclui ' + sq.presumidos + ' mês(es) de vínculo anteriores a 07/1994, presumidos)' : '') + '. ' +
@@ -381,7 +381,7 @@
         if (indicioSeguro) q.linhas.push('O CNIS registra evento de seguro-desemprego (' + (indicioSeguro.inicio ? rotulo(indicioSeguro.inicio) : 's/d') + (indicioSeguro.fim ? ' a ' + rotulo(indicioSeguro.fim) : '') + '): é um indício de desemprego, mas não substitui o registro no órgão próprio.');
         var des = !!entrada.desemprego;
         if (viaDes) {
-          if (viaDes.aplicado) q.linhas.push('Com seguro-desemprego/SINE, o último vínculo de empregado (Seq. ' + viaDes.emp.seq + ', ' + viaDes.emp.origem + ') mantém a qualidade, pelo prazo normal mais 12 meses, até ' + rotulo(dObj(viaDes.ate)) + '. Por isso não houve perda da qualidade antes do retorno como ' + CLASSES[ultimoOrig.classe].toLowerCase() + '.');
+          if (viaDes.aplicado) q.linhas.push('Com seguro-desemprego/SINE, o último vínculo de empregado (Seq. ' + viaDes.emp.seq + ', ' + viaDes.emp.origem + ') mantém a qualidade, pelo prazo normal mais 12 meses, até ' + rotulo(dObj(viaDes.ate)) + '. Por isso não houve perda da qualidade antes do retorno como ' + CLASSES[ultimoOrig.classe].toLowerCase() + '. A categoria, a carência e o valor seguem a filiação do último recolhimento (' + CLASSES[ultimoOrig.classe].toLowerCase() + ').');
           else { q.linhas.push('Sem seguro-desemprego/SINE, houve perda da qualidade entre o vínculo de empregado (Seq. ' + viaDes.emp.seq + ') e o retorno como ' + CLASSES[ultimoOrig.classe].toLowerCase() + '. Com seguro-desemprego/SINE, a qualidade desse vínculo iria até ' + rotulo(dObj(viaDes.ate)) + ' e não haveria perda.'); doc('Comprovante do seguro-desemprego ou registro no SINE, se houver'); }
         }
         if (fgOrd <= prazoFinal) {
@@ -399,12 +399,9 @@
         }
         if (!entrada.categoria || entrada.categoria === 'auto') {
           var oc = ultimoOrig.classe;
-          if (viaDes && viaDes.aplicado && (q.status === 'confirmada' || q.status === 'provavel')) {
-            usada = 'desempregada'; desc.usada = usada; q.graca.classe = viaDes.emp.classe;
-            desc.motivo = 'Qualidade mantida pelo último vínculo de empregado (Seq. ' + viaDes.emp.seq + ') com a soma de 12 meses do seguro-desemprego/SINE; as contribuições posteriores como ' + CLASSES[oc].toLowerCase() + ' não interromperam a qualidade. Categoria considerada: desempregada em período de graça.';
-          } else if ((oc === 'ci' || oc === 'mei' || oc === 'facultativa') && (q.status === 'confirmada' || q.status === 'provavel')) {
+          if ((oc === 'ci' || oc === 'mei' || oc === 'facultativa') && (q.status === 'confirmada' || q.status === 'provavel')) {
             usada = oc; desc.usada = oc;
-            desc.motivo = 'Sem atividade na data, mas a qualidade se mantém e a última contribuição (Seq. ' + ultimoOrig.seq + ') foi como ' + CLASSES[oc].toLowerCase() + ': essa é a categoria considerada.';
+            desc.motivo = 'Sem atividade na data, mas a qualidade se mantém e a última contribuição (Seq. ' + ultimoOrig.seq + ') foi como ' + CLASSES[oc].toLowerCase() + ': a filiação do último recolhimento é a categoria considerada na análise, inclusive na carência e no valor.' + (viaDes && viaDes.aplicado ? ' O seguro-desemprego/SINE só evita a perda da qualidade entre o vínculo de empregado e esse retorno.' : '');
           } else if ((DE_EMPREGO[oc] || oc === 'rpps') && (!ultimoOrig.presumido || fgMes - ultimoOrig.mc > 2)) {
             usada = 'desempregada'; desc.usada = usada;
             desc.motivo = ultimoOrig.presumido
