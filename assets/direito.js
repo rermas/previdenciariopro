@@ -542,6 +542,10 @@
     else if (q.status === 'confirmada' || q.status === 'provavel') conc = { status: 'depende', rotulo: 'Direito depende de validação documental', texto: 'A qualidade de segurado é compatível com o CNIS, mas há pontos a validar antes de concluir.' };
     else if (q.status === 'indeterminada') conc = { status: 'depende', rotulo: 'Indeterminado por falta de informações', texto: 'O resultado depende de informação ou prova que não consta nos dados (como o desemprego involuntário).' };
     else conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado pelos dados', texto: 'Os dados do CNIS não demonstram a qualidade de segurado na data do fato gerador. Isso não é uma conclusão definitiva: outras provas podem alterar o resultado.' };
+    if (fg.prazoExcedido) {
+      conc = { status: 'prescrito', rotulo: 'Sem direito: prescrição', texto: 'O fato gerador (' + rotulo(fgD) + ') tem mais de 5 anos: o prazo para requerer terminou em ' + rotulo(fg.prazoRequerer) + ' (art. 357, § 5º, da IN 128/2022). Pelos dados informados, o benefício está prescrito. A análise abaixo é apenas informativa.' };
+      pend = [];
+    }
     conc.pendencias = pend;
     res.conclusao = conc;
     return res;

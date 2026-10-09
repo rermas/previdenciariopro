@@ -40,6 +40,8 @@ assert.equal(r.qualidade.status, 'nao_demonstrada');
 // Prazo de 5 anos
 r = rodar(v(1, 'EMP A', '01/03/2010'), { tipo: 'parto', data: '2020-01-10' });
 assert.equal(r.fatoGerador.prazoExcedido, true);
+assert.equal(r.conclusao.status, 'prescrito');
+assert.equal(r.conclusao.pendencias.length, 0);
 r = rodar(v(1, 'EMP A', '01/03/2010'), { tipo: 'aborto', data: '2026-01-10' });
 assert.equal(r.fatoGerador.duracaoDias, 14);
 assert.equal(r.fatoGerador.prazoExcedido, false);

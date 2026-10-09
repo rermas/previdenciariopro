@@ -223,7 +223,7 @@ p { margin: 0 0 1rem; }
 .conclusao p { margin: 0.3rem 0 0; color: var(--tinta); }
 .conclusao-dispensada, .conclusao-provavel { border-left-color: var(--verde); background: #eaf8f1; color: #1d6a4b; }
 .conclusao-depende, .conclusao-incompleta { border-left-color: var(--ambar); background: var(--ambar-suave); color: var(--ambar-texto); }
-.conclusao-nao_demonstrado { border-left-color: var(--coral); background: var(--coral-suave); color: var(--coral-texto); }
+.conclusao-nao_demonstrado, .conclusao-prescrito { border-left-color: var(--coral); background: var(--coral-suave); color: var(--coral-texto); }
 .selo-linha { margin: 0.4rem 0; }
 .selo { display: inline-block; padding: 0.15rem 0.7rem; border-radius: 999px; font-size: 0.88rem; font-weight: 700; background: var(--azul-suave); color: var(--azul-texto); }
 .selo-confirmada { background: #eaf8f1; color: #1d6a4b; }
