@@ -33,7 +33,7 @@
 
   var CLASSES = {
     empregada: 'Empregada', domestica: 'Empregada doméstica', avulsa: 'Trabalhadora avulsa', ci: 'Contribuinte individual',
-    mei: 'Microempreendedora individual (MEI)', facultativa: 'Segurada facultativa', especial: 'Segurada especial', rpps: 'Regime próprio', outra: 'Outra categoria'
+    mei: 'Microempreendedora individual (MEI)', desempregada: 'Desempregada em período de graça', facultativa: 'Segurada facultativa', especial: 'Segurada especial', rpps: 'Regime próprio', outra: 'Outra categoria'
   };
   var EC103 = 2019 * 12 + 10; // 11/2019: abaixo do mínimo só deixa de contar, para empregado, a partir daqui
   var DE_EMPREGO = { empregada: true, domestica: true, avulsa: true, outra: true };
@@ -330,6 +330,7 @@
           var aDes = !fac ? ultimoDiaDaQualidade(u.mc, (e120 ? 24 : 12) + 12) : null;
           return { u: u, sq: sqU, facult: fac, base: b, ate120: e120, ate: a1, ate24: a24, ateDes: aDes, prazoFinal: e120 ? a24 : a1 };
         };
+        var ultimoOrig = ultimo;
         var g1 = calcGraca(ultimo), notaFac = null;
         if (g1.facult && fgOrd > g1.prazoFinal) {
           // Facultativa perde a qualidade em 6 meses: confere se a atividade obrigatória anterior ainda a mantém (12/24 meses, +12 com desemprego).
@@ -378,6 +379,18 @@
           q.linhas.push('Fato gerador em ' + rotulo(fgD) + ', depois do fim do período de graça' + (ateDes ? ' mesmo com a prorrogação por desemprego (' + rotulo(dObj(ateDes)) + ')' : '') + '. A perda não é automática: outras atividades, benefícios ou provas fora do CNIS podem mudar o resultado.');
           doc('Documentos de atividade ou contribuição que não aparecem no CNIS');
         }
+        if (!entrada.categoria || entrada.categoria === 'auto') {
+          var oc = ultimoOrig.classe;
+          if ((oc === 'ci' || oc === 'mei' || oc === 'facultativa') && (q.status === 'confirmada' || q.status === 'provavel')) {
+            usada = oc; desc.usada = oc;
+            desc.motivo = 'Sem atividade na data, mas a qualidade se mantém e a última contribuição (Seq. ' + ultimoOrig.seq + ') foi como ' + CLASSES[oc].toLowerCase() + ': essa é a categoria considerada.';
+          } else if ((DE_EMPREGO[oc] || oc === 'rpps') && (!ultimoOrig.presumido || fgMes - ultimoOrig.mc > 2)) {
+            usada = 'desempregada'; desc.usada = usada;
+            desc.motivo = ultimoOrig.presumido
+              ? 'O último vínculo (Seq. ' + ultimoOrig.seq + ') não tem data de fim e foi tratado como encerrado na última remuneração (' + rotuloMes(ultimoOrig.mc) + '), mais de 2 meses antes do fato gerador: desempregada, em período de graça.'
+              : 'O último vínculo (Seq. ' + ultimoOrig.seq + ') terminou em ' + rotulo(dObj(ultimoOrig.fim)) + ', antes do fato gerador: desempregada, em período de graça.';
+          }
+        }
         if (sq.perdas.length) q.linhas.push('Interrupções que acarretaram perda da qualidade no histórico: ' + sq.perdas.map(function (p) { return 'depois de ' + rotuloMes(p.apos) + ' até ' + rotuloMes(p.retorno); }).join('; ') + '.');
       }
     }
@@ -406,7 +419,7 @@
       var soCI = analise.valores[k].every(function (x) { return /individual|facultativ/i.test(x.tipo || ''); });
       if (m !== null && (tot + 0.004 >= m || (!soCI && +k < EC103))) validasAte++;
     });
-    var classeCar = usada || (q.graca ? q.graca.classe : null);
+    var classeCar = (usada && usada !== 'desempregada') ? usada : (q.graca ? q.graca.classe : null);
     var DATA_DISPENSA = C.ordemDe(2024, 4, 5);
     var exigeCar = fgOrd < DATA_DISPENSA && ['ci', 'mei', 'facultativa', 'especial'].indexOf(classeCar) >= 0;
     var CARENCIA = 10;
@@ -490,7 +503,7 @@
     var viavel = (q.status === 'confirmada' || q.status === 'provavel' || q.status === 'indeterminada') && res.carencia.status !== 'nao_cumprida';
     var vl = { calculado: false, linhas: [] };
     res.valor = vl;
-    var classeValor = usada || (q.graca ? Object.keys(CLASSES).filter(function (k) { return CLASSES[k] === q.graca.categoria; })[0] : null);
+    var classeValor = (usada && usada !== 'desempregada') ? usada : (q.graca ? Object.keys(CLASSES).filter(function (k) { return CLASSES[k] === q.graca.categoria; })[0] : null);
     if (!viavel) {
       vl.linhas.push('Valor não calculado: a qualidade de segurado não foi demonstrada pelos dados.');
     } else if (analise.resumo.semRemuneracoes) {
@@ -716,7 +729,7 @@
     grade.appendChild(campo('Fato gerador', selecao('dir-tipo', [['parto', 'Parto'], ['natimorto', 'Natimorto'], ['aborto', 'Aborto não criminoso'], ['adocao', 'Adoção'], ['guarda', 'Guarda judicial para adoção'], ['outro', 'Outra hipótese']])));
     grade.appendChild(campo('Data do fato gerador', entrada('dir-data', 'date')));
     grade.appendChild(campo('Início do afastamento (se houver)', entrada('dir-afast', 'date')));
-    grade.appendChild(campo('Categoria na data', selecao('dir-categoria', [['auto', 'Identificar pelo CNIS'], ['empregada', 'Empregada'], ['domestica', 'Empregada doméstica'], ['avulsa', 'Trabalhadora avulsa'], ['ci', 'Contribuinte individual'], ['mei', 'MEI'], ['facultativa', 'Facultativa'], ['especial', 'Segurada especial']])));
+    grade.appendChild(campo('Categoria na data', selecao('dir-categoria', [['auto', 'Identificar pelo CNIS'], ['empregada', 'Empregada'], ['domestica', 'Empregada doméstica'], ['avulsa', 'Trabalhadora avulsa'], ['ci', 'Contribuinte individual'], ['mei', 'MEI'], ['facultativa', 'Facultativa'], ['desempregada', 'Desempregada (período de graça)'], ['especial', 'Segurada especial']])));
     bloco.appendChild(grade);
     var marcas = C.el('div', 'marcas');
     marcas.appendChild(marca('dir-desemprego', 'Desemprego involuntário comprovado'));

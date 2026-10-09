@@ -98,4 +98,14 @@ assert.notEqual(r.carencia.status, 'nao_cumprida');
 r = rodar(v(1, 'EMP A', '01/03/2020'), { tipo: 'parto', data: '2021-06-10' });
 assert.equal(r.carencia.status, 'dispensada');
 
+// Categoria na data: desempregada (vínculo com fim ou encerrado por presunção) e última contribuição de CI/facultativa
+r = rodar(v(1, 'EMP A', '01/03/2024', '31/03/2025'), { tipo: 'parto', data: '2025-09-10' });
+assert.equal(r.categoria.usada, 'desempregada');
+r = rodar(aberto, { tipo: 'parto', data: '2015-12-01' });
+assert.equal(r.categoria.usada, 'desempregada', 'sem fim, encerrado na última remuneração, mais de 2 meses antes');
+r = rodar(fac, { tipo: 'parto', data: '2024-08-10' });
+assert.equal(r.categoria.usada, 'facultativa');
+r = rodar(v(1, 'EMP A', '01/03/2024', '31/03/2025'), { tipo: 'parto', data: '2025-09-10', categoria: 'empregada' });
+assert.equal(r.categoria.usada, 'empregada', 'categoria informada prevalece');
+
 console.log('direito.test.js: ok');
