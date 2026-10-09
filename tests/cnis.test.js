@@ -327,8 +327,9 @@ assert.equal(trocas.lacunas.length, 0, '3 dias entre empregos não é lacuna');
 assert.equal(CNIS.duracaoCurta(9), '9 dias');
 assert.equal(CNIS.duracaoCurta(400), '1 ano, 1 mês e 5 dias');
 assert.equal(CNIS.duracaoCurta(365), '1 ano');
-assert.equal(CNIS.duracaoCurta(1457), '3 anos, 11 meses e 32 dias', 'nunca 12 meses');
-assert.equal(CNIS.formatarDuracao(1457), '3 anos, 11 meses e 32 dias');
+assert.equal(CNIS.duracaoCurta(1457), '4 anos e 2 dias', '3 anos + 362 dias: 12 meses de 30 dias fecham um ano');
+assert.equal(CNIS.formatarDuracao(1457), '4 anos, 0 meses e 2 dias');
+assert.equal(CNIS.formatarDuracao(364), '1 ano, 0 meses e 4 dias', '364 = 12 x 30 + 4');
 
 // ---------- Carência no exemplo ----------
 assert.equal(r.carencia.validas, 34, 'todas as 34 competências estão no mínimo ou acima');

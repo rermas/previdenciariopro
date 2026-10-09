@@ -217,7 +217,8 @@
 
   // Dias -> "1 ano, 2 meses e 3 dias" sem as partes zeradas (365 dias por ano, 30 por mês).
   function duracaoCurta(dias) {
-    var a = Math.floor(dias / 365), r = dias % 365, m = Math.min(11, Math.floor(r / 30)), d = r - m * 30, p = [];
+    var a = Math.floor(dias / 365), r = dias % 365, m = Math.floor(r / 30), d = r % 30, p = [];
+    if (m >= 12) { a++; m -= 12; } // 12 meses de 30 dias fecham um ano
     if (a) p.push(a + (a === 1 ? ' ano' : ' anos'));
     if (m) p.push(m + (m === 1 ? ' mês' : ' meses'));
     if (d || !p.length) p.push(d + (d === 1 ? ' dia' : ' dias'));
@@ -226,7 +227,8 @@
 
   // Dias -> "1 ano, 1 mês e 3 dias" (365 dias por ano, 30 por mês).
   function formatarDuracao(dias) {
-    var a = Math.floor(dias / 365), r = dias % 365, m = Math.min(11, Math.floor(r / 30)), d = r - m * 30;
+    var a = Math.floor(dias / 365), r = dias % 365, m = Math.floor(r / 30), d = r % 30;
+    if (m >= 12) { a++; m -= 12; } // 12 meses de 30 dias fecham um ano
     return a + (a === 1 ? ' ano, ' : ' anos, ') + m + (m === 1 ? ' mês e ' : ' meses e ') + d + (d === 1 ? ' dia' : ' dias');
   }
 
