@@ -258,7 +258,9 @@
         v = todos.length ? [null, todos[todos.length - 1]] : null;
       }
       if (!v && a.ini !== 0) return;
-      saida.push({ mes: a.mes, valor: v ? valorDe(v[1]) : null, indicadores: indicadoresDe(seg) });
+      var g = { mes: a.mes, valor: v ? valorDe(v[1]) : null, indicadores: indicadoresDe(seg) };
+      if (contrib) { var dp = (seg.match(RE_DATA) || [])[0]; if (dp) g.pagamento = dp; }
+      saida.push(g);
     });
     return saida;
   }
@@ -466,8 +468,18 @@
       });
       Object.keys(presentes).forEach(function (k) {
         ok[k] = true;
-        (valores[k] = valores[k] || []).push({ seq: v.seq, nome: v.nome, tipo: v.tipo, valor: Math.round(somas[k] * 100) / 100 });
+        // Antes de 07/1994 o valor não entra no cálculo e não é mostrado.
+        if (+k >= INICIO_PBC) (valores[k] = valores[k] || []).push({ seq: v.seq, nome: v.nome, tipo: v.tipo, valor: Math.round(somas[k] * 100) / 100 });
       });
+      item.contribuicoes = {};
+      Object.keys(presentes).forEach(function (k) { item.contribuicoes[k] = Math.round(somas[k] * 100) / 100; });
+      item.pagamentos = {};
+      v.remuneracoes.forEach(function (r) {
+        var d = r.pagamento && dataDe(r.pagamento);
+        if (d) (item.pagamentos[r.mes] = item.pagamentos[r.mes] || []).push(d.ord);
+      });
+      item.codigosIndicadores = Object.keys(indic);
+      item.ultRemun = v.ultRemun;
       item.comRemuneracao = Object.keys(presentes).length;
 
       // Fim contado. Sem data de fim, vale até o fim do mês da última remuneração (nunca depois de hoje).
@@ -1047,6 +1059,8 @@
 
     function limpar() {
       texto.value = ''; arquivo.value = ''; saida.textContent = ''; msg.textContent = '';
+      var det = document.getElementById('cnis-direito');
+      if (det) { det.querySelectorAll('input').forEach(function (i) { if (i.type === 'checkbox') i.checked = false; else i.value = ''; }); det.querySelectorAll('select').forEach(function (s) { s.selectedIndex = 0; }); }
     }
 
     form.addEventListener('submit', function (ev) {
@@ -1057,7 +1071,9 @@
       var origem = pdf ? lerPdf(pdf) : Promise.resolve(texto.value);
       origem.then(function (conteudo) {
         if (!conteudo || !conteudo.trim()) throw new Error('Não encontrei texto. Se o PDF for uma imagem escaneada, copie o texto do extrato e cole no campo.');
-        renderizar(saida, analisar(conteudo, hoje()));
+        var analise = analisar(conteudo, hoje());
+        renderizar(saida, analise);
+        if (root.DIREITO) root.DIREITO.aplicar(saida, analise, hoje());
         msg.textContent = '';
         texto.value = ''; arquivo.value = '';
         var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1076,7 +1092,8 @@
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
     formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
-    resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO
+    resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO,
+    el: el, sec: sec, tabela: tabela, ordemDe: ordemDe, dataDeOrd: dataDeOrd, rotuloData: rotuloData, ultimoDiaDoMes: ultimoDiaDoMes, INICIO_PBC: INICIO_PBC, INDICADORES: INDICADORES
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.CNIS = api;

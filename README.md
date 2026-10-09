@@ -8,6 +8,7 @@ Site em PHP puro, sem banco de dados, com um único roteador (`index.php`). O fo
 index.php            roteador, configuração e todas as páginas
 assets/style.css     visual
 assets/cnis.js       leitura e análise do CNIS, mais a interface da ferramenta
+assets/direito.js    "Verificar direito" (hoje só salário-maternidade)
 assets/vendor/       pdf.js (hospedado aqui, nada vem de domínio externo)
 assets/fonts/        Atkinson Hyperlegible
 posts/*.html         texto de cada artigo do blog
@@ -47,6 +48,13 @@ Cada artigo é uma entrada em `$POSTS` (`index.php`) e um arquivo `posts/{slug}.
 - Mês faltante dentro de período de benefício por incapacidade, ou com remuneração em outro vínculo, é sinalizado como tal.
 - Meses anteriores a 07/1994 sem remuneração não entram na contagem de faltantes, porque o CNIS costuma não trazer salários desse período.
 - Os significados dos indicadores vêm de artigos de escritórios de advocacia previdenciária e estão em `INDICADORES` (`assets/cnis.js`). O código original sempre aparece junto.
+
+### Verificar direito (salário-maternidade)
+Opcional, no formulário. Etapas: fato gerador, categoria, qualidade de segurado (período de graça), carência, validade do CNIS, situações especiais e valor estimado. Normas em `NORMAS` (`assets/direito.js`), com vigência.
+- Período de graça: vale até o vencimento da contribuição do mês seguinte ao fim do prazo (dia 15; fim de semana passa para a segunda). Prazo 12 meses (6 na facultativa), 24 com mais de 120 contribuições sem perda, +12 com desemprego involuntário informado. Meses de vínculo anteriores a 07/1994 entram na contagem como presumidos.
+- Carência dispensada (ADIs 2.110/2.111 e regulamento do INSS). Confirmar a norma e a vigência antes de usar em peça.
+- Nunca presume facultativa ou desempregada pela falta de vínculo, nem fecha vínculo pela última remuneração.
+- Testes: `node tests/direito.test.js`.
 
 ### O que ainda falta validar
 

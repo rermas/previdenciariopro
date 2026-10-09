@@ -576,6 +576,51 @@ if ($rota === '/') {
     <label class="campo">Ou cole o texto do extrato
       <textarea id="cnis-texto" rows="7" spellcheck="false"></textarea>
     </label>
+    <details class="verificar" id="cnis-direito">
+      <summary>Verificar direito a um benefício (opcional)</summary>
+      <div class="grade-campos">
+        <label class="campo">Benefício
+          <select id="dir-beneficio">
+            <option value="">Nenhum (só analisar o CNIS)</option>
+            <option value="salario-maternidade">Salário-maternidade</option>
+          </select>
+        </label>
+        <label class="campo">Fato gerador
+          <select id="dir-tipo">
+            <option value="parto">Parto</option>
+            <option value="natimorto">Natimorto</option>
+            <option value="aborto">Aborto não criminoso</option>
+            <option value="adocao">Adoção</option>
+            <option value="guarda">Guarda judicial para adoção</option>
+            <option value="outro">Outra hipótese</option>
+          </select>
+        </label>
+        <label class="campo">Data do fato gerador
+          <input type="date" id="dir-data">
+        </label>
+        <label class="campo">Início do afastamento (se houver)
+          <input type="date" id="dir-afast">
+        </label>
+        <label class="campo">Categoria na data
+          <select id="dir-categoria">
+            <option value="auto">Identificar pelo CNIS</option>
+            <option value="empregada">Empregada</option>
+            <option value="domestica">Empregada doméstica</option>
+            <option value="avulsa">Trabalhadora avulsa</option>
+            <option value="ci">Contribuinte individual</option>
+            <option value="mei">MEI</option>
+            <option value="facultativa">Facultativa</option>
+            <option value="especial">Segurada especial</option>
+          </select>
+        </label>
+      </div>
+      <div class="marcas">
+        <label><input type="checkbox" id="dir-desemprego"> Desemprego involuntário comprovado</label>
+        <label><input type="checkbox" id="dir-internacao"> Internação prolongada (mãe ou bebê)</label>
+        <label><input type="checkbox" id="dir-falecimento"> Falecimento de quem teria direito</label>
+        <label><input type="checkbox" id="dir-anterior"> Há requerimento anterior pelo mesmo fato</label>
+      </div>
+    </details>
     <div class="acoes">
       <button class="btn" type="submit">Analisar</button>
       <button class="btn btn-leve" type="button" id="cnis-exemplo">Carregar exemplo fictício</button>
@@ -588,6 +633,7 @@ if ($rota === '/') {
 </main>
 <script src="<?= e(u('/assets/vendor/pdf.min.js')) ?>"></script>
 <script src="<?= e(u('/assets/cnis.js')) ?>?v=<?= filemtime(__DIR__ . '/assets/cnis.js') ?>"></script>
+<script src="<?= e(u('/assets/direito.js')) ?>?v=<?= filemtime(__DIR__ . '/assets/direito.js') ?>"></script>
 <?php
     rodape();
 

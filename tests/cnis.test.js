@@ -350,6 +350,22 @@ assert.doesNotMatch(sm, /01\/2020 \(|12\/2020 \(/, 'primeiro e último mês não
 const dupl = CNIS.analisar(texto(vinc(1, 'MESMA EMPRESA', '01/01/2020', '31/03/2020'), '01/2020 1.100,00', vinc(2, 'MESMA EMPRESA', '01/02/2020', '31/03/2020'), '02/2020 1.100,00'), HOJE);
 assert.match(dupl.pendencias.map(p => p.sev + ' ' + p.msg).join(' | '), /atencao Mesmo empregador em vínculos concomitantes \(Seq\. 2\)/);
 
+// ---------- Antes de 07/1994 o valor não é mostrado ----------
+assert.equal(r.valores[CNIS.mesDe(1994, 6)], undefined);
+assert.ok(r.valores[CNIS.mesDe(1994, 7)], 'a partir de 07/1994 aparece');
+const ant = CNIS.analisar(texto(vinc(1, 'A', '01/01/1990', '31/12/1990'), '01/1990 50,00 02/1990 50,00', '03/1990 50,00'), HOJE);
+assert.equal(Object.keys(ant.valores).length, 0, 'sem valores no mapa');
+assert.equal(ant.mapa[CNIS.mesDe(1990, 1)], 'ok', 'o mês continua marcado, sem o valor');
+assert.equal(ant.vinculos[0].contribuicoes[CNIS.mesDe(1990, 1)], 50, 'o dado fica disponível para outras verificações');
+
+// ---------- Data de pagamento das contribuições ----------
+const pg = CNIS.analisar(texto(
+  `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2025 28/02/2025`, 'Contribuições',
+  '01/2025 20/02/2025 75,90 1.518,00 IREC-MEI 02/2025 24/03/2025 75,90 1.518,00'
+), HOJE);
+assert.deepEqual(pg.vinculos[0].pagamentos[CNIS.mesDe(2025, 1)], [CNIS.dataDe('20/02/2025').ord]);
+assert.deepEqual(pg.vinculos[0].codigosIndicadores, ['IREC-MEI']);
+
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);
 assert.equal(vazio.resumo.totalVinculos, 0);
