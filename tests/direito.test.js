@@ -72,4 +72,30 @@ r = rodar(fac, { tipo: 'parto', data: '2024-08-10' });
 assert.equal(r.qualidade.graca.categoria, 'Segurada facultativa');
 assert.equal(r.qualidade.status, 'confirmada');
 
+// Vínculo sem data de fim e sem movimento há muito tempo: tratado como encerrado na última remuneração
+const aberto = texto(v(1, 'EMP A', '01/01/2015'), 'Remunerações', '01/2015 1.000,00 02/2015 1.000,00 03/2015 1.000,00');
+r = rodar(aberto, { tipo: 'parto', data: '2018-07-01' });
+assert.equal(r.categoria.ativos.length, 0);
+assert.equal(r.qualidade.graca.competenciaCessacao, '03/2015');
+assert.notEqual(r.qualidade.status, 'confirmada');
+assert.match(r.qualidade.linhas.join(' '), /tratados como encerrados na última remuneração/);
+// Recente (menos de 3 meses sem movimento): continua ativo, com aviso
+r = rodar(aberto, { tipo: 'parto', data: '2015-05-10' });
+assert.equal(r.categoria.ativos.length, 1);
+
+// Carência: contribuinte individual antes de 05/04/2024 exige 10; empregada nunca; depois da data, dispensada
+const ci = (n) => texto(`4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2022 28/${String(n).padStart(2, '0')}/2022`, 'Contribuições',
+  ...Array.from({ length: n }, (_, i) => `${String(i + 1).padStart(2, '0')}/2022 10/${String(i + 1).padStart(2, '0')}/2022 220,00 2.000,00`));
+r = rodar(ci(6), { tipo: 'parto', data: '2022-08-10' });
+assert.equal(r.qualidade.status, 'confirmada');
+assert.equal(r.carencia.status, 'nao_cumprida');
+assert.equal(r.conclusao.status, 'nao_demonstrado');
+assert.match(r.conclusao.rotulo, /carência/);
+r = rodar(ci(12), { tipo: 'parto', data: '2023-01-10' });
+assert.equal(r.carencia.status, 'cumprida');
+r = rodar(ci(6), { tipo: 'parto', data: '2024-06-10' });
+assert.notEqual(r.carencia.status, 'nao_cumprida');
+r = rodar(v(1, 'EMP A', '01/03/2020'), { tipo: 'parto', data: '2021-06-10' });
+assert.equal(r.carencia.status, 'dispensada');
+
 console.log('direito.test.js: ok');

@@ -207,7 +207,7 @@
     itens.forEach(function (v) { classes[v.seq] = classeDe(v); });
 
     // ----- Etapa 2: categoria e vínculos ativos -----
-    var ativos = [];
+    var ativos = [], presumidos = [];
     itens.forEach(function (v) {
       var cl = classes[v.seq];
       if (v.inicio.ord > fgOrd) return;
@@ -215,6 +215,11 @@
         var encerrado = v.fim && v.fim.ord < fgOrd;
         if (encerrado) return;
         var ult = ultimaCompetencia(v);
+        if (!v.fim) {
+          // Sem data de fim e sem movimento há 3 meses ou mais antes do fato gerador: presume-se encerrado na última remuneração.
+          var refMes = ult >= 0 ? ult : mesDe(v.inicio);
+          if (fgMes - refMes >= 3) { presumidos.push({ v: v, mc: refMes, cl: cl, ult: ult }); return; }
+        }
         var aviso = null;
         if (!v.fim) aviso = 'vínculo sem data de fim' + (ult >= 0 ? ' (última remuneração em ' + rotuloMes(ult) + ')' : ' e sem remuneração');
         if (!v.fim && ult >= 0 && fgMes - ult >= 3) aviso += ': pode ter terminado antes do fato gerador';
@@ -226,6 +231,7 @@
       }
     });
     var usada, motivo;
+    var presumidosLista = presumidos;
     var desc = (res.categoria = { ativos: ativos.map(function (a) { return { seq: a.seq, nome: a.nome, classe: a.classe, aviso: a.aviso }; }) });
     var detectada = ativos.length ? ativos[0].classe : null;
     desc.detectada = detectada;
@@ -294,6 +300,10 @@
         if (v.inicio.ord > fgOrd) return;
         if (DE_EMPREGO[cl] || cl === 'rpps') {
           if (v.fim && v.fim.ord < fgOrd) cands.push({ fim: v.fim.ord, mc: mesDe(v.fim), classe: cl, seq: v.seq, nome: v.nome, origem: 'vínculo encerrado em ' + rotulo(v.fim) });
+          else if (!v.fim) {
+            var pz = presumidos.filter(function (x) { return x.v === v; })[0];
+            if (pz) cands.push({ fim: C.ultimoDiaDoMes(pz.mc), mc: pz.mc, classe: cl, seq: v.seq, nome: v.nome, presumido: true, origem: 'vínculo sem data de fim, tratado como encerrado na ' + (pz.ult >= 0 ? 'última remuneração (' + rotuloMes(pz.mc) + ')' : 'competência de início (' + rotuloMes(pz.mc) + '), sem remuneração') });
+          }
         } else if (DE_RECOLHIMENTO[cl] || cl === 'especial') {
           var u = ultimaCompetencia(v, fgMes);
           if (u >= 0) cands.push({ fim: C.ultimoDiaDoMes(u), mc: u, classe: cl, seq: v.seq, nome: v.nome, origem: 'última contribuição da competência ' + rotuloMes(u) });
@@ -335,10 +345,14 @@
         }
         var sq = g1.sq, facult = g1.facult, base = g1.base, ate120 = g1.ate120, ate = g1.ate, ate24 = g1.ate24, ateDes = g1.ateDes, prazoFinal = g1.prazoFinal;
         q.graca = {
-          dataInicial: ultimo.origem, competenciaCessacao: rotuloMes(ultimo.mc), categoria: ultimo.classe === 'beneficio' ? 'Benefício' : CLASSES[ultimo.classe],
+          classe: ultimo.classe, dataInicial: ultimo.origem, competenciaCessacao: rotuloMes(ultimo.mc), categoria: ultimo.classe === 'beneficio' ? 'Benefício' : CLASSES[ultimo.classe],
           prazoBase: base, contribuicoes: sq.total, extensao120: ate120, presumidos: sq.presumidos,
           ateBase: dObj(ate), ateComExtensao: ate120 ? dObj(ate24) : null, ateComDesemprego: ateDes ? dObj(ateDes) : null
         };
+        if (presumidos.length) {
+          q.linhas.push(presumidos.length + ' vínculo(s) sem data de fim foram tratados como encerrados na última remuneração, por não terem movimento nos 3 meses anteriores ao fato gerador: ' + presumidos.slice(0, 8).map(function (x) { return 'Seq. ' + x.v.seq + ' (' + rotuloMes(x.mc) + ')'; }).join(', ') + (presumidos.length > 8 ? ' e mais ' + (presumidos.length - 8) : '') + '. É uma presunção: se algum deles estava ativo na data, a qualidade existe e a conclusão muda.');
+          doc('CTPS e termos de rescisão dos vínculos sem data de fim, para confirmar se estavam ativos na data do fato gerador');
+        }
         q.linhas.push('Sem vínculo ou recolhimento ativo na data. Última cobertura: Seq. ' + ultimo.seq + ' (' + ultimo.nome + '), ' + ultimo.origem + '.');
         if (notaFac) q.linhas.push(notaFac);
         q.linhas.push('Categoria considerada: ' + q.graca.categoria.toLowerCase() + '. Prazo-base: ' + base + ' meses' + (facult ? ' (facultativa)' : ' (art. 15, II, da Lei 8.213/91)') + '.');
@@ -392,16 +406,28 @@
       var soCI = analise.valores[k].every(function (x) { return /individual|facultativ/i.test(x.tipo || ''); });
       if (m !== null && (tot + 0.004 >= m || (!soCI && +k < EC103))) validasAte++;
     });
-    res.carencia = {
-      status: 'dispensada', rotulo: 'Dispensada',
-      linhas: [
-        'Carência tratada como dispensada para todas as categorias, conforme a orientação das ADIs 2.110 e 2.111 e a regulamentação do INSS informada ao sistema. Não se exige automaticamente 10 contribuições de MEI, contribuinte individual ou facultativa.',
-        'Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na data do fato gerador, nem a validade das contribuições.',
-        'Uma única contribuição, mesmo paga depois do fato gerador, não garante o benefício por si só.',
-        'Informativo: o CNIS tem ' + validasAte + ' competência(s) de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo (empregado, antes de 11/2019, conta mesmo abaixo; contribuinte individual e facultativo, em qualquer época, só se atingir o mínimo).'
-      ],
-      competenciasValidas: validasAte
-    };
+    var classeCar = usada || (q.graca ? q.graca.classe : null);
+    var DATA_DISPENSA = C.ordemDe(2024, 4, 5);
+    var exigeCar = fgOrd < DATA_DISPENSA && ['ci', 'mei', 'facultativa', 'especial'].indexOf(classeCar) >= 0;
+    var CARENCIA = 10;
+    res.carencia = { status: 'dispensada', rotulo: 'Dispensada', linhas: [], competenciasValidas: validasAte, exigida: exigeCar ? CARENCIA : 0 };
+    var cl = res.carencia.linhas;
+    if (exigeCar) {
+      var sqFg = sequencia(analise, classes, fgMes);
+      var depoisPerda = sqFg.perdas.length > 0;
+      var ok10 = validasAte >= CARENCIA;
+      var okTerco = !depoisPerda || sqFg.total >= Math.ceil(CARENCIA / 3);
+      cl.push('Fato gerador em ' + rotulo(fgD) + ', antes de 05/04/2024: para ' + CLASSES[classeCar].toLowerCase() + ' a carência é de ' + CARENCIA + ' contribuições mensais (art. 25, III, da Lei 8.213/91). A dispensa para essas categorias vale só a partir de 05/04/2024. Empregada, doméstica e avulsa não têm carência em nenhuma data.');
+      cl.push('Competências do CNIS de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo: ' + validasAte + '.');
+      if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver ao menos 1/3 da carência (' + Math.ceil(CARENCIA / 3) + ') depois do retorno (art. 27-A da Lei 8.213/91). Depois do retorno: ' + sqFg.total + '.');
+      cl.push('Parto antecipado reduz a carência em igual número de meses da antecipação (art. 25, parágrafo único): não aplicado aqui.');
+      if (ok10 && okTerco) { res.carencia.status = 'cumprida'; res.carencia.rotulo = 'Cumprida pelos dados do CNIS'; }
+      else { res.carencia.status = 'nao_cumprida'; res.carencia.rotulo = 'Não cumprida pelos dados do CNIS'; doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
+    } else {
+      cl.push(fgOrd >= DATA_DISPENSA ? 'Fato gerador em ' + rotulo(fgD) + ', a partir de 05/04/2024: carência dispensada para todas as categorias (ADIs 2.110 e 2.111 do STF e regulamentação do INSS).' : 'Empregada, doméstica e avulsa não têm carência para o salário-maternidade (art. 26, VI, da Lei 8.213/91).' + (classeCar ? '' : ' Categoria não identificada: se for contribuinte individual, MEI, facultativa ou segurada especial, a carência de 10 contribuições vale para fatos geradores antes de 05/04/2024.'));
+    }
+    cl.push('Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na data do fato gerador, nem a validade das contribuições.');
+    cl.push('Uma única contribuição, mesmo paga depois do fato gerador, não garante o benefício por si só.');
     if (atrasosAtivos.length) res.carencia.linhas.push('Há recolhimentos em atraso (' + atrasosAtivos.length + '): verifique se são válidos para demonstrar filiação e cobertura na situação analisada.');
 
     // ----- Etapa 5: validade do CNIS -----
@@ -461,7 +487,7 @@
     esp('Requerimento anterior indeferido ou benefício anterior do mesmo evento', entrada.requerimentoAnterior ? 'verificar' : 'nao', entrada.requerimentoAnterior ? 'Veja o motivo do indeferimento e se há outro segurado recebendo pelo mesmo fato gerador (art. 357, § 4º).' : 'Não informado.');
 
     // ----- Etapa 7: valor estimado -----
-    var viavel = q.status === 'confirmada' || q.status === 'provavel' || q.status === 'indeterminada';
+    var viavel = (q.status === 'confirmada' || q.status === 'provavel' || q.status === 'indeterminada') && res.carencia.status !== 'nao_cumprida';
     var vl = { calculado: false, linhas: [] };
     res.valor = vl;
     var classeValor = usada || (q.graca ? Object.keys(CLASSES).filter(function (k) { return CLASSES[k] === q.graca.categoria; })[0] : null);
@@ -540,7 +566,8 @@
     res.cnis.filter(function (x) { return x.impede; }).forEach(function (x) { pend.push(x.achado + ' ' + x.documento + '.'); });
     res.especiais.filter(function (x) { return x.situacao === 'verificar'; }).forEach(function (x) { pend.push(x.nome + ': verificar.'); });
     var conc;
-    if (q.status === 'confirmada' && !pend.length) conc = { status: 'provavel', rotulo: 'Direito provável', texto: 'Com os dados do CNIS, a qualidade de segurado está demonstrada na data do fato gerador e a carência está dispensada. Falta apenas o fato gerador ser comprovado por documento.' };
+    if (res.carencia.status === 'nao_cumprida' && ['confirmada', 'provavel', 'indeterminada'].indexOf(q.status) >= 0) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: carência', texto: 'A qualidade de segurado pode existir, mas o CNIS mostra ' + validasAte + ' contribuição(ões) válida(s) e a carência exigida antes de 05/04/2024 para ' + CLASSES[classeCar].toLowerCase() + ' é de ' + CARENCIA + '. Documentos que completem a carência podem mudar o resultado.' };
+    else if (q.status === 'confirmada' && !pend.length) conc = { status: 'provavel', rotulo: 'Direito provável', texto: 'Com os dados do CNIS, a qualidade de segurado está demonstrada na data do fato gerador e a carência está dispensada. Falta apenas o fato gerador ser comprovado por documento.' };
     else if (q.status === 'confirmada' || q.status === 'provavel') conc = { status: 'depende', rotulo: 'Direito depende de validação documental', texto: 'A qualidade de segurado é compatível com o CNIS, mas há pontos a validar antes de concluir.' };
     else if (q.status === 'indeterminada') conc = { status: 'depende', rotulo: 'Indeterminado por falta de informações', texto: 'O resultado depende de informação ou prova que não consta nos dados (como o desemprego involuntário).' };
     else conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado pelos dados', texto: 'Os dados do CNIS não demonstram a qualidade de segurado na data do fato gerador. Isso não é uma conclusão definitiva: outras provas podem alterar o resultado.' };
