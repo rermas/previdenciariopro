@@ -35,6 +35,7 @@
     empregada: 'Empregada', domestica: 'Empregada doméstica', avulsa: 'Trabalhadora avulsa', ci: 'Contribuinte individual',
     mei: 'Microempreendedora individual (MEI)', facultativa: 'Segurada facultativa', especial: 'Segurada especial', rpps: 'Regime próprio', outra: 'Outra categoria'
   };
+  var EC103 = 2019 * 12 + 10; // 11/2019: abaixo do mínimo só deixa de contar, para empregado, a partir daqui
   var DE_EMPREGO = { empregada: true, domestica: true, avulsa: true, outra: true };
   var DE_RECOLHIMENTO = { ci: true, mei: true, facultativa: true };
 
@@ -388,7 +389,8 @@
       if (+k > fgMes) return;
       var tot = analise.valores[k].reduce(function (t, x) { return t + x.valor; }, 0);
       var m = C.minimoDe(+k);
-      if (m !== null && tot + 0.004 >= m) validasAte++;
+      var soCI = analise.valores[k].every(function (x) { return /individual|facultativ/i.test(x.tipo || ''); });
+      if (m !== null && (tot + 0.004 >= m || (!soCI && +k < EC103))) validasAte++;
     });
     res.carencia = {
       status: 'dispensada', rotulo: 'Dispensada',
@@ -396,7 +398,7 @@
         'Carência tratada como dispensada para todas as categorias, conforme a orientação das ADIs 2.110 e 2.111 e a regulamentação do INSS informada ao sistema. Não se exige automaticamente 10 contribuições de MEI, contribuinte individual ou facultativa.',
         'Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na data do fato gerador, nem a validade das contribuições.',
         'Uma única contribuição, mesmo paga depois do fato gerador, não garante o benefício por si só.',
-        'Informativo: o CNIS tem ' + validasAte + ' competência(s) de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo.'
+        'Informativo: o CNIS tem ' + validasAte + ' competência(s) de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo (empregado, antes de 11/2019, conta mesmo abaixo; contribuinte individual e facultativo, em qualquer época, só se atingir o mínimo).'
       ],
       competenciasValidas: validasAte
     };

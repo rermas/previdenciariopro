@@ -273,6 +273,11 @@ assert.equal(r.valores[CNIS.mesDe(2000, 3)], undefined, 'valor zerado não apare
 assert.equal(r.valores[CNIS.mesDe(2010, 5)], undefined);
 
 // ---------- Salário mínimo ----------
+const ciAnt = CNIS.analisar(texto(`4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2015 31/03/2015`, 'Contribuições',
+  '01/2015 20/02/2015 50,00 500,00 02/2015 24/03/2015 50,00 500,00', '03/2015 22/04/2015 78,80 788,00'), HOJE);
+assert.equal(ciAnt.abaixoMinimo.length, 2, 'contribuinte individual abaixo do mínimo vale para qualquer época');
+assert.equal(ciAnt.carencia.validas, 1);
+assert.match(ciAnt.pendencias.map(p => p.sev + ' ' + p.msg).join(' | '), /atencao Contribuinte individual ou facultativo/);
 assert.equal(CNIS.minimoDe(CNIS.mesDe(1994, 6)), null, 'antes do Plano Real');
 assert.equal(CNIS.minimoDe(CNIS.mesDe(1994, 8)), 64.79);
 assert.equal(CNIS.minimoDe(CNIS.mesDe(2005, 4)), 260);
@@ -284,13 +289,12 @@ assert.equal(CNIS.minimoDe(CNIS.mesDe(2026, 10)), 1621);
 const minAnt = CNIS.analisar(texto(
   vinc(1, 'A', '01/01/2015', '31/05/2015'), '01/2015 300,00 02/2015 300,00 03/2015 1.000,00', '04/2015 1.000,00 05/2015 300,00'
 ), HOJE);
-assert.deepEqual(minAnt.abaixoMinimo.map(a => [CNIS.rotuloMes(a.mes), a.proporcional, a.posEC103, a.ci]),
-  [['01/2015', true, false, false], ['02/2015', false, false, false], ['05/2015', true, false, false]], 'início e fim podem ser proporcionais');
-assert.equal(minAnt.carencia.validas, 2, 'março e abril valem; mínimo de 2015 é 788');
+assert.equal(minAnt.abaixoMinimo.length, 0, 'empregado abaixo do mínimo antes de 11/2019 conta normalmente e não é listado');
+assert.equal(minAnt.carencia.validas, 5);
 assert.equal(minAnt.carencia.todas, 5);
-assert.equal(minAnt.carencia.linhas[0].faltamValidas, 10, '12 menos 2');
+assert.equal(minAnt.carencia.linhas[0].faltamValidas, 7, '12 menos 5');
 assert.equal(minAnt.carencia.linhas[0].faltamTodas, 7);
-assert.equal(minAnt.pendencias.filter(p => p.sev === 'atencao').length, 0, 'antes da EC 103 e em mês proporcional é só nota');
+assert.equal(minAnt.pendencias.filter(p => p.sev === 'atencao').length, 0, 'antes da EC 103 não há pendência');
 
 const minPos = CNIS.analisar(texto(vinc(1, 'A', '01/01/2021', '30/06/2021'), '01/2021 1.100,00 02/2021 500,00 03/2021 1.100,00', '04/2021 1.100,00 05/2021 1.100,00 06/2021 1.100,00'), HOJE);
 assert.equal(minPos.abaixoMinimo.length, 1);

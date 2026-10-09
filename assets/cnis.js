@@ -611,6 +611,8 @@
       if (min === null) return;
       if (totais[k] + 0.004 >= min) { validas++; return; }
       var ci = valores[k].every(function (x) { return /individual|facultativ/i.test(tipoPorSeq[x.seq] || ''); });
+      // Empregado: abaixo do mínimo só deixa de contar a partir da EC 103/2019; antes disso conta normalmente.
+      if (!ci && k < EC103) { validas++; return; }
       abaixo.push({
         mes: k, total: totais[k], minimo: min, seqs: valores[k].map(function (x) { return x.seq; }),
         ci: ci, proporcional: !ci && !!extremos[k], posEC103: k >= EC103
@@ -620,11 +622,9 @@
     function mesesDe(f) { return abaixo.filter(f).map(function (a) { return a.mes; }); }
     var gCI = mesesDe(function (a) { return a.ci; });
     var gPos = mesesDe(function (a) { return !a.ci && !a.proporcional && a.posEC103; });
-    var gAnt = mesesDe(function (a) { return !a.ci && !a.proporcional && !a.posEC103; });
     var gProp = mesesDe(function (a) { return a.proporcional; });
     if (gCI.length) nova('atencao', '', 'Contribuinte individual ou facultativo com salário de contribuição abaixo do salário mínimo em ' + gCI.length + ' competência(s): ' + textoFaixas(gCI, 4) + '. Em regra a competência não conta sem complementação até o mínimo.');
     if (gPos.length) nova('atencao', '', 'Valor total da competência abaixo do salário mínimo em ' + gPos.length + ' competência(s) a partir da EC 103/2019: ' + textoFaixas(gPos, 4) + '. Pode ser complementada, utilizada ou agrupada com outras competências.');
-    if (gAnt.length) nova('info', '', 'Valor total da competência abaixo do salário mínimo da época em ' + gAnt.length + ' competência(s) antes da EC 103/2019: ' + textoFaixas(gAnt, 4) + '. O efeito depende da categoria do segurado; confira.');
     if (gProp.length) nova('info', '', 'Valor abaixo do mínimo em mês de início ou fim de vínculo (' + gProp.length + '): ' + textoFaixas(gProp, 4) + '. Pode ser proporcional aos dias trabalhados.');
 
     var carencia = null;
@@ -914,7 +914,7 @@
     }
     saida.appendChild(sf);
 
-    var sa = sec('Abaixo do salário mínimo', 'Competências cujo valor total (somando os vínculos do mês) ficou abaixo do mínimo vigente. Tabela de mínimos embutida; confira antes de usar em peça.');
+    var sa = sec('Abaixo do salário mínimo', 'Competências cujo valor total (somando os vínculos do mês) ficou abaixo do mínimo vigente. Para empregado, só a partir de 11/2019 (EC 103/2019); antes disso o valor conta normalmente. Contribuinte individual e facultativo, em qualquer época. Tabela de mínimos embutida; confira antes de usar em peça.');
     if (s.semRemuneracoes) {
       sa.appendChild(el('p', 'vazio-msg', 'Não avaliado: o documento não traz remunerações nem recolhimentos.'));
     } else if (r.abaixoMinimo.length) {
