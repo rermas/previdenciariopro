@@ -100,13 +100,13 @@
   // Quantidade de contribuições seguidas sem perda da qualidade de segurado, até a competência `ate`.
   // Lacunas cobertas por vínculo ou benefício não interrompem. Meses de vínculo antes de 07/1994 são presumidos como contribuição.
   function sequencia(analise, itensClasse, ate) {
-    var contrib = {}, cobertos = {}, presumidos = 0;
+    var contrib = {}, cobertos = {}, presum = {};
     analise.vinculos.forEach(function (v) {
       if (!v.valido) return;
       var a = C.mesDe(v.inicio.y, v.inicio.m), b = C.mesDe(v.fimContado.y, v.fimContado.m);
       for (var k = a; k <= b; k++) {
         cobertos[k] = true;
-        if (k < C.INICIO_PBC && DE_EMPREGO[itensClasse[v.seq]]) { if (!contrib[k]) presumidos++; contrib[k] = true; }
+        if (k < C.INICIO_PBC && DE_EMPREGO[itensClasse[v.seq]]) { presum[k] = true; contrib[k] = true; }
       }
       Object.keys(v.contribuicoes || {}).forEach(function (k) { contrib[k] = true; });
     });
@@ -117,20 +117,20 @@
       for (var k = a; k <= z; k++) cobertos[k] = true;
     });
     var ms = Object.keys(contrib).map(Number).filter(function (k) { return k <= ate; }).sort(function (x, y) { return x - y; });
-    var streak = 0, prev = null, perdas = [];
+    var streak = 0, prev = null, perdas = [], mesesSeq = [];
     ms.forEach(function (m) {
       if (prev !== null && m > prev + 1) {
         var coberto = true;
         for (var k = prev + 1; k < m; k++) if (!cobertos[k]) { coberto = false; break; }
         if (!coberto) {
           var g = streak > 120 ? 24 : 12;
-          if (m > prev + g + 2) { perdas.push({ apos: prev, retorno: m }); streak = 0; }
+          if (m > prev + g + 2) { perdas.push({ apos: prev, retorno: m }); streak = 0; mesesSeq = []; }
         }
       }
-      streak++;
+      streak++; mesesSeq.push(m);
       prev = m;
     });
-    return { total: streak, ultima: prev, perdas: perdas, presumidos: presumidos };
+    return { total: streak, ultima: prev, perdas: perdas, presumidos: mesesSeq.filter(function (k) { return presum[k]; }).length };
   }
 
   // ---------- Verificação do salário-maternidade ----------
@@ -309,20 +309,37 @@
         doc('Documentos que comprovem atividade ou contribuição anterior ao fato gerador');
       } else {
         var seqCls = {}; Object.keys(classes).forEach(function (k) { seqCls[k] = classes[k]; });
-        var sq = sequencia(analise, seqCls, ultimo.mc);
-        var facult = ultimo.classe === 'facultativa';
-        var base = facult ? 6 : 12;
-        var ate120 = !facult && sq.total > 120;
-        var ate = ultimoDiaDaQualidade(ultimo.mc, base);
-        var ate24 = !facult ? ultimoDiaDaQualidade(ultimo.mc, base + 12) : null;
-        var ateDes = !facult ? ultimoDiaDaQualidade(ultimo.mc, (ate120 ? 24 : 12) + 12) : null;
-        var prazoFinal = ate120 ? ate24 : ate;
+        var calcGraca = function (u) {
+          var sqU = sequencia(analise, seqCls, u.mc);
+          var fac = u.classe === 'facultativa';
+          var b = fac ? 6 : 12;
+          var e120 = !fac && sqU.total > 120;
+          var a1 = ultimoDiaDaQualidade(u.mc, b);
+          var a24 = !fac ? ultimoDiaDaQualidade(u.mc, b + 12) : null;
+          var aDes = !fac ? ultimoDiaDaQualidade(u.mc, (e120 ? 24 : 12) + 12) : null;
+          return { u: u, sq: sqU, facult: fac, base: b, ate120: e120, ate: a1, ate24: a24, ateDes: aDes, prazoFinal: e120 ? a24 : a1 };
+        };
+        var g1 = calcGraca(ultimo), notaFac = null;
+        if (g1.facult && fgOrd > g1.prazoFinal) {
+          // Facultativa perde a qualidade em 6 meses: confere se a atividade obrigatória anterior ainda a mantém (12/24 meses, +12 com desemprego).
+          var alt = cands.filter(function (c) { return c.classe !== 'facultativa'; })[0];
+          if (alt) {
+            var g2 = calcGraca(alt);
+            var fim2 = g2.ateDes || g2.prazoFinal;
+            if (fim2 > g1.prazoFinal) {
+              notaFac = 'Como facultativa, o prazo de 6 meses terminou em ' + rotulo(dObj(g1.prazoFinal)) + ', antes do fato gerador. Mas houve atividade anterior como ' + (alt.classe === 'beneficio' ? 'benefício' : CLASSES[alt.classe].toLowerCase()) + ' (Seq. ' + alt.seq + ', ' + alt.origem + '), que mantém a qualidade pelo prazo da categoria obrigatória (12 meses, 24 com mais de 120 contribuições, e mais 12 com desemprego involuntário comprovado). A conferência passa a usar essa atividade.';
+              g1 = g2; ultimo = alt;
+            }
+          }
+        }
+        var sq = g1.sq, facult = g1.facult, base = g1.base, ate120 = g1.ate120, ate = g1.ate, ate24 = g1.ate24, ateDes = g1.ateDes, prazoFinal = g1.prazoFinal;
         q.graca = {
           dataInicial: ultimo.origem, competenciaCessacao: rotuloMes(ultimo.mc), categoria: ultimo.classe === 'beneficio' ? 'Benefício' : CLASSES[ultimo.classe],
           prazoBase: base, contribuicoes: sq.total, extensao120: ate120, presumidos: sq.presumidos,
           ateBase: dObj(ate), ateComExtensao: ate120 ? dObj(ate24) : null, ateComDesemprego: ateDes ? dObj(ateDes) : null
         };
         q.linhas.push('Sem vínculo ou recolhimento ativo na data. Última cobertura: Seq. ' + ultimo.seq + ' (' + ultimo.nome + '), ' + ultimo.origem + '.');
+        if (notaFac) q.linhas.push(notaFac);
         q.linhas.push('Categoria considerada: ' + q.graca.categoria.toLowerCase() + '. Prazo-base: ' + base + ' meses' + (facult ? ' (facultativa)' : ' (art. 15, II, da Lei 8.213/91)') + '.');
         q.linhas.push('Contagem: a qualidade se mantém até o vencimento da contribuição do mês seguinte ao fim do prazo (dia ' + DIA_VENCIMENTO + ', passando para o dia útil seguinte se cair em fim de semana): até ' + rotulo(dObj(ate)) + ' no prazo-base. Não é somar 12 meses à data da última contribuição.');
         if (!facult) {
@@ -347,6 +364,20 @@
           doc('Documentos de atividade ou contribuição que não aparecem no CNIS');
         }
         if (sq.perdas.length) q.linhas.push('Interrupções que acarretaram perda da qualidade no histórico: ' + sq.perdas.map(function (p) { return 'depois de ' + rotuloMes(p.apos) + ' até ' + rotuloMes(p.retorno); }).join('; ') + '.');
+      }
+    }
+    // Parto sem qualidade na data: o benefício pode começar na DAT, até 28 dias antes do parto. Confere a qualidade nessa data.
+    if (!entrada._sub && (tipo === 'parto' || tipo === 'natimorto') && ['possivelmente_perdida', 'nao_demonstrada', 'indeterminada'].indexOf(q.status) >= 0) {
+      var dtAfast = (afD && afD.ord >= fgOrd - 28) ? afD : dObj(fgOrd - 28);
+      var antes = salarioMaternidade(analise, Object.assign({}, entrada, { data: dtAfast, afastamento: null, _sub: true }), hoje);
+      var qa = antes.qualidade && antes.qualidade.status;
+      if (qa === 'confirmada' || qa === 'provavel') {
+        q.status = 'provavel'; q.rotulo = 'Provável, dependendo da comprovação do afastamento';
+        q.antecipada = dtAfast;
+        q.linhas.push('Na data do parto (' + rotulo(fgD) + ') a qualidade não está demonstrada, mas em ' + rotulo(dtAfast) + ' (' + (fgOrd - dtAfast.ord) + ' dia(s) antes, dentro do limite de 28 dias da DAT) ela existia. Se o afastamento ocorreu nessa data ou antes, dentro dos 28 dias, o benefício pode ser fixado na DAT (art. 358, I). A IN 128/2022 exceta quem está em período de graça nessa antecipação: confirme o enquadramento.');
+        doc('Atestado médico ou documento que comprove a data do afastamento (até 28 dias antes do parto)');
+      } else {
+        q.linhas.push('Também foi conferida a data 28 dias antes do parto (' + rotulo(dtAfast) + '), em que o benefício poderia começar na DAT: a qualidade também não está demonstrada nela.');
       }
     }
     q.linhas.push('Contribuições posteriores ao fato gerador não criam qualidade retroativa.');
@@ -484,8 +515,10 @@
 
     // ----- Início, fim e documentos -----
     var inicio = fgOrd;
-    if (tipo === 'parto' && afD) {
-      if (q.graca) { fg.notas.push('Em período de graça, o benefício conta do nascimento, mesmo com afastamento anterior.'); }
+    if (q.antecipada && !afD) { inicio = q.antecipada.ord; fg.notas.push('Início do benefício na DAT estimada em ' + rotulo(q.antecipada) + ' (28 dias antes do parto), por ter qualidade de segurado nessa data e não na do parto. Confirme a data real do afastamento.'); }
+    else if (tipo === 'parto' && afD) {
+      if (q.antecipada) { inicio = q.antecipada.ord; fg.notas.push('Início do benefício na DAT (' + rotulo(q.antecipada) + '), por ter qualidade de segurado nessa data e não na do parto.'); }
+      else if (q.graca && q.status === 'confirmada') { fg.notas.push('Em período de graça, o benefício conta do nascimento, mesmo com afastamento anterior.'); }
       else if (fgOrd - afD.ord <= 28) inicio = afD.ord;
       else { inicio = fgOrd - 28; fg.notas.push('Afastamento com mais de 28 dias de antecedência: o início antecipado foi limitado a 28 dias antes do parto (confira).'); }
     }

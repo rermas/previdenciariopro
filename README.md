@@ -52,6 +52,8 @@ Cada artigo é uma entrada em `$POSTS` (`index.php`) e um arquivo `posts/{slug}.
 ### Verificar direito (salário-maternidade)
 Bloco logo abaixo do Mapa de competências, com botão "Verificar direito" (usa o extrato já lido). Etapas: fato gerador, categoria, qualidade de segurado (período de graça), carência, validade do CNIS, situações especiais e valor estimado. Normas em `NORMAS` (`assets/direito.js`), com vigência.
 - Período de graça: vale até o vencimento da contribuição do mês seguinte ao fim do prazo (dia 15; fim de semana passa para a segunda). Prazo 12 meses (6 na facultativa), 24 com mais de 120 contribuições sem perda, +12 com desemprego involuntário informado. Meses de vínculo anteriores a 07/1994 entram na contagem como presumidos.
+- Parto sem qualidade na data: confere a qualidade na DAT (afastamento informado ou 28 dias antes do parto); se existia, o resultado é "provável" e o início passa para a DAT. A IN 128/2022 exceta quem está em período de graça dessa antecipação: confirmar.
+- Facultativa com 6 meses vencidos: usa a graça da atividade obrigatória anterior (12/24/+12), se ela ainda cobrir a data.
 - Carência dispensada (ADIs 2.110/2.111 e regulamento do INSS). Confirmar a norma e a vigência antes de usar em peça.
 - Nunca presume facultativa ou desempregada pela falta de vínculo, nem fecha vínculo pela última remuneração.
 - Testes: `node tests/direito.test.js`.
