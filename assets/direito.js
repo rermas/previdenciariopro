@@ -100,13 +100,14 @@
 
   // Quantidade de contribuições seguidas sem perda da qualidade de segurado, até a competência `ate`.
   // Lacunas cobertas por vínculo ou benefício não interrompem. Meses de vínculo antes de 07/1994 são presumidos como contribuição.
-  function sequencia(analise, itensClasse, ate) {
-    var contrib = {}, cobertos = {}, presum = {};
+  function sequencia(analise, itensClasse, ate, desemp) {
+    var contrib = {}, cobertos = {}, presum = {}, empMes = {};
     analise.vinculos.forEach(function (v) {
       if (!v.valido) return;
       var a = C.mesDe(v.inicio.y, v.inicio.m), b = C.mesDe(v.fimContado.y, v.fimContado.m);
       for (var k = a; k <= b; k++) {
         cobertos[k] = true;
+        if (DE_EMPREGO[itensClasse[v.seq]] || itensClasse[v.seq] === 'rpps') empMes[k] = true;
         if (k < C.INICIO_PBC && DE_EMPREGO[itensClasse[v.seq]]) { presum[k] = true; contrib[k] = true; }
       }
       Object.keys(v.contribuicoes || {}).forEach(function (k) { contrib[k] = true; });
@@ -124,7 +125,7 @@
         var coberto = true;
         for (var k = prev + 1; k < m; k++) if (!cobertos[k]) { coberto = false; break; }
         if (!coberto) {
-          var g = streak > 120 ? 24 : 12;
+          var g = (streak > 120 ? 24 : 12) + (desemp && empMes[prev] ? 12 : 0); // seguro-desemprego soma 12 meses ao vínculo de empregado
           if (m > prev + g + 2) { perdas.push({ apos: prev, retorno: m }); streak = 0; mesesSeq = []; }
         }
       }
@@ -321,7 +322,7 @@
       } else {
         var seqCls = {}; Object.keys(classes).forEach(function (k) { seqCls[k] = classes[k]; });
         var calcGraca = function (u) {
-          var sqU = sequencia(analise, seqCls, u.mc);
+          var sqU = sequencia(analise, seqCls, u.mc, !!entrada.desemprego);
           var fac = u.classe === 'facultativa';
           var b = fac ? 6 : 12;
           var e120 = !fac && sqU.total > 120;
@@ -339,8 +340,21 @@
             var g2 = calcGraca(alt);
             var fim2 = g2.ateDes || g2.prazoFinal;
             if (fim2 > g1.prazoFinal) {
-              notaFac = 'Como facultativa, o prazo de 6 meses terminou em ' + rotulo(dObj(g1.prazoFinal)) + ', antes do fato gerador. Mas houve atividade anterior como ' + (alt.classe === 'beneficio' ? 'benefício' : CLASSES[alt.classe].toLowerCase()) + ' (Seq. ' + alt.seq + ', ' + alt.origem + '), que mantém a qualidade pelo prazo da categoria obrigatória (12 meses, 24 com mais de 120 contribuições, e mais 12 com desemprego involuntário comprovado). A conferência passa a usar essa atividade.';
+              notaFac = 'Como facultativa, o prazo de 6 meses terminou em ' + rotulo(dObj(g1.prazoFinal)) + ', antes do fato gerador. Mas houve atividade anterior como ' + (alt.classe === 'beneficio' ? 'benefício' : CLASSES[alt.classe].toLowerCase()) + ' (Seq. ' + alt.seq + ', ' + alt.origem + '), que mantém a qualidade pelo prazo da categoria obrigatória (12 meses, 24 com mais de 120 contribuições, e mais 12 com seguro-desemprego/SINE). A conferência passa a usar essa atividade.';
               g1 = g2; ultimo = alt;
+            }
+          }
+        }
+        // Seguro-desemprego/SINE soma 12 meses ao último vínculo de empregado, mesmo que depois dele haja contribuições como CI/facultativa.
+        var viaDes = null;
+        if (['ci', 'mei', 'facultativa'].indexOf(ultimoOrig.classe) >= 0) {
+          var empUlt = cands.filter(function (c) { return DE_EMPREGO[c.classe] || c.classe === 'rpps'; })[0];
+          if (empUlt) {
+            var perdasSem = sequencia(analise, seqCls, ultimoOrig.mc, false).perdas.length;
+            var perdasCom = sequencia(analise, seqCls, ultimoOrig.mc, true).perdas.length;
+            if (perdasSem > perdasCom) {
+              var gE = calcGraca(empUlt);
+              viaDes = { emp: empUlt, ate: gE.ateDes, aplicado: !!entrada.desemprego };
             }
           }
         }
@@ -361,17 +375,21 @@
         if (!facult) {
           q.linhas.push('Contribuições seguidas sem perda da qualidade até a cessação: ' + sq.total + (sq.presumidos ? ' (inclui ' + sq.presumidos + ' mês(es) de vínculo anteriores a 07/1994, presumidos)' : '') + '. ' +
             (ate120 ? 'Mais de 120: o prazo passa a 24 meses (art. 15, § 1º), até ' + rotulo(dObj(ate24)) + '.' : 'Não passa de 120, então não há prorrogação para 24 meses.'));
-          q.linhas.push('Desemprego involuntário comprovado soma mais 12 meses (art. 15, § 2º): a qualidade iria até ' + rotulo(dObj(ateDes)) + '.');
+          q.linhas.push('Seguro-desemprego/SINE (desemprego involuntário) soma mais 12 meses (art. 15, § 2º): a qualidade iria até ' + rotulo(dObj(ateDes)) + '.');
         }
         var indicioSeguro = analise.eventos.filter(function (e) { return /SEGURO[- ]DESEMPREGO/i.test(e.texto || ''); })[0];
         if (indicioSeguro) q.linhas.push('O CNIS registra evento de seguro-desemprego (' + (indicioSeguro.inicio ? rotulo(indicioSeguro.inicio) : 's/d') + (indicioSeguro.fim ? ' a ' + rotulo(indicioSeguro.fim) : '') + '): é um indício de desemprego, mas não substitui o registro no órgão próprio.');
         var des = !!entrada.desemprego;
+        if (viaDes) {
+          if (viaDes.aplicado) q.linhas.push('Com seguro-desemprego/SINE, o último vínculo de empregado (Seq. ' + viaDes.emp.seq + ', ' + viaDes.emp.origem + ') mantém a qualidade, pelo prazo normal mais 12 meses, até ' + rotulo(dObj(viaDes.ate)) + '. Por isso não houve perda da qualidade antes do retorno como ' + CLASSES[ultimoOrig.classe].toLowerCase() + '.');
+          else { q.linhas.push('Sem seguro-desemprego/SINE, houve perda da qualidade entre o vínculo de empregado (Seq. ' + viaDes.emp.seq + ') e o retorno como ' + CLASSES[ultimoOrig.classe].toLowerCase() + '. Com seguro-desemprego/SINE, a qualidade desse vínculo iria até ' + rotulo(dObj(viaDes.ate)) + ' e não haveria perda.'); doc('Comprovante do seguro-desemprego ou registro no SINE, se houver'); }
+        }
         if (fgOrd <= prazoFinal) {
           definir('confirmada', 'Confirmada pelos dados disponíveis');
           q.linhas.push('Fato gerador em ' + rotulo(fgD) + ': dentro do período de graça (' + rotulo(dObj(prazoFinal)) + ').');
           if (ultimo.classe === 'beneficio') q.linhas.push('Depois da cessação do benefício, o prazo seguinte conta como período de graça.');
         } else if (ateDes && fgOrd <= ateDes) {
-          if (des) { definir('provavel', 'Provável, dependendo de validação documental'); q.linhas.push('Fato gerador depois do prazo normal, mas dentro da prorrogação por desemprego, que você informou estar comprovado.'); }
+          if (des) { definir('provavel', 'Provável, dependendo de validação documental'); q.linhas.push('Fato gerador depois do prazo normal, mas dentro da prorrogação por seguro-desemprego/SINE, que você informou.'); }
           else { definir('indeterminada', 'Indeterminada por falta de informações'); q.linhas.push('Fato gerador depois do prazo normal (' + rotulo(dObj(prazoFinal)) + '). Só haveria qualidade com desemprego involuntário comprovado, e isso não foi informado.'); }
           doc('Comprovação do desemprego: registro no órgão próprio (SINE/MTE), seguro-desemprego ou CTPS com rescisão sem justa causa');
         } else {
@@ -381,7 +399,10 @@
         }
         if (!entrada.categoria || entrada.categoria === 'auto') {
           var oc = ultimoOrig.classe;
-          if ((oc === 'ci' || oc === 'mei' || oc === 'facultativa') && (q.status === 'confirmada' || q.status === 'provavel')) {
+          if (viaDes && viaDes.aplicado && (q.status === 'confirmada' || q.status === 'provavel')) {
+            usada = 'desempregada'; desc.usada = usada; q.graca.classe = viaDes.emp.classe;
+            desc.motivo = 'Qualidade mantida pelo último vínculo de empregado (Seq. ' + viaDes.emp.seq + ') com a soma de 12 meses do seguro-desemprego/SINE; as contribuições posteriores como ' + CLASSES[oc].toLowerCase() + ' não interromperam a qualidade. Categoria considerada: desempregada em período de graça.';
+          } else if ((oc === 'ci' || oc === 'mei' || oc === 'facultativa') && (q.status === 'confirmada' || q.status === 'provavel')) {
             usada = oc; desc.usada = oc;
             desc.motivo = 'Sem atividade na data, mas a qualidade se mantém e a última contribuição (Seq. ' + ultimoOrig.seq + ') foi como ' + CLASSES[oc].toLowerCase() + ': essa é a categoria considerada.';
           } else if ((DE_EMPREGO[oc] || oc === 'rpps') && (!ultimoOrig.presumido || fgMes - ultimoOrig.mc > 2)) {
@@ -426,7 +447,7 @@
     res.carencia = { status: 'dispensada', rotulo: 'Dispensada', linhas: [], competenciasValidas: validasAte, exigida: exigeCar ? CARENCIA : 0 };
     var cl = res.carencia.linhas;
     if (exigeCar) {
-      var sqFg = sequencia(analise, classes, fgMes);
+      var sqFg = sequencia(analise, classes, fgMes, !!entrada.desemprego);
       var depoisPerda = sqFg.perdas.length > 0;
       var ok10 = validasAte >= CARENCIA;
       var okTerco = !depoisPerda || sqFg.total >= Math.ceil(CARENCIA / 3);
@@ -477,7 +498,7 @@
     // ----- Etapa 6: situações especiais -----
     function esp(nome, situacao, texto) { res.especiais.push({ nome: nome, situacao: situacao, texto: texto }); }
     var semAtivo = !ativos.length && !emBeneficio;
-    esp('Segurada desempregada', semAtivo ? 'aplica' : 'nao', semAtivo ? 'Sem vínculo ativo: a qualidade depende do período de graça e do desemprego involuntário comprovado.' : 'Há vínculo, recolhimento ou benefício na data.');
+    esp('Segurada desempregada', semAtivo ? 'aplica' : 'nao', semAtivo ? 'Sem vínculo ativo: a qualidade depende do período de graça e do seguro-desemprego/SINE.' : 'Há vínculo, recolhimento ou benefício na data.');
     var meiAtivo = ativos.filter(function (a) { return a.classe === 'mei'; })[0];
     var contMEI = meiAtivo ? Object.keys(meiAtivo.item.contribuicoes).length : 0;
     esp('MEI com poucas contribuições', meiAtivo && contMEI < 10 ? 'verificar' : 'nao', meiAtivo ? 'MEI com ' + contMEI + ' contribuição(ões) no CNIS. A carência está dispensada, mas confira a regularidade e o início da atividade.' : 'Não há MEI ativo na data.');
@@ -582,7 +603,7 @@
     if (res.carencia.status === 'nao_cumprida' && ['confirmada', 'provavel', 'indeterminada'].indexOf(q.status) >= 0) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: carência', texto: 'A qualidade de segurado pode existir, mas o CNIS mostra ' + validasAte + ' contribuição(ões) válida(s) e a carência exigida antes de 05/04/2024 para ' + CLASSES[classeCar].toLowerCase() + ' é de ' + CARENCIA + '. Documentos que completem a carência podem mudar o resultado.' };
     else if (q.status === 'confirmada' && !pend.length) conc = { status: 'provavel', rotulo: 'Direito provável', texto: 'Com os dados do CNIS, a qualidade de segurado está demonstrada na data do fato gerador e a carência está dispensada. Falta apenas o fato gerador ser comprovado por documento.' };
     else if (q.status === 'confirmada' || q.status === 'provavel') conc = { status: 'depende', rotulo: 'Direito depende de validação documental', texto: 'A qualidade de segurado é compatível com o CNIS, mas há pontos a validar antes de concluir.' };
-    else if (q.status === 'indeterminada') conc = { status: 'depende', rotulo: 'Indeterminado por falta de informações', texto: 'O resultado depende de informação ou prova que não consta nos dados (como o desemprego involuntário).' };
+    else if (q.status === 'indeterminada') conc = { status: 'depende', rotulo: 'Indeterminado por falta de informações', texto: 'O resultado depende de informação ou prova que não consta nos dados (como o seguro-desemprego/SINE).' };
     else conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado pelos dados', texto: 'Os dados do CNIS não demonstram a qualidade de segurado na data do fato gerador. Isso não é uma conclusão definitiva: outras provas podem alterar o resultado.' };
     if (fg.prazoExcedido) {
       conc = { status: 'prescrito', rotulo: 'Sem direito: prescrição', texto: 'O fato gerador (' + rotulo(fgD) + ') tem mais de 5 anos: o prazo para requerer terminou em ' + rotulo(fg.prazoRequerer) + ' (art. 357, § 5º, da IN 128/2022). Pelos dados informados, o benefício está prescrito. A análise abaixo é apenas informativa.' };
@@ -668,7 +689,7 @@
         ['Contribuições seguidas', String(g.contribuicoes) + (g.extensao120 ? ' (mais de 120: 24 meses)' : '')],
         ['Qualidade mantida até (prazo-base)', C.rotuloData(g.ateBase)],
         ['Com prorrogação de 24 meses', g.ateComExtensao ? C.rotuloData(g.ateComExtensao) : 'não se aplica'],
-        ['Com desemprego involuntário comprovado', g.ateComDesemprego ? C.rotuloData(g.ateComDesemprego) : 'não se aplica']
+        ['Com seguro-desemprego/SINE', g.ateComDesemprego ? C.rotuloData(g.ateComDesemprego) : 'não se aplica']
       ]));
     }
     topo.appendChild(s3);
@@ -732,7 +753,7 @@
     grade.appendChild(campo('Categoria na data', selecao('dir-categoria', [['auto', 'Identificar pelo CNIS'], ['empregada', 'Empregada'], ['domestica', 'Empregada doméstica'], ['avulsa', 'Trabalhadora avulsa'], ['ci', 'Contribuinte individual'], ['mei', 'MEI'], ['facultativa', 'Facultativa'], ['desempregada', 'Desempregada (período de graça)'], ['especial', 'Segurada especial']])));
     bloco.appendChild(grade);
     var marcas = C.el('div', 'marcas');
-    marcas.appendChild(marca('dir-desemprego', 'Desemprego involuntário comprovado'));
+    marcas.appendChild(marca('dir-desemprego', 'Seguro-desemprego/SINE'));
     marcas.appendChild(marca('dir-internacao', 'Internação prolongada (mãe ou bebê)'));
     marcas.appendChild(marca('dir-falecimento', 'Falecimento de quem teria direito'));
     marcas.appendChild(marca('dir-anterior', 'Há requerimento anterior pelo mesmo fato'));

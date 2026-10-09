@@ -108,4 +108,21 @@ assert.equal(r.categoria.usada, 'facultativa');
 r = rodar(v(1, 'EMP A', '01/03/2024', '31/03/2025'), { tipo: 'parto', data: '2025-09-10', categoria: 'empregada' });
 assert.equal(r.categoria.usada, 'empregada', 'categoria informada prevalece');
 
+// Seguro-desemprego/SINE soma 12 meses ao último vínculo de empregado, mesmo com CI depois
+const rex = texto(
+  v(1, 'EMPRESA REX', '17/10/2018', '15/01/2019'), 'Remunerações',
+  '10/2018 1.200,00 11/2018 1.200,00 12/2018 1.200,00', '01/2019 600,00',
+  `2 ${NIT} RECOLHIMENTO Contribuinte Individual 01/10/2020 30/11/2020`, 'Contribuições',
+  '10/2020 10/11/2020 220,00 2.000,00 11/2020 10/12/2020 220,00 2.000,00'
+);
+r = D.salarioMaternidade(C.analisar(rex, { y: 2021, m: 6, d: 1 }), { tipo: 'parto', data: '2021-02-01' }, { y: 2021, m: 6, d: 1 });
+assert.equal(r.carencia.status, 'nao_cumprida', 'sem seguro-desemprego: houve perda e só 2 contribuições no retorno');
+assert.equal(r.conclusao.status, 'nao_demonstrado');
+assert.match(r.qualidade.linhas.join(' '), /Com seguro-desemprego\/SINE, a qualidade desse vínculo iria até 15\/03\/2021/);
+r = D.salarioMaternidade(C.analisar(rex, { y: 2021, m: 6, d: 1 }), { tipo: 'parto', data: '2021-02-01', desemprego: true }, { y: 2021, m: 6, d: 1 });
+assert.equal(r.categoria.usada, 'desempregada');
+assert.equal(r.carencia.status, 'dispensada');
+assert.notEqual(r.conclusao.status, 'nao_demonstrado');
+assert.match(r.qualidade.linhas.join(' '), /até 15\/03\/2021/);
+
 console.log('direito.test.js: ok');
