@@ -344,7 +344,7 @@
   function lerCampos() {
     var g = function (id) { return document.getElementById(id); };
     return {
-      obito: g('pm-obito').value, dependente: g('pm-dependente').value, nascimento: g('pm-nasc').value, uniao: g('pm-uniao').value,
+      obito: g('pm-obito').value, dependente: g('pm-dependente').value, nascimento: g('pm-nasc').value, uniao: ['conjuge', 'companheiro', 'ex_conjuge'].indexOf(g('pm-dependente').value) < 0 ? '' : g('pm-uniao').value,
       requerimento: g('pm-req').value, invalido: g('pm-invalido').checked, acidente: g('pm-acidente').checked,
       economica: g('pm-economica').checked, desemprego: g('dir-desemprego').checked
     };

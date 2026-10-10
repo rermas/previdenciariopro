@@ -814,7 +814,13 @@
       gp.appendChild(campo('Data do óbito do segurado', entrada('pm-obito', 'date')));
       gp.appendChild(campo('Dependente', selecao('pm-dependente', [['conjuge', 'Cônjuge'], ['companheiro', 'Companheiro(a)'], ['ex_conjuge', 'Ex-cônjuge/ex-companheiro(a) com pensão alimentícia'], ['filho', 'Filho ou equiparado'], ['filho_maior_invalido', 'Filho maior inválido ou com deficiência'], ['pai_mae', 'Pai ou mãe'], ['irmao', 'Irmão(ã)']])));
       gp.appendChild(campo('Nascimento do dependente', entrada('pm-nasc', 'date')));
-      gp.appendChild(campo('Início do casamento ou união estável', entrada('pm-uniao', 'date')));
+      var cUniao = campo('Início do casamento ou união estável', entrada('pm-uniao', 'date'));
+      cUniao.id = 'pm-uniao-campo';
+      gp.appendChild(cUniao);
+      var selDep = gp.querySelector('#pm-dependente');
+      var ajustaUniao = function () { cUniao.hidden = ['conjuge', 'companheiro', 'ex_conjuge'].indexOf(selDep.value) < 0; };
+      selDep.addEventListener('change', ajustaUniao);
+      ajustaUniao();
       gp.appendChild(campo('Data do requerimento (se houver)', entrada('pm-req', 'date')));
       gPM.appendChild(gp);
       var mp = C.el('div', 'marcas');
