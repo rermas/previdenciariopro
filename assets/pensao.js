@@ -21,6 +21,7 @@
     conjuge: { rotulo: 'Cônjuge', classe: 1, par: true },
     companheiro: { rotulo: 'Companheiro(a)', classe: 1, par: true },
     filho: { rotulo: 'Filho ou equiparado', classe: 1 },
+    filho_maior_invalido: { rotulo: 'Filho maior inválido ou com deficiência', classe: 1 },
     pai_mae: { rotulo: 'Pai ou mãe', classe: 2 },
     irmao: { rotulo: 'Irmão(ã)', classe: 3 }
   };
@@ -54,7 +55,9 @@
     };
     var obito = lerData(entrada.obito);
     var dep = DEPENDENTES[entrada.dependente] || DEPENDENTES.conjuge;
-    res.dependente = { tipo: entrada.dependente || 'conjuge', rotulo: dep.rotulo, classe: dep.classe, linhas: [], apto: true };
+    var maiorInvalido = entrada.dependente === 'filho_maior_invalido';
+    var tipoDep = maiorInvalido ? 'filho' : (DEPENDENTES[entrada.dependente] ? entrada.dependente : 'conjuge');
+    res.dependente = { tipo: tipoDep, rotulo: dep.rotulo, classe: dep.classe, linhas: [], apto: true };
     var docs = [];
     function doc(t) { if (docs.indexOf(t) < 0) docs.push(t); }
     if (!obito) {
@@ -90,7 +93,7 @@
     // ----- Dependente -----
     var nasc = lerData(entrada.nascimento);
     var idadeObito = nasc ? idadeEm(nasc, obito) : null;
-    var inval = !!entrada.invalido;
+    var inval = !!entrada.invalido || maiorInvalido;
     var d = res.dependente;
     d.idadeNoObito = idadeObito;
     if (dep.classe === 1) d.linhas.push('Classe I: a dependência econômica é presumida (art. 16, § 4º).');
@@ -102,20 +105,27 @@
     var parceiro = !!dep.par;
     var uniao = lerData(entrada.uniao);
     if (parceiro) {
-      doc(entrada.dependente === 'conjuge' ? 'Certidão de casamento' : 'Prova da união estável: documentos contemporâneos dos últimos 24 meses antes do óbito (art. 16, § 5º); só testemunha não basta');
+      doc(tipoDep === 'conjuge' ? 'Certidão de casamento' : 'Prova da união estável: documentos contemporâneos dos últimos 24 meses antes do óbito (art. 16, § 5º); só testemunha não basta');
       if (!uniao) d.linhas.push('Informe a data de início do casamento ou da união estável: ela define se a pensão dura 4 meses.');
       else if (uniao.ord > obito.ord) { d.linhas.push('A data de início da união é posterior ao óbito: confira.'); }
     }
-    if (dep.classe === 1 && !parceiro || entrada.dependente === 'irmao') {
-      if (!nasc) d.linhas.push('Informe a data de nascimento para calcular até quando dura a pensão.');
+    if (dep.classe === 1 && !parceiro || tipoDep === 'irmao') {
+      if (!nasc) { if (!inval) d.linhas.push('Informe a data de nascimento para calcular até quando dura a pensão.'); }
       else if (idadeObito >= 21 && !inval) { d.apto = false; d.linhas.push('Tinha ' + idadeObito + ' anos no óbito: com 21 anos ou mais e sem invalidez ou deficiência grave, não é dependente (art. 16, I e III).'); }
       else if (inval) d.linhas.push('Inválido ou com deficiência grave: sem limite de idade enquanto durar a condição (reavaliação periódica).');
       if (inval) doc('Laudo médico de invalidez ou deficiência grave, anterior ao óbito');
-      if (entrada.dependente === 'filho') doc('Certidão de nascimento do filho' + ' (e documentos de equiparação, se enteado ou menor sob tutela)');
+      if (tipoDep === 'filho') doc('Certidão de nascimento do filho' + ' (e documentos de equiparação, se enteado ou menor sob tutela)');
       else doc('Certidão de nascimento do irmão e de vínculo com o segurado');
     }
-    if (entrada.dependente === 'pai_mae') doc('Certidão de nascimento do segurado (prova do parentesco)');
+    if (tipoDep === 'pai_mae') doc('Certidão de nascimento do segurado (prova do parentesco)');
     if (parceiro && inval) { d.linhas.push('Cônjuge ou companheiro inválido ou com deficiência: a pensão dura enquanto durar a condição, respeitados os períodos mínimos abaixo (art. 77, § 2º, V, a).'); doc('Laudo médico de invalidez ou deficiência'); }
+
+    if (inval) {
+      d.pericia = true;
+      d.linhas.push('**A invalidez ou a deficiência precisa ser comprovada em perícia médica** (INSS), com laudos e exames. A condição deve existir na data do óbito (confira na norma se vale também a anterioridade aos 21 anos). Sem a perícia, a pensão de filho ou irmão maior de 21 anos não é concedida.');
+      doc('Laudos e exames médicos que comprovem a invalidez ou deficiência, para a perícia médica do INSS');
+    }
+    if (maiorInvalido && nasc && idadeObito < 21) d.linhas.push('Tinha ' + idadeObito + ' anos no óbito: a condição de inválido não era necessária para ser dependente nessa idade, mas garante a pensão após os 21 anos.');
 
     // ----- Duração -----
     var du = { rotulo: null, texto: '', anos: undefined, meses: null, vitalicia: false, fim: null, indeterminada: false, linhas: [], regra: null };
@@ -160,8 +170,8 @@
         du.texto = 'Sem a data de início do casamento ou da união estável não dá para saber se a pensão dura 4 meses ou a tabela por idade.';
       }
       if (inval && du.rotulo && !du.indeterminada) du.texto += ' Como o dependente é inválido ou com deficiência, depois desse período a pensão continua enquanto durar a condição.';
-    } else if (entrada.dependente === 'filho' || entrada.dependente === 'irmao') {
-      du.linhas.push('A regra de 18 contribuições e 2 anos **não se aplica** a ' + (entrada.dependente === 'filho' ? 'filhos' : 'irmãos') + '.');
+    } else if (tipoDep === 'filho' || tipoDep === 'irmao') {
+      du.linhas.push('A regra de 18 contribuições e 2 anos **não se aplica** a ' + (tipoDep === 'filho' ? 'filhos' : 'irmãos') + '.');
       if (!d.apto) { du.rotulo = 'Sem direito'; du.texto = 'Não é dependente (idade de 21 anos ou mais no óbito, sem invalidez).'; }
       else if (inval) { du.rotulo = 'Sem limite de idade'; du.texto = 'Enquanto durar a invalidez ou a deficiência grave (reavaliação periódica).'; du.vitalicia = true; }
       else if (!nasc) { du.indeterminada = true; du.rotulo = 'Informe a data de nascimento'; du.texto = 'A pensão dura até o dependente completar 21 anos.'; }
@@ -191,12 +201,14 @@
     var pend = [];
     base.cnis.filter(function (x) { return x.impede; }).forEach(function (x) { pend.push(x.achado + ' ' + x.documento + '.'); });
     d.linhas.forEach(function (l) { if (/^Informe /.test(l)) pend.push(l); });
+    if (d.pericia && d.apto) pend.push('Invalidez ou deficiência: comprovar em perícia médica do INSS.');
     var depOk = d.apto && (dep.classe === 1 || !!entrada.economica);
     var conc;
     var resumoDur = du.rotulo ? ' Duração: ' + du.rotulo.toLowerCase() + '.' : '';
     if (!qualOk) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: qualidade de segurado', texto: 'Os dados do CNIS não demonstram a qualidade de segurado do falecido na data do óbito. Não é conclusão definitiva: direito adquirido à aposentadoria ou incapacidade anterior podem mudar o resultado.' };
     else if (!d.apto) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: dependente', texto: 'O dependente informado não se enquadra no art. 16 da Lei 8.213/91 pelos dados informados.' };
     else if (dep.classe !== 1 && !entrada.economica) conc = { status: 'depende', rotulo: 'Depende da prova de dependência econômica', texto: 'Pais e irmãos precisam comprovar a dependência econômica do segurado, e só recebem se não houver dependente de classe anterior.' + resumoDur };
+    else if (d.pericia) conc = { status: 'depende', rotulo: 'Depende da perícia médica', texto: 'A qualidade de segurado do falecido ' + (q.status === 'confirmada' ? 'está demonstrada' : 'é compatível com o CNIS') + ', mas a invalidez ou deficiência do dependente precisa ser comprovada em perícia médica.' + resumoDur };
     else if (q.status === 'confirmada' && !pend.length) conc = { status: 'provavel', rotulo: 'Direito provável', texto: 'O falecido tinha qualidade de segurado na data do óbito e a pensão não exige carência. Falta comprovar o óbito, o vínculo com o dependente e, se for o caso, a dependência.' + resumoDur };
     else conc = { status: 'depende', rotulo: 'Direito depende de validação documental', texto: 'A qualidade de segurado é compatível com o CNIS, mas há pontos a validar antes de concluir.' + resumoDur };
     conc.pendencias = pend;

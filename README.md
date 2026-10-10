@@ -70,6 +70,7 @@ Escolha "Pensão por morte" na seção Verificar direito. Dados: data do óbito,
 - Sem carência: basta qualidade de segurado na data do óbito (mesmo módulo de período de graça do salário-maternidade, incluindo benefício em gozo e seguro-desemprego/SINE).
 - As 18 contribuições e os 2 anos de união valem só para cônjuge/companheiro(a) e definem a duração (4 meses ou tabela por idade). Acidente ou doença profissional/do trabalho dispensa as duas exigências (art. 77, § 2º-A).
 - Tabela por idade: óbito desde 01/01/2021, Portaria ME 424/2020 (22, 28, 31, 42 e 45 anos); de 18/06/2015 a 31/12/2020, Lei 13.135/2015 (21, 27, 30, 41 e 44 anos). Antes de 18/06/2015, fora desta verificação. Conferir portaria posterior (art. 77, § 2º-B).
+- Filho maior inválido (opção própria): sem limite de idade, mas a invalidez/deficiência precisa ser comprovada em perícia médica (vale para qualquer dependente marcado como inválido).
 - Filho: até 21 anos; irmão: até 21 anos (dependência econômica comprovada); inválido ou com deficiência grave: sem limite; pais: vitalícia (dependência econômica comprovada).
 - Início: do óbito se o pedido for feito em até 90 dias (180 se menor de 16); depois, do requerimento.
 - Contagem das 18 contribuições: competências válidas do CNIS desde 07/1994 mais meses de vínculo anteriores (presumidos). Valor da pensão não calculado nesta versão.

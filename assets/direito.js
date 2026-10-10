@@ -812,7 +812,7 @@
     if (root.PENSAO) {
       var gp = C.el('div', 'grade-campos');
       gp.appendChild(campo('Data do óbito do segurado', entrada('pm-obito', 'date')));
-      gp.appendChild(campo('Dependente', selecao('pm-dependente', [['conjuge', 'Cônjuge'], ['companheiro', 'Companheiro(a)'], ['filho', 'Filho ou equiparado'], ['pai_mae', 'Pai ou mãe'], ['irmao', 'Irmão(ã)']])));
+      gp.appendChild(campo('Dependente', selecao('pm-dependente', [['conjuge', 'Cônjuge'], ['companheiro', 'Companheiro(a)'], ['filho', 'Filho ou equiparado'], ['filho_maior_invalido', 'Filho maior inválido ou com deficiência'], ['pai_mae', 'Pai ou mãe'], ['irmao', 'Irmão(ã)']])));
       gp.appendChild(campo('Nascimento do dependente', entrada('pm-nasc', 'date')));
       gp.appendChild(campo('Início do casamento ou união estável', entrada('pm-uniao', 'date')));
       gp.appendChild(campo('Data do requerimento (se houver)', entrada('pm-req', 'date')));

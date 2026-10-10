@@ -87,6 +87,26 @@ assert.equal(r.conclusao.status, 'provavel');
 r = rodar(longo, { obito: '2022-03-10', dependente: 'irmao', nascimento: '2008-06-01', economica: true });
 assert.equal(dia(r.duracao.fim), '1/6/2029');
 
+// Filho maior inválido: sem limite de idade, mas a invalidez/deficiência precisa de perícia médica
+r = rodar(longo, { obito: '2022-03-10', dependente: 'filho_maior_invalido', nascimento: '1990-01-01' });
+assert.equal(r.dependente.tipo, 'filho');
+assert.equal(r.dependente.apto, true);
+assert.equal(r.duracao.vitalicia, true);
+assert.equal(r.duracao.rotulo, 'Sem limite de idade');
+assert.equal(r.conclusao.status, 'depende');
+assert.match(r.conclusao.rotulo, /perícia médica/);
+assert.match(r.dependente.linhas.join(' '), /perícia médica/);
+assert.ok(r.documentos.some((x) => /perícia médica/.test(x)));
+assert.ok(r.conclusao.pendencias.some((x) => /perícia médica/.test(x)));
+// Sem data de nascimento também funciona
+r = rodar(longo, { obito: '2022-03-10', dependente: 'filho_maior_invalido' });
+assert.equal(r.duracao.vitalicia, true);
+assert.equal(r.conclusao.pendencias.some((x) => /Informe/.test(x)), false);
+// Marcar "inválido" em qualquer dependente também exige a perícia
+r = rodar(longo, { obito: '2022-03-10', dependente: 'irmao', nascimento: '1990-01-01', invalido: true, economica: true });
+assert.equal(r.conclusao.status, 'depende');
+assert.match(r.dependente.linhas.join(' '), /perícia médica/);
+
 // Sem qualidade de segurado na data do óbito: direito não demonstrado
 r = rodar(vinculo([2010, 1], [2012, 12], '31/12/2012'), { obito: '2022-03-10', dependente: 'conjuge', nascimento: '1977-03-10', uniao: '2000-01-01' });
 assert.equal(r.conclusao.status, 'nao_demonstrado');
