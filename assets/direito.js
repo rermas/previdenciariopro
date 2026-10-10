@@ -785,8 +785,8 @@
 
   // Bloco "Verificar direito", logo abaixo do mapa de competências. Usa a análise já feita, sem reenviar o extrato.
   function montar(saida, analise) {
-    var bloco = C.sec('Verificar direito a um benefício', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.');
-    bloco.id = 'cnis-direito';
+    var bloco = C.el('div', 'convite-corpo');
+    bloco.appendChild(C.el('p', 'dica', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.'));
     var topo = C.el('div', 'grade-campos');
     var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : []));
     topo.appendChild(campo('Benefício', selBen));
@@ -859,8 +859,25 @@
       if (!campos.data) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do fato gerador.')); return; }
       resultado.appendChild(renderizar(salarioMaternidade(analise, campos, hojeAgora())));
     });
-    saida.appendChild(bloco);
-    return bloco;
+    // Cartão recolhido: quem só quer analisar o CNIS não é obrigado a ver o formulário
+    var sec = C.el('section', 'bloco convite');
+    sec.id = 'cnis-direito';
+    var det = C.el('details', 'convite-card');
+    var sum = C.el('summary');
+    var alvo = C.el('span', 'alvo'); alvo.setAttribute('aria-hidden', 'true');
+    alvo.appendChild(C.el('i')); alvo.appendChild(C.el('i')); alvo.appendChild(C.el('i'));
+    var txt = C.el('span', 'convite-txt');
+    var tit = C.el('strong', null, 'Verificar direito a um benefício');
+    tit.appendChild(C.el('em', 'convite-opcional', 'opcional'));
+    txt.appendChild(tit);
+    txt.appendChild(C.el('span', null, 'Salário-maternidade e pensão por morte, a partir deste extrato'));
+    sum.appendChild(alvo); sum.appendChild(txt);
+    sum.appendChild(C.el('span', 'convite-seta'));
+    det.appendChild(sum);
+    det.appendChild(bloco);
+    sec.appendChild(det);
+    saida.appendChild(sec);
+    return sec;
   }
 
   var api = { util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
