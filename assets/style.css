@@ -232,3 +232,7 @@ p { margin: 0 0 1rem; }
 .lista-simples { margin: 0.4rem 0 0.9rem; padding-left: 1.2rem; }
 .lista-simples li { margin: 0.25rem 0; }
 @media (max-width: 640px) { .figuras { grid-template-columns: repeat(2, 1fr); } }
+
+.regras { margin: 0.9rem 0; padding: 1rem 1.2rem; border: 1px solid var(--linha); border-radius: 8px; background: var(--azul-nota); }
+.regras p { margin: 0.4rem 0; }
+.regras .lista-simples { margin-bottom: 0; }

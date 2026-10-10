@@ -8,7 +8,8 @@ Site em PHP puro, sem banco de dados, com um único roteador (`index.php`). O fo
 index.php            roteador, configuração e todas as páginas
 assets/style.css     visual
 assets/cnis.js       leitura e análise do CNIS, mais a interface da ferramenta
-assets/direito.js    "Verificar direito" (hoje só salário-maternidade)
+assets/direito.js    "Verificar direito": salário-maternidade e qualidade de segurado
+assets/pensao.js     "Verificar direito": pensão por morte
 assets/vendor/       pdf.js (hospedado aqui, nada vem de domínio externo)
 assets/fonts/        Atkinson Hyperlegible
 posts/*.html         texto de cada artigo do blog
@@ -63,6 +64,16 @@ Bloco logo abaixo do Mapa de competências, com botão "Verificar direito" (usa 
 - Vínculo sem data de fim e sem movimento há 3 meses ou mais antes do fato gerador é tratado como encerrado na última remuneração (presunção, avisada no resultado), e não como ativo.
 - Nunca presume facultativa ou desempregada pela falta de vínculo, nem fecha vínculo pela última remuneração.
 - Testes: `node tests/direito.test.js`.
+
+### Pensão por morte
+Escolha "Pensão por morte" na seção Verificar direito. Dados: data do óbito, dependente (cônjuge, companheiro(a), filho, pai/mãe, irmão), nascimento, início da união, requerimento e marcações (inválido, acidente, dependência econômica).
+- Sem carência: basta qualidade de segurado na data do óbito (mesmo módulo de período de graça do salário-maternidade, incluindo benefício em gozo e seguro-desemprego/SINE).
+- As 18 contribuições e os 2 anos de união valem só para cônjuge/companheiro(a) e definem a duração (4 meses ou tabela por idade). Acidente ou doença profissional/do trabalho dispensa as duas exigências (art. 77, § 2º-A).
+- Tabela por idade: óbito desde 01/01/2021, Portaria ME 424/2020 (22, 28, 31, 42 e 45 anos); de 18/06/2015 a 31/12/2020, Lei 13.135/2015 (21, 27, 30, 41 e 44 anos). Antes de 18/06/2015, fora desta verificação. Conferir portaria posterior (art. 77, § 2º-B).
+- Filho: até 21 anos; irmão: até 21 anos (dependência econômica comprovada); inválido ou com deficiência grave: sem limite; pais: vitalícia (dependência econômica comprovada).
+- Início: do óbito se o pedido for feito em até 90 dias (180 se menor de 16); depois, do requerimento.
+- Contagem das 18 contribuições: competências válidas do CNIS desde 07/1994 mais meses de vínculo anteriores (presumidos). Valor da pensão não calculado nesta versão.
+- Testes: `node tests/pensao.test.js`.
 
 ### O que ainda falta validar
 

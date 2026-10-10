@@ -439,7 +439,7 @@
     });
     var classeCar = (usada && usada !== 'desempregada') ? usada : (q.graca ? q.graca.classe : null);
     var DATA_DISPENSA = C.ordemDe(2024, 4, 5);
-    var exigeCar = fgOrd < DATA_DISPENSA && ['ci', 'mei', 'facultativa', 'especial'].indexOf(classeCar) >= 0;
+    var exigeCar = !entrada._semCarencia && fgOrd < DATA_DISPENSA && ['ci', 'mei', 'facultativa', 'especial'].indexOf(classeCar) >= 0;
     var CARENCIA = 10;
     res.carencia = { status: 'dispensada', rotulo: 'Dispensada', linhas: [], competenciasValidas: validasAte, exigida: exigeCar ? CARENCIA : 0 };
     var cl = res.carencia.linhas;
@@ -703,7 +703,7 @@
       caixa.appendChild(lista(c.pendencias.slice(0, 8)));
     }
     topo.appendChild(caixa);
-    if (!r.fatoGerador.valido) { saida.insertBefore(topo, saida.firstChild); return topo; }
+    if (!r.fatoGerador.valido) return topo;
 
     var fg = r.fatoGerador;
     var s1 = C.sec('1. Fato gerador');
@@ -785,21 +785,56 @@
 
   // Bloco "Verificar direito", logo abaixo do mapa de competências. Usa a análise já feita, sem reenviar o extrato.
   function montar(saida, analise) {
-    var bloco = C.sec('Verificar direito a um benefício', 'Escolha o benefício e a data do fato gerador e clique em Verificar direito. A conferência usa o extrato já lido.');
+    var bloco = C.sec('Verificar direito a um benefício', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.');
     bloco.id = 'cnis-direito';
+    var topo = C.el('div', 'grade-campos');
+    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : []));
+    topo.appendChild(campo('Benefício', selBen));
+    bloco.appendChild(topo);
+
+    // Salário-maternidade
+    var gSM = C.el('div'); gSM.id = 'dir-grupo-sm';
     var grade = C.el('div', 'grade-campos');
-    grade.appendChild(campo('Benefício', selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']])));
     grade.appendChild(campo('Fato gerador', selecao('dir-tipo', [['parto', 'Parto'], ['natimorto', 'Natimorto'], ['aborto', 'Aborto não criminoso'], ['adocao', 'Adoção'], ['guarda', 'Guarda judicial para adoção'], ['outro', 'Outra hipótese']])));
     grade.appendChild(campo('Data do fato gerador', entrada('dir-data', 'date')));
     grade.appendChild(campo('Início do afastamento (se houver)', entrada('dir-afast', 'date')));
     grade.appendChild(campo('Categoria na data', selecao('dir-categoria', [['auto', 'Identificar pelo CNIS'], ['empregada', 'Empregada'], ['domestica', 'Empregada doméstica'], ['avulsa', 'Trabalhadora avulsa'], ['ci', 'Contribuinte individual'], ['mei', 'MEI'], ['facultativa', 'Facultativa'], ['desempregada', 'Desempregada (período de graça)'], ['especial', 'Segurada especial']])));
-    bloco.appendChild(grade);
+    gSM.appendChild(grade);
     var marcas = C.el('div', 'marcas');
-    marcas.appendChild(marca('dir-desemprego', 'Seguro-desemprego/SINE'));
     marcas.appendChild(marca('dir-internacao', 'Internação prolongada (mãe ou bebê)'));
     marcas.appendChild(marca('dir-falecimento', 'Falecimento de quem teria direito'));
     marcas.appendChild(marca('dir-anterior', 'Há requerimento anterior pelo mesmo fato'));
-    bloco.appendChild(marcas);
+    gSM.appendChild(marcas);
+    bloco.appendChild(gSM);
+
+    // Pensão por morte
+    var gPM = C.el('div'); gPM.id = 'dir-grupo-pm'; gPM.hidden = true;
+    if (root.PENSAO) {
+      var gp = C.el('div', 'grade-campos');
+      gp.appendChild(campo('Data do óbito do segurado', entrada('pm-obito', 'date')));
+      gp.appendChild(campo('Dependente', selecao('pm-dependente', [['conjuge', 'Cônjuge'], ['companheiro', 'Companheiro(a)'], ['filho', 'Filho ou equiparado'], ['pai_mae', 'Pai ou mãe'], ['irmao', 'Irmão(ã)']])));
+      gp.appendChild(campo('Nascimento do dependente', entrada('pm-nasc', 'date')));
+      gp.appendChild(campo('Início do casamento ou união estável', entrada('pm-uniao', 'date')));
+      gp.appendChild(campo('Data do requerimento (se houver)', entrada('pm-req', 'date')));
+      gPM.appendChild(gp);
+      var mp = C.el('div', 'marcas');
+      mp.appendChild(marca('pm-invalido', 'Dependente inválido ou com deficiência'));
+      mp.appendChild(marca('pm-acidente', 'Óbito por acidente ou doença profissional/do trabalho'));
+      mp.appendChild(marca('pm-economica', 'Dependência econômica comprovada (pais e irmãos)'));
+      gPM.appendChild(mp);
+    }
+    bloco.appendChild(gPM);
+
+    var comuns = C.el('div', 'marcas');
+    comuns.appendChild(marca('dir-desemprego', 'Seguro-desemprego/SINE'));
+    bloco.appendChild(comuns);
+
+    selBen.addEventListener('change', function () {
+      var pm = selBen.value === 'pensao-por-morte';
+      gSM.hidden = pm; gPM.hidden = !pm;
+      resultado.textContent = '';
+    });
+
     var acoes = C.el('div', 'acoes');
     var botao = C.el('button', 'btn', 'Verificar direito'); botao.type = 'button'; botao.id = 'dir-verificar';
     acoes.appendChild(botao);
@@ -807,16 +842,22 @@
     var resultado = C.el('div'); resultado.id = 'dir-resultado'; resultado.setAttribute('aria-live', 'polite');
     bloco.appendChild(resultado);
     botao.addEventListener('click', function () {
-      var campos = lerCampos();
-      if (!campos.data) { resultado.textContent = ''; resultado.appendChild(C.el('p', 'msg', 'Informe a data do fato gerador.')); return; }
       resultado.textContent = '';
+      if (selBen.value === 'pensao-por-morte' && root.PENSAO) {
+        var cp = root.PENSAO.lerCampos();
+        if (!cp.obito) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do óbito.')); return; }
+        resultado.appendChild(root.PENSAO.renderizar(root.PENSAO.pensaoPorMorte(analise, cp, hojeAgora())));
+        return;
+      }
+      var campos = lerCampos();
+      if (!campos.data) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do fato gerador.')); return; }
       resultado.appendChild(renderizar(salarioMaternidade(analise, campos, hojeAgora())));
     });
     saida.appendChild(bloco);
     return bloco;
   }
 
-  var api = { salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
