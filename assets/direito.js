@@ -447,10 +447,10 @@
       var sqFg = sequencia(analise, classes, fgMes, !!entrada.desemprego);
       var depoisPerda = sqFg.perdas.length > 0;
       var ok10 = validasAte >= CARENCIA;
-      var okTerco = !depoisPerda || sqFg.total >= Math.ceil(CARENCIA / 3);
+      var okTerco = !depoisPerda || sqFg.total >= Math.ceil(CARENCIA / 2);
       cl.push('Fato gerador em ' + rotulo(fgD) + ', antes de 05/04/2024: para ' + CLASSES[classeCar].toLowerCase() + ' a carência é de ' + CARENCIA + ' contribuições mensais (art. 25, III, da Lei 8.213/91). A dispensa para essas categorias vale só a partir de 05/04/2024. Empregada, doméstica e avulsa não têm carência em nenhuma data.');
       cl.push('Competências do CNIS de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo: ' + validasAte + '.');
-      if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver ao menos 1/3 da carência (' + Math.ceil(CARENCIA / 3) + ') depois do retorno (art. 27-A da Lei 8.213/91). Depois do retorno: ' + sqFg.total + '.');
+      if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver ao menos metade da carência (' + Math.ceil(CARENCIA / 2) + ') depois do retorno (art. 27-A da Lei 8.213/91). Depois do retorno: ' + sqFg.total + '.');
       cl.push('Parto antecipado reduz a carência em igual número de meses da antecipação (art. 25, parágrafo único): não aplicado aqui.');
       if (ok10 && okTerco) { res.carencia.status = 'cumprida'; res.carencia.rotulo = 'Cumprida pelos dados do CNIS'; }
       else { res.carencia.status = 'nao_cumprida'; res.carencia.rotulo = 'Não cumprida pelos dados do CNIS'; doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
@@ -788,7 +788,7 @@
     var bloco = C.el('div', 'convite-corpo');
     bloco.appendChild(C.el('p', 'dica', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.'));
     var topo = C.el('div', 'grade-campos');
-    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : []));
+    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)']] : []));
     topo.appendChild(campo('Benefício', selBen));
     bloco.appendChild(topo);
 
@@ -831,13 +831,50 @@
     }
     bloco.appendChild(gPM);
 
+    // Auxílio-reclusão
+    var gAR = C.el('div'); gAR.id = 'dir-grupo-ar'; gAR.hidden = true;
+    if (root.BENEFICIOS) {
+      var ga = C.el('div', 'grade-campos');
+      ga.appendChild(campo('Data do recolhimento à prisão', entrada('ar-prisao', 'date')));
+      ga.appendChild(campo('Regime de cumprimento', selecao('ar-regime', [['fechado', 'Regime fechado'], ['provisorio', 'Prisão provisória (preventiva ou temporária)'], ['semiaberto', 'Regime semiaberto'], ['aberto', 'Regime aberto ou prisão domiciliar']])));
+      ga.appendChild(campo('Data da soltura (se já ocorreu)', entrada('ar-soltura', 'date')));
+      ga.appendChild(campo('Dependente', selecao('ar-dependente', [['conjuge', 'Cônjuge'], ['companheiro', 'Companheiro(a)'], ['filho', 'Filho ou equiparado'], ['filho_maior_invalido', 'Filho maior inválido ou com deficiência'], ['pai_mae', 'Pai ou mãe'], ['irmao', 'Irmão(ã)']])));
+      ga.appendChild(campo('Nascimento do dependente', entrada('ar-nasc', 'date')));
+      var cUniaoAr = campo('Início do casamento ou união estável', entrada('ar-uniao', 'date'));
+      ga.appendChild(cUniaoAr);
+      ga.appendChild(campo('Data do requerimento (se houver)', entrada('ar-req', 'date')));
+      var selDepAr = ga.querySelector('#ar-dependente');
+      var ajustaAr = function () { cUniaoAr.hidden = ['conjuge', 'companheiro'].indexOf(selDepAr.value) < 0; };
+      selDepAr.addEventListener('change', ajustaAr);
+      ajustaAr();
+      gAR.appendChild(ga);
+      var ma = C.el('div', 'marcas');
+      ma.appendChild(marca('ar-invalido', 'Dependente inválido ou com deficiência'));
+      ma.appendChild(marca('ar-economica', 'Dependência econômica comprovada (pais e irmãos)'));
+      gAR.appendChild(ma);
+    }
+    bloco.appendChild(gAR);
+
+    // Auxílio por incapacidade temporária
+    var gAI = C.el('div'); gAI.id = 'dir-grupo-ai'; gAI.hidden = true;
+    if (root.BENEFICIOS) {
+      var gi = C.el('div', 'grade-campos');
+      gi.appendChild(campo('Data de início da incapacidade (DII)', entrada('ai-dii', 'date')));
+      gi.appendChild(campo('Início do afastamento (se diferente)', entrada('ai-afast', 'date')));
+      gi.appendChild(campo('Data do requerimento (se houver)', entrada('ai-req', 'date')));
+      gi.appendChild(campo('Origem da incapacidade', selecao('ai-origem', [['comum', 'Doença ou lesão comum'], ['acidente', 'Acidente de qualquer natureza ou doença profissional/do trabalho'], ['doenca_lista', 'Doença grave da lista oficial (isenta carência)']])));
+      gi.appendChild(campo('Doença ou lesão anterior à filiação?', selecao('ai-pre', [['nao', 'Não, começou depois de se filiar'], ['sim', 'Sim, já existia ao se filiar, sem agravamento'], ['agravamento', 'Já existia, mas se agravou depois']])));
+      gAI.appendChild(gi);
+    }
+    bloco.appendChild(gAI);
+
     var comuns = C.el('div', 'marcas');
     comuns.appendChild(marca('dir-desemprego', 'Seguro-desemprego/SINE'));
     bloco.appendChild(comuns);
 
     selBen.addEventListener('change', function () {
-      var pm = selBen.value === 'pensao-por-morte';
-      gSM.hidden = pm; gPM.hidden = !pm;
+      var v = selBen.value;
+      gSM.hidden = v !== 'salario-maternidade'; gPM.hidden = v !== 'pensao-por-morte'; gAR.hidden = v !== 'auxilio-reclusao'; gAI.hidden = v !== 'auxilio-incapacidade-temporaria';
       resultado.textContent = '';
     });
 
@@ -855,6 +892,18 @@
         resultado.appendChild(root.PENSAO.renderizar(root.PENSAO.pensaoPorMorte(analise, cp, hojeAgora())));
         return;
       }
+      if (selBen.value === 'auxilio-reclusao' && root.BENEFICIOS) {
+        var cr = root.BENEFICIOS.lerCamposReclusao();
+        if (!cr.prisao) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do recolhimento à prisão.')); return; }
+        resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioReclusao(analise, cr, hojeAgora())));
+        return;
+      }
+      if (selBen.value === 'auxilio-incapacidade-temporaria' && root.BENEFICIOS) {
+        var ci = root.BENEFICIOS.lerCamposIncapacidade();
+        if (!ci.dii) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de início da incapacidade.')); return; }
+        resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioIncapacidade(analise, ci, hojeAgora())));
+        return;
+      }
       var campos = lerCampos();
       if (!campos.data) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do fato gerador.')); return; }
       resultado.appendChild(renderizar(salarioMaternidade(analise, campos, hojeAgora())));
@@ -870,7 +919,7 @@
     var tit = C.el('strong', null, 'Verificar direito a um benefício');
     tit.appendChild(C.el('em', 'convite-opcional', 'opcional'));
     txt.appendChild(tit);
-    txt.appendChild(C.el('span', null, 'Salário-maternidade e pensão por morte, a partir deste extrato'));
+    txt.appendChild(C.el('span', null, 'Salário-maternidade, pensão por morte, auxílio-reclusão e incapacidade temporária'));
     sum.appendChild(alvo); sum.appendChild(txt);
     sum.appendChild(C.el('span', 'convite-seta'));
     det.appendChild(sum);

@@ -590,6 +590,7 @@ if ($rota === '/') {
 <script src="<?= e(u('/assets/cnis.js')) ?>?v=<?= filemtime(__DIR__ . '/assets/cnis.js') ?>"></script>
 <script src="<?= e(u('/assets/direito.js')) ?>?v=<?= filemtime(__DIR__ . '/assets/direito.js') ?>"></script>
 <script src="<?= e(u('/assets/pensao.js')) ?>?v=<?= filemtime(__DIR__ . '/assets/pensao.js') ?>"></script>
+<script src="<?= e(u('/assets/beneficios.js')) ?>?v=<?= filemtime(__DIR__ . '/assets/beneficios.js') ?>"></script>
 <?php
     rodape();
 

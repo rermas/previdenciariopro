@@ -10,6 +10,7 @@ assets/style.css     visual
 assets/cnis.js       leitura e análise do CNIS, mais a interface da ferramenta
 assets/direito.js    "Verificar direito": salário-maternidade e qualidade de segurado
 assets/pensao.js     "Verificar direito": pensão por morte
+assets/beneficios.js "Verificar direito": auxílio-reclusão e auxílio por incapacidade temporária
 assets/vendor/       pdf.js (hospedado aqui, nada vem de domínio externo)
 assets/fonts/        Atkinson Hyperlegible
 posts/*.html         texto de cada artigo do blog
@@ -60,7 +61,7 @@ Bloco logo abaixo do Mapa de competências, com botão "Verificar direito" (usa 
 - Seguro-desemprego/SINE (campo marcado): soma 12 meses ao período de graça do último vínculo de empregado, mesmo que depois haja contribuições como CI/facultativa; ele só evita a perda da qualidade entre o vínculo e o retorno; a categoria, a carência e o valor seguem a filiação do último recolhimento antes do fato gerador.
 - Sem carência como CI/MEI/facultativa (fato gerador antes de 05/04/2024): confere o último vínculo de empregado; se ele ainda mantém a qualidade (graça normal, ou com seguro-desemprego/SINE marcado), o benefício é concedido como desempregada, sem carência, com observação no resultado.
 - Categoria na data: desempregada em período de graça quando o último vínculo teve fim (ou foi tratado como encerrado, com mais de 2 meses até o fato gerador); se a última contribuição foi de contribuinte individual, MEI ou facultativa e a qualidade se mantém, vale essa categoria. A categoria informada manualmente prevalece.
-- Carência: empregada, doméstica e avulsa não têm. Contribuinte individual, MEI, facultativa e segurada especial: 10 contribuições para fato gerador antes de 05/04/2024 (com a regra de 1/3 após perda, art. 27-A), dispensada a partir dessa data (ADIs 2.110/2.111 e regulamento do INSS). Confirmar a norma e a vigência antes de usar em peça.
+- Carência: empregada, doméstica e avulsa não têm. Contribuinte individual, MEI, facultativa e segurada especial: 10 contribuições para fato gerador antes de 05/04/2024 (com a regra da metade após perda da qualidade, art. 27-A), dispensada a partir dessa data (ADIs 2.110/2.111 e regulamento do INSS). Confirmar a norma e a vigência antes de usar em peça.
 - Vínculo sem data de fim e sem movimento há 3 meses ou mais antes do fato gerador é tratado como encerrado na última remuneração (presunção, avisada no resultado), e não como ativo.
 - Nunca presume facultativa ou desempregada pela falta de vínculo, nem fecha vínculo pela última remuneração.
 - Testes: `node tests/direito.test.js`.
@@ -76,6 +77,18 @@ Escolha "Pensão por morte" na seção Verificar direito. Dados: data do óbito,
 - IN 128/2022: instituidor aposentado (exceto por incapacidade) dispensa as 18 contribuições (art. 375, § 3º); cônjuge/companheiro que requer depois do fim da cota tem pedido indeferido (art. 375, § 7º); ex-cônjuge exige prova de alimentos ou ajuda financeira (arts. 372, 373, 375, § 1º); qualidade perdida só se salva por direito adquirido ou incapacidade no período de graça (art. 368).
 - Contagem das 18 contribuições: competências válidas do CNIS desde 07/1994 mais meses de vínculo anteriores (presumidos). Valor da pensão não calculado nesta versão.
 - Testes: `node tests/pensao.test.js`.
+
+### Auxílio-reclusão
+- Carência de 24 contribuições (art. 25, IV), sem dispensa; após perda da qualidade, metade (12) contada da nova filiação (art. 27-A).
+- Baixa renda: média dos salários de contribuição dos 12 meses anteriores à prisão contra o limite do ano (tabela `LIMITE_RENDA` em `beneficios.js`, 2019 a 2026; atualizar todo janeiro pela Portaria Interministerial). Sem salário no período: renda zero, com prova.
+- Só regime fechado ou prisão provisória (prisões desde 18/01/2019). Impedem: benefício em gozo (aposentadoria, auxílio por incapacidade, pensão, salário-maternidade) e remuneração da empresa.
+- Duração e dependentes seguem a pensão por morte (tabelas de idade), contadas da prisão; termina com a soltura. Início: da prisão se pedido em até 90 dias (180 se menor de 16); valor de um salário mínimo, dividido entre os dependentes.
+- Testes: `node tests/beneficios.test.js`.
+
+### Auxílio por incapacidade temporária
+- Carência de 12 contribuições, dispensada para acidente de qualquer natureza, doença profissional/do trabalho e doenças da lista oficial; segurado especial precisa de 12 meses de atividade rural.
+- Qualidade conferida na DII (data de início da incapacidade), não no requerimento. Incapacidade anterior à filiação nega o benefício, salvo agravamento.
+- Início: empregado (exceto doméstico) a partir do 16º dia do afastamento; demais, da DII; pedido com mais de 30 dias do afastamento conta da DER. Conclusão sempre "depende da perícia médica". Valor não calculado (exige correção monetária).
 
 ### O que ainda falta validar
 
