@@ -126,4 +126,43 @@ assert.equal(r.duracao.indeterminada, true);
 r = rodar(longo, { dependente: 'conjuge' });
 assert.equal(r.conclusao.status, 'incompleta');
 
+// --- Alinhamento com a IN PRES/INSS 128/2022 ---
+// Instituidor aposentado (não por incapacidade): dispensa as 18 contribuições (art. 375, § 3º)
+const aposentadoTxt = vinculo([2022, 1], [2022, 3], '10/03/2022') + '\n2 ' + NIT + ' 1234567890 Benefício 42 - APOSENTADORIA POR TEMPO DE CONTRIBUICAO 01/01/2015';
+r = rodar(aposentadoTxt, { obito: '2022-03-10', dependente: 'conjuge', nascimento: '1977-03-10', uniao: '2000-01-01' });
+assert.equal(r.contribuicoes.aposentado, true);
+assert.equal(r.contribuicoes.tem18, true);
+assert.equal(r.duracao.vitalicia, true);
+// Aposentadoria por incapacidade NÃO dispensa
+r = rodar(vinculo([2022, 1], [2022, 3], '10/03/2022') + '\n2 ' + NIT + ' 1234567890 Benefício 32 - APOSENTADORIA POR INVALIDEZ 01/01/2015', { obito: '2022-03-10', dependente: 'conjuge', nascimento: '1977-03-10', uniao: '2000-01-01' });
+assert.equal(r.contribuicoes.aposentado, false);
+assert.equal(r.duracao.meses, 4);
+
+// Requerimento depois do fim da cota do cônjuge: indeferido (art. 375, § 7º)
+r = rodar(longo, { obito: '2022-03-10', dependente: 'conjuge', nascimento: '2000-03-11', uniao: '2018-01-01', requerimento: '2026-05-01' });
+assert.equal(r.duracao.anos, 3);
+assert.equal(r.conclusao.status, 'nao_demonstrado');
+assert.match(r.conclusao.rotulo, /fora do prazo/);
+// Filho não sofre esse indeferimento
+r = rodar(longo, { obito: '2022-03-10', dependente: 'filho', nascimento: '2010-01-01', requerimento: '2024-05-01' });
+assert.notEqual(r.conclusao.status, 'nao_demonstrado');
+
+// Filho inválido com 10 anos de idade no óbito vale como maior de 16: 90 dias
+r = rodar(longo, { obito: '2022-03-10', dependente: 'filho', nascimento: '2015-01-01', invalido: true, requerimento: '2022-08-01' });
+assert.equal(dia(r.inicio.dib), '1/8/2022');
+// Filho nascido após o óbito: DIB no nascimento (art. 369-A)
+r = rodar(longo, { obito: '2022-03-10', dependente: 'filho', nascimento: '2022-06-01' });
+assert.equal(dia(r.inicio.dib), '1/6/2022');
+
+// Ex-cônjuge: exige prova de alimentos/ajuda financeira
+r = rodar(longo, { obito: '2022-03-10', dependente: 'ex_conjuge', nascimento: '1977-03-10', uniao: '2000-01-01' });
+assert.equal(r.conclusao.status, 'depende');
+r = rodar(longo, { obito: '2022-03-10', dependente: 'ex_conjuge', nascimento: '1977-03-10', uniao: '2000-01-01', economica: true });
+assert.equal(r.conclusao.status, 'provavel');
+
+// Tabela de 2015 vale desde 01/03/2015 (art. 375)
+r = rodar(vinculo([2013, 6], [2015, 3], '10/03/2015'), { obito: '2015-03-10', dependente: 'conjuge', nascimento: '1990-01-01', uniao: '2005-01-01' });
+assert.ok(r.duracao.anos || r.duracao.vitalicia, 'óbito em 03/2015 usa a tabela da Lei 13.135/2015');
+assert.equal(r.tabela.nome, '2015');
+
 console.log('pensao.test.js: ok');

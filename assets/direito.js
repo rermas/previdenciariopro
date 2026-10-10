@@ -812,7 +812,7 @@
     if (root.PENSAO) {
       var gp = C.el('div', 'grade-campos');
       gp.appendChild(campo('Data do óbito do segurado', entrada('pm-obito', 'date')));
-      gp.appendChild(campo('Dependente', selecao('pm-dependente', [['conjuge', 'Cônjuge'], ['companheiro', 'Companheiro(a)'], ['filho', 'Filho ou equiparado'], ['filho_maior_invalido', 'Filho maior inválido ou com deficiência'], ['pai_mae', 'Pai ou mãe'], ['irmao', 'Irmão(ã)']])));
+      gp.appendChild(campo('Dependente', selecao('pm-dependente', [['conjuge', 'Cônjuge'], ['companheiro', 'Companheiro(a)'], ['ex_conjuge', 'Ex-cônjuge/ex-companheiro(a) com pensão alimentícia'], ['filho', 'Filho ou equiparado'], ['filho_maior_invalido', 'Filho maior inválido ou com deficiência'], ['pai_mae', 'Pai ou mãe'], ['irmao', 'Irmão(ã)']])));
       gp.appendChild(campo('Nascimento do dependente', entrada('pm-nasc', 'date')));
       gp.appendChild(campo('Início do casamento ou união estável', entrada('pm-uniao', 'date')));
       gp.appendChild(campo('Data do requerimento (se houver)', entrada('pm-req', 'date')));
@@ -820,7 +820,7 @@
       var mp = C.el('div', 'marcas');
       mp.appendChild(marca('pm-invalido', 'Dependente inválido ou com deficiência'));
       mp.appendChild(marca('pm-acidente', 'Óbito por acidente ou doença profissional/do trabalho'));
-      mp.appendChild(marca('pm-economica', 'Dependência econômica comprovada (pais e irmãos)'));
+      mp.appendChild(marca('pm-economica', 'Dependência econômica comprovada (pais, irmãos, ex-cônjuge com alimentos)'));
       gPM.appendChild(mp);
     }
     bloco.appendChild(gPM);

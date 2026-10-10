@@ -66,13 +66,14 @@ Bloco logo abaixo do Mapa de competências, com botão "Verificar direito" (usa 
 - Testes: `node tests/direito.test.js`.
 
 ### Pensão por morte
-Escolha "Pensão por morte" na seção Verificar direito. Dados: data do óbito, dependente (cônjuge, companheiro(a), filho, pai/mãe, irmão), nascimento, início da união, requerimento e marcações (inválido, acidente, dependência econômica).
+Escolha "Pensão por morte" na seção Verificar direito. Dados: data do óbito, dependente (cônjuge, companheiro(a), ex-cônjuge com alimentos, filho, filho maior inválido, pai/mãe, irmão), nascimento, início da união, requerimento e marcações (inválido, acidente, dependência econômica).
 - Sem carência: basta qualidade de segurado na data do óbito (mesmo módulo de período de graça do salário-maternidade, incluindo benefício em gozo e seguro-desemprego/SINE).
 - As 18 contribuições e os 2 anos de união valem só para cônjuge/companheiro(a) e definem a duração (4 meses ou tabela por idade). Acidente ou doença profissional/do trabalho dispensa as duas exigências (art. 77, § 2º-A).
-- Tabela por idade: óbito desde 01/01/2021, Portaria ME 424/2020 (22, 28, 31, 42 e 45 anos); de 18/06/2015 a 31/12/2020, Lei 13.135/2015 (21, 27, 30, 41 e 44 anos). Antes de 18/06/2015, fora desta verificação. Conferir portaria posterior (art. 77, § 2º-B).
+- Tabela por idade: óbito desde 01/01/2021, Portaria ME 424/2020 (22, 28, 31, 42 e 45 anos); de 01/03/2015 a 31/12/2020, Lei 13.135/2015 (21, 27, 30, 41 e 44 anos; art. 375 da IN 128/2022). Antes de 01/03/2015, fora desta verificação. Conferir portaria posterior (art. 77, § 2º-B).
 - Filho maior inválido (opção própria): sem limite de idade, mas a invalidez/deficiência precisa ser comprovada em perícia médica (vale para qualquer dependente marcado como inválido).
 - Filho: até 21 anos; irmão: até 21 anos (dependência econômica comprovada); inválido ou com deficiência grave: sem limite; pais: vitalícia (dependência econômica comprovada).
-- Início: do óbito se o pedido for feito em até 90 dias (180 se menor de 16); depois, do requerimento.
+- Início: do óbito se o pedido for feito em até 90 dias (180 se menor de 16; inválido ou com deficiência vale como maior de 16, art. 369, § 1º); depois, do requerimento. Filho nascido após o óbito: do nascimento (art. 369-A, IN 212/2026).
+- IN 128/2022: instituidor aposentado (exceto por incapacidade) dispensa as 18 contribuições (art. 375, § 3º); cônjuge/companheiro que requer depois do fim da cota tem pedido indeferido (art. 375, § 7º); ex-cônjuge exige prova de alimentos ou ajuda financeira (arts. 372, 373, 375, § 1º); qualidade perdida só se salva por direito adquirido ou incapacidade no período de graça (art. 368).
 - Contagem das 18 contribuições: competências válidas do CNIS desde 07/1994 mais meses de vínculo anteriores (presumidos). Valor da pensão não calculado nesta versão.
 - Testes: `node tests/pensao.test.js`.
 

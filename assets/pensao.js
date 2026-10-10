@@ -8,9 +8,9 @@
   var NORMAS = [
     { nome: 'Lei 8.213/91, art. 16 (dependentes), art. 74 (início do benefício) e art. 77 (cotas e duração)', vigencia: 'Redação da Lei 13.135/2015 (vigência: 18/06/2015) e Lei 13.846/2019; confira o texto compilado no Planalto.' },
     { nome: 'Portaria ME 424, de 29/12/2020 (idades da duração da pensão do cônjuge/companheiro)', vigencia: 'Vigência a partir de 01/01/2021, para óbitos desde essa data (art. 77, § 2º-B). Confira se há portaria posterior.' },
-    { nome: 'Faixas anteriores (Lei 13.135/2015): 21, 27, 30, 41 e 44 anos', vigencia: 'Para óbitos de 18/06/2015 a 31/12/2020.' },
-    { nome: 'IN PRES/INSS 128/2022 (pensão por morte)', vigencia: 'Conferir os artigos aplicáveis na versão vigente.' },
-    { nome: 'Lei 8.213/91, art. 15 (qualidade de segurado) e art. 102, § 2º (direito adquirido)', vigencia: 'Texto compilado; confira a versão vigente.' }
+    { nome: 'Faixas anteriores (Lei 13.135/2015): 21, 27, 30, 41 e 44 anos', vigencia: 'Para óbitos de 01/03/2015 a 31/12/2020 (marco do art. 375 da IN 128/2022). A faixa das idades pode ser atualizada a cada 3 anos (art. 375, § 8º).' },
+    { nome: 'IN PRES/INSS 128/2022, arts. 178 e 180 (dependentes e provas), 368 (óbito após perda da qualidade), 369 a 370 (efeitos financeiros, com o art. 369-A da IN 212/2026), 372 a 374 (cônjuge e companheiro) e 375 (duração)', vigencia: 'Texto conferido em 10/10/2026 no material fornecido. Prazos do art. 369 valem para óbitos desde 18/01/2019 (Lei 13.846/2019); o art. 375 vale para óbitos desde 01/03/2015.' },
+    { nome: 'Lei 8.213/91, art. 15 (qualidade de segurado) e art. 102, § 2º (direito adquirido)', vigencia: 'Texto compilado; confira a versão vigente. Na IN 128/2022, art. 368.' }
   ];
 
   // Tabelas de duração por idade na data do óbito: [idade mínima, rótulo da faixa, duração em anos (null = vitalícia)]
@@ -20,6 +20,7 @@
   var DEPENDENTES = {
     conjuge: { rotulo: 'Cônjuge', classe: 1, par: true },
     companheiro: { rotulo: 'Companheiro(a)', classe: 1, par: true },
+    ex_conjuge: { rotulo: 'Ex-cônjuge ou ex-companheiro(a) com pensão alimentícia', classe: 1, par: true, alimentos: true },
     filho: { rotulo: 'Filho ou equiparado', classe: 1 },
     filho_maior_invalido: { rotulo: 'Filho maior inválido ou com deficiência', classe: 1 },
     pai_mae: { rotulo: 'Pai ou mãe', classe: 2 },
@@ -79,8 +80,8 @@
     var q = base.qualidade;
     var qualOk = ['confirmada', 'provavel', 'indeterminada'].indexOf(q.status) >= 0;
     if (!qualOk) {
-      q.linhas.push('Sem qualidade demonstrada na data do óbito, ainda pode haver direito se o segurado já tinha cumprido os requisitos de uma aposentadoria antes de perdê-la (art. 102, § 2º, da Lei 8.213/91) ou se estava incapaz antes da perda (Súmula 416 do STJ). Isso exige documentos fora do CNIS.');
-      doc('Documentos que provem direito adquirido à aposentadoria ou incapacidade anterior à perda da qualidade');
+      q.linhas.push('Sem qualidade demonstrada na data do óbito, a pensão ainda é devida se (art. 368 da IN 128/2022): I) o segurado já tinha cumprido todos os requisitos de uma aposentadoria até a data do óbito; ou II) ficar reconhecido, dentro do período de graça, o direito à aposentadoria por incapacidade permanente, com incapacidade existente até o óbito confirmada pela Perícia Médica Federal. Isso exige documentos e perícia fora do CNIS.');
+      doc('Documentos que provem os requisitos de aposentadoria até o óbito, ou incapacidade permanente dentro do período de graça (para a Perícia Médica Federal)');
     }
     doc('Documentos de identificação e CPF do segurado falecido e do dependente');
 
@@ -88,7 +89,10 @@
     var validas = base.carencia ? base.carencia.competenciasValidas : 0;
     var antes94 = analise.carencia ? analise.carencia.mesesAntes94 : 0;
     var total = validas + antes94;
-    res.contribuicoes = { total: total, doCnis: validas, antes94: antes94, tem18: total >= 18 };
+    var aposentado = analise.beneficios.filter(function (b) {
+      return b.inicio && b.inicio.ord <= obito.ord && (!b.fim || b.fim.ord >= obito.ord) && /APOSENT/i.test(b.texto || '') && !/INCAPACIDADE|INVALIDEZ/i.test(b.texto || '');
+    })[0];
+    res.contribuicoes = { total: total, doCnis: validas, antes94: antes94, tem18: total >= 18 || !!aposentado, aposentado: !!aposentado };
 
     // ----- Dependente -----
     var nasc = lerData(entrada.nascimento);
@@ -97,15 +101,18 @@
     var d = res.dependente;
     d.idadeNoObito = idadeObito;
     if (dep.classe === 1) d.linhas.push('Classe I: a dependência econômica é presumida (art. 16, § 4º).');
-    else d.linhas.push('Classe ' + (dep.classe === 2 ? 'II' : 'III') + ': a dependência econômica precisa ser comprovada (art. 16, § 4º).' + (dep.classe === 2 ? ' Só recebem pais se não houver dependente de classe I.' : ' Só recebem irmãos se não houver dependente das classes I e II.'));
-    if (dep.classe !== 1) {
-      if (!entrada.economica) d.linhas.push('Dependência econômica não marcada como comprovada: sem ela não há direito.');
+    else d.linhas.push('Classe ' + (dep.classe === 2 ? 'II' : 'III') + ': a dependência econômica precisa ser comprovada (art. 16, § 4º).' + (dep.classe === 2 ? ' Só recebem pais se não houver dependente de classe I.' : ' Só recebem irmãos se não houver dependente das classes I e II.') + ' A dependência pode ser parcial ou total, mas precisa ser permanente (art. 178, § 2º).');
+    var precisaEcon = dep.classe !== 1 || !!dep.alimentos;
+    if (dep.alimentos) d.linhas.push('Ex-cônjuge ou ex-companheiro(a) só tem direito se recebia pensão alimentícia, ou ajuda econômica ou financeira sob qualquer forma (art. 373 e § 1º). A comprovação do casamento ou união deve ser imediatamente anterior à separação (art. 375, § 1º). Se o falecido pagava alimentos temporários por decisão judicial ou acordo, a pensão dura o prazo restante fixado, para óbitos desde 18/01/2019 (art. 373, § 2º). A pensão pode ser paga em conjunto com a do cônjuge ou companheiro(a) atual (art. 372).');
+    if (precisaEcon) {
+      if (!entrada.economica) d.linhas.push('Dependência econômica não marcada como comprovada: sem ela não há direito' + (dep.alimentos ? ' (recebimento de alimentos ou ajuda financeira).' : '.'));
       doc('Provas da dependência econômica do dependente em relação ao segurado');
     }
     var parceiro = !!dep.par;
     var uniao = lerData(entrada.uniao);
     if (parceiro) {
-      doc(tipoDep === 'conjuge' ? 'Certidão de casamento' : 'Prova da união estável: documentos contemporâneos dos últimos 24 meses antes do óbito (art. 16, § 5º); só testemunha não basta');
+      doc(tipoDep === 'conjuge' ? 'Certidão de casamento' : 'Prova da união estável (art. 180 da IN 128/2022): duas provas materiais contemporâneas, ao menos uma produzida em até 24 meses antes do óbito; só testemunha não basta. Com um único documento nesse período, é possível justificação administrativa');
+      if (tipoDep === 'conjuge') d.linhas.push('Se o casal estava separado de fato, só há direito com a prova do restabelecimento do vínculo, sem usar a certidão de casamento (art. 374).');
       if (!uniao) d.linhas.push('Informe a data de início do casamento ou da união estável: ela define se a pensão dura 4 meses.');
       else if (uniao.ord > obito.ord) { d.linhas.push('A data de início da união é posterior ao óbito: confira.'); }
     }
@@ -132,17 +139,18 @@
     res.duracao = du;
     var tab = null;
     if (obito.ord >= C.ordemDe(2021, 1, 1)) { tab = TABELA_2021; du.tabela = '2021'; }
-    else if (obito.ord >= C.ordemDe(2015, 6, 18)) { tab = TABELA_2015; du.tabela = '2015'; }
+    else if (obito.ord >= C.ordemDe(2015, 3, 1)) { tab = TABELA_2015; du.tabela = '2015'; }
     res.tabela = tab ? { nome: du.tabela, linhas: tab } : null;
 
     if (parceiro) {
       var anosUniao = uniao && uniao.ord <= obito.ord ? idadeEm(uniao, obito) : null;
       var excecao = !!entrada.acidente;
       du.linhas.push('Contribuições mensais do segurado até o óbito: **' + total + '** (' + validas + ' competências do CNIS de 07/1994 em diante + ' + antes94 + ' mês(es) de vínculo anteriores, presumidos). Tempo de RPPS também conta (art. 77, § 5º). Mínimo para a duração maior: 18.');
+      if (aposentado) du.linhas.push('O segurado estava em gozo de aposentadoria (exceto por incapacidade permanente): **não é preciso apurar as 18 contribuições**, pois a aposentadoria já exigiu pelo menos 60 (art. 375, § 3º).');
       if (anosUniao !== null) du.linhas.push('Tempo de casamento ou união estável até o óbito: ' + anosUniao + ' ano(s) completo(s). Mínimo para a duração maior: 2 anos.');
       if (!tab) {
         du.indeterminada = true; du.rotulo = 'Fora desta verificação';
-        du.texto = 'Óbito antes de 18/06/2015: aplicam-se regras anteriores à Lei 13.135/2015 (em regra, pensão vitalícia para o cônjuge, e MP 664/2015 entre 01/03 e 17/06/2015). Confira a norma da época.';
+        du.texto = 'Óbito antes de 01/03/2015: aplicam-se regras anteriores à MP 664/2014 e à Lei 13.135/2015 (em regra, pensão vitalícia para o cônjuge). Confira a norma da época.';
       } else if (excecao) {
         du.regra = 'idade';
         du.linhas.push('Óbito por acidente de qualquer natureza ou doença profissional/do trabalho: **não se exige** 18 contribuições nem 2 anos de união; vale a tabela por idade (art. 77, § 2º-A).');
@@ -183,15 +191,20 @@
 
     // ----- Início do benefício (art. 74) -----
     var req = lerData(entrada.requerimento);
-    var menor16 = nasc && idadeObito !== null && idadeObito < 16;
+    var nascidoDepois = tipoDep === 'filho' && nasc && nasc.ord > obito.ord;
+    var menor16 = nasc && idadeObito !== null && idadeObito < 16 && !inval; // inválidos e deficientes valem como maiores de 16 (art. 369, § 1º)
     var prazoDias = menor16 ? 180 : 90;
     var ini = { dib: obito, prazoDias: prazoDias, linhas: [] };
     res.inicio = ini;
     ini.linhas.push('Se o pedido for feito em até ' + prazoDias + ' dias do óbito' + (menor16 ? ' (180 dias para menor de 16 anos)' : '') + ' (até ' + rot(dObj(obito.ord + prazoDias)) + '), o benefício conta do **óbito**. Depois disso, conta do **requerimento**.');
+    if (inval) ini.linhas.push('Dependente inválido ou com deficiência é equiparado a maior de 16 anos: prazo de 90 dias (art. 369, § 1º).');
+    if (nascidoDepois) { ini.dib = nasc; ini.linhas.push('Filho nascido após o óbito: o benefício conta do **nascimento** (' + rot(nasc) + '), observados os prazos do art. 369 (art. 369-A, incluído pela IN 212/2026).'); }
+    if (obito.ord < C.ordemDe(2019, 1, 18)) ini.linhas.push('Óbito antes de 18/01/2019: os prazos de 90 e 180 dias vêm da MP 871/2019 (Lei 13.846/2019). Para óbitos anteriores, confira o prazo da época.');
+    ini.linhas.push('Se outro dependente se habilitar depois da concessão, a DIP é a DER enquanto a pensão anterior não tiver cessado; se já cessou, é o dia seguinte à cessação (pedido em até 90 dias do óbito, ou 180 para menor de 16) ou a DER (art. 370). Prescrição quinquenal das parcelas.');
     if (req) {
       if (req.ord <= obito.ord + prazoDias) ini.linhas.push('Requerimento em ' + rot(req) + ': dentro do prazo, início na data do óbito.');
       else { ini.dib = req; ini.linhas.push('Requerimento em ' + rot(req) + ': fora do prazo, início na data do requerimento, sem retroativo ao óbito.'); }
-      if (du.fim && req.ord > du.fim.ord) ini.linhas.push('Atenção: a duração (contada do óbito) terminou em ' + rot(du.fim) + ', antes do requerimento: pode não haver parcelas a receber.');
+      if (du.fim && req.ord > du.fim.ord) ini.linhas.push('A duração da cota do cônjuge ou companheiro(a), contada do óbito, terminou em ' + rot(du.fim) + ', antes do requerimento: **o pedido é indeferido** (art. 375, § 7º).');
     } else ini.linhas.push('Requerimento não informado: foi considerado dentro do prazo.');
 
     // ----- Valor -----
@@ -202,12 +215,14 @@
     base.cnis.filter(function (x) { return x.impede; }).forEach(function (x) { pend.push(x.achado + ' ' + x.documento + '.'); });
     d.linhas.forEach(function (l) { if (/^Informe /.test(l)) pend.push(l); });
     if (d.pericia && d.apto) pend.push('Invalidez ou deficiência: comprovar em perícia médica do INSS.');
-    var depOk = d.apto && (dep.classe === 1 || !!entrada.economica);
+    var vencido = parceiro && !inval && du.fim && req && req.ord > du.fim.ord;
+    var depOk = d.apto && (!precisaEcon || !!entrada.economica);
     var conc;
     var resumoDur = du.rotulo ? ' Duração: ' + du.rotulo.toLowerCase() + '.' : '';
     if (!qualOk) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: qualidade de segurado', texto: 'Os dados do CNIS não demonstram a qualidade de segurado do falecido na data do óbito. Não é conclusão definitiva: direito adquirido à aposentadoria ou incapacidade anterior podem mudar o resultado.' };
     else if (!d.apto) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: dependente', texto: 'O dependente informado não se enquadra no art. 16 da Lei 8.213/91 pelos dados informados.' };
-    else if (dep.classe !== 1 && !entrada.economica) conc = { status: 'depende', rotulo: 'Depende da prova de dependência econômica', texto: 'Pais e irmãos precisam comprovar a dependência econômica do segurado, e só recebem se não houver dependente de classe anterior.' + resumoDur };
+    else if (vencido) conc = { status: 'nao_demonstrado', rotulo: 'Pedido fora do prazo de duração da cota', texto: 'O requerimento foi feito depois do fim da duração da cota (' + rot(du.fim) + '), contada do óbito: pedido indeferido pelo art. 375, § 7º, da IN 128/2022.' };
+    else if (precisaEcon && !entrada.economica) conc = { status: 'depende', rotulo: 'Depende da prova de dependência econômica', texto: (dep.alimentos ? 'O ex-cônjuge ou ex-companheiro(a) precisa comprovar que recebia pensão alimentícia ou ajuda financeira.' : 'Pais e irmãos precisam comprovar a dependência econômica do segurado, e só recebem se não houver dependente de classe anterior.') + resumoDur };
     else if (d.pericia) conc = { status: 'depende', rotulo: 'Depende da perícia médica', texto: 'A qualidade de segurado do falecido ' + (q.status === 'confirmada' ? 'está demonstrada' : 'é compatível com o CNIS') + ', mas a invalidez ou deficiência do dependente precisa ser comprovada em perícia médica.' + resumoDur };
     else if (q.status === 'confirmada' && !pend.length) conc = { status: 'provavel', rotulo: 'Direito provável', texto: 'O falecido tinha qualidade de segurado na data do óbito e a pensão não exige carência. Falta comprovar o óbito, o vínculo com o dependente e, se for o caso, a dependência.' + resumoDur };
     else conc = { status: 'depende', rotulo: 'Direito depende de validação documental', texto: 'A qualidade de segurado é compatível com o CNIS, mas há pontos a validar antes de concluir.' + resumoDur };
