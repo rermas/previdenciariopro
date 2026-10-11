@@ -130,4 +130,18 @@ const perdaInc2 = vinculo([2015, 1], [2017, 12], '31/12/2017') + '\n' + vinculo(
 r = incap(perdaInc2, base);
 assert.equal(r.carencia.status, 'nao_cumprida', 'só 4 contribuições depois do retorno');
 
+// Sem qualidade de segurado: a carência mostra as regras possíveis, sem avaliar a pessoa
+const semQ = vinculo([2010, 1], [2012, 12], '31/12/2012');
+r = reclusao(semQ, par);
+assert.equal(r.carencia.semQualidade, true);
+assert.equal(r.carencia.status, 'regras');
+assert.match(r.carencia.linhas.join(' '), /24 contribuições/);
+assert.doesNotMatch(r.carencia.linhas.join(' '), /Contribuições válidas do CNIS/);
+r = incap(semQ, { dii: '2023-01-10', origem: 'comum', preexistente: 'nao' });
+assert.equal(r.carencia.semQualidade, true);
+assert.match(r.carencia.linhas.join(' '), /acidente/);
+assert.match(r.carencia.linhas.join(' '), /6 contribuições/);
+// Com qualidade, continua avaliando
+assert.equal(reclusao(v30, par).carencia.semQualidade, undefined);
+
 console.log('beneficios.test.js: ok');

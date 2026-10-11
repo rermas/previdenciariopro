@@ -77,6 +77,24 @@
     });
   }
 
+  var REGRAS_CARENCIA_AR = [
+    'Como a qualidade de segurado não foi demonstrada na data da prisão, a carência da pessoa **não é avaliada**. Abaixo estão as regras possíveis, só para consulta.',
+    '**Regra geral:** 24 contribuições mensais (art. 25, IV, da Lei 8.213/91), para segurado de qualquer categoria, inclusive empregado.',
+    '**Sem dispensa:** nem o acidente de qualquer natureza dispensa a carência do auxílio-reclusão (o art. 26 não lista este benefício).',
+    '**Segurado especial:** comprovar 24 meses de atividade rural, ainda que descontínuos, no período anterior ao requerimento (art. 39, I).',
+    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 12 contribuições (art. 27-A).',
+    '**Contagem:** entram as contribuições válidas do CNIS e, conforme a norma do INSS, o tempo de contribuição de regime próprio certificado em contagem recíproca. Salário abaixo do mínimo só conta se complementado.',
+    'Cumprir a carência não dispensa a baixa renda, o regime fechado nem a ausência de remuneração ou de outro benefício.'
+  ];
+  var REGRAS_CARENCIA_AI = [
+    'Como a qualidade de segurado não foi demonstrada na data de início da incapacidade, a carência da pessoa **não é avaliada**. Abaixo estão as regras possíveis, só para consulta.',
+    '**Regra geral:** 12 contribuições mensais (art. 25, I, da Lei 8.213/91), para qualquer categoria, inclusive empregado.',
+    '**Dispensada** em caso de acidente de qualquer natureza ou causa, de doença profissional ou do trabalho, e de doença grave da lista oficial (art. 26, II, e art. 151, atualizada por Portaria Interministerial). Continua exigida a qualidade de segurado na data do início da incapacidade.',
+    '**Segurado especial:** sem contribuições, mas com prova de 12 meses de atividade rural, ainda que descontínuos, no período anterior ao requerimento (art. 39, I).',
+    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 6 contribuições (art. 27-A).',
+    '**Incapacidade anterior à filiação:** não dá direito, salvo progressão ou agravamento posterior, mesmo que a carência seja cumprida (art. 59, parágrafo único).'
+  ];
+
   // ===================== AUXÍLIO-RECLUSÃO =====================
 
   var DEP_R = {
@@ -137,7 +155,8 @@
     // ----- Carência -----
     var car = carenciaEm(analise, entrada, base, prisao, 24);
     res.carencia = { rotulo: car.ok ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS', status: car.ok ? 'cumprida' : 'nao_cumprida', linhas: car.linhas.concat(['A carência de 24 contribuições vale também para segurado empregado e não é dispensada em caso de acidente (art. 26 da Lei 8.213/91 não lista o auxílio-reclusão).']) };
-    if (!car.ok) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS');
+    if (!car.ok && qOk) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS');
+    if (!qOk) res.carencia = { semQualidade: true, status: 'regras', rotulo: 'Regras de carência do auxílio-reclusão', linhas: REGRAS_CARENCIA_AR.slice() };
 
     // ----- Renda (baixa renda) -----
     var mp = mesOrd(prisao), soma = 0, n = 0, meses = [];
@@ -329,9 +348,10 @@
     else if (origem === 'doenca_lista') carLinhas.push('Doença grave da lista oficial (art. 26, II e art. 151, atualizada por Portaria Interministerial): carência **dispensada**. Confira se o CID consta da lista vigente na DII e se há conclusão da medicina especializada.');
     if (especial) { carLinhas.push('Segurado especial: sem contribuições, mas precisa comprovar **12 meses de atividade rural** no período imediatamente anterior ao requerimento, ainda que de forma descontínua (art. 39, I). O CNIS pode não trazer isso.'); doc('Autodeclaração e documentos da atividade rural nos 12 meses anteriores ao requerimento'); }
     if (dispensada || especial) { carOk = true; carLinhas.push('Contribuições válidas do CNIS até ' + rotMes(mesOrd(dii)) + ': **' + car.total + '** (informativo).'); }
-    else { carOk = car.ok; car.linhas.forEach(function (l) { carLinhas.push(l); }); if (!carOk) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
+    else { carOk = car.ok; car.linhas.forEach(function (l) { carLinhas.push(l); }); if (!carOk && qOk) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
     carLinhas.push('Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na DII.');
     res.carencia = { status: dispensada || especial ? 'dispensada' : (carOk ? 'cumprida' : 'nao_cumprida'), rotulo: dispensada ? 'Dispensada' : (especial ? 'Dispensada, com prova de atividade rural' : (carOk ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS')), linhas: carLinhas };
+    if (!qOk) res.carencia = { semQualidade: true, status: 'regras', rotulo: 'Regras de carência do auxílio por incapacidade temporária', linhas: REGRAS_CARENCIA_AI.slice() };
 
     // ----- Incapacidade anterior à filiação -----
     var pre = entrada.preexistente || 'nao';
@@ -447,7 +467,7 @@
     topo.appendChild(s1);
 
     var s2 = C.sec(n++ + '. Carência');
-    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', 'selo selo-' + (r.carencia.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), r.carencia.rotulo));
+    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', r.carencia.semQualidade ? 'selo' : 'selo selo-' + (r.carencia.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), r.carencia.rotulo));
     s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas));
     topo.appendChild(s2);
 

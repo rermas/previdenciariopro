@@ -134,4 +134,14 @@ assert.equal(r.categoria.usada, 'ci');
 assert.equal(r.carencia.status, 'nao_cumprida');
 assert.equal(r.concessaoDesemprego, undefined);
 
+
+// Sem qualidade de segurado: carência mostra só as regras possíveis do salário-maternidade
+{
+  const Cn = require('../assets/cnis.js');
+  const txt = ['1 1.234.567.890-1 11.111.111/0001-11 EMPRESA Empregado 01/01/2010 31/12/2010', 'Remunerações', '01/2010 600,00 02/2010 600,00 03/2010 600,00'].join('\n');
+  const rr = require('../assets/direito.js').salarioMaternidade(Cn.analisar(txt, { y: 2026, m: 10, d: 8 }), { tipo: 'parto', data: '2023-05-10' }, { y: 2026, m: 10, d: 8 });
+  assert.equal(rr.carencia.semQualidade, true);
+  assert.match(rr.carencia.linhas.join(' '), /10 contribuições/);
+  assert.match(rr.carencia.linhas.join(' '), /metade/);
+}
 console.log('direito.test.js: ok');

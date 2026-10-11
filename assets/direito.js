@@ -164,6 +164,17 @@
     return x.ord !== undefined ? x : C.dataDe(rotulo(x));
   }
 
+  var REGRAS_CARENCIA_SM = [
+    'Como a qualidade de segurado não foi demonstrada na data do fato gerador, a carência da pessoa **não é avaliada**. Abaixo estão as regras possíveis, só para consulta.',
+    '**Empregada, empregada doméstica e trabalhadora avulsa:** sem carência, em qualquer data (art. 26, VI, da Lei 8.213/91).',
+    '**Contribuinte individual, MEI e facultativa:** 10 contribuições mensais para fato gerador **antes de 05/04/2024** (art. 25, III). A partir de 05/04/2024 a carência foi dispensada (ADIs 2.110 e 2.111 do STF e regulamentação do INSS).',
+    '**Segurada especial:** comprovar 10 meses de atividade rural, ainda que descontínuos, no período anterior ao requerimento (art. 39, parágrafo único), para fato gerador antes de 05/04/2024.',
+    '**Desempregada em período de graça:** quando a última filiação foi de empregada, não há carência. Se a última filiação foi de contribuinte individual ou facultativa, vale a carência dessa categoria, mas o benefício pode ser concedido pela qualidade de desempregada se um vínculo de empregado anterior ainda mantiver a qualidade.',
+    '**Parto antecipado:** a carência é reduzida em número de contribuições igual aos meses da antecipação (art. 25, parágrafo único).',
+    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 5 contribuições (art. 27-A).',
+    'Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na data do fato gerador.'
+  ];
+
   function salarioMaternidade(analise, entrada, hoje) {
     var hojeD = lerData(hoje) || hoje;
     if (hojeD.ord === undefined) hojeD = { y: hojeD.y, m: hojeD.m, d: hojeD.d, ord: C.ordemDe(hojeD.y, hojeD.m, hojeD.d) };
@@ -653,6 +664,12 @@
     if (res.concessaoDesemprego && conc.status !== 'prescrito') conc.texto += ' Observação: concedido pela qualidade de desempregada, pois pelos recolhimentos como ' + CLASSES[res.concessaoDesemprego.categoriaAnterior].toLowerCase() + ' não havia carência.';
     conc.pendencias = pend;
     res.conclusao = conc;
+    // Sem qualidade de segurado na data, não se avalia a carência da pessoa: mostra todas as regras possíveis do benefício.
+    if (['confirmada', 'provavel', 'indeterminada'].indexOf(q.status) < 0) {
+      res.carencia.semQualidade = true;
+      res.carencia.rotulo = 'Regras de carência do salário-maternidade';
+      res.carencia.linhas = REGRAS_CARENCIA_SM.slice();
+    }
     return res;
   }
 
@@ -738,7 +755,7 @@
 
     var ca = r.carencia;
     var s4 = C.sec('4. Carência');
-    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', 'selo selo-confirmada', ca.rotulo));
+    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', ca.semQualidade ? 'selo' : 'selo selo-' + (ca.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), ca.rotulo));
     s4.appendChild(sc);
     s4.appendChild(lista(ca.linhas));
     topo.appendChild(s4);
