@@ -148,7 +148,7 @@ assert.equal(r.mapa[CNIS.mesDe(1994, 7)], 'ok');
 assert.equal(r.mapa[CNIS.mesDe(2000, 3)], 'falta');
 assert.equal(r.mapa[CNIS.mesDe(2010, 5)], 'falta');
 assert.equal(r.mapa[CNIS.mesDe(2010, 8)], 'ok', 'agosto/2010 tem remuneração nos dois vínculos');
-assert.equal(r.mapa[CNIS.mesDe(2020, 5)], 'falta');
+assert.equal(r.mapa[CNIS.mesDe(2020, 5)], 'beninc-e', 'maio/2020: mês de saída do auxílio por incapacidade (15/04 a 20/05), antes marcado como falta');
 
 const txt = CNIS.resumoEmTexto(r);
 assert.match(txt, /Tempo contado: 3 anos, 5 meses e 18 dias/);
@@ -406,6 +406,25 @@ assert.equal(vazio.resumo.diasUnicos, 0);
   ), HOJE);
   assert.equal(ci2.mapa[2015 * 12], 'abaixoci', 'contribuinte individual abaixo do mínimo em qualquer época');
   assert.equal(ci2.mapa[2015 * 12 + 1], 'ok');
+})();
+
+// ---------- Mapa: meses em benefício ----------
+(function () {
+  const b = CNIS.analisar(texto(
+    `1 ${NIT} 11.111.111/0001-11 EMPRESA Empregado 01/01/2021 31/12/2021`, 'Remunerações', '01/2021 1.500,00 02/2021 1.500,00',
+    `2 ${NIT} 1234567890 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO 15/04/2021 20/07/2021`,
+    `3 ${NIT} 2234567890 Benefício 80 - SALARIO MATERNIDADE 10/09/2021 07/01/2022`
+  ), HOJE).mapa;
+  const k = (y, m) => y * 12 + m - 1;
+  assert.equal(b[k(2021, 4)], 'beninc-e');
+  assert.equal(b[k(2021, 5)], 'beninc');
+  assert.equal(b[k(2021, 6)], 'beninc');
+  assert.equal(b[k(2021, 7)], 'beninc-e');
+  assert.equal(b[k(2021, 8)], 'falta', 'fora dos benefícios continua sem remuneração');
+  assert.equal(b[k(2021, 9)], 'bensm-e');
+  assert.equal(b[k(2021, 11)], 'bensm');
+  assert.equal(b[k(2022, 1)], 'bensm-e');
+  assert.equal(b[k(2021, 1)], 'ok');
 })();
 
 console.log('Todos os testes passaram.');

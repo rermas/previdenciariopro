@@ -169,6 +169,7 @@
     { nome: 'segurado especial (rural) e depois empregado', seg: ['esp', 'emp'] },
     { nome: 'vários vínculos de empregado, com seguro-desemprego', seg: ['emp', 'emp', 'emp'], desemprego: true },
     { nome: 'empregado com auxílio por incapacidade', seg: ['emp', 'emp'], beneficio: true },
+    { nome: 'empregada com salário-maternidade', seg: ['emp', 'emp'], maternidade: true },
     { nome: 'misto: segurado especial, empregado, contribuinte individual e facultativo', seg: ['esp', 'emp', 'ci', 'fac'] },
     { nome: 'empregado, contribuinte individual simultâneo e vínculo antigo sem remunerações', seg: ['emp', 'ci'], concomitante: true, antigo: true }
   ];
@@ -310,6 +311,12 @@
       seq++;
       linhas.push('Seq. NIT NB Origem do Vínculo Espécie Data Início Data Fim');
       linhas.push(seq + ' ' + nit + ' ' + ri(100000000, 999999999) + '0 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO ' + data(kb, ri(1, 28)) + ' ' + data(kb + durm, ri(1, 28)));
+    }
+    if (cen.maternidade) {
+      var km = ultimoFim - ri(6, 36);
+      seq++;
+      linhas.push('Seq. NIT NB Origem do Vínculo Espécie Data Início Data Fim');
+      linhas.push(seq + ' ' + nit + ' ' + ri(100000000, 999999999) + '0 Benefício 80 - SALARIO MATERNIDADE ' + data(km, ri(1, 28)) + ' ' + data(km + 4, ri(1, 28)));
     }
     if (cen.desemprego) {
       var kd = segs[1] ? segs[1].fim : segs[0].fim;
@@ -840,6 +847,20 @@
     });
     // Competências com remuneração, mas com valor total abaixo do mínimo: empregado (desde 11/2019) e contribuinte individual/facultativo (desde 07/1994).
     abaixo.forEach(function (a) { if (mapa[a.mes] === 'ok') mapa[a.mes] = a.ci ? 'abaixoci' : 'abaixoemp'; });
+    // Meses em benefício por incapacidade temporária ou salário-maternidade: cor própria, com tom mais claro nos meses de entrada e de saída.
+    var tipoBen = function (t) {
+      if (/MATERNIDADE/i.test(t || '')) return 'bensm';
+      if (/AUX[IÍ]LIO[ -]DOEN|INCAPACIDADE\s+TEMPOR/i.test(t || '')) return 'beninc';
+      return null;
+    };
+    ['bensm', 'beninc'].forEach(function (tp) {
+      bens.forEach(function (b) {
+        if (b.indeferido || !b.inicio || tipoBen(b.texto) !== tp) return;
+        var fimB = b.fim || dataDeOrd(hojeOrd);
+        var a = mesDe(b.inicio.y, b.inicio.m), z = mesDe(fimB.y, fimB.m);
+        for (var k = a; k <= z; k++) mapa[k] = tp + (k === a || k === z ? '-e' : '');
+      });
+    });
 
     var mesesSem = faltantes.reduce(function (t, f) { return t + f.meses; }, 0);
     var mesesAnt = itens.reduce(function (t, v) { return t + v.anteriores94; }, 0);
@@ -938,7 +959,7 @@
     return s;
   }
 
-  var ROTULO_MAPA = { ok: 'com remuneração', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo' };
+  var ROTULO_MAPA = { ok: 'com remuneração', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída' };
 
   function desenharMapa(mapa, valores) {
     valores = valores || {};
@@ -975,7 +996,9 @@
     var box = el('div', 'mapa-box');
     box.appendChild(t);
     var leg = el('ul', 'legenda');
-    [['ok', 'Com remuneração'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo']].forEach(function (x) {
+    var presentes = {}; Object.keys(mapa).forEach(function (k) { presentes[mapa[k]] = true; });
+    [['ok', 'Com remuneração'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída']].forEach(function (x) {
+      if (/^ben/.test(x[0]) && !presentes[x[0]]) return;
       var li = el('li'); li.appendChild(el('i', 'c-' + x[0])); li.appendChild(document.createTextNode(x[1])); leg.appendChild(li);
     });
     box.appendChild(leg);
