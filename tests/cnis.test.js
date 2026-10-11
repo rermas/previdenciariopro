@@ -427,4 +427,17 @@ assert.equal(vazio.resumo.diasUnicos, 0);
   assert.equal(b[k(2021, 1)], 'ok');
 })();
 
+// ---------- Mapa: seguro-desemprego sem recolhimento ----------
+(function () {
+  const m = CNIS.analisar(texto(
+    `1 ${NIT} 11.111.111/0001-11 EMPRESA Empregado 01/01/2021 31/03/2021`, 'Remunerações', '01/2021 1.500,00 02/2021 1.500,00 03/2021 1.500,00',
+    `2 ${NIT} SEGURO DESEMPREGO/SINE Possuidor de evento previdenciário 01/04/2021 31/07/2021`
+  ), HOJE).mapa;
+  const k = (y, mm) => y * 12 + mm - 1;
+  assert.equal(m[k(2021, 3)], 'ok');
+  assert.equal(m[k(2021, 4)], 'segdes');
+  assert.equal(m[k(2021, 7)], 'segdes');
+  assert.equal(m[k(2021, 8)], undefined);
+})();
+
 console.log('Todos os testes passaram.');

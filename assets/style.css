@@ -170,6 +170,7 @@ p { margin: 0 0 1rem; }
 .c-bensm { background: #e4659f; }
 .c-bensm-e { background: #f7c0d9; }
 .c-vazio { background: #edf0f6; }
+.c-segdes { background: #c3cbdb; }
 .legenda { display: flex; flex-wrap: wrap; gap: 0.3rem 1.3rem; list-style: none; margin: 0.8rem 0 0; padding: 0; color: var(--grafite); font-size: 0.88rem; }
 .legenda i { display: inline-block; width: 0.85rem; height: 0.85rem; margin-right: 0.4rem; border-radius: 3px; vertical-align: -1px; }
 
