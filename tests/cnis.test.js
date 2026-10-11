@@ -405,7 +405,14 @@ assert.equal(vazio.resumo.diasUnicos, 0);
     '01/2015 20/02/2015 30,00 200,00 02/2015 24/03/2015 180,00 900,00'
   ), HOJE);
   assert.equal(ci2.mapa[2015 * 12], 'abaixoci', 'contribuinte individual abaixo do mínimo em qualquer época');
-  assert.equal(ci2.mapa[2015 * 12 + 1], 'ok');
+  assert.equal(ci2.mapa[2015 * 12 + 1], 'okci', 'só contribuinte individual, regular: verde mais claro');
+  const misto = CNIS.analisar(texto(
+    `1 ${NIT} 11.111.111/0001-11 EMPRESA Empregado 01/02/2015 28/02/2015`, 'Remunerações', '02/2015 1.500,00',
+    `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2015 31/03/2015`, 'Contribuições',
+    '01/2015 20/02/2015 180,00 900,00 02/2015 24/03/2015 180,00 900,00 03/2015 24/04/2015 180,00 900,00'
+  ), HOJE);
+  assert.equal(misto.mapa[2015 * 12 + 1], 'ok', 'empregado e contribuinte individual no mesmo mês: prevalece o verde de empregado');
+  assert.equal(misto.mapa[2015 * 12 + 2], 'okci');
 })();
 
 // ---------- Mapa: meses em benefício ----------

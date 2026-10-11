@@ -160,6 +160,7 @@ p { margin: 0 0 1rem; }
 .mapa-valores td { height: auto; min-height: 1.1rem; text-align: center; vertical-align: middle; padding: 2px 1px; }
 .mapa-valores .valor { display: block; font-size: 0.68rem; line-height: 1.2; color: var(--tinta); font-variant-numeric: tabular-nums; }
 .c-ok { background: var(--verde); }
+.c-okci { background: #b6e9d2; }
 .c-parcial { background: var(--ambar); }
 .c-falta { background: var(--coral); }
 .c-pre94 { background: repeating-linear-gradient(135deg, #c4ccdd 0 3px, #e9edf5 3px 6px); }
