@@ -375,4 +375,19 @@ const vazio = CNIS.analisar('', HOJE);
 assert.equal(vazio.resumo.totalVinculos, 0);
 assert.equal(vazio.resumo.diasUnicos, 0);
 
+// ---------- Gerador de exemplos fictícios ----------
+(function () {
+  let sem = 1; const rnd = () => { sem = (sem * 16807) % 2147483647; return sem / 2147483647; };
+  const vistos = new Set(), tipos = new Set(); let anterior = null;
+  for (let i = 0; i < 80; i++) {
+    const g = CNIS.gerarExemplo(rnd);
+    assert.notEqual(g.descricao, anterior, 'nunca repete o mesmo cenário em seguida');
+    anterior = g.descricao; vistos.add(g.descricao);
+    const a = CNIS.analisar(g.texto, { y: 2026, m: 10, d: 11 });
+    assert.ok(a.vinculos.length >= 1, g.descricao);
+    a.vinculos.forEach((v) => tipos.add(v.tipo || v.categoria || ''));
+  }
+  assert.ok(vistos.size >= 10, 'vários cenários diferentes');
+})();
+
 console.log('Todos os testes passaram.');

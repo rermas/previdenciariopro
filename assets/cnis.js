@@ -157,6 +157,164 @@
     'AVRC-DEF Acerto confirmado pelo INSS'
   ].join('\n');
 
+  // ---------- Gerador de extratos fictícios (um cenário diferente a cada clique) ----------
+  var CENARIOS = [
+    { nome: 'só vínculos de empregado', seg: ['emp', 'emp', 'emp'] },
+    { nome: 'só contribuinte individual', seg: ['ci', 'ci'] },
+    { nome: 'só facultativo', seg: ['fac'] },
+    { nome: 'empregado e depois contribuinte individual', seg: ['emp', 'ci'] },
+    { nome: 'contribuinte individual e depois empregado', seg: ['ci', 'emp'] },
+    { nome: 'empregado e contribuinte individual ao mesmo tempo', seg: ['emp', 'ci'], concomitante: true },
+    { nome: 'empregado e depois facultativo', seg: ['emp', 'fac'] },
+    { nome: 'segurado especial (rural) e depois empregado', seg: ['esp', 'emp'] },
+    { nome: 'vários vínculos de empregado, com seguro-desemprego', seg: ['emp', 'emp', 'emp'], desemprego: true },
+    { nome: 'empregado com auxílio por incapacidade', seg: ['emp', 'emp'], beneficio: true },
+    { nome: 'misto: segurado especial, empregado, contribuinte individual e facultativo', seg: ['esp', 'emp', 'ci', 'fac'] },
+    { nome: 'empregado, contribuinte individual simultâneo e vínculo antigo sem remunerações', seg: ['emp', 'ci'], concomitante: true, antigo: true }
+  ];
+  var NOMES_EMP = ['MERCADO ALVORADA LTDA', 'TRANSPORTES HORIZONTE S.A.', 'PADARIA TRIGO BOM ME', 'CONSTRUTORA PEDRA FIRME LTDA', 'INDÚSTRIA NOVA ERA S.A.', 'CLÍNICA VIDA PLENA LTDA', 'ESCOLA SABER MAIS LTDA', 'AUTO PEÇAS CENTRAL LTDA', 'RESTAURANTE SABOR CASEIRO ME', 'LOGÍSTICA RÁPIDA LTDA', 'FARMÁCIA POPULAR EXEMPLO LTDA', 'SERVIÇOS GERAIS UNIÃO LTDA'];
+  var NOMES_RURAL = ['SÍTIO BOA VISTA', 'FAZENDA TRÊS IRMÃOS', 'CHÁCARA SANTA LUZIA', 'SÍTIO RIO CLARO'];
+
+  function gerarExemplo(rnd) {
+    rnd = rnd || Math.random;
+    var ri = function (a, b) { return a + Math.floor(rnd() * (b - a + 1)); };
+    var pick = function (l) { return l[ri(0, l.length - 1)]; };
+    var pad = function (n, t) { return String(n).padStart(t || 2, '0'); };
+    var mi = function (y, m) { return y * 12 + (m - 1); };
+    var yOf = function (k) { return Math.floor(k / 12); }, mOf = function (k) { return k % 12 + 1; };
+    var comp = function (k) { return pad(mOf(k)) + '/' + yOf(k); };
+    var dinheiro = function (n) { return n.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+    var agora = new Date(), kHoje = mi(agora.getFullYear(), agora.getMonth() + 1);
+    var minimo = function (k) { return minimoDe(k) || 1000; };
+    var cen = CENARIOS[ri(0, CENARIOS.length - 1)];
+    if (gerarExemplo.ultimo === cen) cen = CENARIOS[(CENARIOS.indexOf(cen) + 1 + ri(0, CENARIOS.length - 2)) % CENARIOS.length];
+    gerarExemplo.ultimo = cen;
+    var TAM = { emp: [8, 60], ci: [12, 72], fac: [6, 48], esp: [24, 120] };
+
+    // Linha do tempo, de trás para frente: o último segmento termina entre 0 e 24 meses atrás (ou fica aberto).
+    var fimCursor = kHoje - 1 - (rnd() < 0.5 ? 0 : ri(1, 24));
+    var segs = [];
+    var cursor = fimCursor;
+    for (var i = cen.seg.length - 1; i >= 0; i--) {
+      var tipo = cen.seg[i], t = TAM[tipo], len = ri(t[0], t[1]);
+      var fim = cursor, ini = fim - len + 1;
+      if (yOf(ini) < 1996) { ini = mi(1996, ri(1, 12)); if (ini > fim - 5) break; }
+      segs.unshift({ tipo: tipo, ini: ini, fim: fim, aberto: false });
+      cursor = ini - 1 - ri(0, 14);
+      if (cen.concomitante && i === cen.seg.length - 1 && i > 0) cursor = ini + ri(2, 10); // o segmento anterior termina depois do início deste
+    }
+    if (cen.concomitante && segs.length === 2) {
+      // Empregado dura mais; o CI começa dentro do vínculo e termina antes ou depois dele.
+      var e = segs[0].tipo === 'emp' ? segs[0] : segs[1], c = segs[0].tipo === 'emp' ? segs[1] : segs[0];
+      var lenE = ri(30, 80); e.fim = fimCursor - ri(0, 6); e.ini = e.fim - lenE + 1;
+      c.ini = e.ini + ri(3, Math.max(4, Math.floor(lenE / 2))); c.fim = Math.min(e.fim + ri(-6, 12), fimCursor);
+      if (c.fim < c.ini + 6) c.fim = Math.min(fimCursor, c.ini + ri(6, 24));
+      segs = [e, c].sort(function (a, b) { return a.ini - b.ini; });
+    }
+    if (!segs.length) segs = [{ tipo: 'emp', ini: fimCursor - 24, fim: fimCursor }];
+    var ultimo = segs.reduce(function (a, b) { return b.fim >= a.fim ? b : a; }, segs[0]);
+    if (ultimo.fim >= kHoje - 1 - 1 && ultimo.tipo !== 'esp' && rnd() < 0.6) ultimo.aberto = true;
+    if (ultimo.aberto) ultimo.fim = kHoje - 1;
+
+    var seq = 0, nit = '1.234.567.890-1';
+    var linhas = [
+      'CNIS - Cadastro Nacional de Informações Sociais',
+      'Extrato Previdenciário - Portal CNIS (EXEMPLO FICTÍCIO)',
+      'Identificação do Filiado',
+      'Nit: ' + nit + ' CPF: 000.000.000-00 Nome: PESSOA DE EXEMPLO',
+      'Data de Nascimento: ' + pad(ri(1, 28)) + '/' + pad(ri(1, 12)) + '/' + ri(1962, 1996) + ' Nome da Mãe: MÃE DE EXEMPLO',
+      'Relações Previdenciárias'
+    ];
+    var cabV = 'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim';
+    var data = function (k, dia) { return pad(dia) + '/' + pad(mOf(k)) + '/' + yOf(k); };
+    var ultDia = function (k) { return new Date(yOf(k), mOf(k), 0).getDate(); };
+    var linhasRem = function (ks, valorDe) {
+      var out = [], cel = [];
+      ks.forEach(function (k) { var v = valorDe(k); if (v === null) return; cel.push(comp(k) + ' ' + dinheiro(v)); });
+      for (var j = 0; j < cel.length; j += 3) out.push(cel.slice(j, j + 3).join(' '));
+      return out;
+    };
+    var meses = function (a, b) { var r = []; for (var k = a; k <= b; k++) r.push(k); return r; };
+
+    function emprego(sg) {
+      var mult = 1 + Math.round(rnd() * 25) / 10, ind = [];
+      var ks = meses(sg.ini, sg.fim);
+      var falha = rnd() < 0.45 ? ri(0, ks.length - 1) : -1; // às vezes falta uma competência
+      var abaixo = rnd() < 0.15 ? ri(0, ks.length - 1) : -1;
+      seq++;
+      var rural = false, dia1 = ri(1, 28);
+      linhas.push(cabV);
+      linhas.push(seq + ' ' + nit + ' ' + pad(ri(10, 99)) + '.' + pad(ri(100, 999), 3) + '.' + pad(ri(100, 999), 3) + '/0001-' + pad(ri(10, 99)) + ' ' + pick(NOMES_EMP) + ' Empregado ' + data(sg.ini, dia1) + (sg.aberto ? '' : ' ' + data(sg.fim, ri(1, ultDia(sg.fim)))));
+      linhas.push('Indicadores:' + (abaixo >= 0 ? ' PREC-MENOR-MIN' : ''));
+      linhas.push('Remunerações');
+      linhas.push('Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração');
+      var idx = -1;
+      linhasRem(ks, function (k) {
+        idx++;
+        if (idx === falha && ks.length > 6) return null;
+        var base = Math.round(minimo(k) * mult * 100) / 100;
+        if (idx === abaixo) base = Math.round(minimo(k) * 0.7 * 100) / 100;
+        return Math.min(base, 7800);
+      }).forEach(function (l) { linhas.push(l); });
+    }
+    function recolhimento(sg, rotulo) {
+      seq++;
+      var mult = sg.tipo === 'fac' ? 1 + Math.round(rnd() * 8) / 10 : 1 + Math.round(rnd() * 20) / 10;
+      var simplificado = rnd() < 0.3;
+      linhas.push(cabV);
+      linhas.push(seq + ' ' + nit + ' RECOLHIMENTO ' + rotulo + ' ' + data(sg.ini, 1) + (sg.aberto ? '' : ' ' + data(sg.fim, ultDia(sg.fim))));
+      linhas.push('Indicadores:');
+      linhas.push('Contribuições');
+      linhas.push('Compet. Data Pgto. Contribuição Salário Contrib. Indicadores Compet. Data Pgto. Contribuição Salário Contrib. Indicadores');
+      var cel = [];
+      meses(sg.ini, sg.fim).forEach(function (k) {
+        if (rnd() < 0.06) return; // competência não recolhida
+        var sal = simplificado ? minimo(k) : Math.min(Math.round(minimo(k) * mult * 100) / 100, 7800);
+        var contr = Math.round(sal * (simplificado ? 0.11 : 0.2) * 100) / 100;
+        var kp = k + 1 + (rnd() < 0.08 ? ri(2, 6) : 0);
+        cel.push(comp(k) + ' ' + data(kp, ri(8, 15)) + ' ' + dinheiro(contr) + ' ' + dinheiro(sal));
+      });
+      for (var j = 0; j < cel.length; j += 2) linhas.push(cel.slice(j, j + 2).join(' '));
+    }
+    function rural(sg) {
+      seq++;
+      linhas.push(cabV);
+      linhas.push(seq + ' ' + nit + ' ' + pick(NOMES_RURAL) + ' Segurado Especial ' + data(sg.ini, 1) + (sg.aberto ? '' : ' ' + data(sg.fim, ultDia(sg.fim))));
+      linhas.push('Indicadores:');
+    }
+
+    if (cen.antigo) {
+      seq++;
+      var ka = mi(ri(1988, 1992), ri(1, 12));
+      linhas.push(cabV);
+      linhas.push(seq + ' ' + nit + ' 11.222.333/0001-44 COMÉRCIO ANTIGO LTDA Empregado ' + data(ka, ri(1, 28)) + ' ' + data(ka + ri(14, 40), ri(1, 28)));
+      linhas.push('Indicadores:');
+    }
+    segs.forEach(function (sg) {
+      if (sg.tipo === 'emp') emprego(sg);
+      else if (sg.tipo === 'ci') recolhimento(sg, 'Contribuinte Individual');
+      else if (sg.tipo === 'fac') recolhimento(sg, 'Facultativo');
+      else rural(sg);
+    });
+    var ultimoFim = segs.reduce(function (m, x) { return Math.max(m, x.fim); }, 0);
+    if (cen.beneficio) {
+      var kb = ultimoFim - ri(8, 40), durm = ri(2, 9);
+      seq++;
+      linhas.push('Seq. NIT NB Origem do Vínculo Espécie Data Início Data Fim');
+      linhas.push(seq + ' ' + nit + ' ' + ri(100000000, 999999999) + '0 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO ' + data(kb, ri(1, 28)) + ' ' + data(kb + durm, ri(1, 28)));
+    }
+    if (cen.desemprego) {
+      var kd = segs[1] ? segs[1].fim : segs[0].fim;
+      seq++;
+      linhas.push('Seq. NIT Origem do Vínculo Tipo Filiado Vínculo Data Início Data Fim');
+      linhas.push(seq + ' ' + nit + ' SEGURO DESEMPREGO/SINE Possuidor de evento previdenciário ' + data(kd + 1, 1) + ' ' + data(kd + ri(3, 5), ri(1, 28)));
+    }
+    linhas.push('Legenda de Indicadores');
+    linhas.push('Indicador Descrição');
+    linhas.push('PREC-MENOR-MIN Remuneração abaixo do salário mínimo');
+    return { texto: linhas.join('\n'), descricao: cen.nome };
+  }
+
   // ---------- Utilidades de data e mês ----------
 
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
@@ -1082,7 +1240,7 @@
     });
 
     bExemplo.addEventListener('click', function () {
-      arquivo.value = ''; texto.value = EXEMPLO; msg.textContent = 'Exemplo fictício carregado. Clique em Analisar.';
+      arquivo.value = ''; var ex = gerarExemplo(); texto.value = ex.texto; msg.textContent = 'Exemplo fictício carregado (' + ex.descricao + '). Clique em Analisar. Clique em Carregar exemplo de novo para gerar outro caso.';
     });
     bLimpar.addEventListener('click', limpar);
   }
@@ -1090,7 +1248,7 @@
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
     formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
-    resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO,
+    resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO, gerarExemplo: gerarExemplo,
     el: el, sec: sec, tabela: tabela, ordemDe: ordemDe, dataDeOrd: dataDeOrd, rotuloData: rotuloData, ultimoDiaDoMes: ultimoDiaDoMes, INICIO_PBC: INICIO_PBC, INDICADORES: INDICADORES
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
