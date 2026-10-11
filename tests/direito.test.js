@@ -144,4 +144,14 @@ assert.equal(r.concessaoDesemprego, undefined);
   assert.match(rr.carencia.linhas.join(' '), /10 contribuições/);
   assert.match(rr.carencia.linhas.join(' '), /metade/);
 }
+
+// Fato gerador durante vínculo de empregada: observação sobre MEI x pagamento pela empresa
+{
+  const txt = ['1 1.234.567.890-1 11.111.111/0001-11 EMPRESA Empregado 01/01/2024 31/12/2024', 'Remunerações', '01/2024 1.500,00 02/2024 1.500,00 03/2024 1.500,00'].join('\n');
+  const rr = rodar(txt, { tipo: 'parto', data: '2024-02-10' });
+  assert.match(rr.fatoGerador.notas.join(' '), /MEI/);
+  assert.match(rr.fatoGerador.notas.join(' '), /pago diretamente pela empresa/);
+  const rc = rodar(txt, { tipo: 'parto', data: '2025-03-10' });
+  assert.doesNotMatch(rc.fatoGerador.notas.join(' '), /pago diretamente pela empresa/, 'fora do vínculo não se aplica');
+}
 console.log('direito.test.js: ok');

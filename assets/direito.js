@@ -259,6 +259,12 @@
     }
     desc.usada = usada;
     desc.motivo = motivo;
+    // Fato gerador durante vínculo de empregada: em regra a empresa paga o benefício; só empregada de empresa MEI pede ao INSS.
+    var empregadaAtiva = ativos.filter(function (a) { return a.classe === 'empregada'; });
+    if (!entrada._sub && empregadaAtiva.length && (usada === 'empregada')) {
+      fg.notas.push('Fato gerador durante vínculo de empregada (Seq. ' + empregadaAtiva.map(function (a) { return a.seq; }).join(', ') + '): **só a empregada de empresa MEI solicita o salário-maternidade no INSS**. Nas demais empresas, o benefício é **pago diretamente pela empresa**, que compensa o valor nas contribuições previdenciárias. O CNIS não informa se o empregador é MEI: confira o CNPJ do empregador.');
+      doc('Se o empregador não for MEI: atestado ou certidão e comunicação à empresa, que paga o benefício. Se for MEI: requerimento ao INSS');
+    }
 
     // ----- Etapa 3: qualidade de segurado -----
     var q = { status: null, rotulo: null, linhas: [], graca: null };
@@ -702,7 +708,14 @@
 
   function lista(itens, classe) {
     var ul = C.el('ul', classe || 'lista-simples');
-    itens.forEach(function (t) { ul.appendChild(C.el('li', null, t)); });
+    itens.forEach(function (t) {
+      var li = C.el('li');
+      String(t).split('**').forEach(function (parte, i) {
+        if (!parte) return;
+        if (i % 2) li.appendChild(C.el('strong', null, parte)); else li.appendChild(document.createTextNode(parte));
+      });
+      ul.appendChild(li);
+    });
     return ul;
   }
 
