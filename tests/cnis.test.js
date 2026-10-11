@@ -390,4 +390,22 @@ assert.equal(vazio.resumo.diasUnicos, 0);
   assert.ok(vistos.size >= 10, 'vários cenários diferentes');
 })();
 
+// ---------- Mapa: cores para valores abaixo do mínimo ----------
+(function () {
+  const emp = CNIS.analisar(texto(
+    `1 ${NIT} 11.111.111/0001-11 EMPRESA Empregado 01/01/2015 31/03/2021`, 'Remunerações',
+    '01/2015 400,00 02/2015 1.500,00', '11/2020 500,00 12/2020 1.500,00 01/2021 1.500,00'
+  ), HOJE);
+  const m = emp.mapa;
+  assert.equal(m[2015 * 12], 'ok', 'empregado abaixo do mínimo antes de 11/2019 conta normalmente');
+  assert.equal(m[2020 * 12 + 10], 'abaixoemp', 'empregado abaixo do mínimo desde 11/2019');
+  assert.equal(m[2020 * 12 + 11], 'ok');
+  const ci2 = CNIS.analisar(texto(
+    `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2015 31/03/2015`, 'Contribuições',
+    '01/2015 20/02/2015 30,00 200,00 02/2015 24/03/2015 180,00 900,00'
+  ), HOJE);
+  assert.equal(ci2.mapa[2015 * 12], 'abaixoci', 'contribuinte individual abaixo do mínimo em qualquer época');
+  assert.equal(ci2.mapa[2015 * 12 + 1], 'ok');
+})();
+
 console.log('Todos os testes passaram.');

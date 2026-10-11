@@ -163,6 +163,8 @@ p { margin: 0 0 1rem; }
 .c-parcial { background: var(--ambar); }
 .c-falta { background: var(--coral); }
 .c-pre94 { background: repeating-linear-gradient(135deg, #c4ccdd 0 3px, #e9edf5 3px 6px); }
+.c-abaixoemp { background: #6f9bf2; }
+.c-abaixoci { background: #a98be0; }
 .c-vazio { background: #edf0f6; }
 .legenda { display: flex; flex-wrap: wrap; gap: 0.3rem 1.3rem; list-style: none; margin: 0.8rem 0 0; padding: 0; color: var(--grafite); font-size: 0.88rem; }
 .legenda i { display: inline-block; width: 0.85rem; height: 0.85rem; margin-right: 0.4rem; border-radius: 3px; vertical-align: -1px; }

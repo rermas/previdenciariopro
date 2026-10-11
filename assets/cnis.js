@@ -234,13 +234,18 @@
       for (var j = 0; j < cel.length; j += 3) out.push(cel.slice(j, j + 3).join(' '));
       return out;
     };
+    // Prefere meses depois de 11/2019, quando o empregado abaixo do mínimo deixa de contar a carência.
+    var escolheMes = function (ks) {
+      var apos = []; ks.forEach(function (k, i) { if (k >= mi(2019, 11)) apos.push(i); });
+      return apos.length && rnd() < 0.8 ? apos[ri(0, apos.length - 1)] : ri(0, ks.length - 1);
+    };
     var meses = function (a, b) { var r = []; for (var k = a; k <= b; k++) r.push(k); return r; };
 
     function emprego(sg) {
       var mult = 1 + Math.round(rnd() * 25) / 10, ind = [];
       var ks = meses(sg.ini, sg.fim);
       var falha = rnd() < 0.45 ? ri(0, ks.length - 1) : -1; // às vezes falta uma competência
-      var abaixo = rnd() < 0.15 ? ri(0, ks.length - 1) : -1;
+      var abaixo = rnd() < 0.3 ? escolheMes(ks) : -1; // às vezes um mês abaixo do mínimo
       seq++;
       var rural = false, dia1 = ri(1, 28);
       linhas.push(cabV);
@@ -261,6 +266,8 @@
       seq++;
       var mult = sg.tipo === 'fac' ? 1 + Math.round(rnd() * 8) / 10 : 1 + Math.round(rnd() * 20) / 10;
       var simplificado = rnd() < 0.3;
+      var baixos = {}; // meses abaixo do mínimo (contribuinte individual/facultativo, em qualquer época)
+      if (rnd() < 0.6) { var nb = ri(1, 4), ksb = meses(sg.ini, sg.fim); for (var b = 0; b < nb && ksb.length; b++) baixos[ksb[ri(0, ksb.length - 1)]] = true; }
       linhas.push(cabV);
       linhas.push(seq + ' ' + nit + ' RECOLHIMENTO ' + rotulo + ' ' + data(sg.ini, 1) + (sg.aberto ? '' : ' ' + data(sg.fim, ultDia(sg.fim))));
       linhas.push('Indicadores:');
@@ -270,6 +277,7 @@
       meses(sg.ini, sg.fim).forEach(function (k) {
         if (rnd() < 0.06) return; // competência não recolhida
         var sal = simplificado ? minimo(k) : Math.min(Math.round(minimo(k) * mult * 100) / 100, 7800);
+        if (baixos[k]) sal = Math.round(minimo(k) * (0.4 + Math.round(rnd() * 5) / 10) * 100) / 100;
         var contr = Math.round(sal * (simplificado ? 0.11 : 0.2) * 100) / 100;
         var kp = k + 1 + (rnd() < 0.08 ? ri(2, 6) : 0);
         cel.push(comp(k) + ' ' + data(kp, ri(8, 15)) + ' ' + dinheiro(contr) + ' ' + dinheiro(sal));
@@ -830,6 +838,8 @@
       else if (falta[k]) mapa[k] = 'falta';
       else mapa[k] = 'pre94';
     });
+    // Competências com remuneração, mas com valor total abaixo do mínimo: empregado (desde 11/2019) e contribuinte individual/facultativo (desde 07/1994).
+    abaixo.forEach(function (a) { if (mapa[a.mes] === 'ok') mapa[a.mes] = a.ci ? 'abaixoci' : 'abaixoemp'; });
 
     var mesesSem = faltantes.reduce(function (t, f) { return t + f.meses; }, 0);
     var mesesAnt = itens.reduce(function (t, v) { return t + v.anteriores94; }, 0);
@@ -928,7 +938,7 @@
     return s;
   }
 
-  var ROTULO_MAPA = { ok: 'com remuneração', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994' };
+  var ROTULO_MAPA = { ok: 'com remuneração', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo' };
 
   function desenharMapa(mapa, valores) {
     valores = valores || {};
@@ -965,7 +975,7 @@
     var box = el('div', 'mapa-box');
     box.appendChild(t);
     var leg = el('ul', 'legenda');
-    [['ok', 'Com remuneração'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994']].forEach(function (x) {
+    [['ok', 'Com remuneração'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo']].forEach(function (x) {
       var li = el('li'); li.appendChild(el('i', 'c-' + x[0])); li.appendChild(document.createTextNode(x[1])); leg.appendChild(li);
     });
     box.appendChild(leg);
