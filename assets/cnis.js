@@ -1200,7 +1200,11 @@
   var TOLERANCIA_Y = 3;
   function textoDaPagina(conteudo) {
     var itens = conteudo.items.filter(function (it) { return it.str && it.str.trim(); }).map(function (it) {
-      return { x: it.transform[4], y: it.transform[5], w: it.width || 0, s: it.str };
+      // Páginas giradas (extrato impresso em paisagem): o texto vem rotacionado, então converte para as coordenadas visuais (x para a direita, y para cima).
+      var t = it.transform, a = t[0], b = t[1], c = t[2], e = t[4], f = t[5], x = e, y = f;
+      if (Math.abs(b) > Math.abs(a)) { if (b > 0) { x = f; y = -e; } else { x = -f; y = e; } }
+      else if (a < 0) { x = -e; y = -f; }
+      return { x: x, y: y, w: it.width || 0, s: it.str };
     });
     itens.sort(function (a, b) { return b.y - a.y || a.x - b.x; });
     var linhas = [], cur = null;

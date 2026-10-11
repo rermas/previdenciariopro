@@ -447,4 +447,17 @@ assert.equal(vazio.resumo.diasUnicos, 0);
   assert.equal(m[k(2021, 8)], undefined);
 })();
 
+// ---------- PDF com página girada (paisagem): texto rotacionado ----------
+(function () {
+  const rot = (s, e, f, w) => ({ str: s, width: w, transform: [0, 8, -8, 0, e, f] });
+  const conteudo = { items: [
+    // linha de cima: e menor; dentro da linha, x cresce com f
+    rot('Remunerações', 250, 54, 66),
+    rot('03/2007', 282, 55, 33), rot('2.334,36', 282, 144, 36), rot('04/2007', 282, 318, 33), rot('2.027,87', 282, 407, 36),
+    rot('06/2007', 297, 55, 33), rot('2.027,87', 297, 144, 36)
+  ] };
+  const t = CNIS.textoDaPagina(conteudo).split('\n');
+  assert.deepEqual(t, ['Remunerações', '03/2007 2.334,36 04/2007 2.027,87', '06/2007 2.027,87']);
+})();
+
 console.log('Todos os testes passaram.');
