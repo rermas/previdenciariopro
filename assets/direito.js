@@ -164,6 +164,74 @@
     return x.ord !== undefined ? x : C.dataDe(rotulo(x));
   }
 
+  // Competências que não contam como carência pelos dados do CNIS, mas podem contar se o segurado complementar ou comprovar o vínculo.
+  function complementosEm(analise, ateMes) {
+    var empBaixo = [], ciBaixo = [], empSem = [], visto = {};
+    (analise.abaixoMinimo || []).forEach(function (a) {
+      if (a.mes > ateMes) return;
+      (a.ci ? ciBaixo : empBaixo).push(a.mes);
+    });
+    var piso = C.mesDe(1994, 7);
+    analise.vinculos.forEach(function (v) {
+      if (!v.inicio) return;
+      var cl = classeDe(v);
+      if (cl !== 'empregada' && cl !== 'domestica' && cl !== 'avulsa') return;
+      (v.mesesFaltantes || []).forEach(function (k) {
+        if (k > ateMes || k < piso || visto[k] || analise.valores[k]) return;
+        visto[k] = true; empSem.push(k);
+      });
+    });
+    var ord = function (a, b) { return a - b; };
+    return { empBaixo: empBaixo.sort(ord), ciBaixo: ciBaixo.sort(ord), empSem: empSem.sort(ord) };
+  }
+  // Quantas competências complementadas ou comprovadas (respostas "sim") contam, e quantas delas depois de certo mês.
+  function contarComplementos(compl, resp, aPartirDe) {
+    var f = function (l) { return aPartirDe === undefined ? l.length : l.filter(function (k) { return k >= aPartirDe; }).length; };
+    return (resp.compEmp ? f(compl.empBaixo) : 0) + (resp.vincComprovado ? f(compl.empSem) : 0) + (resp.compCI ? f(compl.ciBaixo) : 0);
+  }
+  // Perguntas ao usuário quando essas competências fazem falta na carência. Já respondidas continuam visíveis para desfazer.
+  function perguntasCarencia(compl, resp, falta, atual, exigida) {
+    var defs = [
+      { id: 'compEmp', lista: compl.empBaixo, texto: 'Há **%n** competência(s) de empregado com valor abaixo do salário mínimo desde 11/2019 (%l), que não contam como carência. **O segurado pretende complementar?** Se sim, contam como contribuição de um salário mínimo.' },
+      { id: 'vincComprovado', lista: compl.empSem, texto: 'O vínculo de empregado tem **%n** competência(s) sem remuneração no CNIS (%l). **O vínculo está comprovado** (CTPS, contracheques, termo de rescisão)? Se sim, todas contam como carência, no valor do salário mínimo.' },
+      { id: 'compCI', lista: compl.ciBaixo, texto: 'Há **%n** competência(s) de contribuinte individual ou facultativo abaixo do salário mínimo (%l), que não contam como carência. **O segurado pretende complementar?** Se sim, contam como contribuição de um salário mínimo.' }
+    ];
+    var pendentes = defs.filter(function (d) { return d.lista.length && resp[d.id] === undefined; }).reduce(function (t, d) { return t + d.lista.length; }, 0);
+    var alcanca = atual + pendentes >= exigida;
+    var out = [];
+    defs.forEach(function (d) {
+      if (!d.lista.length) return;
+      var respondida = resp[d.id] !== undefined;
+      if (!respondida && !(falta && alcanca)) return;
+      var ks = d.lista;
+      var l = ks.length <= 6 ? ks.map(rotuloMes).join(', ') : rotuloMes(ks[0]) + ' a ' + rotuloMes(ks[ks.length - 1]);
+      out.push({ id: d.id, texto: d.texto.replace('%n', String(ks.length)).replace('%l', l), resposta: respondida ? !!resp[d.id] : null });
+    });
+    return out;
+  }
+  function perguntasUI(perguntas) {
+    var box = C.el('div', 'perguntas');
+    perguntas.forEach(function (p) {
+      var q = C.el('div', 'pergunta');
+      var t = C.el('p');
+      String(p.texto).split('**').forEach(function (parte, i) {
+        if (!parte) return;
+        if (i % 2) t.appendChild(C.el('strong', null, parte)); else t.appendChild(document.createTextNode(parte));
+      });
+      q.appendChild(t);
+      var bt = C.el('div', 'pergunta-botoes');
+      [['Sim', true], ['Não', false]].forEach(function (o) {
+        var b = C.el('button', 'btn btn-leve' + (p.resposta === o[1] ? ' marcado' : ''), o[0]); b.type = 'button';
+        b.setAttribute('aria-pressed', p.resposta === o[1] ? 'true' : 'false');
+        b.addEventListener('click', function () { if (api.responder) api.responder(p.id, o[1]); });
+        bt.appendChild(b);
+      });
+      q.appendChild(bt);
+      box.appendChild(q);
+    });
+    return box;
+  }
+
   var REGRAS_CARENCIA_SM = [
     'Como a qualidade de segurado não foi demonstrada na data do fato gerador, a carência da pessoa **não é avaliada**. Abaixo estão as regras possíveis, só para consulta.',
     '**Empregada, empregada doméstica e trabalhadora avulsa:** sem carência, em qualquer data (art. 26, VI, da Lei 8.213/91).',
@@ -220,6 +288,10 @@
 
     // ----- Etapa 2: categoria e vínculos ativos -----
     var ativos = [], presumidos = [];
+    // O último vínculo (o de início mais recente até o fato gerador), se for de empregado e estiver em aberto, é tratado como ativo
+    // mesmo sem recolhimento nos meses anteriores: não se presume demissão no último mês com remuneração.
+    var ultimoVinc = itens.filter(function (v) { return v.inicio.ord <= fgOrd; }).sort(function (a, b) { return b.inicio.ord - a.inicio.ord; })[0];
+    var ultimoEmpregoAberto = ultimoVinc && !ultimoVinc.fim && (DE_EMPREGO[classes[ultimoVinc.seq]] || classes[ultimoVinc.seq] === 'rpps') ? ultimoVinc : null;
     itens.forEach(function (v) {
       var cl = classes[v.seq];
       if (v.inicio.ord > fgOrd) return;
@@ -227,14 +299,15 @@
         var encerrado = v.fim && v.fim.ord < fgOrd;
         if (encerrado) return;
         var ult = ultimaCompetencia(v);
-        if (!v.fim) {
+        if (!v.fim && v !== ultimoEmpregoAberto) {
           // Sem data de fim e sem movimento há 3 meses ou mais antes do fato gerador: presume-se encerrado na última remuneração.
           var refMes = ult >= 0 ? ult : mesDe(v.inicio);
           if (fgMes - refMes >= 3) { presumidos.push({ v: v, mc: refMes, cl: cl, ult: ult }); return; }
         }
         var aviso = null;
         if (!v.fim) aviso = 'vínculo sem data de fim' + (ult >= 0 ? ' (última remuneração em ' + rotuloMes(ult) + ')' : ' e sem remuneração');
-        if (!v.fim && ult >= 0 && fgMes - ult >= 3) aviso += ': pode ter terminado antes do fato gerador';
+        if (!v.fim && v === ultimoEmpregoAberto) aviso += ', considerado ativo por ser o último vínculo de empregado e estar em aberto' + (ult >= 0 && fgMes - ult >= 3 ? ' (sem remuneração há ' + (fgMes - ult) + ' meses)' : '');
+        else if (!v.fim && ult >= 0 && fgMes - ult >= 3) aviso += ': pode ter terminado antes do fato gerador';
         ativos.push({ seq: v.seq, nome: v.nome, classe: cl, item: v, aviso: aviso, porDatas: true });
       } else if (DE_RECOLHIMENTO[cl] || cl === 'especial') {
         if (v.contribuicoes && v.contribuicoes[fgMes] !== undefined) {
@@ -454,23 +527,33 @@
       var soCI = analise.valores[k].every(function (x) { return /individual|facultativ/i.test(x.tipo || ''); });
       if (m !== null && (tot + 0.004 >= m || (!soCI && +k < EC103))) validasAte++;
     });
+    // Complementação e comprovação informadas pelo usuário: as competências contam como salário mínimo.
+    var respCar = { compEmp: entrada.compEmp, vincComprovado: entrada.vincComprovado, compCI: entrada.compCI };
+    var compl = complementosEm(analise, fgMes);
+    var extraCar = contarComplementos(compl, respCar);
+    validasAte += extraCar;
     var classeCar = (usada && usada !== 'desempregada') ? usada : (q.graca ? q.graca.classe : null);
     var DATA_DISPENSA = C.ordemDe(2024, 4, 5);
     var exigeCar = !entrada._semCarencia && fgOrd < DATA_DISPENSA && ['ci', 'mei', 'facultativa', 'especial'].indexOf(classeCar) >= 0;
     var CARENCIA = 10;
-    res.carencia = { status: 'dispensada', rotulo: 'Dispensada', linhas: [], competenciasValidas: validasAte, exigida: exigeCar ? CARENCIA : 0 };
+    res.carencia = { status: 'dispensada', rotulo: 'Dispensada', linhas: [], competenciasValidas: validasAte, exigida: exigeCar ? CARENCIA : 0, complementos: compl, respostas: respCar, extra: extraCar, perguntas: [] };
     var cl = res.carencia.linhas;
     if (exigeCar) {
       var sqFg = sequencia(analise, classes, fgMes, !!entrada.desemprego);
       var depoisPerda = sqFg.perdas.length > 0;
       var ok10 = validasAte >= CARENCIA;
-      var okTerco = !depoisPerda || sqFg.total >= Math.ceil(CARENCIA / 2);
+      var retornoMes = depoisPerda ? sqFg.perdas[sqFg.perdas.length - 1].retorno : undefined;
+      var okTerco = !depoisPerda || sqFg.total + contarComplementos(compl, respCar, retornoMes) >= Math.ceil(CARENCIA / 2);
       cl.push('Fato gerador em ' + rotulo(fgD) + ', antes de 05/04/2024: para ' + CLASSES[classeCar].toLowerCase() + ' a carência é de ' + CARENCIA + ' contribuições mensais (art. 25, III, da Lei 8.213/91). A dispensa para essas categorias vale só a partir de 05/04/2024. Empregada, doméstica e avulsa não têm carência em nenhuma data.');
-      cl.push('Competências do CNIS de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo: ' + validasAte + '.');
+      cl.push('Competências do CNIS de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo' + (extraCar ? ', mais ' + extraCar + ' complementada(s) ou comprovada(s) a pedido' : '') + ': ' + validasAte + '.');
+      if (extraCar) cl.push('Foram contadas ' + extraCar + ' competência(s) como contribuição de um salário mínimo, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');
       if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver ao menos metade da carência (' + Math.ceil(CARENCIA / 2) + ') depois do retorno (art. 27-A da Lei 8.213/91). Depois do retorno: ' + sqFg.total + '.');
       cl.push('Parto antecipado reduz a carência em igual número de meses da antecipação (art. 25, parágrafo único): não aplicado aqui.');
-      if (ok10 && okTerco) { res.carencia.status = 'cumprida'; res.carencia.rotulo = 'Cumprida pelos dados do CNIS'; }
+      if (ok10 && okTerco) { res.carencia.status = 'cumprida'; res.carencia.rotulo = extraCar ? 'Cumprida, com as premissas informadas' : 'Cumprida pelos dados do CNIS'; }
       else { res.carencia.status = 'nao_cumprida'; res.carencia.rotulo = 'Não cumprida pelos dados do CNIS'; doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
+      res.carencia.perguntas = perguntasCarencia(compl, respCar, !(ok10 && okTerco), validasAte, CARENCIA);
+      if (!(ok10 && okTerco) && !res.carencia.perguntas.length && compl.empBaixo.length + compl.empSem.length + compl.ciBaixo.length) cl.push('Mesmo contando as competências que dependem de complementação ou de comprovação do vínculo, a carência não seria atingida.');
+      if (extraCar) doc('Guias de complementação até o salário mínimo, se for o caso');
     } else {
       cl.push(fgOrd >= DATA_DISPENSA ? 'Fato gerador em ' + rotulo(fgD) + ', a partir de 05/04/2024: carência dispensada para todas as categorias (ADIs 2.110 e 2.111 do STF e regulamentação do INSS).' : 'Empregada, doméstica e avulsa não têm carência para o salário-maternidade (art. 26, VI, da Lei 8.213/91).' + (classeCar ? '' : ' Categoria não identificada: se for contribuinte individual, MEI, facultativa ou segurada especial, a carência de 10 contribuições vale para fatos geradores antes de 05/04/2024.'));
     }
@@ -487,7 +570,7 @@
         if (!(DE_EMPREGO[cl2] || cl2 === 'rpps') || v.inicio.ord > fgOrd) return;
         var fimC = null, mcC = null, orig = null;
         if (v.fim && v.fim.ord < fgOrd) { fimC = v.fim.ord; mcC = mesDe(v.fim); orig = 'vínculo encerrado em ' + rotulo(v.fim); }
-        else if (!v.fim) {
+        else if (!v.fim && v !== ultimoEmpregoAberto) {
           var u2 = ultimaCompetencia(v), ref2 = u2 >= 0 ? u2 : mesDe(v.inicio);
           if (fgMes - ref2 >= 3) { fimC = C.ultimoDiaDoMes(ref2); mcC = ref2; orig = 'vínculo sem data de fim, tratado como encerrado em ' + rotuloMes(ref2); }
         }
@@ -771,6 +854,7 @@
     var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', ca.semQualidade ? 'selo' : 'selo selo-' + (ca.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), ca.rotulo));
     s4.appendChild(sc);
     s4.appendChild(lista(ca.linhas));
+    if (ca.perguntas && ca.perguntas.length && !ca.semQualidade) s4.appendChild(perguntasUI(ca.perguntas));
     topo.appendChild(s4);
 
     var s5 = C.sec('5. Validade do CNIS');
@@ -914,7 +998,9 @@
     bloco.appendChild(acoes);
     var resultado = C.el('div'); resultado.id = 'dir-resultado'; resultado.setAttribute('aria-live', 'polite');
     bloco.appendChild(resultado);
-    botao.addEventListener('click', function () {
+    var respostas = {}; // respostas às perguntas de carência (complementar, vínculo comprovado)
+    api.responder = function (id, v) { respostas[id] = v; executar(); };
+    function executar() {
       resultado.textContent = '';
       if (selBen.value === 'pensao-por-morte' && root.PENSAO) {
         var cp = root.PENSAO.lerCampos();
@@ -923,21 +1009,22 @@
         return;
       }
       if (selBen.value === 'auxilio-reclusao' && root.BENEFICIOS) {
-        var cr = root.BENEFICIOS.lerCamposReclusao();
+        var cr = Object.assign(root.BENEFICIOS.lerCamposReclusao(), respostas);
         if (!cr.prisao) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do recolhimento à prisão.')); return; }
         resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioReclusao(analise, cr, hojeAgora())));
         return;
       }
       if (selBen.value === 'auxilio-incapacidade-temporaria' && root.BENEFICIOS) {
-        var ci = root.BENEFICIOS.lerCamposIncapacidade();
+        var ci = Object.assign(root.BENEFICIOS.lerCamposIncapacidade(), respostas);
         if (!ci.dii) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de início da incapacidade.')); return; }
         resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioIncapacidade(analise, ci, hojeAgora())));
         return;
       }
-      var campos = lerCampos();
+      var campos = Object.assign(lerCampos(), respostas);
       if (!campos.data) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do fato gerador.')); return; }
       resultado.appendChild(renderizar(salarioMaternidade(analise, campos, hojeAgora())));
-    });
+    }
+    botao.addEventListener('click', executar);
     // Cartão recolhido: quem só quer analisar o CNIS não é obrigado a ver o formulário
     var sec = C.el('section', 'bloco convite');
     sec.id = 'cnis-direito';
@@ -959,7 +1046,7 @@
     return sec;
   }
 
-  var api = { util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

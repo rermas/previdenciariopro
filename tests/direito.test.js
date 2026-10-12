@@ -72,12 +72,18 @@ r = rodar(fac, { tipo: 'parto', data: '2024-08-10' });
 assert.equal(r.qualidade.graca.categoria, 'Segurada facultativa');
 assert.equal(r.qualidade.status, 'confirmada');
 
-// Vínculo sem data de fim e sem movimento há muito tempo: tratado como encerrado na última remuneração
+// O último vínculo de empregado, em aberto, é tratado como ativo mesmo sem recolhimento recente
 const aberto = texto(v(1, 'EMP A', '01/01/2015'), 'Remunerações', '01/2015 1.000,00 02/2015 1.000,00 03/2015 1.000,00');
 r = rodar(aberto, { tipo: 'parto', data: '2018-07-01' });
+assert.equal(r.categoria.ativos.length, 1);
+assert.match(r.categoria.ativos[0].aviso, /último vínculo de empregado/);
+assert.equal(r.qualidade.graca, null);
+// Vínculo antigo em aberto que não é o último: continua tratado como encerrado na última remuneração
+const doisAbertos = texto(v(1, 'EMP A', '01/01/2015'), 'Remunerações', '01/2015 1.000,00 02/2015 1.000,00 03/2015 1.000,00',
+  v(2, 'EMP B', '01/06/2016', '30/06/2016'), 'Remunerações', '06/2016 1.000,00');
+r = rodar(doisAbertos, { tipo: 'parto', data: '2018-07-01' });
 assert.equal(r.categoria.ativos.length, 0);
-assert.equal(r.qualidade.graca.competenciaCessacao, '03/2015');
-assert.notEqual(r.qualidade.status, 'confirmada');
+assert.equal(r.qualidade.graca.competenciaCessacao, '06/2016');
 assert.match(r.qualidade.linhas.join(' '), /tratados como encerrados na última remuneração/);
 // Recente (menos de 3 meses sem movimento): continua ativo, com aviso
 r = rodar(aberto, { tipo: 'parto', data: '2015-05-10' });
@@ -101,8 +107,8 @@ assert.equal(r.carencia.status, 'dispensada');
 // Categoria na data: desempregada (vínculo com fim ou encerrado por presunção) e última contribuição de CI/facultativa
 r = rodar(v(1, 'EMP A', '01/03/2024', '31/03/2025'), { tipo: 'parto', data: '2025-09-10' });
 assert.equal(r.categoria.usada, 'desempregada');
-r = rodar(aberto, { tipo: 'parto', data: '2015-12-01' });
-assert.equal(r.categoria.usada, 'desempregada', 'sem fim, encerrado na última remuneração, mais de 2 meses antes');
+r = rodar(doisAbertos, { tipo: 'parto', data: '2016-12-01' });
+assert.equal(r.categoria.usada, 'desempregada', 'vínculo antigo sem fim, encerrado na última remuneração, mais de 2 meses antes');
 r = rodar(fac, { tipo: 'parto', data: '2024-08-10' });
 assert.equal(r.categoria.usada, 'facultativa');
 r = rodar(v(1, 'EMP A', '01/03/2024', '31/03/2025'), { tipo: 'parto', data: '2025-09-10', categoria: 'empregada' });
@@ -155,3 +161,46 @@ assert.equal(r.concessaoDesemprego, undefined);
   assert.doesNotMatch(rc.fatoGerador.notas.join(' '), /pago diretamente pela empresa/, 'fora do vínculo não se aplica');
 }
 console.log('direito.test.js: ok');
+
+// ---- Perguntas de complementação / vínculo comprovado (carência) ----
+{
+  const ci = (comp, val) => `${1} ${NIT} 22.222.222/0001-22 Contribuinte Individual 01/01/2020`; // placeholder não usado
+  // CI com 8 competências no mínimo e 4 abaixo do mínimo (2022), parto em 2022-12: carência 10 exige complementar
+  const idx = [];
+  const analise = C.analisar(texto(
+    '1 ' + NIT + ' 33.333.333/0001-33 EMP Z Empregado 01/01/2015 31/12/2015',
+    '2 ' + NIT + ' CI Contribuinte Individual 01/01/2022'
+  ), HOJE);
+  const compl = D.complementosEm(analise, C.mesDe(2022, 12));
+  assert.ok(Array.isArray(compl.empBaixo) && Array.isArray(compl.ciBaixo) && Array.isArray(compl.empSem));
+  const p = D.perguntasCarencia({ empBaixo: [1, 2], empSem: [], ciBaixo: [] }, {}, true, 8, 10);
+  assert.equal(p.length, 1);
+  assert.equal(p[0].id, 'compEmp');
+  const p2 = D.perguntasCarencia({ empBaixo: [1], empSem: [], ciBaixo: [] }, {}, true, 5, 10);
+  assert.equal(p2.length, 0);
+  const p3 = D.perguntasCarencia({ empBaixo: [1, 2], empSem: [3], ciBaixo: [4] }, { compEmp: true, vincComprovado: false }, true, 7, 10);
+  assert.ok(p3.some((x) => x.id === 'compEmp' && x.resposta === true));
+  assert.equal(D.contarComplementos({ empBaixo: [1, 2], empSem: [3], ciBaixo: [4, 5] }, { compEmp: true, vincComprovado: true, compCI: false }), 3);
+  assert.equal(D.contarComplementos({ empBaixo: [1, 2], empSem: [3], ciBaixo: [4, 5] }, { compEmp: true, compCI: true }, 3), 2);
+}
+console.log('perguntas ok');
+
+// Integração: CI com 6 meses no mínimo e 4 abaixo; parto em 11/2022 exige 10
+{
+  const ciTxt = texto(`4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2022 31/10/2022`, 'Contribuições',
+    '01/2022 15/02/2022 133,32 1.212,00 02/2022 15/03/2022 133,32 1.212,00 03/2022 15/04/2022 133,32 1.212,00',
+    '04/2022 15/05/2022 133,32 1.212,00 05/2022 15/06/2022 133,32 1.212,00 06/2022 15/07/2022 133,32 1.212,00',
+    '07/2022 15/08/2022 50,00 500,00 08/2022 15/09/2022 50,00 500,00 09/2022 15/10/2022 50,00 500,00 10/2022 15/11/2022 50,00 500,00');
+  const base = { tipo: 'parto', data: '2022-11-10' };
+  let a = rodar(ciTxt, base);
+  assert.equal(a.carencia.status, 'nao_cumprida');
+  assert.equal(a.carencia.perguntas.length, 1);
+  assert.equal(a.carencia.perguntas[0].id, 'compCI');
+  a = rodar(ciTxt, Object.assign({ compCI: true }, base));
+  assert.equal(a.carencia.status, 'cumprida');
+  assert.equal(a.carencia.rotulo, 'Cumprida, com as premissas informadas');
+  a = rodar(ciTxt, Object.assign({ compCI: false }, base));
+  assert.equal(a.carencia.status, 'nao_cumprida');
+  assert.equal(a.carencia.perguntas[0].resposta, false);
+}
+console.log('integração perguntas ok');

@@ -270,3 +270,11 @@ p { margin: 0 0 1rem; }
 .convite-card:not([open]) .alvo i:nth-child(1) { animation: alvo-pulso 2.4s ease-out infinite; }
 @keyframes alvo-pulso { 0% { transform: scale(.6); opacity: .6; } 100% { transform: scale(1.25); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .convite-card:not([open]) .alvo i:nth-child(1) { animation: none; } .convite-seta { transition: none; } }
+
+/* Perguntas de complementação (carência) */
+.perguntas { display: grid; gap: 0.6rem; margin: 0.8rem 0; }
+.pergunta { border: 1px solid var(--linha); border-left: 4px solid var(--azul); border-radius: 6px; padding: 0.7rem 0.9rem; background: var(--azul-suave); }
+.pergunta p { margin: 0 0 0.5rem; }
+.pergunta-botoes { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.pergunta-botoes .btn { padding: 0.35rem 1rem; }
+.btn.marcado, .btn-leve.marcado { background: var(--azul); color: #fff; border-color: var(--azul); }

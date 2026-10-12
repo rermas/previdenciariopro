@@ -102,3 +102,12 @@ Git Version Control do cPanel, com o site em `/home1/simul637/public_html/previd
 - Se o repositório foi clonado dentro da própria pasta do site, o `.cpanel.yml` não faz nada e basta **Update from Remote**.
 - Envie sempre pelo Git, com as pastas. O upload pelo navegador do GitHub não leva pastas e deixa o site sem `assets/` (sem CSS) e sem `posts/`.
 - O domínio precisa de certificado SSL válido, porque o `.htaccess` redireciona tudo para HTTPS. No cPanel: SSL/TLS Status, **Run AutoSSL**.
+
+### Complementação e vínculo comprovado (carência)
+Quando faltam contribuições para a carência (salário-maternidade, auxílio-reclusão e auxílio por incapacidade temporária) e as competências abaixo ainda a completariam, a ferramenta pergunta (Sim/Não) e refaz o cálculo:
+- Empregado abaixo do salário mínimo desde 11/2019: "o segurado pretende complementar?" Se sim, conta como carência no valor do mínimo, sem cortar o vínculo.
+- Vínculo de empregado com competências sem remuneração: "o vínculo está comprovado?" Se sim, todas contam como carência, no valor do mínimo.
+- Contribuinte individual/facultativo abaixo do mínimo (desde 07/1994): "pretende complementar?" Se sim, conta como mínimo.
+- Após perda da qualidade (art. 27-A), as competências complementadas só valem se posteriores ao retorno.
+- Último vínculo de empregado em aberto no fato gerador é considerado ativo, mesmo sem recolhimento nos meses anteriores (não se presume demissão no dia 30 do último recolhimento). Vale apenas para "Verificar direito"; a contagem de tempo do mapa não muda.
+- Pensão por morte não tem essas perguntas (sem carência).

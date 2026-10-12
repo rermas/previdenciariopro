@@ -52,7 +52,7 @@
 
   // Qualidade de segurado numa data (mesmo módulo do salário-maternidade e da pensão por morte).
   function qualidadeEm(analise, entrada, data, hoje) {
-    return D.salarioMaternidade(analise, { tipo: 'outro', data: data, categoria: 'auto', desemprego: !!entrada.desemprego, _sub: true, _semCarencia: true }, hoje);
+    return D.salarioMaternidade(analise, { tipo: 'outro', data: data, categoria: 'auto', desemprego: !!entrada.desemprego, compEmp: entrada.compEmp, vincComprovado: entrada.vincComprovado, compCI: entrada.compCI, _sub: true, _semCarencia: true }, hoje);
   }
 
   // Carência: contribuições válidas do CNIS (mais meses anteriores a 07/1994) e a regra da metade após perda da qualidade (art. 27-A).
@@ -65,10 +65,18 @@
     var sq = D.sequencia(analise, classes, mesOrd(data), !!entrada.desemprego);
     var perda = sq.perdas.length > 0;
     var metade = Math.ceil(exigida / 2);
-    var ok = total >= exigida && (!perda || sq.total >= metade);
+    var resp = base.carencia && base.carencia.respostas ? base.carencia.respostas : {};
+    var compl = base.carencia && base.carencia.complementos ? base.carencia.complementos : { empBaixo: [], ciBaixo: [], empSem: [] };
+    var extra = base.carencia && base.carencia.extra ? base.carencia.extra : 0;
+    var retorno = perda ? sq.perdas[sq.perdas.length - 1].retorno : undefined;
+    var depois = sq.total + (perda ? D.contarComplementos(compl, resp, retorno) : 0);
+    var ok = total >= exigida && (!perda || depois >= metade);
     var linhas = ['Contribuições válidas do CNIS até ' + rotMes(mesOrd(data)) + ' (competências desde 07/1994 com valor igual ou acima do salário mínimo, mais meses de vínculo anteriores a 07/1994): **' + total + '**. Exigidas: **' + exigida + '**.'];
-    if (perda) linhas.push('Houve perda da qualidade no histórico (depois de ' + rotMes(sq.perdas[sq.perdas.length - 1].apos) + '): contando da nova filiação, são exigidas ao menos **' + metade + '** contribuições, metade da carência (art. 27-A). Depois do retorno: **' + sq.total + '**.');
-    return { exigida: exigida, total: total, perda: perda, depoisDoRetorno: sq.total, ok: ok, linhas: linhas };
+    if (extra) linhas.push('Estão incluídas **' + extra + '** competência(s) complementada(s) até o salário mínimo ou com vínculo comprovado, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');
+    if (perda) linhas.push('Houve perda da qualidade no histórico (depois de ' + rotMes(sq.perdas[sq.perdas.length - 1].apos) + '): contando da nova filiação, são exigidas ao menos **' + metade + '** contribuições, metade da carência (art. 27-A). Depois do retorno: **' + depois + '**.');
+    var perguntas = D.perguntasCarencia(compl, resp, !ok, total, exigida);
+    if (!ok && !perguntas.length && compl.empBaixo.length + compl.empSem.length + compl.ciBaixo.length) linhas.push('Mesmo contando as competências que dependem de complementação ou de comprovação do vínculo, a carência não seria atingida.');
+    return { exigida: exigida, total: total, perda: perda, depoisDoRetorno: depois, ok: ok, linhas: linhas, perguntas: perguntas, extra: extra };
   }
 
   function beneficioEmGozo(analise, ord, regex) {
@@ -154,7 +162,7 @@
 
     // ----- Carência -----
     var car = carenciaEm(analise, entrada, base, prisao, 24);
-    res.carencia = { rotulo: car.ok ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS', status: car.ok ? 'cumprida' : 'nao_cumprida', linhas: car.linhas.concat(['A carência de 24 contribuições vale também para segurado empregado e não é dispensada em caso de acidente (art. 26 da Lei 8.213/91 não lista o auxílio-reclusão).']) };
+    res.carencia = { rotulo: car.ok ? (car.extra ? 'Cumprida, com as premissas informadas' : 'Cumprida pelos dados do CNIS') : 'Não cumprida pelos dados do CNIS', status: car.ok ? 'cumprida' : 'nao_cumprida', perguntas: car.perguntas, linhas: car.linhas.concat(['A carência de 24 contribuições vale também para segurado empregado e não é dispensada em caso de acidente (art. 26 da Lei 8.213/91 não lista o auxílio-reclusão).']) };
     if (!car.ok && qOk) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS');
     if (!qOk) res.carencia = { semQualidade: true, status: 'regras', rotulo: 'Regras de carência do auxílio-reclusão', linhas: REGRAS_CARENCIA_AR.slice() };
 
@@ -295,6 +303,7 @@
     else if (d.pericia) conc = { status: 'depende', rotulo: 'Depende da perícia médica', texto: 'Os requisitos do segurado estão compatíveis com o CNIS, mas a invalidez ou deficiência do dependente precisa ser comprovada em perícia médica.' + resumoDur };
     else if (q.status === 'confirmada' && !pend.length && n && !ativosEmpr.length) conc = { status: 'provavel', rotulo: 'Direito provável', texto: 'Qualidade de segurado, carência de 24 contribuições e baixa renda estão compatíveis com o CNIS. Falta comprovar a prisão em regime fechado, a relação com o dependente e a ausência de remuneração.' + resumoDur };
     else conc = { status: 'depende', rotulo: 'Direito depende de validação documental', texto: 'Os requisitos são compatíveis com o CNIS, mas há pontos a validar antes de concluir.' + resumoDur };
+    if (car.extra) { conc.texto += ' Observação: a carência foi contada com as premissas informadas (complementação até o salário mínimo ou vínculo comprovado).'; doc('Guias de complementação até o salário mínimo, se for o caso'); }
     conc.pendencias = pend;
     res.conclusao = conc;
     docs.forEach(function (t) { res.documentos.push(t); });
@@ -350,7 +359,7 @@
     if (dispensada || especial) { carOk = true; carLinhas.push('Contribuições válidas do CNIS até ' + rotMes(mesOrd(dii)) + ': **' + car.total + '** (informativo).'); }
     else { carOk = car.ok; car.linhas.forEach(function (l) { carLinhas.push(l); }); if (!carOk && qOk) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
     carLinhas.push('Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na DII.');
-    res.carencia = { status: dispensada || especial ? 'dispensada' : (carOk ? 'cumprida' : 'nao_cumprida'), rotulo: dispensada ? 'Dispensada' : (especial ? 'Dispensada, com prova de atividade rural' : (carOk ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS')), linhas: carLinhas };
+    res.carencia = { status: dispensada || especial ? 'dispensada' : (carOk ? 'cumprida' : 'nao_cumprida'), rotulo: dispensada ? 'Dispensada' : (especial ? 'Dispensada, com prova de atividade rural' : (carOk ? (car.extra ? 'Cumprida, com as premissas informadas' : 'Cumprida pelos dados do CNIS') : 'Não cumprida pelos dados do CNIS')), perguntas: dispensada || especial ? [] : car.perguntas, linhas: carLinhas };
     if (!qOk) res.carencia = { semQualidade: true, status: 'regras', rotulo: 'Regras de carência do auxílio por incapacidade temporária', linhas: REGRAS_CARENCIA_AI.slice() };
 
     // ----- Incapacidade anterior à filiação -----
@@ -409,6 +418,7 @@
     else if (apos.length) conc = { status: 'nao_demonstrado', rotulo: 'Segurado em gozo de aposentadoria', texto: 'O CNIS mostra aposentadoria em gozo na DII, o que em regra impede o auxílio por incapacidade temporária. Confira se a aposentadoria já havia cessado.' };
     else conc = { status: 'depende', rotulo: 'Depende da perícia médica', texto: 'Qualidade de segurado' + (dispensada ? '' : ' e carência') + ' estão compatíveis com o CNIS' + (q.status === 'confirmada' ? '' : ', com pontos a validar') + '. A incapacidade para o trabalho por mais de 15 dias e a DII precisam ser confirmadas pela perícia médica do INSS.' };
     pend.push('Incapacidade e DII: comprovar em perícia médica do INSS.');
+    if (car.extra) { conc.texto += ' Observação: a carência foi contada com as premissas informadas (complementação até o salário mínimo ou vínculo comprovado).'; doc('Guias de complementação até o salário mínimo, se for o caso'); }
     conc.pendencias = pend;
     res.conclusao = conc;
     docs.forEach(function (t) { res.documentos.push(t); });
@@ -469,6 +479,7 @@
     var s2 = C.sec(n++ + '. Carência');
     var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', r.carencia.semQualidade ? 'selo' : 'selo selo-' + (r.carencia.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), r.carencia.rotulo));
     s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas));
+    if (r.carencia.perguntas && r.carencia.perguntas.length && !r.carencia.semQualidade) s2.appendChild(D.perguntasUI(r.carencia.perguntas));
     topo.appendChild(s2);
 
     r.requisitos.forEach(function (rq) {
