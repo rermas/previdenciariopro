@@ -388,6 +388,11 @@ assert.equal(vazio.resumo.diasUnicos, 0);
     a.vinculos.forEach((v) => tipos.add(v.tipo || v.categoria || ''));
   }
   assert.ok(vistos.size >= 10, 'vários cenários diferentes');
+  const fac = CNIS.analisar(texto(
+    `5 ${NIT} RECOLHIMENTO Facultativo 01/01/2015 31/03/2015`, 'Contribuições',
+    '01/2015 20/02/2015 180,00 900,00 02/2015 24/03/2015 180,00 900,00'
+  ), HOJE);
+  assert.equal(fac.mapa[2015 * 12], 'okfac', 'só facultativo: verde mais claro');
 })();
 
 // ---------- Mapa: cores para valores abaixo do mínimo ----------
@@ -405,7 +410,7 @@ assert.equal(vazio.resumo.diasUnicos, 0);
     '01/2015 20/02/2015 30,00 200,00 02/2015 24/03/2015 180,00 900,00'
   ), HOJE);
   assert.equal(ci2.mapa[2015 * 12], 'abaixoci', 'contribuinte individual abaixo do mínimo em qualquer época');
-  assert.equal(ci2.mapa[2015 * 12 + 1], 'okci', 'só contribuinte individual, regular: verde mais claro');
+  assert.equal(ci2.mapa[2015 * 12 + 1], 'okci', 'só contribuinte individual, regular: verde médio');
   const misto = CNIS.analisar(texto(
     `1 ${NIT} 11.111.111/0001-11 EMPRESA Empregado 01/02/2015 28/02/2015`, 'Remunerações', '02/2015 1.500,00',
     `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2015 31/03/2015`, 'Contribuições',
