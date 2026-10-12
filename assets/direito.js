@@ -184,6 +184,15 @@
     var ord = function (a, b) { return a - b; };
     return { empBaixo: empBaixo.sort(ord), ciBaixo: ciBaixo.sort(ord), empSem: empSem.sort(ord) };
   }
+  // Contribuições exigidas depois do retorno, após perda da qualidade, conforme a lei vigente no fato gerador (tempus regit actum).
+  function exigidaNoRetorno(exigida, ord) {
+    var o = function (y, m, d) { return Date.UTC(y, m - 1, d) / 86400000; };
+    if (ord <= o(2016, 7, 7)) return { n: Math.round(exigida / 3), rotulo: 'um terço (art. 24, parágrafo único, texto original da Lei 8.213/91)' };
+    if (ord <= o(2016, 11, 5)) return { n: exigida, rotulo: 'carência integral (MP 739/2016, vigente de 08/07 a 05/11/2016)' };
+    if (ord <= o(2019, 1, 17)) return { n: Math.ceil(exigida / 2), rotulo: 'metade (art. 27-A, Lei 13.457/2017)' };
+    if (ord <= o(2019, 6, 17)) return { n: exigida, rotulo: 'carência integral (MP 871/2019, vigente de 18/01 a 17/06/2019)' };
+    return { n: Math.ceil(exigida / 2), rotulo: 'metade (art. 27-A, restabelecido pela Lei 13.846/2019, desde 18/06/2019)' };
+  }
   // Meses de atividade rural (segurado especial) no CNIS até certo mês, sem repetir meses sobrepostos.
   function mesesRurais(analise, ateMes) {
     var set = {};
@@ -256,7 +265,7 @@
     '**Segurada especial:** comprovar 10 meses de atividade rural, ainda que descontínuos, no período anterior ao requerimento (art. 39, parágrafo único), para fato gerador antes de 05/04/2024.',
     '**Desempregada em período de graça:** quando a última filiação foi de empregada, não há carência. Se a última filiação foi de contribuinte individual ou facultativa, vale a carência dessa categoria, mas o benefício pode ser concedido pela qualidade de desempregada se um vínculo de empregado anterior ainda mantiver a qualidade.',
     '**Parto antecipado:** a carência é reduzida em número de contribuições igual aos meses da antecipação (art. 25, parágrafo único).',
-    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 5 contribuições (art. 27-A).',
+    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 5 contribuições (art. 27-A; para fatos geradores até 07/2016 vale um terço, de 08 a 11/2016 e de 18/01 a 17/06/2019 a carência integral).',
     'Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na data do fato gerador.'
   ];
 
@@ -566,11 +575,11 @@
       var depoisPerda = sqFg.perdas.length > 0;
       var ok10 = validasAte >= CARENCIA;
       var retornoMes = depoisPerda ? sqFg.perdas[sqFg.perdas.length - 1].retorno : undefined;
-      var okTerco = !depoisPerda || sqFg.total + contarComplementos(compl, respCar, retornoMes) >= Math.ceil(CARENCIA / 2);
+      var okTerco = !depoisPerda || sqFg.total + contarComplementos(compl, respCar, retornoMes) >= exigidaNoRetorno(CARENCIA, fgOrd).n;
       cl.push('Fato gerador em ' + rotulo(fgD) + ', antes de 05/04/2024: para ' + CLASSES[classeCar].toLowerCase() + ' a carência é de ' + CARENCIA + ' contribuições mensais (art. 25, III, da Lei 8.213/91). A dispensa para essas categorias vale só a partir de 05/04/2024. Empregada, doméstica e avulsa não têm carência em nenhuma data.');
       cl.push('Competências do CNIS de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo' + (extraCar ? ', mais ' + extraCar + ' complementada(s) ou comprovada(s) a pedido' : '') + ': ' + validasAte + '.');
       if (extraCar) cl.push('Foram contadas ' + extraCar + ' competência(s) como contribuição de um salário mínimo, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');
-      if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver ao menos metade da carência (' + Math.ceil(CARENCIA / 2) + ') depois do retorno (art. 27-A da Lei 8.213/91). Depois do retorno: ' + sqFg.total + '.');
+      if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver, depois do retorno, ao menos ' + exigidaNoRetorno(CARENCIA, fgOrd).n + ' contribuições, regra vigente no fato gerador: ' + exigidaNoRetorno(CARENCIA, fgOrd).rotulo + '. Depois do retorno: ' + sqFg.total + '.');
       cl.push('Parto antecipado reduz a carência em igual número de meses da antecipação (art. 25, parágrafo único): não aplicado aqui.');
       if (ok10 && okTerco) { res.carencia.status = 'cumprida'; res.carencia.rotulo = extraCar ? 'Cumprida, com as premissas informadas' : 'Cumprida pelos dados do CNIS'; }
       else { res.carencia.status = 'nao_cumprida'; res.carencia.rotulo = 'Não cumprida pelos dados do CNIS'; doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
@@ -1071,7 +1080,7 @@
     return sec;
   }
 
-  var api = { mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -205,3 +205,15 @@ console.log('perguntas ok');
   assert.equal(a.carencia.perguntas[0].resposta, false);
 }
 console.log('integração perguntas ok');
+
+// Carência no retorno após perda da qualidade, conforme a data do fato gerador
+{
+  const o = (y, m, d) => Date.UTC(y, m - 1, d) / 86400000;
+  const n = (c, y, m, d) => D.exigidaNoRetorno(c, o(y, m, d)).n;
+  assert.equal(n(12, 2016, 7, 7), 4); assert.equal(n(10, 2016, 7, 7), 3);
+  assert.equal(n(12, 2016, 7, 8), 12); assert.equal(n(12, 2016, 11, 5), 12);
+  assert.equal(n(12, 2016, 11, 6), 6); assert.equal(n(10, 2018, 8, 1), 5); assert.equal(n(12, 2019, 1, 17), 6);
+  assert.equal(n(12, 2019, 1, 18), 12); assert.equal(n(12, 2019, 6, 17), 12);
+  assert.equal(n(12, 2019, 6, 18), 6); assert.equal(n(24, 2025, 1, 1), 12);
+}
+console.log('exigida no retorno ok');

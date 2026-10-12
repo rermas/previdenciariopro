@@ -64,7 +64,7 @@
     analise.vinculos.filter(function (v) { return v.inicio; }).forEach(function (v) { classes[v.seq] = D.classeDe(v); });
     var sq = D.sequencia(analise, classes, mesOrd(data), !!entrada.desemprego);
     var perda = sq.perdas.length > 0;
-    var metade = Math.ceil(exigida / 2);
+    var reg = D.exigidaNoRetorno(exigida, data.ord), metade = reg.n;
     var resp = base.carencia && base.carencia.respostas ? base.carencia.respostas : {};
     var compl = base.carencia && base.carencia.complementos ? base.carencia.complementos : { empBaixo: [], ciBaixo: [], empSem: [] };
     var extra = base.carencia && base.carencia.extra ? base.carencia.extra : 0;
@@ -73,7 +73,7 @@
     var ok = total >= exigida && (!perda || depois >= metade);
     var linhas = ['Contribuições válidas do CNIS até ' + rotMes(mesOrd(data)) + ' (competências desde 07/1994 com valor igual ou acima do salário mínimo, mais meses de vínculo anteriores a 07/1994): **' + total + '**. Exigidas: **' + exigida + '**.'];
     if (extra) linhas.push('Estão incluídas **' + extra + '** competência(s) complementada(s) até o salário mínimo ou com vínculo comprovado, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');
-    if (perda) linhas.push('Houve perda da qualidade no histórico (depois de ' + rotMes(sq.perdas[sq.perdas.length - 1].apos) + '): contando da nova filiação, são exigidas ao menos **' + metade + '** contribuições, metade da carência (art. 27-A). Depois do retorno: **' + depois + '**.');
+    if (perda) linhas.push('Houve perda da qualidade no histórico (depois de ' + rotMes(sq.perdas[sq.perdas.length - 1].apos) + '): contando da nova filiação, são exigidas ao menos **' + metade + '** contribuições (regra vigente no fato gerador: ' + reg.rotulo + '). Se não houver essa quantidade depois do retorno, as contribuições anteriores não contam. Depois do retorno: **' + depois + '**.');
     var cc = base.categoria && base.categoria.usada; var classeR = cc === 'desempregada' || !cc ? (base.qualidade && base.qualidade.graca ? base.qualidade.graca.classe : null) : cc;
     var lr = classeR ? D.linhaRural(analise, classeR, mesOrd(data), null) : null;
     if (lr) linhas.push(lr);
@@ -93,7 +93,7 @@
     '**Regra geral:** 24 contribuições mensais (art. 25, IV, da Lei 8.213/91), para segurado de qualquer categoria, inclusive empregado.',
     '**Sem dispensa:** nem o acidente de qualquer natureza dispensa a carência do auxílio-reclusão (o art. 26 não lista este benefício).',
     '**Segurado especial:** comprovar 24 meses de atividade rural, ainda que descontínuos, no período anterior ao requerimento (art. 39, I).',
-    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 12 contribuições (art. 27-A).',
+    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 12 contribuições (art. 27-A; para fatos geradores até 07/2016 vale um terço, de 08 a 11/2016 e de 18/01 a 17/06/2019 a carência integral).',
     '**Contagem:** entram as contribuições válidas do CNIS e, conforme a norma do INSS, o tempo de contribuição de regime próprio certificado em contagem recíproca. Salário abaixo do mínimo só conta se complementado.',
     'Cumprir a carência não dispensa a baixa renda, o regime fechado nem a ausência de remuneração ou de outro benefício.'
   ];
@@ -102,7 +102,7 @@
     '**Regra geral:** 12 contribuições mensais (art. 25, I, da Lei 8.213/91), para qualquer categoria, inclusive empregado.',
     '**Dispensada** em caso de acidente de qualquer natureza ou causa, de doença profissional ou do trabalho, e de doença grave da lista oficial (art. 26, II, e art. 151, atualizada por Portaria Interministerial). Continua exigida a qualidade de segurado na data do início da incapacidade.',
     '**Segurado especial:** sem contribuições, mas com prova de 12 meses de atividade rural, ainda que descontínuos, no período anterior ao requerimento (art. 39, I).',
-    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 6 contribuições (art. 27-A).',
+    '**Perda da qualidade de segurado:** ao recuperá-la, só contam as contribuições anteriores se houver, a partir da nova filiação, ao menos **metade** da carência, 6 contribuições (art. 27-A; para fatos geradores até 07/2016 vale um terço, de 08 a 11/2016 e de 18/01 a 17/06/2019 a carência integral).',
     '**Incapacidade anterior à filiação:** não dá direito, salvo progressão ou agravamento posterior, mesmo que a carência seja cumprida (art. 59, parágrafo único).'
   ];
 
