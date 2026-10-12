@@ -613,6 +613,30 @@
     // Vínculos em ordem cronológica de início (empate: ordem do extrato; datas inválidas no fim).
     var ordenados = lido.vinculos.slice().sort(porInicio);
 
+    // Facultativo: a contribuição só vale em meses sem vínculo de empregado ou contribuinte individual e sem salário-maternidade,
+    // auxílio por incapacidade ou aposentadoria, nem por um dia do mês. Nos demais meses o recolhimento é descartado de qualquer contagem.
+    var bloqFac = {};
+    (function () {
+      var marca = function (ini, fim) { for (var kk = mesDe(ini.y, ini.m); kk <= mesDe(fim.y, fim.m); kk++) bloqFac[kk] = true; };
+      lido.vinculos.forEach(function (v) {
+        if (!v.inicio || /facultativ|especial/i.test(v.tipo || '') || v.inicio.ord > hojeOrd) return;
+        var fim = v.fim;
+        if (!fim) {
+          var ult = -1;
+          (v.remuneracoes || []).forEach(function (r) { if (r.valor > 0 && r.mes > ult && r.mes <= hojeMes) ult = r.mes; });
+          if (ult < 0 && semLeitura && v.ultRemun !== undefined && v.ultRemun <= hojeMes) ult = v.ultRemun;
+          if (ult < 0) return;
+          fim = dataDeOrd(Math.max(v.inicio.ord, Math.min(hojeOrd, ultimoDiaDoMes(ult))));
+        }
+        if (fim.ord >= v.inicio.ord) marca(v.inicio, fim);
+      });
+      lido.beneficios.forEach(function (b) {
+        if (!b.inicio || b.datasBrutas.length === 0 || /indeferid/i.test(b.nome || '') || /AUX[IÍ]LIO[ -]ACIDENTE/i.test(b.nome || '')) return;
+        if (!/MATERNIDADE|AUX[IÍ]LIO[ -]DOEN|INCAPACIDADE|INVALIDEZ|APOSENTADORIA/i.test(b.nome || '')) return;
+        marca(b.inicio, b.fim || dataDeOrd(Math.max(hojeOrd, b.inicio.ord)));
+      });
+    })();
+
     ordenados.forEach(function (v) {
       var rotulo = rotuloDe(v);
       var item = {
@@ -627,6 +651,13 @@
       if (v.fim && v.fim.ord < v.inicio.ord) { nova('erro', rotulo, 'Data de fim anterior à data de início.'); return; }
 
       var mIni = mesDe(v.inicio.y, v.inicio.m);
+      var excluidosFac = [];
+      if (/facultativ/i.test(v.tipo || '')) {
+        v.remuneracoes = v.remuneracoes.filter(function (r) { if (bloqFac[r.mes]) { if (excluidosFac.indexOf(r.mes) < 0) excluidosFac.push(r.mes); return false; } return true; });
+        excluidosFac.sort(function (x, y) { return x - y; });
+        item.excluidosFacultativo = excluidosFac;
+        if (excluidosFac.length) nova('atencao', rotulo, 'Recolhimento de facultativo em ' + excluidosFac.length + ' competência(s) com vínculo de empregado ou contribuinte individual, ou benefício (salário-maternidade, incapacidade ou aposentadoria), concomitante: ' + textoFaixas(excluidosFac, 4) + '. A contribuição de facultativo não vale nesses meses e foi desconsiderada de todas as contagens.');
+      }
       var somas = {}, vistos = {}, repetidas = [], zeradas = [], semValor = [], indic = {};
       v.indicadores.forEach(function (c) { indic[c] = indic[c] || []; });
       v.remuneracoes.forEach(function (r) {
@@ -684,6 +715,19 @@
       item.inicioOrd = v.inicio.ord;
       item.fimOrd = fim.ord;
       item.dias = fim.ord - v.inicio.ord + 1;
+      item.segmentos = [[v.inicio.ord, fim.ord]];
+      if (/facultativ/i.test(v.tipo || '')) {
+        var segF = [], iniS = null;
+        for (var kf = mIni; kf <= mFim; kf++) {
+          var dIni = Math.max(v.inicio.ord, ordemDe(Math.floor(kf / 12), (kf % 12) + 1, 1)), dFim = Math.min(fim.ord, ultimoDiaDoMes(kf));
+          if (bloqFac[kf]) { if (iniS !== null) { segF.push([iniS, dIni - 1]); iniS = null; } }
+          else if (iniS === null) iniS = dIni;
+          if (!bloqFac[kf] && kf === mFim) { segF.push([iniS, dFim]); iniS = null; }
+        }
+        if (iniS !== null) segF.push([iniS, fim.ord]);
+        item.segmentos = segF.filter(function (x) { return x[0] <= x[1]; });
+        item.dias = item.segmentos.reduce(function (t, x) { return t + x[1] - x[0] + 1; }, 0);
+      }
       validos.push(item);
 
       var fora = [];
@@ -714,7 +758,7 @@
       // Salários faltantes: meses do vínculo sem remuneração (ou com valor zero).
       var sem = [], ant = [];
       for (var k = mIni; k <= mFim; k++) {
-        if (presentes[k]) continue;
+        if (presentes[k] || (excluidosFac.length && bloqFac[k] && /facultativ/i.test(v.tipo || ''))) continue;
         if (k < INICIO_PBC) { ant.push(k); pre94[k] = true; } else { sem.push(k); falta[k] = true; }
       }
       item.faltantes = sem.length;
@@ -757,7 +801,9 @@
     });
 
     // Tempo contado: união dos períodos, sem somar duas vezes o que se sobrepõe.
-    var segs = validos.map(function (v) { return [v.inicioOrd, v.fimOrd]; }).sort(function (x, y) { return x[0] - y[0]; });
+    var segs = [];
+    validos.forEach(function (v) { v.segmentos.forEach(function (x) { segs.push([x[0], x[1]]); }); });
+    segs.sort(function (x, y) { return x[0] - y[0]; });
     var diasUnicos = 0, cI = null, cF = null;
     segs.forEach(function (sg) {
       if (cI === null) { cI = sg[0]; cF = sg[1]; }
@@ -830,7 +876,8 @@
     }
 
     // Lacunas: períodos sem vínculo, benefício nem evento, entre o primeiro registro e hoje.
-    var cob = validos.map(function (v) { return { ini: v.inicioOrd, fim: v.fimOrd, seq: v.seq }; });
+    var cob = [];
+    validos.forEach(function (v) { v.segmentos.forEach(function (x) { cob.push({ ini: x[0], fim: x[1], seq: v.seq }); }); });
     lido.beneficios.concat(lido.eventos).forEach(function (b) {
       if (!b.inicio) return;
       var f = b.fim ? Math.max(b.fim.ord, b.inicio.ord) : (b.tipoRegistro === 'beneficio' ? Math.max(hojeOrd, b.inicio.ord) : b.inicio.ord);

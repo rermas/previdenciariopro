@@ -490,3 +490,27 @@ console.log('Todos os testes passaram.');
   assert.equal(b.carencia.validas, 8);
   console.log('benefício integral na carência:', a.beneficios.length, b.beneficios.length);
 }
+
+// ---------- Facultativo só conta em meses sem outra atividade ou benefício concomitante ----------
+{
+  const NITf = '1.234.567.890-1';
+  const fac = `5 ${NITf} RECOLHIMENTO Facultativo 01/01/2020 30/06/2020\nContribuições\n01/2020 15/02/2020 110,00 1.100,00 02/2020 15/03/2020 110,00 1.100,00 03/2020 15/04/2020 110,00 1.100,00 04/2020 15/05/2020 110,00 1.100,00 05/2020 15/06/2020 110,00 1.100,00 06/2020 15/07/2020 110,00 1.100,00`;
+  const emp = `1 ${NITf} 11.111.111/0001-11 EMPRESA Empregado 10/03/2020 15/04/2020\nRemunerações\n03/2020 1.100,00 04/2020 1.100,00`;
+  const sozinho = CNIS.analisar(fac, HOJE);
+  assert.equal(sozinho.resumo.diasUnicos, 182);
+  assert.equal(sozinho.carencia.validas, 6);
+  const junto = CNIS.analisar(emp + '\n' + fac, HOJE);
+  // março e abril: só vale o empregado (1 valor por mês); o facultativo fica de fora de carência, mapa e tempo
+  assert.equal(junto.valores[CNIS.mesDe(2020, 3)].length, 1);
+  assert.equal(junto.valores[CNIS.mesDe(2020, 4)].length, 1);
+  assert.equal(junto.valores[CNIS.mesDe(2020, 1)].length, 1);
+  assert.equal(junto.mapa[CNIS.mesDe(2020, 3)], 'ok');
+  assert.equal(junto.carencia.validas, 6);
+  assert.equal(junto.resumo.diasUnicos, 182 - 61 + 37);
+  const ex = junto.vinculos.find((x) => /facultativ/i.test(x.tipo));
+  assert.deepEqual(ex.excluidosFacultativo, [CNIS.mesDe(2020, 3), CNIS.mesDe(2020, 4)]);
+  // salário-maternidade concomitante, mesmo que por um dia do mês
+  const sm = CNIS.analisar(fac + `\n2 ${NITf} 1234567890 Benefício 80 - SALARIO MATERNIDADE 30/05/2020 28/09/2020`, HOJE);
+  assert.deepEqual(sm.vinculos.find((x) => /facultativ/i.test(x.tipo)).excluidosFacultativo, [CNIS.mesDe(2020, 5), CNIS.mesDe(2020, 6)]);
+}
+console.log('facultativo concomitante ok');

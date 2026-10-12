@@ -114,3 +114,6 @@ Quando faltam contribuições para a carência (salário-maternidade, auxílio-r
 
 ### Benefício por incapacidade e carência
 Meses dentro de auxílio por incapacidade (ou aposentadoria por incapacidade) pago por inteiro não contam como carência. Contam apenas o mês de início, se o benefício começou depois do dia 1, e o mês de saída, se terminou antes do último dia, e só havendo remuneração de empregado ou recolhimento no mês. Auxílio-acidente não entra nessa regra. Vale para o resumo do CNIS e para todas as verificações de direito.
+
+### Facultativo concomitante
+A contribuição de facultativo só vale em meses sem vínculo de empregado ou contribuinte individual e sem salário-maternidade, auxílio por incapacidade ou aposentadoria, mesmo que por um único dia do mês. Nesses meses o recolhimento é desconsiderado de todas as contagens (carência, mapa, tempo contado, qualidade de segurado) e uma pendência lista as competências afetadas.
