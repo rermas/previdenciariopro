@@ -311,6 +311,9 @@
         // Vínculo em aberto: último de empregado, ou com remuneração até o mês anterior ao fato gerador, não gera registro de "sem data de fim".
         if (!v.fim && (v === ultimoEmpregoAberto || (ult >= 0 && ult >= fgMes - 1))) aviso = null;
         ativos.push({ seq: v.seq, nome: v.nome, classe: cl, item: v, aviso: aviso, porDatas: true });
+      } else if (cl === 'especial' && (!v.fim || v.fim.ord >= fgOrd)) {
+        // Segurado especial: o CNIS traz o período de atividade rural, sem remunerações. Vale pelas datas, sujeito à prova da atividade.
+        ativos.push({ seq: v.seq, nome: v.nome, classe: cl, item: v, aviso: 'período de atividade rural de segurado especial' + (v.fim ? '' : ', sem data de fim') + ': a qualidade depende da prova da atividade rural na data (o CNIS não traz remunerações)', porDatas: true, rural: true });
       } else if (DE_RECOLHIMENTO[cl] || cl === 'especial') {
         if (v.contribuicoes && v.contribuicoes[fgMes] !== undefined) {
           ativos.push({ seq: v.seq, nome: v.nome, classe: cl, item: v, aviso: null, porDatas: false });
@@ -399,7 +402,8 @@
           }
         } else if (DE_RECOLHIMENTO[cl] || cl === 'especial') {
           var u = ultimaCompetencia(v, fgMes);
-          if (u >= 0) cands.push({ fim: C.ultimoDiaDoMes(u), mc: u, classe: cl, seq: v.seq, nome: v.nome, origem: 'última contribuição da competência ' + rotuloMes(u) });
+          if (cl === 'especial' && v.fim && v.fim.ord < fgOrd) cands.push({ fim: v.fim.ord, mc: mesDe(v.fim), classe: cl, seq: v.seq, nome: v.nome, origem: 'período de atividade rural (segurado especial) encerrado em ' + rotulo(v.fim) });
+          else if (u >= 0) cands.push({ fim: C.ultimoDiaDoMes(u), mc: u, classe: cl, seq: v.seq, nome: v.nome, origem: 'última contribuição da competência ' + rotuloMes(u) });
         }
       });
       analise.beneficios.forEach(function (b) {
@@ -608,7 +612,7 @@
     var ultimoSeq = q.graca ? null : null;
     function add(achado, impacto, documento, impede, providencia) { res.cnis.push({ achado: achado, impacto: impacto, documento: documento, impede: impede, providencia: providencia }); }
     ativos.forEach(function (a) {
-      if (!a.item.fim && a.aviso) {
+      if (!a.item.fim && a.aviso && !a.rural) {
         add('Seq. ' + a.seq + ': vínculo sem data de fim.', 'Não dá para afirmar que estava ativo na data do fato gerador sem a data de saída.', 'CTPS, termo de rescisão ou declaração do empregador', true, 'Pedir a atualização do vínculo no CNIS com os documentos (arts. 19 a 19-F do RPS).');
       }
       (a.item.codigosIndicadores || []).forEach(function (c) {

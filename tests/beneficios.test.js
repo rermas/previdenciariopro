@@ -145,3 +145,16 @@ assert.match(r.carencia.linhas.join(' '), /6 contribuições/);
 assert.equal(reclusao(v30, par).carencia.semQualidade, undefined);
 
 console.log('beneficios.test.js: ok');
+
+// Segurado especial sem remunerações: o período de atividade rural vale pelas datas (CNIS não traz salários)
+{
+  const NITx = '1.234.567.890-1';
+  const rural = `1 ${NITx} 11.111.111/0001-11 FAZENDA TRÊS IRMÃOS Segurado Especial 01/12/2009 31/12/2016`;
+  let r = incap(rural, { dii: '2017-01-01' });
+  assert.equal(r.qualidade.status, 'confirmada', 'dentro da graça após o fim da atividade rural');
+  r = incap(rural, { dii: '2015-06-10' });
+  assert.notEqual(r.qualidade.status, 'nao_demonstrada', 'durante o período rural');
+  r = incap(rural, { dii: '2018-03-01' });
+  assert.notEqual(r.qualidade.status, 'confirmada');
+}
+console.log('especial ok');
