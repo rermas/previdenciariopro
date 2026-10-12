@@ -308,6 +308,8 @@
         if (!v.fim) aviso = 'vínculo sem data de fim' + (ult >= 0 ? ' (última remuneração em ' + rotuloMes(ult) + ')' : ' e sem remuneração');
         if (!v.fim && v === ultimoEmpregoAberto) aviso += ', considerado ativo por ser o último vínculo de empregado e estar em aberto' + (ult >= 0 && fgMes - ult >= 3 ? ' (sem remuneração há ' + (fgMes - ult) + ' meses)' : '');
         else if (!v.fim && ult >= 0 && fgMes - ult >= 3) aviso += ': pode ter terminado antes do fato gerador';
+        // Vínculo em aberto: último de empregado, ou com remuneração até o mês anterior ao fato gerador, não gera registro de "sem data de fim".
+        if (!v.fim && (v === ultimoEmpregoAberto || (ult >= 0 && ult >= fgMes - 1))) aviso = null;
         ativos.push({ seq: v.seq, nome: v.nome, classe: cl, item: v, aviso: aviso, porDatas: true });
       } else if (DE_RECOLHIMENTO[cl] || cl === 'especial') {
         if (v.contribuicoes && v.contribuicoes[fgMes] !== undefined) {
@@ -606,7 +608,7 @@
     var ultimoSeq = q.graca ? null : null;
     function add(achado, impacto, documento, impede, providencia) { res.cnis.push({ achado: achado, impacto: impacto, documento: documento, impede: impede, providencia: providencia }); }
     ativos.forEach(function (a) {
-      if (!a.item.fim) {
+      if (!a.item.fim && a.aviso) {
         add('Seq. ' + a.seq + ': vínculo sem data de fim.', 'Não dá para afirmar que estava ativo na data do fato gerador sem a data de saída.', 'CTPS, termo de rescisão ou declaração do empregador', true, 'Pedir a atualização do vínculo no CNIS com os documentos (arts. 19 a 19-F do RPS).');
       }
       (a.item.codigosIndicadores || []).forEach(function (c) {
@@ -644,7 +646,7 @@
     var facAtiva = ativos.filter(function (a) { return a.classe === 'facultativa'; })[0];
     esp('Facultativa com início recente de contribuições', facAtiva && Object.keys(facAtiva.item.contribuicoes).length < 12 ? 'verificar' : 'nao', facAtiva ? 'Facultativa com ' + Object.keys(facAtiva.item.contribuicoes).length + ' contribuição(ões): a filiação conta da primeira contribuição paga.' : 'Não há facultativa ativa na data.');
     esp('Segurada especial rural', (usada === 'especial' || entrada.categoria === 'especial') ? 'verificar' : 'nao', 'Exige prova da atividade rural (autodeclaração, documentos de terra, notas de produtor e outros), que o CNIS pode não trazer. Esta verificação não conclui sozinha.');
-    var omissao = ativos.some(function (a) { return !a.item.fim || (a.item.mesesFaltantes || []).some(function (k) { return k >= fgMes - 15 && k <= fgMes; }); });
+    var omissao = ativos.some(function (a) { return !!a.aviso || (a.item.mesesFaltantes || []).some(function (k) { return k >= fgMes - 15 && k <= fgMes; }); });
     esp('Empregada com vínculo ativo e omissões no CNIS', omissao ? 'verificar' : 'nao', omissao ? 'O vínculo ativo tem omissões (sem data de fim ou competências sem remuneração): documente com CTPS e holerites.' : 'Sem omissões relevantes nos vínculos ativos.');
     esp('Atividades concomitantes', ativos.length > 1 ? 'aplica' : 'nao', ativos.length > 1 ? 'Há mais de uma atividade na data. Se uma delas estiver em período de graça por causa da outra, não gera benefício separado (art. 361). Quando o desligamento é só de uma atividade, o benefício é devido pela que continua (§ 2º).' : 'Há no máximo uma atividade na data.');
     esp('Afastamento médico anterior ao parto', afD ? 'verificar' : 'nao', afD ? 'Afastamento em ' + rotulo(afD) + ' (' + (fgOrd - afD.ord) + ' dia(s) antes do fato gerador). O início pode ser antecipado até 28 dias antes do parto, exceto para quem está em período de graça, caso em que conta do nascimento.' : 'Sem afastamento anterior informado.');

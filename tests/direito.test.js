@@ -76,7 +76,8 @@ assert.equal(r.qualidade.status, 'confirmada');
 const aberto = texto(v(1, 'EMP A', '01/01/2015'), 'Remunerações', '01/2015 1.000,00 02/2015 1.000,00 03/2015 1.000,00');
 r = rodar(aberto, { tipo: 'parto', data: '2018-07-01' });
 assert.equal(r.categoria.ativos.length, 1);
-assert.match(r.categoria.ativos[0].aviso, /último vínculo de empregado/);
+assert.equal(r.categoria.ativos[0].aviso, null);
+assert.equal(r.cnis.filter((x) => /sem data de fim/.test(x.achado)).length, 0, 'vínculo aberto, último de empregado: sem registro de "sem data de fim"');
 assert.equal(r.qualidade.graca, null);
 // Vínculo antigo em aberto que não é o último: continua tratado como encerrado na última remuneração
 const doisAbertos = texto(v(1, 'EMP A', '01/01/2015'), 'Remunerações', '01/2015 1.000,00 02/2015 1.000,00 03/2015 1.000,00',
