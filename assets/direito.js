@@ -193,8 +193,15 @@
     if (ord <= o(2019, 6, 17)) return { n: exigida, rotulo: 'carência integral (MP 871/2019, vigente de 18/01 a 17/06/2019)' };
     return { n: Math.ceil(exigida / 2), rotulo: 'metade (art. 27-A, restabelecido pela Lei 13.846/2019, desde 18/06/2019)' };
   }
+  // Quantas contribuições o segurado precisa ter depois do retorno, se perder e recuperar a qualidade, conforme a data do fato gerador.
+  function linhaRetorno(exigida, ord) {
+    var data = C.rotuloData(C.dataDeOrd(ord));
+    if (!exigida) return 'Não há carência exigida para este benefício na data do fato gerador (' + data + '): se a qualidade fosse perdida e recuperada, não haveria contribuições a refazer depois do retorno.';
+    var r = exigidaNoRetorno(exigida, ord);
+    return 'Se a qualidade for perdida e depois recuperada, para o fato gerador em ' + data + ' são necessárias **' + r.n + '** contribuições depois do retorno (regra: ' + r.rotulo + ') para aproveitar as contribuições anteriores; com menos que isso, a carência de ' + exigida + ' tem de ser cumprida só com as contribuições posteriores à nova filiação.';
+  }
   // Qualidade "indeterminada" (só existiria com desemprego involuntário comprovado): a carência não pode aparecer como cumprida sem condição.
-  function condicionarCarencia(car, q, exigida) {
+  function condicionarCarencia(car, q, exigida, ord) {
     if (!car || car.semQualidade || !q || q.status !== 'indeterminada' || car.status === 'nao_cumprida') return;
     car.condicional = true;
     car.rotulo = 'Depende da qualidade de segurado (desemprego involuntário)';
@@ -202,7 +209,8 @@
     if (car.status !== 'dispensada') {
       var l0 = 'Sem informação de seguro-desemprego/SINE, a carência considerada para o benefício é **0**' + (exigida ? ' (exigidas: ' + exigida + ')' : '') + ': a qualidade foi perdida e nenhuma contribuição anterior é aproveitada até o segurado voltar a contribuir.';
       var i = -1; ln.forEach(function (x, j) { if (i < 0 && /^Dispensar a carência/.test(x)) i = j; });
-      if (i < 0) ln.push(l0); else ln.splice(i, 0, l0);
+      var extra = ord !== undefined ? [l0, linhaRetorno(exigida, ord)] : [l0];
+      if (i < 0) ln = ln.concat(extra); else ln.splice.apply(ln, [i, 0].concat(extra));
     }
     car.linhas = ln.concat(['Esta carência só vale se a qualidade de segurado for mantida pelo desemprego involuntário (seguro-desemprego/SINE ou comprovação equivalente). Sem isso, a qualidade foi perdida antes da data do fato gerador, e as contribuições anteriores só contam depois que o segurado voltar a contribuir e cumprir a regra de retorno do art. 27-A (veja a regra vigente na data). Marque seguro-desemprego/SINE se houve.']);
   }
@@ -783,7 +791,7 @@
     if (entrada.falecimento) res.documentos.push('Certidão de óbito e prova da relação com a pessoa falecida');
     if (usada === 'especial') res.documentos.push('Autodeclaração e documentos da atividade rural');
 
-    condicionarCarencia(res.carencia, q, exigeCar ? CARENCIA : null);
+    condicionarCarencia(res.carencia, q, exigeCar ? CARENCIA : null, fgOrd);
     // ----- Conclusão -----
     var pend = [];
     res.cnis.filter(function (x) { return x.impede; }).forEach(function (x) { pend.push(x.achado + ' ' + x.documento + '.'); });
@@ -806,6 +814,7 @@
       res.carencia.semQualidade = true;
       res.carencia.rotulo = 'Regras de carência do salário-maternidade';
       res.carencia.linhas = REGRAS_CARENCIA_SM.slice();
+      res.carencia.linhas.push(linhaRetorno(fgOrd < DATA_DISPENSA ? CARENCIA : null, fgOrd));
     }
     return res;
   }
@@ -1094,7 +1103,7 @@
     return sec;
   }
 
-  var api = { condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { linhaRetorno: linhaRetorno, condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
