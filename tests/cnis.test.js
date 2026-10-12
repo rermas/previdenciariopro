@@ -543,3 +543,11 @@ console.log('rural ok');
   assert.equal(require('../assets/direito.js').classeDe(au.vinculos[0]), 'ci');
 }
 console.log('autônomo ok');
+
+// Mapa: vínculos por competência (para o texto ao passar o mouse)
+{
+  const NITv = '1.234.567.890-1';
+  const rv = CNIS.analisar(`1 ${NITv} 11.111.111/0001-11 EMPRESA ANTIGA Empregado 01/01/1993 30/06/1993\nRemunerações\n01/1993 1.000,00 02/1993 1.000,00`, HOJE);
+  assert.deepEqual(rv.vinculosPorMes[CNIS.mesDe(1993, 2)], [{ seq: 1, nome: 'EMPRESA ANTIGA' }]);
+}
+console.log('vínculos por mês ok');

@@ -843,6 +843,11 @@
         if (!parcialIni && !parcialFim) exclBen[kb] = true;
       }
     });
+    // Vínculos que cobrem cada competência (para o texto ao passar o mouse nos meses sem valor, como os anteriores a 07/1994).
+    var vinculosPorMes = {};
+    validos.forEach(function (v) {
+      for (var kv = mesDe(v.inicio.y, v.inicio.m); kv <= mesDe(v.fimContado.y, v.fimContado.m); kv++) (vinculosPorMes[kv] = vinculosPorMes[kv] || []).push({ seq: v.seq, nome: v.nome });
+    });
     var abaixo = [], validas = 0;
     Object.keys(totais).forEach(function (ks) {
       var k = +ks, min = minimoDe(k);
@@ -974,6 +979,7 @@
       abaixoMinimo: abaixo,
       carencia: carencia,
       mesesBenIncapacidade: exclBen,
+      vinculosPorMes: vinculosPorMes,
       lacunas: lacunas,
       resumo: {
         totalVinculos: itens.length,
@@ -1058,8 +1064,9 @@
 
   var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'vínculo de segurado especial ou empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento' };
 
-  function desenharMapa(mapa, valores) {
+  function desenharMapa(mapa, valores, vinculosPorMes) {
     valores = valores || {};
+    vinculosPorMes = vinculosPorMes || {};
     var ks = Object.keys(mapa).map(Number);
     if (!ks.length) return null;
     var ini = Math.floor(Math.min.apply(null, ks) / 12), fim = Math.floor(Math.max.apply(null, ks) / 12);
@@ -1084,6 +1091,8 @@
           td.title += ' - ' + vs.map(function (x) { return 'Seq. ' + x.seq + ' ' + x.nome + ': ' + formatarValor(x.valor); }).join('; ');
         } else if (est) {
           td.appendChild(el('span', 'so-leitor', ROTULO_MAPA[est]));
+          var vm = vinculosPorMes[k];
+          if (vm && vm.length) td.title += ' - ' + vm.map(function (x) { return 'Seq. ' + x.seq + ' ' + x.nome; }).join('; ') + (k < INICIO_PBC ? ' (valores anteriores a 07/1994 não são exibidos)' : '');
         }
         tr.appendChild(td);
       }
@@ -1152,7 +1161,7 @@
     acoes.appendChild(bCopiar); acoes.appendChild(bImp);
     saida.appendChild(acoes);
 
-    var mapa = desenharMapa(r.mapa, r.valores);
+    var mapa = desenharMapa(r.mapa, r.valores, r.vinculosPorMes);
     if (mapa) {
       var sm = sec('Mapa de competências', 'Cada quadrado é um mês e mostra o valor lançado. Com mais de um vínculo na competência, aparece um valor por vínculo (passe o mouse para ver quais); no mesmo vínculo, os lançamentos são somados. Em recolhimentos, é o salário de contribuição.');
       sm.appendChild(mapa);
