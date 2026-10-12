@@ -514,3 +514,18 @@ console.log('Todos os testes passaram.');
   assert.deepEqual(sm.vinculos.find((x) => /facultativ/i.test(x.tipo)).excluidosFacultativo, [CNIS.mesDe(2020, 5), CNIS.mesDe(2020, 6)]);
 }
 console.log('facultativo concomitante ok');
+
+// ---------- Segurado especial e empregado rural: marrom claro ----------
+{
+  const NITr = '1.234.567.890-1';
+  const r1 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 SÍTIO BOA VISTA Segurado Especial 01/01/2020 31/03/2020`, HOJE);
+  assert.equal(r1.mapa[CNIS.mesDe(2020, 2)], 'rural');
+  const r2 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 FAZENDA TRÊS IRMÃOS Empregado 01/01/2020 31/03/2020\nRemunerações\n01/2020 1.500,00 02/2020 1.500,00 03/2020 1.500,00`, HOJE);
+  assert.equal(r2.mapa[CNIS.mesDe(2020, 2)], 'rural', 'empregado rural pelo nome do empregador');
+  const r3 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 LOJA CENTRO Empregado 01/01/2020 31/03/2020\nRemunerações\n01/2020 1.500,00 02/2020 1.500,00 03/2020 1.500,00`, HOJE);
+  assert.equal(r3.mapa[CNIS.mesDe(2020, 2)], 'ok');
+  const r4 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 SÍTIO BOA VISTA Segurado Especial 01/01/2020 31/03/2020\n2 ${NITr} 22.222.222/0001-22 LOJA CENTRO Empregado 01/02/2020 29/02/2020\nRemunerações\n02/2020 1.500,00`, HOJE);
+  assert.equal(r4.mapa[CNIS.mesDe(2020, 2)], 'ok', 'remuneração de outra atividade prevalece');
+  assert.equal(r4.mapa[CNIS.mesDe(2020, 1)], 'rural');
+}
+console.log('rural ok');

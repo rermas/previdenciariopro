@@ -174,6 +174,12 @@
     { nome: 'empregado, contribuinte individual simultâneo e vínculo antigo sem remunerações', seg: ['emp', 'ci'], concomitante: true, antigo: true }
   ];
   var NOMES_EMP = ['MERCADO ALVORADA LTDA', 'TRANSPORTES HORIZONTE S.A.', 'PADARIA TRIGO BOM ME', 'CONSTRUTORA PEDRA FIRME LTDA', 'INDÚSTRIA NOVA ERA S.A.', 'CLÍNICA VIDA PLENA LTDA', 'ESCOLA SABER MAIS LTDA', 'AUTO PEÇAS CENTRAL LTDA', 'RESTAURANTE SABOR CASEIRO ME', 'LOGÍSTICA RÁPIDA LTDA', 'FARMÁCIA POPULAR EXEMPLO LTDA', 'SERVIÇOS GERAIS UNIÃO LTDA'];
+  var RURAL_NOME = /FAZENDA|S[IÍ]TIO|CH[ÁA]CARA|AGR[IÍ]COLA|AGROPEC|AGRO|AGRIC|RURAL|GRANJA|HARAS|LAVOURA|ESTÂNCIA|ESTANCIA|COLONO|PASTAGEM|PECU[ÁA]RIA/i;
+  // Segurado especial, tipo rural ou empregado de empregador com nome de atividade rural.
+  function ehRural(v) {
+    var t = v.tipo || '';
+    return /especial|rural/i.test(t) || (/^empregado/i.test(t.trim()) && RURAL_NOME.test(v.nome || ''));
+  }
   var NOMES_RURAL = ['SÍTIO BOA VISTA', 'FAZENDA TRÊS IRMÃOS', 'CHÁCARA SANTA LUZIA', 'SÍTIO RIO CLARO'];
 
   function gerarExemplo(rnd) {
@@ -914,6 +920,21 @@
       var tp = function (x) { return tipoPorSeq[x.seq] || ''; };
       if (vs.every(function (x) { return /individual|facultativ/i.test(tp(x)); })) mapa[k] = vs.some(function (x) { return /individual/i.test(tp(x)); }) ? 'okci' : 'okfac';
     });
+    // Vínculo de segurado especial ou de empregado rural: marrom claro nos meses do período, salvo se outra atividade tiver remuneração no mês.
+    var seqRural = {};
+    validos.forEach(function (v) { if (ehRural(v)) seqRural[v.seq] = true; });
+    // O período rural sem remuneração não é "falta" quando outra atividade tem remuneração no mês.
+    var faltaNaoRural = {};
+    itens.forEach(function (it) { if (!seqRural[it.seq]) (it.mesesFaltantes || []).forEach(function (kk) { faltaNaoRural[kk] = true; }); });
+    Object.keys(mapa).forEach(function (ks) { if (mapa[ks] === 'parcial' && !faltaNaoRural[ks]) mapa[ks] = 'ok'; });
+    validos.forEach(function (v) {
+      if (!seqRural[v.seq]) return;
+      for (var kr = mesDe(v.inicio.y, v.inicio.m); kr <= mesDe(v.fimContado.y, v.fimContado.m); kr++) {
+        var est = mapa[kr], vsr = valores[kr];
+        var soRural = !vsr || vsr.every(function (x) { return seqRural[x.seq]; });
+        if ((est === undefined || est === 'falta' || est === 'pre94' || est === 'ok' || est === 'okci' || est === 'okfac' || est === 'parcial') && soRural) mapa[kr] = 'rural';
+      }
+    });
     // Meses em benefício por incapacidade temporária ou salário-maternidade: cor própria, com tom mais claro nos meses de entrada e de saída.
     var tipoBen = function (t) {
       if (/MATERNIDADE/i.test(t || '')) return 'bensm';
@@ -1035,7 +1056,7 @@
     return s;
   }
 
-  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento' };
+  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'vínculo de segurado especial ou empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento' };
 
   function desenharMapa(mapa, valores) {
     valores = valores || {};
@@ -1073,8 +1094,8 @@
     box.appendChild(t);
     var leg = el('ul', 'legenda');
     var presentes = {}; Object.keys(mapa).forEach(function (k) { presentes[mapa[k]] = true; });
-    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento']].forEach(function (x) {
-      if ((/^ben/.test(x[0]) || x[0] === 'segdes' || x[0] === 'okci' || x[0] === 'okfac') && !presentes[x[0]]) return;
+    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['rural', 'Segurado especial ou empregado rural'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento']].forEach(function (x) {
+      if ((/^ben/.test(x[0]) || x[0] === 'segdes' || x[0] === 'okci' || x[0] === 'okfac' || x[0] === 'rural') && !presentes[x[0]]) return;
       var li = el('li'); li.appendChild(el('i', 'c-' + x[0])); li.appendChild(document.createTextNode(x[1])); leg.appendChild(li);
     });
     box.appendChild(leg);
