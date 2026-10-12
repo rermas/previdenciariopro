@@ -184,6 +184,23 @@
     var ord = function (a, b) { return a - b; };
     return { empBaixo: empBaixo.sort(ord), ciBaixo: ciBaixo.sort(ord), empSem: empSem.sort(ord) };
   }
+  // Meses de atividade rural (segurado especial) no CNIS até certo mês, sem repetir meses sobrepostos.
+  function mesesRurais(analise, ateMes) {
+    var set = {};
+    analise.vinculos.forEach(function (v) {
+      if (!v.inicio || classeDe(v) !== 'especial') return;
+      var i = C.mesDe(v.inicio.y, v.inicio.m), f = v.fim ? C.mesDe(v.fim.y, v.fim.m) : ateMes;
+      for (var k = i; k <= Math.min(f, ateMes); k++) set[k] = 1;
+    });
+    return Object.keys(set).length;
+  }
+  // Tempo de segurado especial só conta como carência se for o último vínculo antes do fato gerador; senão, só na aposentadoria híbrida.
+  function linhaRural(analise, classeCar, ateMes, exigidos) {
+    var n = mesesRurais(analise, ateMes);
+    if (!n) return null;
+    if (classeCar === 'especial') return 'Atividade rural de segurado especial no CNIS até ' + rotuloMes(ateMes) + ': **' + n + '** mês(es)' + (exigidos ? (n >= exigidos ? ', suficientes para os ' + exigidos + ' meses de atividade rural exigidos' : ', menos que os ' + exigidos + ' meses exigidos: serão necessárias outras provas da atividade rural') : '') + '. O tempo rural conta como carência porque o segurado especial é o último vínculo antes do fato gerador.';
+    return 'O CNIS tem **' + n + '** mês(es) como segurado especial, mas o último vínculo antes do fato gerador não é de segurado especial: esse tempo **não conta como carência** neste benefício (só soma, com o tempo urbano, na aposentadoria por idade híbrida, art. 48, § 3º, da Lei 8.213/91).';
+  }
   // Quantas competências complementadas ou comprovadas (respostas "sim") contam, e quantas delas depois de certo mês.
   function contarComplementos(compl, resp, aPartirDe) {
     var f = function (l) { return aPartirDe === undefined ? l.length : l.filter(function (k) { return k >= aPartirDe; }).length; };
@@ -563,6 +580,8 @@
     } else {
       cl.push(fgOrd >= DATA_DISPENSA ? 'Fato gerador em ' + rotulo(fgD) + ', a partir de 05/04/2024: carência dispensada para todas as categorias (ADIs 2.110 e 2.111 do STF e regulamentação do INSS).' : 'Empregada, doméstica e avulsa não têm carência para o salário-maternidade (art. 26, VI, da Lei 8.213/91).' + (classeCar ? '' : ' Categoria não identificada: se for contribuinte individual, MEI, facultativa ou segurada especial, a carência de 10 contribuições vale para fatos geradores antes de 05/04/2024.'));
     }
+    var lr = classeCar ? linhaRural(analise, classeCar, fgMes, 10) : null;
+    if (lr) cl.push(lr);
     cl.push('Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na data do fato gerador, nem a validade das contribuições.');
     cl.push('Uma única contribuição, mesmo paga depois do fato gerador, não garante o benefício por si só.');
     if (atrasosAtivos.length) res.carencia.linhas.push('Há recolhimentos em atraso (' + atrasosAtivos.length + '): verifique se são válidos para demonstrar filiação e cobertura na situação analisada.');
@@ -1052,7 +1071,7 @@
     return sec;
   }
 
-  var api = { complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -74,6 +74,9 @@
     var linhas = ['Contribuições válidas do CNIS até ' + rotMes(mesOrd(data)) + ' (competências desde 07/1994 com valor igual ou acima do salário mínimo, mais meses de vínculo anteriores a 07/1994): **' + total + '**. Exigidas: **' + exigida + '**.'];
     if (extra) linhas.push('Estão incluídas **' + extra + '** competência(s) complementada(s) até o salário mínimo ou com vínculo comprovado, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');
     if (perda) linhas.push('Houve perda da qualidade no histórico (depois de ' + rotMes(sq.perdas[sq.perdas.length - 1].apos) + '): contando da nova filiação, são exigidas ao menos **' + metade + '** contribuições, metade da carência (art. 27-A). Depois do retorno: **' + depois + '**.');
+    var cc = base.categoria && base.categoria.usada; var classeR = cc === 'desempregada' || !cc ? (base.qualidade && base.qualidade.graca ? base.qualidade.graca.classe : null) : cc;
+    var lr = classeR ? D.linhaRural(analise, classeR, mesOrd(data), null) : null;
+    if (lr) linhas.push(lr);
     var perguntas = D.perguntasCarencia(compl, resp, !ok, total, exigida);
     if (!ok && !perguntas.length && compl.empBaixo.length + compl.empSem.length + compl.ciBaixo.length) linhas.push('Mesmo contando as competências que dependem de complementação ou de comprovação do vínculo, a carência não seria atingida.');
     return { exigida: exigida, total: total, perda: perda, depoisDoRetorno: depois, ok: ok, linhas: linhas, perguntas: perguntas, extra: extra };
@@ -356,6 +359,7 @@
     if (origem === 'acidente') carLinhas.push('Incapacidade decorrente de **acidente de qualquer natureza ou causa, ou doença profissional/do trabalho**: carência **dispensada** (art. 26, II). Exige filiação ao RGPS e qualidade de segurado na DII. Para acidente de trabalho, comunicar com a CAT.');
     else if (origem === 'doenca_lista') carLinhas.push('Doença grave da lista oficial (art. 26, II e art. 151, atualizada por Portaria Interministerial): carência **dispensada**. Confira se o CID consta da lista vigente na DII e se há conclusão da medicina especializada.');
     if (especial) { carLinhas.push('Segurado especial: sem contribuições, mas precisa comprovar **12 meses de atividade rural** no período imediatamente anterior ao requerimento, ainda que de forma descontínua (art. 39, I). O CNIS pode não trazer isso.'); doc('Autodeclaração e documentos da atividade rural nos 12 meses anteriores ao requerimento'); }
+    if (dispensada || especial) { var lr2 = classeCar ? D.linhaRural(analise, classeCar, mesOrd(dii), especial ? 12 : null) : null; if (lr2) carLinhas.push(lr2); }
     if (dispensada || especial) { carOk = true; carLinhas.push('Contribuições válidas do CNIS até ' + rotMes(mesOrd(dii)) + ': **' + car.total + '** (informativo).'); }
     else { carOk = car.ok; car.linhas.forEach(function (l) { carLinhas.push(l); }); if (!carOk && qOk) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
     carLinhas.push('Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na DII.');

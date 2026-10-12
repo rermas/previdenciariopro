@@ -158,3 +158,16 @@ console.log('beneficios.test.js: ok');
   assert.notEqual(r.qualidade.status, 'confirmada');
 }
 console.log('especial ok');
+
+// Tempo rural só conta como carência se for o último vínculo antes do fato gerador
+{
+  const NITx = '1.234.567.890-1';
+  const rural = `1 ${NITx} 11.111.111/0001-11 SÍTIO BOA VISTA Segurado Especial 01/01/2010 31/12/2015`;
+  const urbano = `\n2 ${NITx} 22.222.222/0001-22 LOJA Empregado 01/01/2016 31/12/2016\nRemunerações\n01/2016 1.200,00`;
+  let r = incap(rural + urbano, { dii: '2016-06-10' });
+  assert.match(r.carencia.linhas.join(' '), /não conta como carência/);
+  r = incap(rural, { dii: '2016-03-10' });
+  assert.match(r.carencia.linhas.join(' '), /conta como carência porque o segurado especial é o último vínculo/);
+  assert.match(r.carencia.linhas.join(' '), /suficientes/);
+}
+console.log('rural último vínculo ok');

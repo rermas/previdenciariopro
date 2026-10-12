@@ -942,6 +942,7 @@
     if (r.carencia) {
       l.push('', 'Carência: ' + r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo; ' + r.carencia.todas + ' com qualquer remuneração.');
       r.carencia.linhas.forEach(function (c) { l.push('- ' + c.nome + ' (' + c.exigido + '): faltam ' + c.faltamValidas + ' (' + c.faltamTodas + ' contando todas)'); });
+      if (r.vinculos.some(function (v) { return /especial/i.test(v.tipo || v.texto || v.nome || ''); })) l.push('- Observação: o tempo de segurado especial não entra nas contagens acima. Ele só soma como carência na aposentadoria por idade híbrida (art. 48, § 3º); nos demais benefícios conta apenas se o segurado especial for o último vínculo antes do fato gerador ou do requerimento.');
     }
     if (r.lacunas.length) {
       l.push('', 'Lacunas sem vínculo nem benefício:');
