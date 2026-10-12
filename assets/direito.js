@@ -194,11 +194,17 @@
     return { n: Math.ceil(exigida / 2), rotulo: 'metade (art. 27-A, restabelecido pela Lei 13.846/2019, desde 18/06/2019)' };
   }
   // Qualidade "indeterminada" (só existiria com desemprego involuntário comprovado): a carência não pode aparecer como cumprida sem condição.
-  function condicionarCarencia(car, q) {
+  function condicionarCarencia(car, q, exigida) {
     if (!car || car.semQualidade || !q || q.status !== 'indeterminada' || car.status === 'nao_cumprida') return;
     car.condicional = true;
     car.rotulo = 'Depende da qualidade de segurado (desemprego involuntário)';
-    car.linhas = (car.linhas || []).concat(['Esta carência só vale se a qualidade de segurado for mantida pelo desemprego involuntário (seguro-desemprego/SINE ou comprovação equivalente). Sem isso, a qualidade foi perdida antes da data do fato gerador, e as contribuições anteriores só contam depois que o segurado voltar a contribuir e cumprir a regra de retorno do art. 27-A (veja a regra vigente na data). Marque seguro-desemprego/SINE se houve.']);
+    var ln = (car.linhas || []).slice();
+    if (car.status !== 'dispensada') {
+      var l0 = 'Sem informação de seguro-desemprego/SINE, a carência considerada para o benefício é **0**' + (exigida ? ' (exigidas: ' + exigida + ')' : '') + ': a qualidade foi perdida e nenhuma contribuição anterior é aproveitada até o segurado voltar a contribuir.';
+      var i = -1; ln.forEach(function (x, j) { if (i < 0 && /^Dispensar a carência/.test(x)) i = j; });
+      if (i < 0) ln.push(l0); else ln.splice(i, 0, l0);
+    }
+    car.linhas = ln.concat(['Esta carência só vale se a qualidade de segurado for mantida pelo desemprego involuntário (seguro-desemprego/SINE ou comprovação equivalente). Sem isso, a qualidade foi perdida antes da data do fato gerador, e as contribuições anteriores só contam depois que o segurado voltar a contribuir e cumprir a regra de retorno do art. 27-A (veja a regra vigente na data). Marque seguro-desemprego/SINE se houve.']);
   }
   // Meses de atividade rural (segurado especial) no CNIS até certo mês, sem repetir meses sobrepostos.
   function mesesRurais(analise, ateMes) {
@@ -777,7 +783,7 @@
     if (entrada.falecimento) res.documentos.push('Certidão de óbito e prova da relação com a pessoa falecida');
     if (usada === 'especial') res.documentos.push('Autodeclaração e documentos da atividade rural');
 
-    condicionarCarencia(res.carencia, q);
+    condicionarCarencia(res.carencia, q, exigeCar ? CARENCIA : null);
     // ----- Conclusão -----
     var pend = [];
     res.cnis.filter(function (x) { return x.impede; }).forEach(function (x) { pend.push(x.achado + ' ' + x.documento + '.'); });

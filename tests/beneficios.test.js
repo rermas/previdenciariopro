@@ -184,3 +184,10 @@ console.log('rural último vínculo ok');
   assert.equal(r.carencia.condicional, undefined);
 }
 console.log('carência condicional ok');
+{
+  const NITx = '1.234.567.890-1';
+  const t = `1 ${NITx} 11.111.111/0001-11 INDUSTRIA Empregado 16/06/2014 06/07/2017\nRemunerações\n06/2014 3.000,00 07/2014 3.000,00 08/2014 3.000,00 09/2014 3.000,00 10/2014 3.000,00 11/2014 3.000,00 12/2014 3.000,00 01/2015 3.000,00 02/2015 3.000,00 03/2015 3.000,00 04/2015 3.000,00 05/2015 3.000,00`;
+  const r = incap(t, { dii: '2018-09-18' });
+  assert.match(r.carencia.linhas.join(' '), /carência considerada para o benefício é \*\*0\*\* \(exigidas: 12\)/);
+}
+console.log('linha carência 0 ok');
