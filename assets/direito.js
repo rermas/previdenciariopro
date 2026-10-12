@@ -177,7 +177,7 @@
       var cl = classeDe(v);
       if (cl !== 'empregada' && cl !== 'domestica' && cl !== 'avulsa') return;
       (v.mesesFaltantes || []).forEach(function (k) {
-        if (k > ateMes || k < piso || visto[k] || analise.valores[k]) return;
+        if (k > ateMes || k < piso || visto[k] || analise.valores[k] || (analise.mesesBenIncapacidade && analise.mesesBenIncapacidade[k])) return;
         visto[k] = true; empSem.push(k);
       });
     });
@@ -213,6 +213,13 @@
       if (i < 0) ln = ln.concat(extra); else ln.splice.apply(ln, [i, 0].concat(extra));
     }
     car.linhas = ln.concat(['Esta carência só vale se a qualidade de segurado for mantida pelo desemprego involuntário (seguro-desemprego/SINE ou comprovação equivalente). Sem isso, a qualidade foi perdida antes da data do fato gerador, e as contribuições anteriores só contam depois que o segurado voltar a contribuir e cumprir a regra de retorno do art. 27-A (veja a regra vigente na data). Marque seguro-desemprego/SINE se houve.']);
+  }
+  // Meses de benefício por incapacidade pago por inteiro que tinham remuneração/recolhimento mas não contam como carência.
+  function linhaBenIncapacidade(analise, ateMes) {
+    var ex = analise.mesesBenIncapacidade || {};
+    var ks = Object.keys(analise.valores || {}).map(Number).filter(function (k) { return ex[k] && k <= ateMes; }).sort(function (x, y) { return x - y; });
+    if (!ks.length) return null;
+    return ks.length + ' competência(s) com remuneração ou recolhimento não foram contadas por estarem dentro de benefício por incapacidade pago por inteiro (' + ks.slice(0, 6).map(rotuloMes).join(', ') + (ks.length > 6 ? ' e outras' : '') + '). Só contam o mês de início (se começou depois do dia 1) e o mês de saída (se terminou antes do último dia), havendo recolhimento ou vínculo de empregado no mês.';
   }
   // Meses de atividade rural (segurado especial) no CNIS até certo mês, sem repetir meses sobrepostos.
   function mesesRurais(analise, ateMes) {
@@ -574,7 +581,7 @@
     // ----- Etapa 4: carência -----
     var validasAte = 0;
     Object.keys(analise.valores).forEach(function (k) {
-      if (+k > fgMes) return;
+      if (+k > fgMes || (analise.mesesBenIncapacidade && analise.mesesBenIncapacidade[k])) return;
       var tot = analise.valores[k].reduce(function (t, x) { return t + x.valor; }, 0);
       var m = C.minimoDe(+k);
       var soCI = analise.valores[k].every(function (x) { return /individual|facultativ/i.test(x.tipo || ''); });
@@ -610,6 +617,8 @@
     } else {
       cl.push(fgOrd >= DATA_DISPENSA ? 'Fato gerador em ' + rotulo(fgD) + ', a partir de 05/04/2024: carência dispensada para todas as categorias (ADIs 2.110 e 2.111 do STF e regulamentação do INSS).' : 'Empregada, doméstica e avulsa não têm carência para o salário-maternidade (art. 26, VI, da Lei 8.213/91).' + (classeCar ? '' : ' Categoria não identificada: se for contribuinte individual, MEI, facultativa ou segurada especial, a carência de 10 contribuições vale para fatos geradores antes de 05/04/2024.'));
     }
+    var lb = linhaBenIncapacidade(analise, fgMes);
+    if (lb) cl.push(lb);
     var lr = classeCar ? linhaRural(analise, classeCar, fgMes, 10) : null;
     if (lr) cl.push(lr);
     cl.push('Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na data do fato gerador, nem a validade das contribuições.');
@@ -1103,7 +1112,7 @@
     return sec;
   }
 
-  var api = { linhaRetorno: linhaRetorno, condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { linhaBenIncapacidade: linhaBenIncapacidade, linhaRetorno: linhaRetorno, condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

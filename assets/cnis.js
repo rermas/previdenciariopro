@@ -778,10 +778,23 @@
       extremos[mesDe(v.inicio.y, v.inicio.m)] = true;
       extremos[mesDe(v.fimContado.y, v.fimContado.m)] = true;
     });
+    // Meses em benefício por incapacidade (pago por inteiro) não contam como carência. Só conta o mês de início, se começou depois do dia 1,
+    // e o mês de saída, se terminou antes do último dia (e, nos dois casos, só havendo recolhimento ou remuneração no mês).
+    var exclBen = {};
+    bens.forEach(function (b) {
+      if (b.indeferido || !b.inicio || !/AUX[IÍ]LIO[ -]DOEN|INCAPACIDADE|INVALIDEZ/i.test(b.texto || '') || /AUX[IÍ]LIO[ -]ACIDENTE/i.test(b.texto || '')) return;
+      var fimB = b.fim || dataDeOrd(hojeOrd);
+      var a0 = mesDe(b.inicio.y, b.inicio.m), z0 = mesDe(fimB.y, fimB.m);
+      for (var kb = a0; kb <= z0; kb++) {
+        var parcialIni = kb === a0 && b.inicio.d > 1;
+        var parcialFim = kb === z0 && !!b.fim && ordemDe(b.fim.y, b.fim.m, b.fim.d) < ultimoDiaDoMes(z0);
+        if (!parcialIni && !parcialFim) exclBen[kb] = true;
+      }
+    });
     var abaixo = [], validas = 0;
     Object.keys(totais).forEach(function (ks) {
       var k = +ks, min = minimoDe(k);
-      if (min === null) return;
+      if (min === null || exclBen[k]) return;
       if (totais[k] + 0.004 >= min) { validas++; return; }
       var ci = valores[k].every(function (x) { return /individual|facultativ/i.test(tipoPorSeq[x.seq] || ''); });
       // Empregado: abaixo do mínimo só deixa de contar a partir da EC 103/2019; antes disso conta normalmente.
@@ -805,11 +818,11 @@
       var antes94 = {};
       validos.forEach(function (v) {
         var a = mesDe(v.inicio.y, v.inicio.m), b = Math.min(mesDe(v.fimContado.y, v.fimContado.m), INICIO_PBC - 1);
-        for (var k = a; k <= b; k++) antes94[k] = true;
+        for (var k = a; k <= b; k++) if (!exclBen[k]) antes94[k] = true;
       });
-      var todas = Object.keys(ok).length;
+      var todas = Object.keys(ok).filter(function (k) { return !exclBen[k]; }).length;
       carencia = {
-        validas: validas, todas: todas, mesesAntes94: Object.keys(antes94).length,
+        validas: validas, todas: todas, excluidasBeneficio: Object.keys(totais).filter(function (k) { return exclBen[k]; }).length, mesesAntes94: Object.keys(antes94).length,
         linhas: CARENCIAS.map(function (c) {
           return { nome: c[0], exigido: c[1], faltamValidas: Math.max(0, c[1] - validas), faltamTodas: Math.max(0, c[1] - todas) };
         })
@@ -891,6 +904,7 @@
       valores: valores,
       abaixoMinimo: abaixo,
       carencia: carencia,
+      mesesBenIncapacidade: exclBen,
       lacunas: lacunas,
       resumo: {
         totalVinculos: itens.length,
@@ -941,6 +955,7 @@
     }
     if (r.carencia) {
       l.push('', 'Carência: ' + r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo; ' + r.carencia.todas + ' com qualquer remuneração.');
+      if (r.carencia.excluidasBeneficio) l.push('- ' + r.carencia.excluidasBeneficio + ' competência(s) com remuneração dentro de benefício por incapacidade pago por inteiro não foram contadas como carência (conta só o mês de início, se depois do dia 1, e o de saída, se antes do último dia).');
       r.carencia.linhas.forEach(function (c) { l.push('- ' + c.nome + ' (' + c.exigido + '): faltam ' + c.faltamValidas + ' (' + c.faltamTodas + ' contando todas)'); });
       if (r.vinculos.some(function (v) { return /especial/i.test(v.tipo || v.texto || v.nome || ''); })) l.push('- Observação: o tempo de segurado especial não entra nas contagens acima. Ele só soma como carência na aposentadoria por idade híbrida (art. 48, § 3º); nos demais benefícios conta apenas se o segurado especial for o último vínculo antes do fato gerador ou do requerimento.');
     }

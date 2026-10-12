@@ -461,3 +461,27 @@ assert.equal(vazio.resumo.diasUnicos, 0);
 })();
 
 console.log('Todos os testes passaram.');
+
+// ---------- Benefício por incapacidade integral não conta como carência ----------
+{
+  const NITb = '1.234.567.890-1';
+  const rem = (a, b) => { const o = []; for (let k = a; k <= b; k++) o.push(String(k % 12 + 1).padStart(2, '0') + '/' + Math.floor(k / 12) + ' 3.000,00'); return o.join(' '); };
+  const mk = (ini, fim) => texto(`1 ${NITb} 11.111.111/0001-11 EMPRESA Empregado 01/01/2020`, 'Remunerações', rem(2020 * 12, 2020 * 12 + 11),
+    `2 ${NITb} 1234567890 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO ${ini} ${fim}`);
+  const base = CNIS.analisar(texto(`1 ${NITb} 11.111.111/0001-11 EMPRESA Empregado 01/01/2020`, 'Remunerações', rem(2020 * 12, 2020 * 12 + 11)), HOJE);
+  assert.equal(base.carencia.validas, 12);
+  // Benefício de 10/03/2020 a 20/06/2020: março conta (começou depois do dia 1), abril e maio não, junho conta (terminou antes do fim do mês)
+  const a = CNIS.analisar(mk('10/03/2020', '20/06/2020'), HOJE);
+  assert.ok(a.beneficios.length > 0);
+  {
+    assert.equal(!!a.mesesBenIncapacidade[CNIS.mesDe(2020, 4)], true);
+    assert.equal(!!a.mesesBenIncapacidade[CNIS.mesDe(2020, 5)], true);
+    assert.equal(!!a.mesesBenIncapacidade[CNIS.mesDe(2020, 3)], false);
+    assert.equal(!!a.mesesBenIncapacidade[CNIS.mesDe(2020, 6)], false);
+    assert.equal(a.carencia.validas, 10);
+  }
+  // Benefício de 01/03/2020 a 30/06/2020: março a junho inteiros ficam de fora
+  const b = CNIS.analisar(mk('01/03/2020', '30/06/2020'), HOJE);
+  assert.equal(b.carencia.validas, 8);
+  console.log('benefício integral na carência:', a.beneficios.length, b.beneficios.length);
+}

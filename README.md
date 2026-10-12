@@ -111,3 +111,6 @@ Quando faltam contribuições para a carência (salário-maternidade, auxílio-r
 - Após perda da qualidade (art. 27-A), as competências complementadas só valem se posteriores ao retorno.
 - Último vínculo de empregado em aberto no fato gerador é considerado ativo, mesmo sem recolhimento nos meses anteriores (não se presume demissão no dia 30 do último recolhimento). Vale apenas para "Verificar direito"; a contagem de tempo do mapa não muda.
 - Pensão por morte não tem essas perguntas (sem carência).
+
+### Benefício por incapacidade e carência
+Meses dentro de auxílio por incapacidade (ou aposentadoria por incapacidade) pago por inteiro não contam como carência. Contam apenas o mês de início, se o benefício começou depois do dia 1, e o mês de saída, se terminou antes do último dia, e só havendo remuneração de empregado ou recolhimento no mês. Auxílio-acidente não entra nessa regra. Vale para o resumo do CNIS e para todas as verificações de direito.

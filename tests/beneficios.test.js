@@ -194,3 +194,14 @@ console.log('linha carência 0 ok');
 assert.match(require('../assets/direito.js').linhaRetorno(12, Date.UTC(2018, 8, 18) / 86400000), /\*\*6\*\* contribuições depois do retorno/);
 assert.match(require('../assets/direito.js').linhaRetorno(12, Date.UTC(2019, 2, 1) / 86400000), /\*\*12\*\* contribuições depois do retorno/);
 console.log('linhaRetorno ok');
+
+// Benefício por incapacidade integral: meses dentro dele não contam para a carência (nem para incapacidade/reclusão)
+{
+  const NITx = '1.234.567.890-1';
+  const rem = (a, b) => { const o = []; for (let k = a; k <= b; k++) o.push(String(k % 12 + 1).padStart(2, '0') + '/' + Math.floor(k / 12) + ' 3.000,00'); return o.join(' '); };
+  const t = `1 ${NITx} 11.111.111/0001-11 EMPRESA Empregado 01/01/2020\nRemunerações\n${rem(2020 * 12, 2020 * 12 + 11)}\n2 ${NITx} 1234567890 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO 01/03/2020 30/06/2020`;
+  const r = incap(t, { dii: '2020-12-10' });
+  assert.match(r.carencia.linhas.join(' '), /\*\*8\*\*/);
+  assert.match(r.carencia.linhas.join(' '), /dentro de benefício por incapacidade pago por inteiro/);
+}
+console.log('benefício integral ok');

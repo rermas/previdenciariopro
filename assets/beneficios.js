@@ -74,6 +74,8 @@
     var linhas = ['Contribuições válidas do CNIS até ' + rotMes(mesOrd(data)) + ' (competências desde 07/1994 com valor igual ou acima do salário mínimo, mais meses de vínculo anteriores a 07/1994): **' + total + '**. Exigidas: **' + exigida + '**.'];
     if (extra) linhas.push('Estão incluídas **' + extra + '** competência(s) complementada(s) até o salário mínimo ou com vínculo comprovado, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');
     if (perda) linhas.push('Houve perda da qualidade no histórico (depois de ' + rotMes(sq.perdas[sq.perdas.length - 1].apos) + '): contando da nova filiação, são exigidas ao menos **' + metade + '** contribuições (regra vigente no fato gerador: ' + reg.rotulo + '). Se não houver essa quantidade depois do retorno, as contribuições anteriores não contam. Depois do retorno: **' + depois + '**.');
+    var lb = D.linhaBenIncapacidade(analise, mesOrd(data));
+    if (lb) linhas.push(lb);
     var cc = base.categoria && base.categoria.usada; var classeR = cc === 'desempregada' || !cc ? (base.qualidade && base.qualidade.graca ? base.qualidade.graca.classe : null) : cc;
     var lr = classeR ? D.linhaRural(analise, classeR, mesOrd(data), null) : null;
     if (lr) linhas.push(lr);
