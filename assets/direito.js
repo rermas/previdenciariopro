@@ -76,7 +76,7 @@
     if (/avulso/i.test(t)) return 'avulsa';
     if (/facultativ/i.test(t)) return 'facultativa';
     if (/especial/i.test(t)) return 'especial';
-    if (/individual/i.test(t)) return (item.codigosIndicadores || []).indexOf('IREC-MEI') >= 0 ? 'mei' : 'ci';
+    if (/individual|aut[ôo]nomo/i.test(t)) return (item.codigosIndicadores || []).indexOf('IREC-MEI') >= 0 ? 'mei' : 'ci';
     if (/empregad/i.test(t)) return 'empregada';
     if (/servidor|agente/i.test(t)) return 'rpps';
     return 'outra';
@@ -584,7 +584,7 @@
       if (+k > fgMes || (analise.mesesBenIncapacidade && analise.mesesBenIncapacidade[k])) return;
       var tot = analise.valores[k].reduce(function (t, x) { return t + x.valor; }, 0);
       var m = C.minimoDe(+k);
-      var soCI = analise.valores[k].every(function (x) { return /individual|facultativ/i.test(x.tipo || ''); });
+      var soCI = analise.valores[k].every(function (x) { return /individual|aut[ôo]nomo|facultativ/i.test(x.tipo || ''); });
       if (m !== null && (tot + 0.004 >= m || (!soCI && +k < EC103))) validasAte++;
     });
     // Complementação e comprovação informadas pelo usuário: as competências contam como salário mínimo.

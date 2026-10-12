@@ -72,7 +72,7 @@
   var RE_CAB = new RegExp('^(\\d{1,3})\\s+' + NIT + '(?:\\s+(.*))?$');
   var RE_FIM = /Sal[áa]rios\s+de\s+Contribui[çc][ãa]o\s+Consolidados|Legenda\s+de\s+Indicadores/i;
   var RE_COLUNAS = /^(Seq\.|Matr[íi]cula|Trabalhador\b|Compet[êe]ncia\s+Remunera|Dt\.|Data\s+In[íi]cio|Compet\.|NIT\b)/i;
-  var RE_TIPO = /\b(Empregado\s+Dom[ée]stico|Empregado|Contribuinte\s+Individual|Trabalhador\s+Avulso|Facultativo|Segurado\s+Especial|Servidor\s+P[úu]blico|Agente\s+P[úu]blico|Contribuinte\s+em\s+Dobro|Dom[ée]stico|Benefici[áa]rio)\b/i;
+  var RE_TIPO = /\b(Empregado\s+Dom[ée]stico|Empregado|Contribuinte\s+Individual|Aut[ôo]nomo|Trabalhador\s+Avulso|Facultativo|Segurado\s+Especial|Servidor\s+P[úu]blico|Agente\s+P[úu]blico|Contribuinte\s+em\s+Dobro|Dom[ée]stico|Benefici[áa]rio)\b/i;
   var RE_CODIGO = /^[\d.\/-]{6,}$/;
   var RE_CONTINUACAO = /^[A-ZÀ-Ý0-9][A-ZÀ-Ý0-9 .,&'\/()\-]*$/;
   var PALAVRAS = [
@@ -848,7 +848,7 @@
       var k = +ks, min = minimoDe(k);
       if (min === null || exclBen[k]) return;
       if (totais[k] + 0.004 >= min) { validas++; return; }
-      var ci = valores[k].every(function (x) { return /individual|facultativ/i.test(tipoPorSeq[x.seq] || ''); });
+      var ci = valores[k].every(function (x) { return /individual|aut[ôo]nomo|facultativ/i.test(tipoPorSeq[x.seq] || ''); });
       // Empregado: abaixo do mínimo só deixa de contar a partir da EC 103/2019; antes disso conta normalmente.
       if (!ci && k < EC103) { validas++; return; }
       abaixo.push({
@@ -918,7 +918,7 @@
       var k = +ks, vs = valores[k];
       if (mapa[k] !== 'ok' || !vs || !vs.length) return;
       var tp = function (x) { return tipoPorSeq[x.seq] || ''; };
-      if (vs.every(function (x) { return /individual|facultativ/i.test(tp(x)); })) mapa[k] = vs.some(function (x) { return /individual/i.test(tp(x)); }) ? 'okci' : 'okfac';
+      if (vs.every(function (x) { return /individual|aut[ôo]nomo|facultativ/i.test(tp(x)); })) mapa[k] = vs.some(function (x) { return /individual|aut[ôo]nomo/i.test(tp(x)); }) ? 'okci' : 'okfac';
     });
     // Vínculo de segurado especial ou de empregado rural: marrom claro nos meses do período, salvo se outra atividade tiver remuneração no mês.
     var seqRural = {};

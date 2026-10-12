@@ -529,3 +529,17 @@ console.log('facultativo concomitante ok');
   assert.equal(r4.mapa[CNIS.mesDe(2020, 1)], 'rural');
 }
 console.log('rural ok');
+
+// ---------- Categoria AUTÔNOMO = contribuinte individual ----------
+{
+  const NITa = '1.234.567.890-1';
+  const au = CNIS.analisar(texto(
+    `4 ${NITa} RECOLHIMENTO AUTÔNOMO 01/01/2015 31/03/2015`, 'Contribuições',
+    '01/2015 20/02/2015 30,00 200,00 02/2015 24/03/2015 180,00 900,00'
+  ), HOJE);
+  assert.equal(au.vinculos.length, 1);
+  assert.equal(au.mapa[2015 * 12], 'abaixoci', 'autônomo abaixo do mínimo, como contribuinte individual');
+  assert.equal(au.mapa[2015 * 12 + 1], 'okci');
+  assert.equal(require('../assets/direito.js').classeDe(au.vinculos[0]), 'ci');
+}
+console.log('autônomo ok');
