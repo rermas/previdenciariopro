@@ -191,6 +191,6 @@ console.log('carência condicional ok');
   assert.match(r.carencia.linhas.join(' '), /carência considerada para o benefício é \*\*0\*\* \(exigidas: 12\)/);
 }
 console.log('linha carência 0 ok');
-assert.match(D.linhaRetorno(12, Date.UTC(2018, 8, 18) / 86400000), /\*\*6\*\* contribuições depois do retorno/);
-assert.match(D.linhaRetorno(12, Date.UTC(2019, 2, 1) / 86400000), /\*\*12\*\* contribuições depois do retorno/);
+assert.match(require('../assets/direito.js').linhaRetorno(12, Date.UTC(2018, 8, 18) / 86400000), /\*\*6\*\* contribuições depois do retorno/);
+assert.match(require('../assets/direito.js').linhaRetorno(12, Date.UTC(2019, 2, 1) / 86400000), /\*\*12\*\* contribuições depois do retorno/);
 console.log('linhaRetorno ok');
