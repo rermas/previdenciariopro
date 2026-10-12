@@ -168,6 +168,7 @@
     res.carencia = { rotulo: car.ok ? (car.extra ? 'Cumprida, com as premissas informadas' : 'Cumprida pelos dados do CNIS') : 'Não cumprida pelos dados do CNIS', status: car.ok ? 'cumprida' : 'nao_cumprida', perguntas: car.perguntas, linhas: car.linhas.concat(['A carência de 24 contribuições vale também para segurado empregado e não é dispensada em caso de acidente (art. 26 da Lei 8.213/91 não lista o auxílio-reclusão).']) };
     if (!car.ok && qOk) doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS');
     if (!qOk) res.carencia = { semQualidade: true, status: 'regras', rotulo: 'Regras de carência do auxílio-reclusão', linhas: REGRAS_CARENCIA_AR.slice() };
+    D.condicionarCarencia(res.carencia, q);
 
     // ----- Renda (baixa renda) -----
     var mp = mesOrd(prisao), soma = 0, n = 0, meses = [];
@@ -365,6 +366,7 @@
     carLinhas.push('Dispensar a carência não dispensa a filiação ao RGPS nem a qualidade de segurado na DII.');
     res.carencia = { status: dispensada || especial ? 'dispensada' : (carOk ? 'cumprida' : 'nao_cumprida'), rotulo: dispensada ? 'Dispensada' : (especial ? 'Dispensada, com prova de atividade rural' : (carOk ? (car.extra ? 'Cumprida, com as premissas informadas' : 'Cumprida pelos dados do CNIS') : 'Não cumprida pelos dados do CNIS')), perguntas: dispensada || especial ? [] : car.perguntas, linhas: carLinhas };
     if (!qOk) res.carencia = { semQualidade: true, status: 'regras', rotulo: 'Regras de carência do auxílio por incapacidade temporária', linhas: REGRAS_CARENCIA_AI.slice() };
+    D.condicionarCarencia(res.carencia, q);
 
     // ----- Incapacidade anterior à filiação -----
     var pre = entrada.preexistente || 'nao';
@@ -481,7 +483,7 @@
     topo.appendChild(s1);
 
     var s2 = C.sec(n++ + '. Carência');
-    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', r.carencia.semQualidade ? 'selo' : 'selo selo-' + (r.carencia.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), r.carencia.rotulo));
+    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', (r.carencia.semQualidade || r.carencia.condicional) ? 'selo' : 'selo selo-' + (r.carencia.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), r.carencia.rotulo));
     s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas));
     if (r.carencia.perguntas && r.carencia.perguntas.length && !r.carencia.semQualidade) s2.appendChild(D.perguntasUI(r.carencia.perguntas));
     topo.appendChild(s2);

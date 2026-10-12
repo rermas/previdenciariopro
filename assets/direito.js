@@ -193,6 +193,13 @@
     if (ord <= o(2019, 6, 17)) return { n: exigida, rotulo: 'carência integral (MP 871/2019, vigente de 18/01 a 17/06/2019)' };
     return { n: Math.ceil(exigida / 2), rotulo: 'metade (art. 27-A, restabelecido pela Lei 13.846/2019, desde 18/06/2019)' };
   }
+  // Qualidade "indeterminada" (só existiria com desemprego involuntário comprovado): a carência não pode aparecer como cumprida sem condição.
+  function condicionarCarencia(car, q) {
+    if (!car || car.semQualidade || !q || q.status !== 'indeterminada' || car.status === 'nao_cumprida') return;
+    car.condicional = true;
+    car.rotulo = 'Depende da qualidade de segurado (desemprego involuntário)';
+    car.linhas = (car.linhas || []).concat(['Esta carência só vale se a qualidade de segurado for mantida pelo desemprego involuntário (seguro-desemprego/SINE ou comprovação equivalente). Sem isso, a qualidade foi perdida antes da data do fato gerador, e as contribuições anteriores só contam depois que o segurado voltar a contribuir e cumprir a regra de retorno do art. 27-A (veja a regra vigente na data). Marque seguro-desemprego/SINE se houve.']);
+  }
   // Meses de atividade rural (segurado especial) no CNIS até certo mês, sem repetir meses sobrepostos.
   function mesesRurais(analise, ateMes) {
     var set = {};
@@ -770,6 +777,7 @@
     if (entrada.falecimento) res.documentos.push('Certidão de óbito e prova da relação com a pessoa falecida');
     if (usada === 'especial') res.documentos.push('Autodeclaração e documentos da atividade rural');
 
+    condicionarCarencia(res.carencia, q);
     // ----- Conclusão -----
     var pend = [];
     res.cnis.filter(function (x) { return x.impede; }).forEach(function (x) { pend.push(x.achado + ' ' + x.documento + '.'); });
@@ -885,7 +893,7 @@
 
     var ca = r.carencia;
     var s4 = C.sec('4. Carência');
-    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', ca.semQualidade ? 'selo' : 'selo selo-' + (ca.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), ca.rotulo));
+    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', (ca.semQualidade || ca.condicional) ? 'selo' : 'selo selo-' + (ca.status === 'nao_cumprida' ? 'nao_demonstrada' : 'confirmada'), ca.rotulo));
     s4.appendChild(sc);
     s4.appendChild(lista(ca.linhas));
     if (ca.perguntas && ca.perguntas.length && !ca.semQualidade) s4.appendChild(perguntasUI(ca.perguntas));
@@ -1080,7 +1088,7 @@
     return sec;
   }
 
-  var api = { exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
