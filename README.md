@@ -129,3 +129,7 @@ Módulo `assets/idade.js` (testes em `tests/idade.test.js`), no bloco "Verificar
 - **Conta como carência:** vínculo de empregado (presumido), doméstico presumido desde 06/2015, CI/facultativo/MEI em dia e no mínimo (até 02/1994 e sem data de pagamento = em dia), salário-maternidade, benefício por incapacidade conforme as ACPs. Não conta: segurado especial, atraso fora da manutenção da qualidade, pagamento após a DER, RPPS.
 - **Rural:** 55/60 anos e 180 meses de atividade rural (segurado especial e empregado rural), com aviso se a última atividade no CNIS for anterior em mais de 12 meses.
 - **Premissas a conferir:** tabela do art. 142 (confirmada pelo texto da lei: vale para inscritos urbanos até 24/07/1991 e para o trabalhador rural) pelo ano em que a idade é completada, até 2010 (2011 em diante: 180); "filiação" = primeiro vínculo válido do CNIS; janela de atraso começa 14 meses após a perda; empregado rural identificado por tipo ou nome do empregador; a híbrida será feita depois.
+
+### Aposentadoria por idade híbrida
+
+Opção "híbrida" no mesmo módulo: usa a idade e o tempo mínimo da aposentadoria urbana e soma o tempo rural (segurado especial e empregado rural, em qualquer data) sem exigir recolhimento, na carência e no tempo de contribuição. Premissas: idade e tempo de contribuição iguais aos da urbana (inclusive 20 anos para o homem filiado depois de 13/11/2019); o tempo rural vale mesmo que a última atividade seja urbana (Tema 1007 do STJ); a tabela do art. 142 usa a data do primeiro vínculo, rural ou urbano.

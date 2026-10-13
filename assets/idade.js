@@ -64,7 +64,7 @@
   // ---------- Meses de carência ----------
   function montarMeses(analise, entrada, der, regras) {
     var derMes = mesOrd(der), derOrd = der.ord;
-    var rural = regras.modalidade === 'rural';
+    var rural = regras.modalidade === 'rural', hib = regras.modalidade === 'hibrida';
     var resp = { compEmp: entrada.compEmp, compCI: entrada.compCI };
     var compl = D.complementosEm(analise, derMes);
     compl.empSem = [];
@@ -101,11 +101,17 @@
       if (!v.valido) return;
       var cl = classes[v.seq];
       if (cl === 'rpps') { ex.rpps++; return; }
-      if (cl === 'especial') { ex.especial++; return; }
       var a = mesOrd(v.inicio), z = Math.min(mesOrd(v.fimContado), derMes);
+      if (cl === 'especial') {
+        if (!hib) { ex.especial++; return; }
+        // Híbrida: segurado especial conta como carência independentemente de recolhimento.
+        for (var ke = a; ke <= z; ke++) { marca(ke, Math.max(v.inicioOrd, primeiroDia(ke)), Math.min(v.fimOrd, ultimoDia(ke)), 'rural'); ex.ruralMeses = (ex.ruralMeses || 0) + 1; }
+        return;
+      }
       if (EMPREGO[cl]) {
         var rur = C.ehRural(v);
         for (var k = a; k <= z; k++) {
+          if (rur && hib) { marca(k, Math.max(v.inicioOrd, primeiroDia(k)), Math.min(v.fimOrd, ultimoDia(k)), 'rural'); ex.ruralMeses = (ex.ruralMeses || 0) + 1; presenca[k] = true; continue; }
           if (rur && k < RURAL_EMP91) { ex.ruralAntes91.push(k); continue; }
           if (cl === 'domestica' && k < DOM_PRESUMIDO && !(v.contribuicoes && v.contribuicoes[k] !== undefined)) { ex.domesticoAntes.push(k); continue; }
           if (baixoEmp[k] && !resp.compEmp) { ex.abaixoEmp.push(k); continue; }
@@ -224,11 +230,11 @@
   }
 
   function aposentadoriaIdade(analise, entrada, hoje) {
-    var rural = entrada.modalidade === 'rural';
+    var rural = entrada.modalidade === 'rural', hib = entrada.modalidade === 'hibrida';
     var res = {
-      beneficio: rural ? 'aposentadoria-idade-rural' : 'aposentadoria-idade-urbana',
-      titulo: rural ? 'aposentadoria por idade rural' : 'aposentadoria por idade urbana',
-      normas: N_IDADE, entrada: entrada, regras: [], idade: null, filiacao: null, carencia: null, tempo: null,
+      beneficio: rural ? 'aposentadoria-idade-rural' : hib ? 'aposentadoria-idade-hibrida' : 'aposentadoria-idade-urbana',
+      titulo: rural ? 'aposentadoria por idade rural' : hib ? 'aposentadoria por idade híbrida' : 'aposentadoria por idade urbana',
+      normas: hib ? N_IDADE.concat([{ nome: 'Lei 8.213/91, art. 48, §§ 3º e 4º (aposentadoria por idade híbrida) e Tema 1007 do STJ', vigencia: 'Soma de tempo rural, sem exigir recolhimento, com tempo urbano, pela regra de idade urbana. O STJ fixou que o tempo rural vale mesmo que a última atividade seja urbana. Confira a versão vigente.' }]) : N_IDADE, entrada: entrada, regras: [], idade: null, filiacao: null, carencia: null, tempo: null,
       atividade: null, cnis: [], documentos: [], conclusao: null, fato: { rotulo: 'Data do requerimento (DER)', data: null, notas: [] }
     };
     var nasc = lerData(entrada.nascimento), der = lerData(entrada.der), sexo = entrada.sexo === 'M' ? 'M' : 'F';
@@ -274,12 +280,14 @@
     // ----- Carência (e atividade rural) -----
     var usaTabela = rural || (primeira && primeira.ord <= tab142);
     var exigida = carenciaExigida(dataIdade.y, usaTabela);
-    var regrasFixas = rural
+    var regrasFixas = hib
+      ? ['**Idade:** a da aposentadoria urbana (art. 48, § 3º, da Lei 8.213/91): filiados até 13/11/2019, mulher 60 anos (60,5 em 2020, 61 em 2021, 61,5 em 2022 e 62 de 2023 em diante) e homem 65; filiados depois, mulher 62 e homem 65.', '**Carência:** 180 meses somando atividade rural e urbana. A rural conta sem recolhimento; a urbana segue as regras da aposentadoria urbana.', '**Conta:** segurado especial e empregado rural em qualquer data, empregado urbano presumido, CI e facultativo em dia e no mínimo, salário-maternidade e, conforme a data, benefício por incapacidade.', '**Qualidade de segurado:** não é exigida se a carência estiver cumprida (Lei 10.666/2003, art. 3º, § 1º).']
+      : rural
       ? ['**Idade:** 55 anos (mulher) ou 60 anos (homem).', '**Carência:** 180 meses de atividade rural, ainda que descontínuos, no período imediatamente anterior ao requerimento (ou à data em que completou a idade).', '**Contam como atividade rural:** segurado especial e empregado rural, em qualquer data.']
       : ['**Idade e tempo de contribuição:** filiados até 13/11/2019: mulher 60 anos (60,5 em 2020, 61 em 2021, 61,5 em 2022 e 62 de 2023 em diante) e homem 65, com 15 anos de contribuição; filiados depois: mulher 62 anos e 15 de contribuição, homem 65 anos e 20 de contribuição.', '**Carência:** 180 contribuições mensais (art. 25, II). Quem se inscreveu até 24/07/1991 segue a tabela do art. 142, conforme o ano em que completa a idade.', '**Conta como carência:** todo mês de vínculo de empregado (recolhimento presumido), doméstico presumido desde 06/2015, contribuição de contribuinte individual e facultativo em dia e no mínimo, salário-maternidade e, conforme a data do requerimento, benefício por incapacidade.', '**Não conta:** período de segurado especial (só na aposentadoria rural ou híbrida), contribuição em atraso fora da manutenção da qualidade e contribuição paga depois da data do fato gerador.', '**Qualidade de segurado:** perder a qualidade não impede a aposentadoria por idade se a carência estiver cumprida (Lei 10.666/2003, art. 3º, § 1º).'];
     res.regras = regrasFixas;
 
-    var mm = montarMeses(analise, entrada, der, { modalidade: rural ? 'rural' : 'urbana' });
+    var mm = montarMeses(analise, entrada, der, { modalidade: rural ? 'rural' : hib ? 'hibrida' : 'urbana' });
     var total = Object.keys(mm.contados).length;
     var falta = total < exigida;
     var perguntas = D.perguntasCarencia(mm.compl, mm.resp, falta, total, exigida);
@@ -288,9 +296,9 @@
       linhasCar.push('Meses de atividade rural no CNIS (segurado especial e empregado rural) até ' + rotMes(derMes) + ': **' + total + '**. Exigidos: **' + exigida + '**' + (exigida < 180 ? ' (tabela do art. 142 da Lei 8.213/91, aplicável ao trabalhador rural, conforme o ano em que completou a idade)' : '') + '.');
     } else {
       linhasCar.push('Meses que contam como carência até ' + rotMes(derMes) + ': **' + total + '**. Exigidos: **' + exigida + '**' + (exigida < 180 ? ' (tabela do art. 142, inscrito até 24/07/1991, idade completada em ' + dataIdade.y + ')' : '') + '.');
-      var orig = { emprego: 0, ci: 0, sm: 0, incap: 0 };
-      Object.keys(mm.contados).forEach(function (k) { var o = mm.contados[k].origem; if (o.emprego) orig.emprego++; else if (o.ci) orig.ci++; else if (o.sm) orig.sm++; else if (o.incap) orig.incap++; });
-      linhasCar.push('Composição: ' + orig.emprego + ' mês(es) de vínculo de empregado (incluindo os presumidos), ' + orig.ci + ' de contribuinte individual ou facultativo, ' + orig.sm + ' de salário-maternidade e ' + orig.incap + ' de benefício por incapacidade. Meses concomitantes contam uma vez.');
+      var orig = { emprego: 0, ci: 0, sm: 0, incap: 0, rural: 0 };
+      Object.keys(mm.contados).forEach(function (k) { var o = mm.contados[k].origem; if (o.rural) orig.rural++; else if (o.emprego) orig.emprego++; else if (o.ci) orig.ci++; else if (o.sm) orig.sm++; else if (o.incap) orig.incap++; });
+      linhasCar.push('Composição: ' + orig.emprego + ' mês(es) de vínculo de empregado (incluindo os presumidos), ' + orig.ci + ' de contribuinte individual ou facultativo, ' + orig.sm + ' de salário-maternidade e ' + orig.incap + ' de benefício por incapacidade' + (hib ? ' e ' + orig.rural + ' de atividade rural (segurado especial ou empregado rural), contados sem exigir recolhimento' : '') + '. Meses concomitantes contam uma vez.');
     }
     var ex = mm.ex;
     if (ex.abaixoEmp.length) linhasCar.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo desde 11/2019 não foram contados (' + faixas(ex.abaixoEmp) + ').');
@@ -299,6 +307,7 @@
     if (ex.aposFG.length) linhasCar.push(ex.aposFG.length + ' competência(s) paga(s) depois da data do fato gerador não contam (' + faixas(ex.aposFG) + '), salvo a da própria competência do requerimento paga no vencimento.');
     if (ex.domesticoAntes.length) linhasCar.push(ex.domesticoAntes.length + ' mês(es) de vínculo de empregado doméstico antes de 06/2015 sem recolhimento no CNIS não foram presumidos (' + faixas(ex.domesticoAntes) + '): para esses meses a carência exige a prova do recolhimento.');
     if (ex.ruralAntes91.length) linhasCar.push(ex.ruralAntes91.length + ' mês(es) de empregado rural antes de 11/1991 não contam como carência na aposentadoria urbana (' + faixas(ex.ruralAntes91) + ').');
+    if (hib && ex.ruralMeses) linhasCar.push('Híbrida: o tempo rural (segurado especial e empregado rural, em qualquer data) soma com o urbano **independentemente de recolhimento**, pela regra de idade da aposentadoria urbana.');
     if (ex.especial) linhasCar.push('Há período de segurado especial no CNIS: ele não conta na aposentadoria por idade urbana. Só conta na rural e na híbrida.');
     if (ex.rpps) linhasCar.push('Há vínculo de regime próprio (servidor): esse tempo não entra aqui. Seria preciso certidão de tempo de contribuição (CTC).');
     if (mm.incap) {
@@ -325,7 +334,7 @@
       else {
         var idadeAntiga = somar(nasc, sexo === 'F' ? 60 : 65, 0), ecDia = mk(2019, 11, 12);
         if (idadeAntiga.ord <= ecDia.ord) {
-          var mmEc = montarMeses(analise, entrada, ecDia, { modalidade: 'urbana' });
+          var mmEc = montarMeses(analise, entrada, ecDia, { modalidade: hib ? 'hibrida' : 'urbana' });
           var totEc = Object.keys(mmEc.contados).length;
           if (totEc >= carenciaExigida(idadeAntiga.y, usaTabela)) dispensa = 'idade (' + rot(idadeAntiga) + ') e carência (' + totEc + ' meses) cumpridas antes da EC 103/2019, em 13/11/2019: direito adquirido, basta a carência';
         }
@@ -334,6 +343,7 @@
       tcOk = dias >= anosExig * 365;
       var linhasTc = ['Tempo de contribuição contado pelo CNIS (sem segurado especial, sem os meses descartados acima e sem contar duas vezes o que é concomitante): **' + C.formatarDuracao(dias) + '** (' + dias + ' dias). Exigido: **' + anosExig + ' anos**.'];
       if (!tcOk) linhasTc.push('Faltam cerca de ' + C.formatarDuracao(anosExig * 365 - dias) + ' de tempo de contribuição.');
+      if (hib) { res.atividade = { ultimoMes: null, ok: true, linhas: ['O tempo rural do CNIS (segurado especial e empregado rural) foi somado ao urbano. Na híbrida ele vale mesmo que a última atividade seja urbana (Tema 1007 do STJ), mas precisa ser comprovado por autodeclaração e início de prova material (art. 106 da Lei 8.213/91).'] }; }
       res.tempo = { exigidoAnos: anosExig, dias: dias, ok: tcOk, rotulo: tcOk ? 'Cumprido pelos dados do CNIS' : 'Não cumprido pelos dados do CNIS', linhas: linhasTc };
     } else {
       var ms = Object.keys(mm.contados).map(Number).sort(function (x, y) { return x - y; });
@@ -371,6 +381,7 @@
     conc.pendencias = pendencias;
     res.conclusao = conc;
     if (rural) res.documentos = ['Documento de identificação e certidões de casamento ou nascimento dos filhos com a profissão rural', 'Autodeclaração do segurado especial e documentos de terra (contrato de arrendamento, parceria, comodato, ITR, bloco de notas do produtor, comprovante de venda)', 'CTPS dos vínculos rurais, se empregado rural', 'Documentos que cubram o período imediatamente anterior ao requerimento'];
+    else if (hib) res.documentos = ['Documento de identificação com a data de nascimento', 'Para o período rural: autodeclaração do segurado especial e início de prova material (certidões, documentos de terra, notas do produtor, ITR)', 'CTPS e documentos dos vínculos sem remuneração ou sem data de fim no CNIS', 'Guias e comprovantes das contribuições de contribuinte individual e facultativo, em especial as em atraso'];
     else res.documentos = ['Documento de identificação com a data de nascimento', 'CTPS e documentos dos vínculos sem remuneração ou sem data de fim no CNIS', 'Guias e comprovantes de pagamento das contribuições de contribuinte individual e facultativo, em especial as em atraso', 'Carta de concessão dos benefícios por incapacidade e salário-maternidade, se houver'];
     return res;
   }

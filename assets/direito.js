@@ -968,7 +968,7 @@
     var bloco = C.el('div', 'convite-corpo');
     bloco.appendChild(C.el('p', 'dica', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.'));
     var topo = C.el('div', 'grade-campos');
-    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural']] : []));
+    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural'], ['aposentadoria-idade-hibrida', 'Aposentadoria por idade híbrida (rural + urbana)']] : []));
     topo.appendChild(campo('Benefício', selBen));
     bloco.appendChild(topo);
 
@@ -1099,7 +1099,7 @@
         return;
       }
       if (selBen.value.indexOf('aposentadoria-idade') === 0 && root.IDADE) {
-        var cap = Object.assign(root.IDADE.lerCampos(selBen.value === 'aposentadoria-idade-rural' ? 'rural' : 'urbana'), respostas);
+        var cap = Object.assign(root.IDADE.lerCampos(selBen.value === 'aposentadoria-idade-rural' ? 'rural' : selBen.value === 'aposentadoria-idade-hibrida' ? 'hibrida' : 'urbana'), respostas);
         if (!cap.nascimento || !cap.der) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de nascimento e a data do requerimento.')); return; }
         resultado.appendChild(root.IDADE.renderizar(root.IDADE.aposentadoriaIdade(analise, cap, hojeAgora())));
         return;

@@ -50,4 +50,12 @@ assert.equal(r.tempo.exigidoAnos, 0);
 // idade só depois da EC: continua exigindo 15 anos
 r = ap(vinculo([2000, 1], [2010, 12], '31/12/2010'), { sexo: 'M', nascimento: '1956-01-01', der: '2022-01-10' });
 assert.equal(r.tempo.exigidoAnos, 15);
+// híbrida: 8 anos de segurado especial (sem recolhimento) + 8 anos de empregado urbano = 192 meses; homem 65
+const hibTxt = `1 ${NIT} Segurado Especial 01/01/1990 31/12/1997\n` + vinculo([2005, 1], [2012, 12], '31/12/2012').replace(/^1 /, '2 ');
+const hib = (ent) => I.aposentadoriaIdade(C.analisar(hibTxt, HOJE), Object.assign({ modalidade: 'hibrida', sexo: 'M', nascimento: '1955-01-01' }, ent), HOJE);
+r = hib({ der: '2021-01-10' });
+assert.ok(r.carencia.total >= 180, 'híbrida soma rural e urbano: ' + r.carencia.total);
+assert.equal(r.conclusao.status, 'provavel');
+r = ap(hibTxt, { sexo: 'M', nascimento: '1955-01-01', der: '2021-01-10' });
+assert.ok(r.carencia.total < 180); // urbana pura não conta o especial
 console.log('idade.test.js: ok');
