@@ -320,6 +320,17 @@
     if (!rural) {
       var anosExig = (filiadoAntes === false && sexo === 'M') ? 20 : 15;
       var dias = uniaoDias(mm.contados);
+      var dispensa = null;
+      if (usaTabela && exigida < 180) dispensa = 'inscrito até 24/07/1991, segue a tabela do art. 142: basta a carência';
+      else {
+        var idadeAntiga = somar(nasc, sexo === 'F' ? 60 : 65, 0), ecDia = mk(2019, 11, 12);
+        if (idadeAntiga.ord <= ecDia.ord) {
+          var mmEc = montarMeses(analise, entrada, ecDia, { modalidade: 'urbana' });
+          var totEc = Object.keys(mmEc.contados).length;
+          if (totEc >= carenciaExigida(idadeAntiga.y, usaTabela)) dispensa = 'idade (' + rot(idadeAntiga) + ') e carência (' + totEc + ' meses) cumpridas antes da EC 103/2019, em 13/11/2019: direito adquirido, basta a carência';
+        }
+      }
+      if (dispensa) anosExig = 0;
       tcOk = dias >= anosExig * 365;
       var linhasTc = ['Tempo de contribuição contado pelo CNIS (sem segurado especial, sem os meses descartados acima e sem contar duas vezes o que é concomitante): **' + C.formatarDuracao(dias) + '** (' + dias + ' dias). Exigido: **' + anosExig + ' anos**.'];
       if (!tcOk) linhasTc.push('Faltam cerca de ' + C.formatarDuracao(anosExig * 365 - dias) + ' de tempo de contribuição.');

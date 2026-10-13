@@ -40,4 +40,14 @@ const rr = I.aposentadoriaIdade(C.analisar(esp, HOJE), { modalidade: 'rural', se
 assert.ok(rr.carencia.total >= 180);
 // sem datas: incompleta
 assert.equal(ap(esp, { sexo: 'F' }).conclusao.status, 'incompleta');
+// inscrito até 1991, idade em 2005: só carência (144), sem 15 anos
+r = ap(vinculo([1990, 1], [2002, 12], '31/12/2002'), { sexo: 'M', nascimento: '1940-01-01', der: '2005-02-01' });
+assert.equal(r.tempo.exigidoAnos, 0);
+assert.equal(r.conclusao.status, 'provavel');
+// direito adquirido antes da EC: 65 anos em 2018, 12 anos de carência 180 cumpridos, DER em 2022
+r = ap(vinculo([2000, 1], [2014, 12], '31/12/2014'), { sexo: 'M', nascimento: '1953-01-01', der: '2022-01-10' });
+assert.equal(r.tempo.exigidoAnos, 0);
+// idade só depois da EC: continua exigindo 15 anos
+r = ap(vinculo([2000, 1], [2010, 12], '31/12/2010'), { sexo: 'M', nascimento: '1956-01-01', der: '2022-01-10' });
+assert.equal(r.tempo.exigidoAnos, 15);
 console.log('idade.test.js: ok');
