@@ -6,8 +6,8 @@
 
 // ---------- Configuração ----------
 const SITE_NOME = 'Análise CNIS';
-const SITE_URL = 'https://www.seudominio.com.br'; // domínio final, sem barra no fim
-const GA_ID = '';                 // 'G-XXXXXXXXXX'. Vazio: o Analytics não é carregado.
+const SITE_URL = 'https://previdenciariopro.com.br'; // domínio final, sem barra no fim
+const GA_ID = 'G-8YQ7F9NREV';     // Google Analytics 4. Vazio: o Analytics não é carregado.
 const ADSENSE = '';               // 'ca-pub-XXXXXXXXXXXXXXXX'. Vazio: sem anúncios.
 const ADS_ATIVOS = false;         // true só depois da aprovação do AdSense.
 const FERRAMENTA_PUBLICA = false; // true: links para a ferramenta, indexação liberada e sitemap.
