@@ -285,7 +285,7 @@
     var perguntas = D.perguntasCarencia(mm.compl, mm.resp, falta, total, exigida);
     var linhasCar = [];
     if (rural) {
-      linhasCar.push('Meses de atividade rural no CNIS (segurado especial e empregado rural) até ' + rotMes(derMes) + ': **' + total + '**. Exigidos: **' + exigida + '**' + (exigida < 180 ? ' (tabela do art. 142, por analogia do art. 143, conforme o ano em que completou a idade)' : '') + '.');
+      linhasCar.push('Meses de atividade rural no CNIS (segurado especial e empregado rural) até ' + rotMes(derMes) + ': **' + total + '**. Exigidos: **' + exigida + '**' + (exigida < 180 ? ' (tabela do art. 142 da Lei 8.213/91, aplicável ao trabalhador rural, conforme o ano em que completou a idade)' : '') + '.');
     } else {
       linhasCar.push('Meses que contam como carência até ' + rotMes(derMes) + ': **' + total + '**. Exigidos: **' + exigida + '**' + (exigida < 180 ? ' (tabela do art. 142, inscrito até 24/07/1991, idade completada em ' + dataIdade.y + ')' : '') + '.');
       var orig = { emprego: 0, ci: 0, sm: 0, incap: 0 };
