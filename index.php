@@ -23,6 +23,15 @@ $POSTS = [
     ['slug' => 'salarios-faltantes-no-cnis', 'data' => '2026-10-07', 'revisado' => '2026-10-07',
      'titulo' => 'Salários faltantes no CNIS: como identificar',
      'resumo' => 'O que significa uma competência sem remuneração, quando isso é esperado e como conferir.'],
+    ['slug' => 'qualidade-de-segurado-e-periodo-de-graca', 'data' => '2026-10-13', 'revisado' => '2026-10-13',
+     'titulo' => 'Qualidade de segurado e período de graça: prazos e como conferir',
+     'resumo' => 'Quanto tempo a proteção da Previdência dura depois de parar de contribuir e o que olhar no CNIS.'],
+    ['slug' => 'como-emitir-o-extrato-do-cnis', 'data' => '2026-10-13', 'revisado' => '2026-10-13',
+     'titulo' => 'Como emitir o extrato do CNIS no Meu INSS e o que conferir',
+     'resumo' => 'Passo a passo gratuito para tirar o extrato, qual tipo escolher e quando pedir a atualização do CNIS.'],
+    ['slug' => 'aposentadoria-por-idade-regras-e-carencia', 'data' => '2026-10-13', 'revisado' => '2026-10-13',
+     'titulo' => 'Aposentadoria por idade: regras, carência e o que o CNIS mostra',
+     'resumo' => 'Idade, tempo de contribuição e carência na aposentadoria por idade urbana e rural, e como conferir no CNIS.'],
 ];
 
 // Fontes oficiais. Os textos mudam: a versão vigente é a do site de origem.
