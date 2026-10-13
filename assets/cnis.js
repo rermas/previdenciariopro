@@ -1392,7 +1392,7 @@
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
     formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
     resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO, gerarExemplo: gerarExemplo,
-    el: el, sec: sec, tabela: tabela, ordemDe: ordemDe, dataDeOrd: dataDeOrd, rotuloData: rotuloData, ultimoDiaDoMes: ultimoDiaDoMes, INICIO_PBC: INICIO_PBC, INDICADORES: INDICADORES
+    el: el, sec: sec, tabela: tabela, ordemDe: ordemDe, dataDeOrd: dataDeOrd, rotuloData: rotuloData, ultimoDiaDoMes: ultimoDiaDoMes, ehRural: ehRural, INICIO_PBC: INICIO_PBC, INDICADORES: INDICADORES
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.CNIS = api;

@@ -120,3 +120,12 @@ A contribuição de facultativo só vale em meses sem vínculo de empregado ou c
 
 ### Cor do segurado especial e do empregado rural
 Meses de vínculo de segurado especial, de tipo rural ou de empregado cujo empregador tem nome de atividade rural (fazenda, sítio, chácara, agrícola, granja etc.) aparecem em marrom claro no mapa. Se outra atividade tiver remuneração no mesmo mês, prevalece a cor dela.
+
+## Aposentadoria por idade (urbana e rural)
+
+Módulo `assets/idade.js` (testes em `tests/idade.test.js`), no bloco "Verificar direito". Informa sexo, nascimento e DER.
+
+- **Urbana:** filiação até 13/11/2019: mulher 60 anos (+6 meses por ano desde 2020, até 62) e homem 65, com 15 anos de contribuição; filiação depois: mulher 62/15 anos e homem 65/20 anos. Carência de 180 meses (tabela do art. 142 para inscritos até 24/07/1991).
+- **Conta como carência:** vínculo de empregado (presumido), doméstico presumido desde 06/2015, CI/facultativo/MEI em dia e no mínimo (até 02/1994 e sem data de pagamento = em dia), salário-maternidade, benefício por incapacidade conforme as ACPs. Não conta: segurado especial, atraso fora da manutenção da qualidade, pagamento após a DER, RPPS.
+- **Rural:** 55/60 anos e 180 meses de atividade rural (segurado especial e empregado rural), com aviso se a última atividade no CNIS for anterior em mais de 12 meses.
+- **Premissas a conferir:** tabela do art. 142 também para o rural com idade completada até 2010; "filiação" = primeiro vínculo válido do CNIS; janela de atraso começa 14 meses após a perda; empregado rural identificado por tipo ou nome do empregador; a híbrida será feita depois.
