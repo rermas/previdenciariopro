@@ -735,6 +735,7 @@
       item.fimOrd = fim.ord;
       item.dias = fim.ord - v.inicio.ord + 1;
       item.segmentos = [[v.inicio.ord, fim.ord]];
+      item.cobertura = item.segmentos;
       if (/facultativ/i.test(v.tipo || '')) {
         var segF = [], iniS = null;
         for (var kf = mIni; kf <= mFim; kf++) {
@@ -744,9 +745,23 @@
           if (!bloqFac[kf] && kf === mFim) { segF.push([iniS, dFim]); iniS = null; }
         }
         if (iniS !== null) segF.push([iniS, fim.ord]);
-        item.segmentos = segF.filter(function (x) { return x[0] <= x[1]; });
-        item.dias = item.segmentos.reduce(function (t, x) { return t + x[1] - x[0] + 1; }, 0);
+        item.cobertura = segF.filter(function (x) { return x[0] <= x[1]; });
       }
+      if (!semLeitura && /individual|aut[ôo]nomo|facultativ/i.test(v.tipo || '')) {
+        // Contribuinte individual e facultativo: só conta a competência com recolhimento (mês sem recolhimento não entra no tempo).
+        var segC = [], iniC = null;
+        for (var kc = mIni; kc <= mFim; kc++) {
+          var cIni = Math.max(v.inicio.ord, ordemDe(Math.floor(kc / 12), (kc % 12) + 1, 1)), cFim = Math.min(fim.ord, ultimoDiaDoMes(kc));
+          if (presentes[kc]) {
+            if (iniC === null) iniC = cIni;
+            if (kc === mFim) { segC.push([iniC, cFim]); iniC = null; }
+          } else if (iniC !== null) { segC.push([iniC, cIni - 1]); iniC = null; }
+        }
+        item.segmentos = segC.filter(function (x) { return x[0] <= x[1]; });
+        item.semRecolhimento = 0;
+        for (var kz = mIni; kz <= mFim; kz++) if (!presentes[kz]) item.semRecolhimento++;
+      }
+      item.dias = item.segmentos.reduce(function (t, x) { return t + x[1] - x[0] + 1; }, 0);
       validos.push(item);
 
       var fora = [];
@@ -901,7 +916,7 @@
 
     // Lacunas: períodos sem vínculo, benefício nem evento, entre o primeiro registro e hoje.
     var cob = [];
-    validos.forEach(function (v) { v.segmentos.forEach(function (x) { cob.push({ ini: x[0], fim: x[1], seq: v.seq }); }); });
+    validos.forEach(function (v) { v.cobertura.forEach(function (x) { cob.push({ ini: x[0], fim: x[1], seq: v.seq }); }); });
     lido.beneficios.concat(lido.eventos).forEach(function (b) {
       if (!b.inicio) return;
       var f = b.fim ? Math.max(b.fim.ord, b.inicio.ord) : (b.tipoRegistro === 'beneficio' ? Math.max(hojeOrd, b.inicio.ord) : b.inicio.ord);

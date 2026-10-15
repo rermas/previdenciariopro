@@ -370,6 +370,15 @@ const pg = CNIS.analisar(texto(
 assert.deepEqual(pg.vinculos[0].pagamentos[CNIS.mesDe(2025, 1)], [CNIS.dataDe('20/02/2025').ord]);
 assert.deepEqual(pg.vinculos[0].codigosIndicadores, ['IREC-MEI']);
 
+// ---------- CI sem recolhimento não conta no tempo ----------
+const ciSem = CNIS.analisar(texto(
+  `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2025 30/04/2025`, 'Contribuições',
+  '01/2025 20/02/2025 303,60 1.518,00 02/2025 20/03/2025 303,60 1.518,00 04/2025 20/05/2025 303,60 1.518,00'
+), HOJE);
+assert.equal(ciSem.vinculos[0].dias, 31 + 28 + 30, 'março sem recolhimento fora da contagem');
+assert.equal(ciSem.resumo.diasUnicos, 31 + 28 + 30);
+console.log('CI sem recolhimento ok');
+
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);
 assert.equal(vazio.resumo.totalVinculos, 0);
