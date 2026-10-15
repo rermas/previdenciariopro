@@ -148,3 +148,7 @@ Módulo `assets/tempo.js` (testes em `tests/tempo.test.js`). Avalia, de uma vez,
 - **Gerar relatório (PDF)** (ao lado de "Copiar resumo" e "Imprimir"): análise do CNIS e pendências, sem o "Mapa de competências" e sem o bloco "Verificar direito".
 - **Gerar relatório da simulação (PDF)** (dentro de "Verificar direito"): só o resultado da verificação feita.
 - Funcionam pela impressão do navegador ("Salvar como PDF"), com classes `rel-analise`/`rel-direito` no `body` e regras em `@media print` (`assets/style.css`). Nada é enviado a servidor, compatível com a CSP `connect-src 'none'`.
+
+## Versão em arquivo único (offline)
+
+`node tools/gerar-offline.js` gera `dist/analise-cnis.html`: a ferramenta inteira (CSS, fontes, leitor de PDF e todos os módulos) em um HTML só, que abre com duplo clique, sem internet e sem servidor. Gere de novo a cada alteração nos arquivos de `assets/`.

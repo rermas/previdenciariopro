@@ -1417,7 +1417,7 @@
   }
   function lerPdf(arquivo) {
     if (!root.pdfjsLib) return Promise.reject(new Error('O leitor de PDF não carregou. Recarregue a página ou cole o texto do extrato.'));
-    root.pdfjsLib.GlobalWorkerOptions.workerSrc = BASE + 'vendor/pdf.worker.min.js';
+    root.pdfjsLib.GlobalWorkerOptions.workerSrc = root.PDF_WORKER_URL || (BASE + 'vendor/pdf.worker.min.js');
     return arquivo.arrayBuffer()
       .then(function (buf) { return root.pdfjsLib.getDocument({ data: new Uint8Array(buf), isEvalSupported: false, disableFontFace: true }).promise; })
       .then(function (pdf) {
