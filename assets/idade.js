@@ -106,8 +106,14 @@
       var a = mesOrd(v.inicio), z = Math.min(mesOrd(v.fimContado), derMes);
       if (cl === 'especial') {
         if (tcmode) {
-          // Tempo rural anterior a 24/07/1991 conta como tempo de contribuição sem recolhimento (Lei 8.213, art. 55, § 2º).
-          for (var kt = a; kt <= z; kt++) { var fimT = Math.min(v.fimOrd, ultimoDia(kt), C.ordemDe(1991, 7, 23)), iniT = Math.max(v.inicioOrd, primeiroDia(kt)); if (fimT >= iniT) marca(kt, iniT, fimT, 'rural'); }
+          // Segurado especial: até 31/10/1991 conta como tempo de contribuição sem recolhimento; de 11/1991 em diante só com indenização.
+          var limEsp = regras.indenizaEspecial ? Infinity : C.ordemDe(1991, 10, 31);
+          ex.espIndenizar = ex.espIndenizar || [];
+          for (var kt = a; kt <= z; kt++) {
+            var fimT = Math.min(v.fimOrd, ultimoDia(kt), limEsp), iniT = Math.max(v.inicioOrd, primeiroDia(kt));
+            if (kt >= 1991 * 12 + 10) ex.espIndenizar.push(kt);
+            if (fimT >= iniT) marca(kt, iniT, fimT, 'rural');
+          }
           return;
         }
         if (!hib) { ex.especial++; return; }

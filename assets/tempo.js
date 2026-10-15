@@ -22,7 +22,7 @@
   var NORMAS = [
     { nome: 'EC 103/2019, arts. 15, 16, 17, 20 e 25', vigencia: 'Regras de transição por pontos, idade mínima progressiva, pedágio de 50% e pedágio de 100%. O art. 25, § 2º, limita a conversão do tempo especial ao período até 13/11/2019.' },
     { nome: 'Decreto 3.048/1999, art. 70 (conversão de tempo especial)', vigencia: 'Fatores de conversão usados: mulher 2,00 / 1,50 / 1,20 e homem 2,33 / 1,75 / 1,40, para atividades de 15, 20 e 25 anos. Confira a versão vigente.' },
-    { nome: 'Lei 8.213/91, arts. 25, II, 55 e 142', vigencia: 'Carência de 180 contribuições; tempo intercalado de benefício por incapacidade conta como tempo de contribuição; tempo rural anterior a 24/07/1991 conta sem recolhimento, mas não como carência.' },
+    { nome: 'Lei 8.213/91, arts. 25, II, 55 e 142', vigencia: 'Carência de 180 contribuições; tempo intercalado de benefício por incapacidade conta como tempo de contribuição; tempo rural de segurado especial até 31/10/1991 conta sem recolhimento, mas não como carência; de 11/1991 em diante só com indenização.' },
     { nome: 'Lei 10.666/2003, art. 3º, caput', vigencia: 'A perda da qualidade de segurado não impede a aposentadoria por tempo de contribuição.' },
     { nome: 'IN PRES/INSS 128/2022 (com a IN 212/2026)', vigencia: 'Competências com alíquota reduzida de 5%, 11% ou 12% só contam como tempo de contribuição com complementação para 20%. O CNIS não informa a alíquota: confira esses períodos.' }
   ];
@@ -39,7 +39,7 @@
 
   // ---------- Contagem por dia, com o enquadramento ----------
   function contar(analise, entrada, der) {
-    var mm = I.montarMeses(analise, entrada, der, { modalidade: 'urbana', modo: 'tc' });
+    var mm = I.montarMeses(analise, entrada, der, { modalidade: 'urbana', modo: 'tc', indenizaEspecial: entrada.indenizaEspecial === true });
     var sexo = entrada.sexo === 'M' ? 'M' : 'F';
     var enq = (entrada.enquadramento || []).filter(function (e) { return e && e.inicio && e.fim && NAT[e.natureza]; });
     var porSeq = {};
@@ -198,6 +198,12 @@
     var oks = avaliacoes.filter(function (a) { return a.ok && a.aplicavel; });
     var previstas = avaliacoes.filter(function (a) { return !a.ok && a.quando && a.aplicavel; }).sort(function (x, y) { return x.quando.ord - y.quando.ord; });
     var perguntas = D.perguntasCarencia(carenciaMm.compl, carenciaMm.resp, !oks.length, carenciaMeses, ctx.carenciaExigida);
+    var espInd = (ex.espIndenizar || []).filter(function (k, i, arr) { return arr.indexOf(k) === i; });
+    if (espInd.length) {
+      var respInd = entrada.indenizaEspecial;
+      perguntas.unshift({ id: 'indenizaEspecial', texto: 'Há **' + espInd.length + '** mês(es) de segurado especial a partir de 11/1991 (' + I.faixas(espInd) + '). Na aposentadoria por tempo de contribuição esse tempo só conta com **indenização** (pagamento das contribuições do período). **O segurado vai indenizar?** Se sim, o período entra na contagem do tempo; o valor deve ser calculado pelo INSS.', resposta: respInd === undefined ? null : !!respInd });
+      linhasTempo.push(respInd === true ? '**' + espInd.length + '** mês(es) de segurado especial a partir de 11/1991 foram incluídos **condicionados à indenização** (' + I.faixas(espInd) + '). Eles não contam como carência.' : '**' + espInd.length + '** mês(es) de segurado especial a partir de 11/1991 **não foram contados**, porque dependem de indenização (' + I.faixas(espInd) + ').');
+    }
     res.perguntas = perguntas;
     var conc;
     if (filiadoAteEC === false) conc = { status: 'nao_demonstrado', rotulo: 'Regras de transição não se aplicam', texto: 'O primeiro vínculo é posterior a 13/11/2019.' };
@@ -205,6 +211,7 @@
     else conc = { status: 'nao_demonstrado', rotulo: 'Requisitos ainda não demonstrados pelos dados do CNIS', texto: previstas.length ? 'Mantidas as contribuições, a primeira regra a ser cumprida seria ' + previstas[0].regra.nome + ', em ' + rot(previstas[0].quando) + '.' : 'Nenhuma regra é cumprida pelos dados atuais, nem nos próximos 20 anos com contribuição contínua.' };
     if (!oks.length && perguntas.length && perguntas.some(function (q) { return q.resposta === null; })) { conc.status = 'depende'; conc.rotulo = 'Depende da complementação das competências abaixo do mínimo'; }
     conc.pendencias = [];
+    if (entrada.indenizaEspecial === true && espInd.length) conc.pendencias.push('Pagamento da indenização do período de segurado especial a partir de 11/1991.');
     if (ct.temEspecial) conc.pendencias.push('PPP, LTCAT e demais provas da exposição aos agentes nocivos nos períodos enquadrados como especiais.');
     if ((entrada.enquadramento || []).some(function (e) { return !e.seq; })) conc.pendencias.push('Provas dos períodos informados fora do CNIS.');
     res.conclusao = conc;
@@ -228,6 +235,8 @@
     if (r.avisos && r.avisos.length) topo.appendChild(lista(r.avisos));
     var s1 = C.sec('1. Tempo de contribuição');
     s1.appendChild(lista(r.tempo.linhas));
+    var pInd = (r.perguntas || []).filter(function (q) { return q.id === 'indenizaEspecial'; });
+    if (pInd.length) s1.appendChild(D.perguntasUI(pInd));
     var t = r.tempo.tabela;
     s1.appendChild(C.tabela(['Natureza', 'Até 13/11/2019', 'Total até a DER'], [
       ['Comum', dur(t.ate.comum), dur(t.tot.comum)],
@@ -239,7 +248,8 @@
     var s2 = C.sec('2. Carência');
     var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', 'selo selo-' + (r.carencia.ok ? 'confirmada' : 'nao_demonstrada'), r.carencia.ok ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS'));
     s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas));
-    if (r.perguntas && r.perguntas.length) s2.appendChild(D.perguntasUI(r.perguntas));
+    var pCar = (r.perguntas || []).filter(function (q) { return q.id !== 'indenizaEspecial'; });
+    if (pCar.length) s2.appendChild(D.perguntasUI(pCar));
     topo.appendChild(s2);
     var s3 = C.sec('3. Regras de transição');
     r.avaliacoes.forEach(function (a) {

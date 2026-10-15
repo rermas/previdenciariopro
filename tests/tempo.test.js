@@ -54,4 +54,17 @@ assert.equal(salvo[0].natureza, 'esp25');
 // Pedágio de 50%: 33 anos em 13/11/2019 (mulher falta ... ), sem erro
 r = ap(vinculo([1990, 1], [2019, 10], '31/10/2019'), { sexo: 'F', nascimento: '1965-05-05', der: '2022-01-10' });
 assert.ok(r.avaliacoes.find((a) => a.regra.id === 'pedagio50'));
+// Segurado especial: até 31/10/1991 conta sem recolhimento; de 11/1991 em diante só se indenizar
+const rural = `1 ${NIT} Segurado Especial 01/01/1985 31/12/1995\n` + vinculo([1996, 1], [2010, 12], '31/12/2010', null, 2);
+let semInd = ap(rural, { sexo: 'M', nascimento: '1965-01-01', der: '2026-01-02' });
+let com2 = ap(rural, { sexo: 'M', nascimento: '1965-01-01', der: '2026-01-02', indenizaEspecial: true });
+const dias = (r) => r.tempo.brutoDer;
+assert.ok(semInd.perguntas.some((q) => q.id === 'indenizaEspecial' && q.resposta === null));
+// 01/01/1985 a 31/10/1991 = 6 anos e 10 meses (aprox. 2495 dias) + 15 anos urbanos
+assert.ok(dias(semInd) > 2400 + 5400 && dias(semInd) < 2600 + 5500, 'sem indenização: ' + dias(semInd));
+// com indenização: + 01/11/1991 a 31/12/1995 (~1522 dias)
+assert.ok(dias(com2) - dias(semInd) > 1500 && dias(com2) - dias(semInd) < 1540, 'diferença: ' + (dias(com2) - dias(semInd)));
+assert.equal(com2.perguntas.find((q) => q.id === 'indenizaEspecial').resposta, true);
+// sem segurado especial a partir de 11/1991, a pergunta não aparece
+assert.ok(!ap(vinculo([2000, 1], [2010, 12], '31/12/2010'), { sexo: 'M', nascimento: '1965-01-01', der: '2026-01-02' }).perguntas.some((q) => q.id === 'indenizaEspecial'));
 console.log('tempo.test.js: ok');
