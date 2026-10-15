@@ -75,3 +75,12 @@ Compet. Data Pgto. Contribuição Salário Contrib. Indicadores Compet. Data Pgt
 01/1990 200,00 1.000,00 02/1990 200,00 1.000,00`;
 assert.equal(ap(ciTxt, { sexo: 'M', nascimento: '1965-01-01', der: '2026-01-02' }).tempo.brutoDer, 59);
 console.log('tempo.test.js: ok');
+
+// Competência paga no vencimento, mesmo depois da DER, conta; paga em atraso depois da DER não conta
+(function () {
+  const mk = (pag) => [`4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/07/2026`, 'Contribuições',
+    '07/2026 15/08/2026 400,00 2.000,00 08/2026 15/09/2026 400,00 2.000,00', `09/2026 ${pag} 400,00 2.000,00`].join('\n');
+  const dias = (pag) => T.aposentadoriaTempo(C.analisar(mk(pag), HOJE), { sexo: 'M', nascimento: '1966-10-01', der: '2026-10-01' }, HOJE).tempo.brutoDer;
+  assert.equal(dias('14/10/2026') - dias('20/10/2026'), 30, 'setembro conta se pago até o vencimento');
+})();
+console.log('pago no vencimento depois da DER ok');

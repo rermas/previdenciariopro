@@ -150,7 +150,7 @@
       var primeiro = pag.length ? Math.min.apply(null, pag) : null;
       var venc = D.vencimento(k);
       var atraso = primeiro !== null && primeiro > venc;
-      var depois = primeiro !== null && primeiro > derOrd && !(k === derMes && primeiro <= venc);
+      var depois = primeiro !== null && primeiro > derOrd && primeiro > venc;
       porMes[k] = porMes[k] || [];
       porMes[k].push({ atraso: atraso, depois: depois, v: c.v });
     });
@@ -321,7 +321,7 @@
     if (ex.abaixoEmp.length) linhasCar.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo desde 11/2019 não foram contados (' + faixas(ex.abaixoEmp) + ').');
     if (ex.abaixoCI.length) linhasCar.push(ex.abaixoCI.length + ' mês(es) de contribuinte individual ou facultativo abaixo do mínimo não foram contados (' + faixas(ex.abaixoCI) + ').');
     if (ex.atraso.length) linhasCar.push('**' + ex.atraso.length + '** contribuição(ões) de contribuinte individual ou facultativo em atraso, feita(s) fora do período de manutenção da qualidade, não contam (' + faixas(ex.atraso) + '). Só contam a partir da primeira contribuição em dia.');
-    if (ex.aposFG.length) linhasCar.push(ex.aposFG.length + ' competência(s) paga(s) depois da data do fato gerador não contam (' + faixas(ex.aposFG) + '), salvo a da própria competência do requerimento paga no vencimento.');
+    if (ex.aposFG.length) linhasCar.push(ex.aposFG.length + ' competência(s) paga(s) depois da data do fato gerador não contam (' + faixas(ex.aposFG) + '), salvo a competência paga no vencimento, ainda que depois da DER.');
     if (ex.domesticoAntes.length) linhasCar.push(ex.domesticoAntes.length + ' mês(es) de vínculo de empregado doméstico antes de 06/2015 sem recolhimento no CNIS não foram presumidos (' + faixas(ex.domesticoAntes) + '): para esses meses a carência exige a prova do recolhimento.');
     if (ex.ruralAntes91.length) linhasCar.push(ex.ruralAntes91.length + ' mês(es) de empregado rural antes de 11/1991 não contam como carência na aposentadoria urbana (' + faixas(ex.ruralAntes91) + ').');
     if (hib && ex.ruralMeses) linhasCar.push('Híbrida: o tempo rural (segurado especial e empregado rural, em qualquer data) soma com o urbano **independentemente de recolhimento**, pela regra de idade da aposentadoria urbana.');
