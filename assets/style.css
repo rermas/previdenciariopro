@@ -213,11 +213,24 @@ p { margin: 0 0 1rem; }
   .painel { padding: 1rem; }
 }
 
+/* Cabeçalho que só aparece nos relatórios impressos */
+.so-impressao { display: none; }
 @media print {
   body { background: #fff; font-size: 11pt; }
   .topo, .rodape, .painel, .sem-impressao, .aviso-privacidade { display: none; }
   .wrap { max-width: none; padding: 0; }
   .bloco { break-inside: avoid; }
+  .so-impressao { display: block; }
+  .cab-relatorio { margin: 0 0 1rem; padding-bottom: 0.6rem; border-bottom: 2px solid #000; }
+  .cab-relatorio h1 { font-size: 16pt; margin: 0 0 0.2rem; }
+  .cab-relatorio p { margin: 0; font-size: 9.5pt; }
+  /* Relatório da análise: sem o mapa de competências e sem o bloco de verificação de direito */
+  body.rel-analise .sec-mapa, body.rel-analise #cnis-direito { display: none; }
+  /* Relatório da simulação: só o resultado de "Verificar direito" */
+  body.rel-direito #cnis-resultado > :not(#cnis-direito):not(.so-impressao) { display: none; }
+  body.rel-direito .convite-card > summary, body.rel-direito .convite-corpo > :not(#dir-resultado) { display: none; }
+  body.rel-direito #dir-resultado button, body.rel-direito #dir-resultado .sem-impressao { display: none; }
+  body.rel-direito .convite-card { border: 0; box-shadow: none; }
 }
 
 /* Verificar direito */

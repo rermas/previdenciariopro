@@ -142,3 +142,9 @@ Módulo `assets/tempo.js` (testes em `tests/tempo.test.js`). Avalia, de uma vez,
 - **Conversão:** o especial é convertido pelos fatores do Decreto 3.048, art. 70 (mulher 2,00/1,50/1,20; homem 2,33/1,75/1,40) só até 13/11/2019; depois conta como tempo simples.
 - **Tempo contado:** emprego (presumido), CI/facultativo no mínimo, só nas competências com contribuição lançada (inclusive pagas em atraso; mês sem recolhimento não conta, inclusive antes de 07/1994), salário-maternidade, benefício por incapacidade intercalado e segurado especial até 31/10/1991 sem recolhimento (de 11/1991 em diante só se o usuário responder que vai indenizar). A carência (180 meses) usa as regras da aposentadoria por idade.
 - **Premissas:** pontos somam idade fracionada (dias/365,25) e tempo (dias/365); a qualidade de segurado não é exigida (Lei 10.666, art. 3º); alíquotas reduzidas de 5/11/12% não são detectáveis no CNIS; só as quatro regras de transição (não a regra permanente nem professor/especial/PcD).
+
+## Relatórios em PDF
+
+- **Gerar relatório (PDF)** (ao lado de "Copiar resumo" e "Imprimir"): análise do CNIS e pendências, sem o "Mapa de competências" e sem o bloco "Verificar direito".
+- **Gerar relatório da simulação (PDF)** (dentro de "Verificar direito"): só o resultado da verificação feita.
+- Funcionam pela impressão do navegador ("Salvar como PDF"), com classes `rel-analise`/`rel-direito` no `body` e regras em `@media print` (`assets/style.css`). Nada é enviado a servidor, compatível com a CSP `connect-src 'none'`.

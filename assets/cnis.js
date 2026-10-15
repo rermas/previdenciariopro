@@ -1184,9 +1184,31 @@
 
   var ROTULO_SEV = { erro: 'Erro', atencao: 'Atenção', info: 'Nota' };
 
+  // Relatório em PDF: usa a impressão do navegador ("Salvar como PDF"), só com as seções do modo escolhido. Nada sai do navegador.
+  function gerarRelatorio(modo) {
+    var cls = 'rel-' + modo, corpo = document.body;
+    var det = document.querySelector('#cnis-direito details');
+    var estavaAberto = det ? det.open : false;
+    if (modo === 'direito' && det) det.open = true;
+    corpo.classList.add(cls);
+    var limpar = function () {
+      corpo.classList.remove(cls);
+      if (det) det.open = estavaAberto;
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
+  }
+
   function renderizar(saida, r) {
     saida.textContent = '';
     var s = r.resumo;
+
+    var cab = el('div', 'so-impressao cab-relatorio');
+    var hoje = new Date();
+    cab.appendChild(el('h1', null, 'Análise do CNIS'));
+    cab.appendChild(el('p', null, 'Gerado em ' + String(hoje.getDate()).padStart(2, '0') + '/' + String(hoje.getMonth() + 1).padStart(2, '0') + '/' + hoje.getFullYear() + '. Pontos de atenção para conferência, não é parecer jurídico. O extrato foi processado no navegador e não foi enviado a nenhum servidor.'));
+    saida.appendChild(cab);
 
     var figs = el('dl', 'figuras');
     [
@@ -1214,12 +1236,17 @@
     var bImp = el('button', 'btn btn-leve', 'Imprimir');
     bImp.type = 'button';
     bImp.addEventListener('click', function () { window.print(); });
-    acoes.appendChild(bCopiar); acoes.appendChild(bImp);
+    var bRel = el('button', 'btn btn-leve', 'Gerar relatório (PDF)');
+    bRel.type = 'button';
+    bRel.title = 'Análise e pendências, sem o mapa de competências. Na janela de impressão, escolha "Salvar como PDF".';
+    bRel.addEventListener('click', function () { gerarRelatorio('analise'); });
+    acoes.appendChild(bCopiar); acoes.appendChild(bRel); acoes.appendChild(bImp);
     saida.appendChild(acoes);
 
     var mapa = desenharMapa(r.mapa, r.valores, r.vinculosPorMes);
     if (mapa) {
       var sm = sec('Mapa de competências', 'Cada quadrado é um mês e mostra o valor lançado. Com mais de um vínculo na competência, aparece um valor por vínculo (passe o mouse para ver quais); no mesmo vínculo, os lançamentos são somados. Em recolhimentos, é o salário de contribuição.');
+      sm.classList.add('sec-mapa');
       sm.appendChild(mapa);
       saida.appendChild(sm);
     }
@@ -1446,7 +1473,7 @@
 
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
-    formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
+    gerarRelatorio: gerarRelatorio, formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
     resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO, gerarExemplo: gerarExemplo,
     el: el, sec: sec, tabela: tabela, ordemDe: ordemDe, dataDeOrd: dataDeOrd, rotuloData: rotuloData, ultimoDiaDoMes: ultimoDiaDoMes, ehRural: ehRural, INICIO_PBC: INICIO_PBC, INDICADORES: INDICADORES
   };

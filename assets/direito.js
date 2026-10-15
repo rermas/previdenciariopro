@@ -1086,6 +1086,13 @@
     var acoes = C.el('div', 'acoes');
     var botao = C.el('button', 'btn', 'Verificar direito'); botao.type = 'button'; botao.id = 'dir-verificar';
     acoes.appendChild(botao);
+    var botaoRel = C.el('button', 'btn btn-leve', 'Gerar relatório da simulação (PDF)'); botaoRel.type = 'button'; botaoRel.id = 'dir-relatorio';
+    botaoRel.title = 'Somente o resultado desta verificação. Na janela de impressão, escolha "Salvar como PDF".';
+    botaoRel.addEventListener('click', function () {
+      if (!document.getElementById('dir-resultado').firstChild) { window.alert('Clique em Verificar direito antes de gerar o relatório.'); return; }
+      C.gerarRelatorio('direito');
+    });
+    acoes.appendChild(botaoRel);
     bloco.appendChild(acoes);
     var resultado = C.el('div'); resultado.id = 'dir-resultado'; resultado.setAttribute('aria-live', 'polite');
     bloco.appendChild(resultado);
