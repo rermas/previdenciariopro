@@ -171,7 +171,13 @@
     { nome: 'empregado com auxílio por incapacidade', seg: ['emp', 'emp'], beneficio: true },
     { nome: 'empregada com salário-maternidade', seg: ['emp', 'emp'], maternidade: true },
     { nome: 'misto: segurado especial, empregado, contribuinte individual e facultativo', seg: ['esp', 'emp', 'ci', 'fac'] },
-    { nome: 'empregado, contribuinte individual simultâneo e vínculo antigo sem remunerações', seg: ['emp', 'ci'], concomitante: true, antigo: true }
+    { nome: 'empregado, contribuinte individual simultâneo e vínculo antigo sem remunerações', seg: ['emp', 'ci'], concomitante: true, antigo: true },
+    // Carreiras longas (mais de 30/35 anos de tempo), para simular as aposentadorias por tempo de contribuição.
+    { nome: 'carreira longa: vários vínculos de empregado (mais de 35 anos)', seg: ['emp', 'emp', 'emp', 'emp'], longo: true },
+    { nome: 'carreira longa: empregado, contribuinte individual e empregado (mais de 35 anos)', seg: ['emp', 'ci', 'emp'], longo: true },
+    { nome: 'carreira longa: empregado, contribuinte individual e facultativo (mais de 35 anos)', seg: ['emp', 'emp', 'ci', 'fac'], longo: true },
+    { nome: 'carreira longa: segurado especial no início e depois empregado (mais de 35 anos)', seg: ['esp', 'emp', 'emp', 'ci'], longo: true },
+    { nome: 'carreira longa com auxílio por incapacidade no meio (mais de 35 anos)', seg: ['emp', 'emp', 'emp'], longo: true, beneficio: true }
   ];
   var NOMES_EMP = ['MERCADO ALVORADA LTDA', 'TRANSPORTES HORIZONTE S.A.', 'PADARIA TRIGO BOM ME', 'CONSTRUTORA PEDRA FIRME LTDA', 'INDÚSTRIA NOVA ERA S.A.', 'CLÍNICA VIDA PLENA LTDA', 'ESCOLA SABER MAIS LTDA', 'AUTO PEÇAS CENTRAL LTDA', 'RESTAURANTE SABOR CASEIRO ME', 'LOGÍSTICA RÁPIDA LTDA', 'FARMÁCIA POPULAR EXEMPLO LTDA', 'SERVIÇOS GERAIS UNIÃO LTDA'];
   var RURAL_NOME = /FAZENDA|S[IÍ]TIO|CH[ÁA]CARA|AGR[IÍ]COLA|AGROPEC|AGRO|AGRIC|RURAL|GRANJA|HARAS|LAVOURA|ESTÂNCIA|ESTANCIA|COLONO|PASTAGEM|PECU[ÁA]RIA/i;
@@ -193,10 +199,12 @@
     var dinheiro = function (n) { return n.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
     var agora = new Date(), kHoje = mi(agora.getFullYear(), agora.getMonth() + 1);
     var minimo = function (k) { return minimoDe(k) || 1000; };
-    var cen = CENARIOS[ri(0, CENARIOS.length - 1)];
+    var longos = CENARIOS.filter(function (x) { return x.longo; });
+    var cen = rnd() < 0.55 ? longos[ri(0, longos.length - 1)] : CENARIOS[ri(0, CENARIOS.length - 1)];
     if (gerarExemplo.ultimo === cen) cen = CENARIOS[(CENARIOS.indexOf(cen) + 1 + ri(0, CENARIOS.length - 2)) % CENARIOS.length];
     gerarExemplo.ultimo = cen;
-    var TAM = { emp: [8, 60], ci: [12, 72], fac: [6, 48], esp: [24, 120] };
+    var TAM = cen.longo ? { emp: [84, 180], ci: [84, 180], fac: [36, 96], esp: [48, 120] } : { emp: [8, 60], ci: [12, 72], fac: [6, 48], esp: [24, 120] };
+    var DESDE = cen.longo ? 1982 : 1996;
 
     // Linha do tempo, de trás para frente: o último segmento termina entre 0 e 24 meses atrás (ou fica aberto).
     var fimCursor = kHoje - 1 - (rnd() < 0.5 ? 0 : ri(1, 24));
@@ -205,7 +213,7 @@
     for (var i = cen.seg.length - 1; i >= 0; i--) {
       var tipo = cen.seg[i], t = TAM[tipo], len = ri(t[0], t[1]);
       var fim = cursor, ini = fim - len + 1;
-      if (yOf(ini) < 1996) { ini = mi(1996, ri(1, 12)); if (ini > fim - 5) break; }
+      if (yOf(ini) < DESDE) { ini = mi(DESDE, ri(1, 12)); if (ini > fim - 5) break; }
       segs.unshift({ tipo: tipo, ini: ini, fim: fim, aberto: false });
       cursor = ini - 1 - ri(0, 14);
       if (cen.concomitante && i === cen.seg.length - 1 && i > 0) cursor = ini + ri(2, 10); // o segmento anterior termina depois do início deste
@@ -219,6 +227,11 @@
       segs = [e, c].sort(function (a, b) { return a.ini - b.ini; });
     }
     if (!segs.length) segs = [{ tipo: 'emp', ini: fimCursor - 24, fim: fimCursor }];
+    if (cen.longo) {
+      // Garante mais de 36 anos de calendário entre o primeiro e o último mês, para passar de 35 anos de tempo.
+      var primeiro = segs[0], alvoIni = segs[segs.length - 1].fim - 36 * 12 - ri(0, 24);
+      if (primeiro.ini > alvoIni) primeiro.ini = Math.max(alvoIni, mi(DESDE, 1));
+    }
     var ultimo = segs.reduce(function (a, b) { return b.fim >= a.fim ? b : a; }, segs[0]);
     if (ultimo.fim >= kHoje - 1 - 1 && ultimo.tipo !== 'esp' && rnd() < 0.6) ultimo.aberto = true;
     if (ultimo.aberto) ultimo.fim = kHoje - 1;
@@ -229,7 +242,7 @@
       'Extrato Previdenciário - Portal CNIS (EXEMPLO FICTÍCIO)',
       'Identificação do Filiado',
       'Nit: ' + nit + ' CPF: 000.000.000-00 Nome: PESSOA DE EXEMPLO',
-      'Data de Nascimento: ' + pad(ri(1, 28)) + '/' + pad(ri(1, 12)) + '/' + ri(1962, 1996) + ' Nome da Mãe: MÃE DE EXEMPLO',
+      'Data de Nascimento: ' + pad(ri(1, 28)) + '/' + pad(ri(1, 12)) + '/' + (cen.longo ? Math.min(1996, yOf(segs[0].ini) - ri(16, 24)) : ri(1962, 1996)) + ' Nome da Mãe: MÃE DE EXEMPLO',
       'Relações Previdenciárias'
     ];
     var cabV = 'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim';
@@ -250,7 +263,7 @@
 
     function emprego(sg) {
       var mult = 1 + Math.round(rnd() * 25) / 10, ind = [];
-      var ks = meses(sg.ini, sg.fim);
+      var ks = meses(sg.ini, sg.fim).filter(function (k) { return k >= mi(1994, 7); }); // o CNIS só traz remunerações a partir de 07/1994
       var falha = rnd() < 0.45 ? ri(0, ks.length - 1) : -1; // às vezes falta uma competência
       var abaixo = rnd() < 0.3 ? escolheMes(ks) : -1; // às vezes um mês abaixo do mínimo
       seq++;
@@ -274,14 +287,14 @@
       var mult = sg.tipo === 'fac' ? 1 + Math.round(rnd() * 8) / 10 : 1 + Math.round(rnd() * 20) / 10;
       var simplificado = rnd() < 0.3;
       var baixos = {}; // meses abaixo do mínimo (contribuinte individual/facultativo, em qualquer época)
-      if (rnd() < 0.6) { var nb = ri(1, 4), ksb = meses(sg.ini, sg.fim); for (var b = 0; b < nb && ksb.length; b++) baixos[ksb[ri(0, ksb.length - 1)]] = true; }
+      if (rnd() < 0.6) { var nb = ri(1, 4), ksb = meses(Math.max(sg.ini, mi(1994, 7)), sg.fim); for (var b = 0; b < nb && ksb.length; b++) baixos[ksb[ri(0, ksb.length - 1)]] = true; }
       linhas.push(cabV);
       linhas.push(seq + ' ' + nit + ' RECOLHIMENTO ' + rotulo + ' ' + data(sg.ini, 1) + (sg.aberto ? '' : ' ' + data(sg.fim, ultDia(sg.fim))));
       linhas.push('Indicadores:');
       linhas.push('Contribuições');
       linhas.push('Compet. Data Pgto. Contribuição Salário Contrib. Indicadores Compet. Data Pgto. Contribuição Salário Contrib. Indicadores');
       var cel = [];
-      meses(sg.ini, sg.fim).forEach(function (k) {
+      meses(Math.max(sg.ini, mi(1994, 7)), sg.fim).forEach(function (k) {
         if (rnd() < 0.06) return; // competência não recolhida
         var sal = simplificado ? minimo(k) : Math.min(Math.round(minimo(k) * mult * 100) / 100, 7800);
         if (baixos[k]) sal = Math.round(minimo(k) * (0.4 + Math.round(rnd() * 5) / 10) * 100) / 100;
