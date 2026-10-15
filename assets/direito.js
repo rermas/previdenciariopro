@@ -968,7 +968,7 @@
     var bloco = C.el('div', 'convite-corpo');
     bloco.appendChild(C.el('p', 'dica', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.'));
     var topo = C.el('div', 'grade-campos');
-    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural'], ['aposentadoria-idade-hibrida', 'Aposentadoria por idade híbrida (rural + urbana)']] : []));
+    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural'], ['aposentadoria-idade-hibrida', 'Aposentadoria por idade híbrida (rural + urbana)']] : [], root.TEMPO ? [['aposentadoria-tempo', 'Aposentadoria por tempo de contribuição (regras de transição)']] : []));
     topo.appendChild(campo('Benefício', selBen));
     bloco.appendChild(topo);
 
@@ -1059,6 +1059,19 @@
     }
     bloco.appendChild(gAP);
 
+    // Aposentadoria por tempo de contribuição (regras de transição da EC 103)
+    var gTC = C.el('div'); gTC.id = 'dir-grupo-tc'; gTC.hidden = true;
+    var enq = [];
+    if (root.TEMPO) {
+      var gt = C.el('div', 'grade-campos');
+      gt.appendChild(campo('Sexo', selecao('tc-sexo', [['F', 'Mulher'], ['M', 'Homem']])));
+      gt.appendChild(campo('Data de nascimento', entrada('tc-nasc', 'date')));
+      gt.appendChild(campo('Data do requerimento (DER)', entrada('tc-der', 'date')));
+      gTC.appendChild(gt);
+      gTC.appendChild(root.TEMPO.editor(analise, enq, function () { if (resultado.firstChild) executar(); }));
+    }
+    bloco.appendChild(gTC);
+
     var comuns = C.el('div', 'marcas');
     comuns.appendChild(marca('dir-desemprego', 'Seguro-desemprego/SINE'));
     bloco.appendChild(comuns);
@@ -1066,7 +1079,7 @@
     selBen.addEventListener('change', function () {
       var v = selBen.value;
       gSM.hidden = v !== 'salario-maternidade'; gPM.hidden = v !== 'pensao-por-morte'; gAR.hidden = v !== 'auxilio-reclusao'; gAI.hidden = v !== 'auxilio-incapacidade-temporaria';
-      gAP.hidden = v.indexOf('aposentadoria-idade') !== 0; comuns.hidden = gAP.hidden === false;
+      gAP.hidden = v.indexOf('aposentadoria-idade') !== 0; gTC.hidden = v !== 'aposentadoria-tempo'; comuns.hidden = gAP.hidden === false || !gTC.hidden;
       resultado.textContent = '';
     });
 
@@ -1098,6 +1111,12 @@
         resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioIncapacidade(analise, ci, hojeAgora())));
         return;
       }
+      if (selBen.value === 'aposentadoria-tempo' && root.TEMPO) {
+        var ctc = Object.assign(root.TEMPO.lerCampos(), respostas, { enquadramento: enq });
+        if (!ctc.nascimento || !ctc.der) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de nascimento e a data do requerimento.')); return; }
+        resultado.appendChild(root.TEMPO.renderizar(root.TEMPO.aposentadoriaTempo(analise, ctc, hojeAgora())));
+        return;
+      }
       if (selBen.value.indexOf('aposentadoria-idade') === 0 && root.IDADE) {
         var cap = Object.assign(root.IDADE.lerCampos(selBen.value === 'aposentadoria-idade-rural' ? 'rural' : selBen.value === 'aposentadoria-idade-hibrida' ? 'hibrida' : 'urbana'), respostas);
         if (!cap.nascimento || !cap.der) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de nascimento e a data do requerimento.')); return; }
@@ -1120,7 +1139,7 @@
     var tit = C.el('strong', null, 'Verificar direito a um benefício');
     tit.appendChild(C.el('em', 'convite-opcional', 'opcional'));
     txt.appendChild(tit);
-    txt.appendChild(C.el('span', null, 'Salário-maternidade, pensão por morte, auxílio-reclusão, incapacidade temporária e aposentadoria por idade'));
+    txt.appendChild(C.el('span', null, 'Salário-maternidade, pensão por morte, auxílio-reclusão, incapacidade temporária, aposentadoria por idade e por tempo de contribuição'));
     sum.appendChild(alvo); sum.appendChild(txt);
     sum.appendChild(C.el('span', 'convite-seta'));
     det.appendChild(sum);

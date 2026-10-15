@@ -133,3 +133,12 @@ Módulo `assets/idade.js` (testes em `tests/idade.test.js`), no bloco "Verificar
 ### Aposentadoria por idade híbrida
 
 Opção "híbrida" no mesmo módulo: usa a idade e o tempo mínimo da aposentadoria urbana e soma o tempo rural (segurado especial e empregado rural, em qualquer data) sem exigir recolhimento, na carência e no tempo de contribuição. Premissas: idade e tempo de contribuição iguais aos da urbana (inclusive 20 anos para o homem filiado depois de 13/11/2019); o tempo rural vale mesmo que a última atividade seja urbana (Tema 1007 do STJ); a tabela do art. 142 usa a data do primeiro vínculo, rural ou urbano.
+
+## Aposentadoria por tempo de contribuição (regras de transição)
+
+Módulo `assets/tempo.js` (testes em `tests/tempo.test.js`). Avalia, de uma vez, as quatro regras da EC 103/2019 para quem era filiado até 13/11/2019: pontos (art. 15), idade mínima progressiva (art. 16), pedágio de 50% (art. 17) e pedágio de 100% (art. 20). Para cada uma mostra os requisitos, a situação na DER e, se não cumprida, a data em que seria, mantidas as contribuições.
+
+- **Enquadramento:** o CNIS não informa atividade especial. Um editor permite marcar trechos por vínculo (ou fora do CNIS) como especial de 15/20/25 anos, período indenizado/CTC (conta como comum) ou desconsiderar. Fica só no navegador; dá para salvar e carregar em arquivo JSON.
+- **Conversão:** o especial é convertido pelos fatores do Decreto 3.048, art. 70 (mulher 2,00/1,50/1,20; homem 2,33/1,75/1,40) só até 13/11/2019; depois conta como tempo simples.
+- **Tempo contado:** emprego (presumido), CI/facultativo no mínimo (inclusive pagos em atraso), salário-maternidade, benefício por incapacidade intercalado e rural até 23/07/1991 sem recolhimento. A carência (180 meses) usa as regras da aposentadoria por idade.
+- **Premissas:** pontos somam idade fracionada (dias/365,25) e tempo (dias/365); a qualidade de segurado não é exigida (Lei 10.666, art. 3º); alíquotas reduzidas de 5/11/12% não são detectáveis no CNIS; só as quatro regras de transição (não a regra permanente nem professor/especial/PcD).

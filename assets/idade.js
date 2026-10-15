@@ -64,7 +64,8 @@
   // ---------- Meses de carência ----------
   function montarMeses(analise, entrada, der, regras) {
     var derMes = mesOrd(der), derOrd = der.ord;
-    var rural = regras.modalidade === 'rural', hib = regras.modalidade === 'hibrida';
+    var rural = regras.modalidade === 'rural', hib = regras.modalidade === 'hibrida', tcmode = regras.modo === 'tc';
+    var curSeq = null;
     var resp = { compEmp: entrada.compEmp, compCI: entrada.compCI };
     var compl = D.complementosEm(analise, derMes);
     compl.empSem = [];
@@ -76,7 +77,7 @@
     var ex = { abaixoEmp: [], abaixoCI: [], atraso: [], aposFG: [], domesticoAntes: [], ruralAntes91: [], rpps: 0, especial: 0 };
     function marca(k, ini, fim, origem) {
       if (!contados[k]) contados[k] = { ints: [], origem: {} };
-      contados[k].ints.push([ini, fim]); contados[k].origem[origem] = true;
+      contados[k].ints.push([ini, fim, curSeq]); contados[k].origem[origem] = true;
     }
     var classes = {};
     analise.vinculos.forEach(function (v) { if (v.inicio) classes[v.seq] = D.classeDe(v); });
@@ -99,10 +100,16 @@
     var candCI = [];    // contribuições de contribuinte individual/facultativo a avaliar
     analise.vinculos.forEach(function (v) {
       if (!v.valido) return;
+      curSeq = v.seq;
       var cl = classes[v.seq];
       if (cl === 'rpps') { ex.rpps++; return; }
       var a = mesOrd(v.inicio), z = Math.min(mesOrd(v.fimContado), derMes);
       if (cl === 'especial') {
+        if (tcmode) {
+          // Tempo rural anterior a 24/07/1991 conta como tempo de contribuição sem recolhimento (Lei 8.213, art. 55, § 2º).
+          for (var kt = a; kt <= z; kt++) { var fimT = Math.min(v.fimOrd, ultimoDia(kt), C.ordemDe(1991, 7, 23)), iniT = Math.max(v.inicioOrd, primeiroDia(kt)); if (fimT >= iniT) marca(kt, iniT, fimT, 'rural'); }
+          return;
+        }
         if (!hib) { ex.especial++; return; }
         // Híbrida: segurado especial conta como carência independentemente de recolhimento.
         for (var ke = a; ke <= z; ke++) { marca(ke, Math.max(v.inicioOrd, primeiroDia(ke)), Math.min(v.fimOrd, ultimoDia(ke)), 'rural'); ex.ruralMeses = (ex.ruralMeses || 0) + 1; }
@@ -112,7 +119,7 @@
         var rur = C.ehRural(v);
         for (var k = a; k <= z; k++) {
           if (rur && hib) { marca(k, Math.max(v.inicioOrd, primeiroDia(k)), Math.min(v.fimOrd, ultimoDia(k)), 'rural'); ex.ruralMeses = (ex.ruralMeses || 0) + 1; presenca[k] = true; continue; }
-          if (rur && k < RURAL_EMP91) { ex.ruralAntes91.push(k); continue; }
+          if (rur && !tcmode && k < RURAL_EMP91) { ex.ruralAntes91.push(k); continue; }
           if (cl === 'domestica' && k < DOM_PRESUMIDO && !(v.contribuicoes && v.contribuicoes[k] !== undefined)) { ex.domesticoAntes.push(k); continue; }
           if (baixoEmp[k] && !resp.compEmp) { ex.abaixoEmp.push(k); continue; }
           marca(k, Math.max(v.inicioOrd, primeiroDia(k)), Math.min(v.fimOrd, ultimoDia(k)), 'emprego');
@@ -165,13 +172,16 @@
       var ok = itens.filter(function (x) { return !x.depois; });
       if (!ok.length) { ex.aposFG.push(k); return; }
       var emDia = ok.filter(function (x) { return !x.atraso; });
-      if (!emDia.length && atrasoSemValidade(k)) { ex.atraso.push(k); return; }
+      if (!emDia.length && !tcmode && atrasoSemValidade(k)) { ex.atraso.push(k); return; }
       if (baixoCI[k] && !resp.compCI) { ex.abaixoCI.push(k); return; }
       if (baixoEmp[k] && !resp.compEmp && !contados[k]) { ex.abaixoEmp.push(k); return; }
-      marca(k, primeiroDia(k), Math.min(ultimoDia(k), derOrd >= primeiroDia(k) ? ultimoDia(k) : ultimoDia(k)), 'ci');
+      curSeq = ok[0].v.seq;
+      marca(k, primeiroDia(k), ultimoDia(k), 'ci');
+      curSeq = null;
     });
 
     // Salário-maternidade: todos os meses do período contam.
+    curSeq = null;
     analise.beneficios.forEach(function (b) {
       if (b.indeferido || !b.inicio || !/MATERNIDADE/i.test(b.texto || '')) return;
       var z = Math.min(mesOrd(b.fim || der), derMes);
@@ -193,7 +203,7 @@
       var antes = Object.keys(base).some(function (k) { return +k < a; });
       var depois = !!b.fim && Object.keys(base).some(function (k) { return +k > mesOrd(b.fim) && +k <= derMes; });
       var interc = antes && depois;
-      var conta = (apos2019 && (acid || interc)) || (janela2011 && interc);
+      var conta = tcmode ? interc : ((apos2019 && (acid || interc)) || (janela2011 && interc));
       if (conta) {
         incapAchados.contados++;
         for (var k = a; k <= z; k++) if (!contados[k]) marca(k, Math.max(b.inicio.ord, primeiroDia(k)), Math.min(b.fim ? b.fim.ord : derOrd, ultimoDia(k)), 'incap');
@@ -428,7 +438,7 @@
     return { modalidade: modalidade, sexo: g('ap-sexo').value, nascimento: g('ap-nasc').value, der: g('ap-der').value };
   }
 
-  var api = { aposentadoriaIdade: aposentadoriaIdade, renderizar: renderizar, lerCampos: lerCampos, carenciaExigida: carenciaExigida, dataIdadeMulherTransicao: dataIdadeMulherTransicao };
+  var api = { montarMeses: montarMeses, uniaoDias: uniaoDias, faixas: faixas, aposentadoriaIdade: aposentadoriaIdade, renderizar: renderizar, lerCampos: lerCampos, carenciaExigida: carenciaExigida, dataIdadeMulherTransicao: dataIdadeMulherTransicao };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.IDADE = api;
 })(typeof window !== 'undefined' ? window : globalThis);
