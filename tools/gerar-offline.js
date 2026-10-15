@@ -4,7 +4,7 @@ const fs = require('fs'), path = require('path');
 const raiz = path.join(__dirname, '..');
 const ler = (p, enc) => fs.readFileSync(path.join(raiz, p), enc || 'utf8');
 const esc = (t) => t.replace(/<\/(script)/gi, '<\\/$1').replace(/<!--/g, '<\\!--');
-const b64 = (p) => ler(p, null).toString('base64');
+const b64 = (p) => fs.readFileSync(path.join(raiz, p)).toString('base64');
 
 let css = ler('assets/style.css');
 css = css.replace('url(fonts/atkinson-400.woff2)', 'url(data:font/woff2;base64,' + b64('assets/fonts/atkinson-400.woff2') + ')')
