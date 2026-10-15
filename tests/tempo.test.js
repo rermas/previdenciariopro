@@ -67,4 +67,11 @@ assert.ok(dias(com2) - dias(semInd) > 1500 && dias(com2) - dias(semInd) < 1540, 
 assert.equal(com2.perguntas.find((q) => q.id === 'indenizaEspecial').resposta, true);
 // sem segurado especial a partir de 11/1991, a pergunta não aparece
 assert.ok(!ap(vinculo([2000, 1], [2010, 12], '31/12/2010'), { sexo: 'M', nascimento: '1965-01-01', der: '2026-01-02' }).perguntas.some((q) => q.id === 'indenizaEspecial'));
+// Contribuinte individual: competência sem recolhimento (lacuna) não conta como tempo
+const ciTxt = `1 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/1990 31/12/1993
+Indicadores:
+Contribuições
+Compet. Data Pgto. Contribuição Salário Contrib. Indicadores Compet. Data Pgto. Contribuição Salário Contrib. Indicadores
+01/1990 200,00 1.000,00 02/1990 200,00 1.000,00`;
+assert.equal(ap(ciTxt, { sexo: 'M', nascimento: '1965-01-01', der: '2026-01-02' }).tempo.brutoDer, 59);
 console.log('tempo.test.js: ok');

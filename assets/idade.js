@@ -132,8 +132,9 @@
           presenca[k] = true;
         }
       } else if (CIFAC[cl]) {
-        // Antes de 07/1994 vale o período do vínculo (contribuições anteriores a 03/1994 sem data de pagamento contam como em dia).
-        for (var k2 = a; k2 < Math.min(PISO94, z + 1); k2++) { marca(k2, Math.max(v.inicioOrd, primeiroDia(k2)), Math.min(v.fimOrd, ultimoDia(k2)), 'ci'); presenca[k2] = true; }
+        // Antes de 07/1994: contribuições lançadas sem data de pagamento (até 02/1994) contam como em dia.
+        // Só conta a competência que tem contribuição lançada: mês sem recolhimento não conta.
+        for (var k2 = a; k2 < Math.min(PISO94, z + 1); k2++) { if (!v.contribuicoes || v.contribuicoes[k2] === undefined) continue; marca(k2, Math.max(v.inicioOrd, primeiroDia(k2)), Math.min(v.fimOrd, ultimoDia(k2)), 'ci'); presenca[k2] = true; }
         Object.keys(v.contribuicoes || {}).forEach(function (ks) {
           var k = +ks;
           if (k < PISO94 || k > derMes) return;
