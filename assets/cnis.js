@@ -834,18 +834,6 @@
       if (lista.length) nova('info', a.rotulo, 'Período concomitante com ' + lista.join(', ') + '. O tempo é contado uma vez.');
     });
 
-    // Tempo contado: união dos períodos, sem somar duas vezes o que se sobrepõe.
-    var segs = [];
-    validos.forEach(function (v) { v.segmentos.forEach(function (x) { segs.push([x[0], x[1]]); }); });
-    segs.sort(function (x, y) { return x[0] - y[0]; });
-    var diasUnicos = 0, cI = null, cF = null;
-    segs.forEach(function (sg) {
-      if (cI === null) { cI = sg[0]; cF = sg[1]; }
-      else if (sg[0] <= cF + 1) { cF = Math.max(cF, sg[1]); }
-      else { diasUnicos += cF - cI + 1; cI = sg[0]; cF = sg[1]; }
-    });
-    if (cI !== null) diasUnicos += cF - cI + 1;
-    var diasBrutos = validos.reduce(function (t, v) { return t + v.dias; }, 0);
 
     // ---- Salário mínimo, carência e lacunas ----
     var tipoPorSeq = {};
@@ -897,6 +885,46 @@
     if (gCI.length) nova('atencao', '', 'Contribuinte individual ou facultativo com salário de contribuição abaixo do salário mínimo em ' + gCI.length + ' competência(s): ' + textoFaixas(gCI, 4) + '. Em regra a competência não conta sem complementação até o mínimo.');
     if (gPos.length) nova('atencao', '', 'Valor total da competência abaixo do salário mínimo em ' + gPos.length + ' competência(s) a partir da EC 103/2019: ' + textoFaixas(gPos, 4) + '. Pode ser complementada, utilizada ou agrupada com outras competências.');
     if (gProp.length) nova('info', '', 'Valor abaixo do mínimo em mês de início ou fim de vínculo (' + gProp.length + '): ' + textoFaixas(gProp, 4) + '. Pode ser proporcional aos dias trabalhados.');
+
+    // Competências abaixo do mínimo não entram no tempo: contribuinte individual/facultativo em qualquer época e empregado desde a EC 103/2019
+    // (mês de início ou fim de vínculo, que pode ser proporcional, continua contando).
+    var exclSeq = {};
+    abaixo.forEach(function (a) {
+      if (a.proporcional) return;
+      a.seqs.forEach(function (sq) { (exclSeq[sq] = exclSeq[sq] || {})[a.mes] = true; });
+    });
+    validos.forEach(function (v) {
+      var em = exclSeq[v.seq];
+      if (!em) return;
+      var novos = [], n = 0;
+      v.segmentos.forEach(function (sg) {
+        var ini = null;
+        var dA = dataDeOrd(sg[0]), dB = dataDeOrd(sg[1]), mA = mesDe(dA.y, dA.m), mB = mesDe(dB.y, dB.m);
+        for (var km = mA; km <= mB; km++) {
+          var dI = Math.max(sg[0], ordemDe(Math.floor(km / 12), (km % 12) + 1, 1)), dF = Math.min(sg[1], ultimoDiaDoMes(km));
+          if (em[km]) { if (ini !== null) { novos.push([ini, dI - 1]); ini = null; } n++; }
+          else if (ini === null) ini = dI;
+          if (!em[km] && km === mB) { novos.push([ini, dF]); ini = null; }
+        }
+        if (ini !== null) novos.push([ini, sg[1]]);
+      });
+      v.segmentos = novos.filter(function (x) { return x[0] <= x[1]; });
+      v.dias = v.segmentos.reduce(function (t, x) { return t + x[1] - x[0] + 1; }, 0);
+      v.abaixoExcluidos = n;
+    });
+
+    // Tempo contado: união dos períodos, sem somar duas vezes o que se sobrepõe.
+    var segs = [];
+    validos.forEach(function (v) { v.segmentos.forEach(function (x) { segs.push([x[0], x[1]]); }); });
+    segs.sort(function (x, y) { return x[0] - y[0]; });
+    var diasUnicos = 0, cI = null, cF = null;
+    segs.forEach(function (sg) {
+      if (cI === null) { cI = sg[0]; cF = sg[1]; }
+      else if (sg[0] <= cF + 1) { cF = Math.max(cF, sg[1]); }
+      else { diasUnicos += cF - cI + 1; cI = sg[0]; cF = sg[1]; }
+    });
+    if (cI !== null) diasUnicos += cF - cI + 1;
+    var diasBrutos = validos.reduce(function (t, v) { return t + v.dias; }, 0);
 
     var carencia = null;
     if (!semLeitura) {

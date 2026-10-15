@@ -379,6 +379,18 @@ assert.equal(ciSem.vinculos[0].dias, 31 + 28 + 30, 'março sem recolhimento fora
 assert.equal(ciSem.resumo.diasUnicos, 31 + 28 + 30);
 console.log('CI sem recolhimento ok');
 
+// ---------- Abaixo do mínimo não conta no tempo ----------
+const emp20 = CNIS.analisar(texto(vinc(1, 'A', '01/01/2020', '30/04/2020'), '01/2020 1.045,00 02/2020 500,00 03/2020 1.045,00', '04/2020 1.045,00'), HOJE);
+assert.equal(emp20.vinculos[0].dias, 31 + 31 + 30, 'empregado abaixo do mínimo após a EC 103 sai do tempo');
+const emp18 = CNIS.analisar(texto(vinc(1, 'A', '01/01/2018', '30/04/2018'), '01/2018 954,00 02/2018 500,00 03/2018 954,00', '04/2018 954,00'), HOJE);
+assert.equal(emp18.vinculos[0].dias, 31 + 28 + 31 + 30, 'antes da EC 103 conta normalmente');
+const ciMin2 = CNIS.analisar(texto(
+  `4 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2025 30/04/2025`, 'Contribuições',
+  '01/2025 20/02/2025 303,60 1.518,00 02/2025 20/03/2025 100,00 500,00 03/2025 20/04/2025 303,60 1.518,00 04/2025 20/05/2025 303,60 1.518,00'
+), HOJE);
+assert.equal(ciMin2.vinculos[0].dias, 31 + 31 + 30, 'CI abaixo do mínimo sai do tempo');
+console.log('abaixo do mínimo fora do tempo ok');
+
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);
 assert.equal(vazio.resumo.totalVinculos, 0);
