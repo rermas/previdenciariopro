@@ -112,14 +112,14 @@
       r('Tempo de contribuição', tcDias >= req, dur(tcDias), (sexo === 'F' ? 30 : 35) + ' anos');
       r('Idade mínima progressiva', idadeM >= im, textoMeses(Math.max(0, idadeM)), textoMeses(im) + ' em ' + ano);
     } else if (regra === 'pedagio50') {
-      var elegivel = ctx.tcEC < req && ctx.tcEC >= req - 2 * 365;
-      r('Faltavam até 2 anos para o tempo mínimo em 13/11/2019', elegivel, dur(ctx.tcEC) + ' em 13/11/2019', ctx.tcEC >= req ? 'Não se aplica: o tempo mínimo (' + (sexo === 'F' ? 30 : 35) + ' anos) já estava cumprido em 13/11/2019; veja o direito adquirido' : (sexo === 'F' ? 28 : 33) + ' anos a menos de ' + (sexo === 'F' ? 30 : 35));
+      var elegivel = ctx.tcEC >= req - 2 * 365;
+      r('Faltavam até 2 anos para o tempo mínimo em 13/11/2019', elegivel, dur(ctx.tcEC) + ' em 13/11/2019', ctx.tcEC >= req ? 'Nada faltava: o tempo mínimo (' + (sexo === 'F' ? 30 : 35) + ' anos) já estava cumprido em 13/11/2019 (pedágio zero); veja também o direito adquirido' : (sexo === 'F' ? 28 : 33) + ' anos a menos de ' + (sexo === 'F' ? 30 : 35));
       var exigido = req + falta * 0.5;
-      r('Tempo de contribuição com pedágio de 50%', tcDias >= exigido, dur(tcDias), dur(exigido) + (ctx.tcEC >= req ? ' (sem pedágio: informativo, a regra não se aplica a quem já tinha o tempo em 13/11/2019)' : ' (pedágio de ' + dur(falta * 0.5) + ')'));
+      r('Tempo de contribuição com pedágio de 50%', tcDias >= exigido, dur(tcDias), dur(exigido) + (ctx.tcEC >= req ? ' (pedágio zero: já tinha o tempo mínimo em 13/11/2019)' : ' (pedágio de ' + dur(falta * 0.5) + ')'));
     } else if (regra === 'pedagio100') {
       var ex100 = req + falta;
       var idMin = (sexo === 'F' ? 57 : 60) * 12;
-      r('Tempo de contribuição com pedágio de 100%', tcDias >= ex100, dur(tcDias), dur(ex100) + (ctx.tcEC >= req ? ' (sem pedágio: informativo, a regra não se aplica a quem já tinha o tempo em 13/11/2019)' : ' (pedágio de ' + dur(falta) + ')'));
+      r('Tempo de contribuição com pedágio de 100%', tcDias >= ex100, dur(tcDias), dur(ex100) + (ctx.tcEC >= req ? ' (pedágio zero: já tinha o tempo mínimo em 13/11/2019)' : ' (pedágio de ' + dur(falta) + ')'));
       r('Idade mínima', idadeM >= idMin, textoMeses(Math.max(0, idadeM)), (sexo === 'F' ? 57 : 60) + ' anos');
     }
     r('Carência', carenciaMeses >= ctx.carenciaExigida, carenciaMeses + ' meses', ctx.carenciaExigida + ' meses');

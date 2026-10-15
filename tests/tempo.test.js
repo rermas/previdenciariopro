@@ -84,3 +84,12 @@ console.log('tempo.test.js: ok');
   assert.equal(dias('14/10/2026') - dias('20/10/2026'), 30, 'setembro conta se pago até o vencimento');
 })();
 console.log('pago no vencimento depois da DER ok');
+
+// Quem já tinha o tempo mínimo em 13/11/2019 cumpre o requisito "faltavam até 2 anos" (nada faltava, pedágio zero)
+(function () {
+  const r2 = ap(vinculo([1985, 1], [2025, 12], '31/12/2025'), { sexo: 'M', nascimento: '1966-10-01', der: '2026-10-01' });
+  const p50 = r2.avaliacoes.find((a) => a.regra.id === 'pedagio50');
+  assert.equal(p50.reqs[0].ok, true);
+  assert.equal(p50.ok, true);
+})();
+console.log('pedágio 50% com tempo já cumprido ok');
