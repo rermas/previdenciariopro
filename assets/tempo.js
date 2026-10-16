@@ -320,16 +320,22 @@
     function campo(rotulo, el) { var l = C.el('label', 'campo'); l.appendChild(C.el('span', null, rotulo)); l.appendChild(el); return l; }
     var selV = document.createElement('select'); selV.id = 'enq-vinculo';
     var o0 = document.createElement('option'); o0.value = '0'; o0.textContent = 'Período fora do CNIS'; selV.appendChild(o0);
-    analise.vinculos.forEach(function (v) {
-      if (!v.valido) return;
-      var rg = regraEnq(v);
-      if (!rg) return;
-      var di = rg.min !== null ? Math.max(v.inicio.ord, rg.min) : v.inicio.ord, df = rg.max !== null ? Math.min(v.fimContado.ord, rg.max) : v.fimContado.ord;
-      var o = document.createElement('option'); o.value = String(v.seq);
-      o.textContent = 'Seq. ' + v.seq + ' – ' + (v.nome || v.tipo || 'vínculo') + ' (' + rot(C.dataDeOrd(di)) + ' a ' + rot(C.dataDeOrd(df)) + ')' + (rg.motivo ? ' – ' + rg.motivo : '');
-      o.dataset.ini = rot(C.dataDeOrd(di)); o.dataset.fim = rot(C.dataDeOrd(df));
-      selV.appendChild(o);
-    });
+    var ref = { a: analise };
+    function preencher() {
+      while (selV.options.length > 1) selV.remove(1);
+      ref.a.vinculos.forEach(function (v) {
+        if (!v.valido) return;
+        var rg = regraEnq(v);
+        if (!rg) return;
+        var di = rg.min !== null ? Math.max(v.inicio.ord, rg.min) : v.inicio.ord, df = rg.max !== null ? Math.min(v.fimContado.ord, rg.max) : v.fimContado.ord;
+        var o = document.createElement('option'); o.value = String(v.seq);
+        o.textContent = 'Seq. ' + v.seq + ' – ' + (v.nome || v.tipo || 'vínculo') + ' (' + rot(C.dataDeOrd(di)) + ' a ' + rot(C.dataDeOrd(df)) + ')' + (rg.motivo ? ' – ' + rg.motivo : '');
+        o.dataset.ini = rot(C.dataDeOrd(di)); o.dataset.fim = rot(C.dataDeOrd(df));
+        selV.appendChild(o);
+      });
+    }
+    preencher();
+    box.atualizar = function (nova) { ref.a = nova; preencher(); };
     var selN = document.createElement('select'); selN.id = 'enq-natureza';
     NATUREZAS.forEach(function (n) { if (n.id === 'comum') return; var o = document.createElement('option'); o.value = n.id; o.textContent = n.nome; selN.appendChild(o); });
     var ini = document.createElement('input'); ini.type = 'date'; ini.id = 'enq-inicio';
@@ -364,7 +370,7 @@
       var i = ordDe(ini.value), f = ordDe(fim.value);
       if (!i || !f || f.ord < i.ord) { msg.textContent = 'Informe um período válido (início até o fim).'; return; }
       msg.textContent = '';
-      var sq = +selV.value || 0, vv = analise.vinculos.filter(function (x) { return x.seq === sq; })[0], rg = vv ? regraEnq(vv) : null;
+      var sq = +selV.value || 0, vv = ref.a.vinculos.filter(function (x) { return x.seq === sq; })[0], rg = vv ? regraEnq(vv) : null;
       if (sq && rg) {
         if (rg.min !== null && i.ord < rg.min) { i = C.dataDeOrd(rg.min); msg.textContent = 'Início ajustado para ' + rot(i) + ' (' + rg.motivo + ').'; }
         if (rg.max !== null && f.ord > rg.max) { f = C.dataDeOrd(rg.max); msg.textContent = 'Fim ajustado para ' + rot(f) + ' (' + rg.motivo + ').'; }

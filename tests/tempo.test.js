@@ -125,3 +125,27 @@ console.log('pedágio 50% com tempo já cumprido ok');
   assert.ok(r1.tempo.brutoDer === r0.tempo.brutoDer, 'enquadramento não muda o tempo bruto');
 })();
 console.log('regras do enquadramento ok');
+
+// Vínculos incluídos manualmente: contam como vínculos do extrato, sem tempo em dobro nas sobreposições
+(function () {
+  const D = require('../assets/direito.js');
+  const base = C.analisar(vinculo([2000, 1], [2010, 12], '31/12/2010'), HOJE);
+  const ent = { sexo: 'M', nascimento: '1970-01-01', der: '2026-10-01' };
+  const sem = T.aposentadoriaTempo(base, ent, HOJE).tempo.brutoDer;
+  const mk = (tipo, i, f) => ({ nome: 'Teste', tipo, inicio: C.dataDe(i), fim: C.dataDe(f) });
+  // CTC de 1995 a 2002 sobrepõe 2000-2002 do extrato: só 1995-1999 (1826 dias) entra a mais
+  const comCtc = T.aposentadoriaTempo(D.comExtras(base, [mk('ctc', '01/01/1995', '31/12/2002')]), ent, HOJE).tempo.brutoDer;
+  assert.equal(comCtc - sem, 1826, 'sobreposição não soma em dobro');
+  // mesmo período repetido duas vezes não duplica
+  const dobro = T.aposentadoriaTempo(D.comExtras(base, [mk('ctc', '01/01/1995', '31/12/2002'), mk('emp', '01/01/1995', '31/12/2002')]), ent, HOJE).tempo.brutoDer;
+  assert.equal(dobro, comCtc);
+  // contribuinte individual: recolhido em todo o período (sem tempo antes de 04/1991: o limite do enquadramento é outro assunto)
+  const comCi = T.aposentadoriaTempo(D.comExtras(base, [mk('ci', '01/01/1998', '31/12/1999')]), ent, HOJE).tempo.brutoDer;
+  assert.equal(comCi - sem, 730);
+  // segurado especial até 31/10/1991 conta como tempo
+  const comSe = T.aposentadoriaTempo(D.comExtras(base, [mk('esp', '01/01/1985', '31/12/1989')]), ent, HOJE).tempo.brutoDer;
+  assert.equal(comSe - sem, 1826);
+  // a análise original não é alterada
+  assert.equal(base.vinculos.length, 1);
+})();
+console.log('vínculos incluídos manualmente ok');

@@ -239,7 +239,7 @@ p { margin: 0 0 1rem; }
 
 
 .grade-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; }
-.campo select, .campo input[type="date"] { width: 100%; max-width: 100%; font: inherit; font-weight: 400; padding: 0.55rem; border: 1px solid var(--linha); border-radius: 6px; background: var(--branco); color: var(--tinta); }
+.campo select, .campo input[type="date"], .campo input[type="text"] { width: 100%; max-width: 100%; font: inherit; font-weight: 400; padding: 0.55rem; border: 1px solid var(--linha); border-radius: 6px; background: var(--branco); color: var(--tinta); }
 .marcas { display: grid; gap: 0.5rem; margin-top: 0.9rem; font-size: 0.95rem; }
 .marcas label { display: flex; gap: 0.5rem; align-items: flex-start; }
 .direito { margin: 0 0 2.4rem; padding-bottom: 1.6rem; border-bottom: 2px solid var(--tinta); overflow-wrap: anywhere; }
@@ -294,3 +294,6 @@ p { margin: 0 0 1rem; }
 .pergunta-botoes { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .pergunta-botoes .btn { padding: 0.35rem 1rem; }
 .btn.marcado, .btn-leve.marcado { background: var(--azul); color: #fff; border-color: var(--azul); }
+
+.marcas.comuns { margin-bottom: 1.4rem; }
+.vinculos-extra { margin-top: 1.2rem; }

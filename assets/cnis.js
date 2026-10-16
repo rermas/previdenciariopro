@@ -183,6 +183,7 @@
   var RURAL_NOME = /FAZENDA|S[IÍ]TIO|CH[ÁA]CARA|AGR[IÍ]COLA|AGROPEC|AGRO|AGRIC|RURAL|GRANJA|HARAS|LAVOURA|ESTÂNCIA|ESTANCIA|COLONO|PASTAGEM|PECU[ÁA]RIA/i;
   // Segurado especial, tipo rural ou empregado de empregador com nome de atividade rural.
   function ehRural(v) {
+    if (typeof v.rural === 'boolean') return v.rural; // vínculo incluído manualmente: o tipo foi escolhido pela pessoa
     var t = v.tipo || '';
     return /especial|rural/i.test(t) || (/^empregado/i.test(t.trim()) && RURAL_NOME.test(v.nome || ''));
   }

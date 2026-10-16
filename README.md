@@ -159,3 +159,7 @@ Módulo `assets/tempo.js` (testes em `tests/tempo.test.js`). Avalia, de uma vez,
 - Cada benefício decide em "Verificar direito" se esse período entra (tempo e carência); a análise geral traz só a observação.
 - O tipo vem de "Tipo Filiado no Vínculo"; se for "Empregado", o nome do empregador (fazenda, sítio, haras etc.) indica emprego rural. No mapa: marrom claro = segurado especial, marrom mais escuro = empregado rural.
 - Células do PDF quebradas em duas linhas (primeira linha acima do registro) são reagrupadas ao registro correto.
+
+## Vínculos incluídos manualmente
+
+Em "Verificar direito" há o bloco "Vínculos que faltam no CNIS (opcional)": nome, tipo (empregado, empregado rural, segurado especial, contribuinte individual, CTC), início e fim. Os vínculos entram na análise usada pela simulação (`DIREITO.comExtras`), com Seq. a partir de 9001, e valem para todos os benefícios. CTC conta como empregado urbano; contribuinte individual é tratado como recolhido no mínimo em todas as competências. A contagem é por dia (tempo) e por competência (carência), então sobreposições não somam em dobro. O resultado traz a observação de que o tempo incluído deve ser comprovado no INSS e aceito conforme a legislação em vigor.

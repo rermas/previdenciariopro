@@ -963,8 +963,93 @@
 
   function hojeAgora() { var a = new Date(); return { y: a.getFullYear(), m: a.getMonth() + 1, d: a.getDate() }; }
 
+  // ---------- Vínculos incluídos manualmente (que faltam no CNIS) ----------
+  var TIPOS_EXTRA = [['emp', 'Empregado'], ['rural', 'Empregado rural'], ['esp', 'Segurado especial'], ['ci', 'Contribuinte individual'], ['ctc', 'CTC (certidão de tempo de contribuição)']];
+  var OBS_EXTRA = 'O tempo incluído aqui não consta no CNIS: deve ser comprovado perante o INSS e aceito conforme a legislação em vigor.';
+  function rotuloTipoExtra(id) { var r = TIPOS_EXTRA.filter(function (t) { return t[0] === id; })[0]; return r ? r[1] : id; }
+
+  // Monta um item igual aos da análise, para as simulações tratarem como um vínculo do extrato.
+  // CTC conta como empregado urbano; o contribuinte individual é considerado recolhido no mínimo em todas as competências.
+  function itemExtra(e, seq) {
+    var ini = e.inicio, fim = e.fim, ordI = ini.ord, ordF = fim.ord;
+    var tipo = e.tipo === 'esp' ? 'Segurado Especial' : e.tipo === 'ci' ? 'Contribuinte Individual' : 'Empregado';
+    var nome = e.nome || rotuloTipoExtra(e.tipo);
+    var it = {
+      seq: seq, nome: nome, tipo: tipo, rotulo: 'Seq. ' + seq + ' - ' + nome + ' (incluído manualmente)', inicio: ini, fim: fim, emAberto: false, valido: true,
+      dias: ordF - ordI + 1, remuneracoes: 0, decimos: 0, comRemuneracao: 0, faltantes: 0, anteriores94: 0,
+      fimContado: fim, inicioOrd: ordI, fimOrd: ordF, segmentos: [[ordI, ordF]], cobertura: [[ordI, ordF]],
+      contribuicoes: {}, pagamentos: {}, codigosIndicadores: [], incluidoManual: true,
+      rural: e.tipo === 'rural' || e.tipo === 'esp'
+    };
+    if (e.tipo === 'ci') {
+      for (var k = C.mesDe(ini.y, ini.m); k <= C.mesDe(fim.y, fim.m); k++) it.contribuicoes[k] = C.minimoDe(k) || 1;
+    }
+    return it;
+  }
+  // Devolve uma cópia da análise com os vínculos incluídos. Sobreposições não somam em dobro: a contagem é por dia e por competência.
+  function comExtras(base, extras) {
+    if (!extras.length) return base;
+    var copia = Object.assign({}, base);
+    copia.vinculos = base.vinculos.concat(extras.map(function (e, i) { return itemExtra(e, 9001 + i); }));
+    return copia;
+  }
+  function blocoExtras(extras) {
+    var b = C.el('div', 'regras');
+    b.appendChild(C.el('p', null, 'Vínculos incluídos manualmente nesta simulação:'));
+    var ul = C.el('ul', 'lista-simples');
+    extras.forEach(function (e) { ul.appendChild(C.el('li', null, e.nome + ' (' + rotuloTipoExtra(e.tipo) + '): ' + C.rotuloData(e.inicio) + ' a ' + C.rotuloData(e.fim))); });
+    b.appendChild(ul);
+    b.appendChild(C.el('p', null, OBS_EXTRA + ' Períodos que se sobrepõem a outros vínculos são contados uma vez.'));
+    return b;
+  }
+  function editorVinculos(extras, aoMudar) {
+    var box = C.el('div', 'enquadramento vinculos-extra');
+    box.appendChild(C.el('h4', null, 'Vínculos que faltam no CNIS (opcional)'));
+    box.appendChild(C.el('p', 'dica', 'Inclua períodos que não aparecem no extrato. ' + OBS_EXTRA + ' CTC é contada como empregado urbano. Contribuinte individual é considerado recolhido no salário mínimo em todo o período.'));
+    var grade = C.el('div', 'grade-campos');
+    function campo2(rotulo, el) { var l = C.el('label', 'campo'); l.appendChild(C.el('span', null, rotulo)); l.appendChild(el); return l; }
+    var nome = document.createElement('input'); nome.type = 'text'; nome.id = 'vx-nome'; nome.maxLength = 80; nome.autocomplete = 'off';
+    var tipo = document.createElement('select'); tipo.id = 'vx-tipo';
+    TIPOS_EXTRA.forEach(function (t) { var o = document.createElement('option'); o.value = t[0]; o.textContent = t[1]; tipo.appendChild(o); });
+    var ini = document.createElement('input'); ini.type = 'date'; ini.id = 'vx-inicio';
+    var fim = document.createElement('input'); fim.type = 'date'; fim.id = 'vx-fim';
+    grade.appendChild(campo2('Nome', nome)); grade.appendChild(campo2('Tipo', tipo)); grade.appendChild(campo2('Início', ini)); grade.appendChild(campo2('Fim', fim));
+    box.appendChild(grade);
+    var acoes2 = C.el('div', 'acoes');
+    var add = C.el('button', 'btn', 'Adicionar vínculo'); add.type = 'button';
+    acoes2.appendChild(add); box.appendChild(acoes2);
+    var msg = C.el('p', 'msg'); box.appendChild(msg);
+    var lista2 = C.el('div', 'enq-lista'); box.appendChild(lista2);
+    function iso(v) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || ''); return m ? C.dataDe(m[3] + '/' + m[2] + '/' + m[1]) : null; }
+    function desenhar() {
+      lista2.textContent = '';
+      if (!extras.length) return;
+      var ul = C.el('ul', 'lista-simples');
+      extras.forEach(function (e, i) {
+        var li = C.el('li');
+        li.appendChild(document.createTextNode(e.nome + ' (' + rotuloTipoExtra(e.tipo) + '): ' + C.rotuloData(e.inicio) + ' a ' + C.rotuloData(e.fim) + ' '));
+        var rm = C.el('button', 'btn btn-sec', 'Remover'); rm.type = 'button';
+        rm.addEventListener('click', function () { extras.splice(i, 1); desenhar(); aoMudar(); });
+        li.appendChild(rm); ul.appendChild(li);
+      });
+      lista2.appendChild(ul);
+    }
+    add.addEventListener('click', function () {
+      var i = iso(ini.value), f = iso(fim.value);
+      if (!i || !f || f.ord < i.ord) { msg.textContent = 'Informe a data de início e a data de fim (o fim não pode ser anterior ao início).'; return; }
+      if (i.y < 1900 || f.y > 2100) { msg.textContent = 'Data fora do intervalo esperado.'; return; }
+      msg.textContent = '';
+      extras.push({ nome: (nome.value || '').trim().slice(0, 80) || rotuloTipoExtra(tipo.value), tipo: tipo.value, inicio: i, fim: f });
+      nome.value = ''; ini.value = ''; fim.value = '';
+      desenhar(); aoMudar();
+    });
+    return box;
+  }
+
   // Bloco "Verificar direito", logo abaixo do mapa de competências. Usa a análise já feita, sem reenviar o extrato.
-  function montar(saida, analise) {
+  function montar(saida, analiseBase) {
+    var analise = analiseBase;
+    var extras = [];
     var bloco = C.el('div', 'convite-corpo');
     bloco.appendChild(C.el('p', 'dica', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.'));
     var topo = C.el('div', 'grade-campos');
@@ -1068,11 +1153,18 @@
       gt.appendChild(campo('Data de nascimento', entrada('tc-nasc', 'date')));
       gt.appendChild(campo('Data do requerimento (DER)', entrada('tc-der', 'date')));
       gTC.appendChild(gt);
-      gTC.appendChild(root.TEMPO.editor(analise, enq, function () { if (resultado.firstChild) executar(); }));
+      gTC.editorEnq = root.TEMPO.editor(analise, enq, function () { if (resultado.firstChild) executar(); });
+      gTC.appendChild(gTC.editorEnq);
     }
     bloco.appendChild(gTC);
 
-    var comuns = C.el('div', 'marcas');
+    var edVinc = editorVinculos(extras, function () {
+      analise = comExtras(analiseBase, extras);
+      if (gTC.editorEnq && gTC.editorEnq.atualizar) gTC.editorEnq.atualizar(analise);
+      if (resultado.firstChild) executar();
+    });
+    bloco.appendChild(edVinc);
+    var comuns = C.el('div', 'marcas comuns');
     comuns.appendChild(marca('dir-desemprego', 'Seguro-desemprego/SINE'));
     bloco.appendChild(comuns);
 
@@ -1099,6 +1191,11 @@
     var respostas = {}; // respostas às perguntas de carência (complementar, vínculo comprovado)
     api.responder = function (id, v) { respostas[id] = v; executar(); };
     function executar() {
+      analise = comExtras(analiseBase, extras);
+      executarBase();
+      if (extras.length && resultado.firstChild) resultado.insertBefore(blocoExtras(extras), resultado.firstChild);
+    }
+    function executarBase() {
       resultado.textContent = '';
       if (selBen.value === 'pensao-por-morte' && root.PENSAO) {
         var cp = root.PENSAO.lerCampos();
@@ -1156,7 +1253,7 @@
     return sec;
   }
 
-  var api = { linhaBenIncapacidade: linhaBenIncapacidade, linhaRetorno: linhaRetorno, condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { comExtras: comExtras, itemExtra: itemExtra, linhaBenIncapacidade: linhaBenIncapacidade, linhaRetorno: linhaRetorno, condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
