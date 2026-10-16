@@ -93,3 +93,35 @@ console.log('pago no vencimento depois da DER ok');
   assert.equal(p50.ok, true);
 })();
 console.log('pedágio 50% com tempo já cumprido ok');
+
+// Regras do enquadramento por tipo de vínculo
+(function () {
+  const N = '1.111.111.111-1';
+  const txt = [
+    `1 ${N} 11.111.111/0001-11 FÁBRICA Empregado 01/01/1980 31/12/1990`,
+    'Remunerações',
+    `2 ${N} RECOLHIMENTO Contribuinte Individual 01/01/1990 31/12/1999`,
+    `3 ${N} RECOLHIMENTO Facultativo 01/01/2000 31/12/2005`,
+    `4 ${N} Segurado Especial 01/01/1970 31/12/1979`,
+    `5 ${N} 22.222.222/0001-22 FAZENDA SANTA FÉ Empregado 01/01/1988 31/12/1995`
+  ].join('\n');
+  const a = C.analisar(txt, HOJE);
+  const v = (s) => a.vinculos.find((x) => x.seq === s);
+  assert.equal(T.regraEnq(v(1)).max, null);
+  assert.equal(T.regraEnq(v(2)).max, C.ordemDe(1995, 4, 28), 'CI só até 28/04/1995');
+  assert.equal(T.regraEnq(v(3)), null, 'facultativo não admite');
+  assert.equal(T.regraEnq(v(4)), null, 'segurado especial não admite');
+  assert.equal(T.regraEnq(v(5)).min, C.ordemDe(1991, 11, 1), 'empregado rural só a partir de 11/1991');
+  // o contar() também limita
+  const base = { sexo: 'M', nascimento: '1960-01-01', der: '2026-10-01' };
+  const r0 = T.aposentadoriaTempo(a, base, HOJE);
+  const r1 = T.aposentadoriaTempo(a, Object.assign({}, base, { enquadramento: [
+    { seq: 2, inicio: C.dataDe('01/01/1990'), fim: C.dataDe('31/12/1999'), natureza: 'esp25' },
+    { seq: 3, inicio: C.dataDe('01/01/2000'), fim: C.dataDe('31/12/2005'), natureza: 'esp25' }
+  ] }), HOJE);
+  assert.ok(r1.tempo.linhas.join(' ').length > 0);
+  assert.match(r1.avisos.join(' | '), /Seq\. 3: este tipo de vínculo não admite enquadramento/);
+  assert.match(r1.avisos.join(' | '), /Seq\. 2: enquadramento ajustado a 01\/01\/1990 a 28\/04\/1995/);
+  assert.ok(r1.tempo.brutoDer === r0.tempo.brutoDer, 'enquadramento não muda o tempo bruto');
+})();
+console.log('regras do enquadramento ok');

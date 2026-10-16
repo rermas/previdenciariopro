@@ -37,11 +37,40 @@
   function textoMeses(m) { var a = Math.floor(m / 12), r = m % 12; return a + ' anos' + (r ? ' e ' + r + ' meses' : ''); }
   function dur(dias) { return C.formatarDuracao(Math.max(0, Math.round(dias))); }
 
+  // ---------- Regras do enquadramento por tipo de vínculo ----------
+  // Facultativo e segurado especial não admitem enquadramento; contribuinte individual só até 28/04/1995;
+  // empregado rural só a partir de 01/11/1991. Devolve null (não enquadrável) ou os limites {min, max} em ordinal de dia (null = sem limite).
+  var LIM_CI = C.ordemDe(1995, 4, 28), LIM_RURAL = C.ordemDe(1991, 11, 1);
+  function regraEnq(v) {
+    var t = v.tipo || '', ini = v.inicioOrd !== undefined ? v.inicioOrd : (v.inicio && v.inicio.ord), fim = v.fimOrd !== undefined ? v.fimOrd : (v.fimContado && v.fimContado.ord);
+    if (/facultativ/i.test(t) || /especial/i.test(t)) return null;
+    var min = null, max = null, motivo = '';
+    if (/individual|aut[ôo]nomo/i.test(t)) { max = LIM_CI; motivo = 'contribuinte individual só até 28/04/1995'; }
+    else if (C.ehRural(v)) { min = LIM_RURAL; motivo = 'empregado rural só a partir de 01/11/1991'; }
+    if (max !== null && ini > max) return null;
+    if (min !== null && fim < min) return null;
+    return { min: min, max: max, motivo: motivo };
+  }
+
   // ---------- Contagem por dia, com o enquadramento ----------
   function contar(analise, entrada, der) {
     var mm = I.montarMeses(analise, entrada, der, { modalidade: 'urbana', modo: 'tc', indenizaEspecial: entrada.indenizaEspecial === true });
     var sexo = entrada.sexo === 'M' ? 'M' : 'F';
     var enq = (entrada.enquadramento || []).filter(function (e) { return e && e.inicio && e.fim && NAT[e.natureza]; });
+    var ajustes = [];
+    enq = enq.map(function (e) {
+      if (!e.seq) return e;
+      var v = analise.vinculos.filter(function (x) { return x.seq === e.seq; })[0];
+      if (!v || !v.valido) return e;
+      var rg = regraEnq(v);
+      if (!rg) { ajustes.push('Seq. ' + e.seq + ': este tipo de vínculo não admite enquadramento; o período foi tratado como comum.'); return null; }
+      var i = e.inicio, f = e.fim, mudou = false;
+      if (rg.min !== null && i.ord < rg.min) { i = C.dataDeOrd(rg.min); mudou = true; }
+      if (rg.max !== null && f.ord > rg.max) { f = C.dataDeOrd(rg.max); mudou = true; }
+      if (f.ord < i.ord) { ajustes.push('Seq. ' + e.seq + ': enquadramento fora do limite permitido (' + rg.motivo + '); tratado como comum.'); return null; }
+      if (mudou) ajustes.push('Seq. ' + e.seq + ': enquadramento ajustado a ' + rot(i) + ' a ' + rot(f) + ' (' + rg.motivo + ').');
+      return { seq: e.seq, inicio: i, fim: f, natureza: e.natureza, nota: e.nota };
+    }).filter(Boolean);
     var porSeq = {};
     enq.forEach(function (e) { if (e.seq) (porSeq[e.seq] = porSeq[e.seq] || []).push(e); });
     var dias = {};  // ordinal do dia -> peso da natureza (maior prevalece), -1 = desconsiderar
@@ -86,7 +115,7 @@
     }
     var fatores = FATOR[sexo];
     return {
-      mm: mm, tot: tot, ate: ate, fatores: fatores,
+      mm: mm, tot: tot, ate: ate, fatores: fatores, ajustes: ajustes,
       brutoDer: bruto(tot), brutoEC: bruto(ate),
       convDer: convParcial(tot, ate), convEC: conv(ate),
       temEspecial: tot.esp25 + tot.esp20 + tot.esp15 > 0
@@ -191,6 +220,7 @@
     var adquirido = ct.convEC >= req;
     var avisos = [];
     if (filiadoAteEC === false) avisos.push('O primeiro vínculo é posterior a 13/11/2019: as regras de transição não se aplicam. Para esses segurados só há a aposentadoria programada por idade.');
+    (ct.ajustes || []).forEach(function (x) { avisos.push('Enquadramento: ' + x); });
     if (adquirido) avisos.push('Em 13/11/2019 já havia **' + dur(ct.convEC) + '** de tempo, mais que o mínimo de ' + (sexo === 'F' ? 30 : 35) + ' anos: pode haver direito adquirido à regra anterior à EC 103, sem idade mínima e com fator previdenciário. Verifique também a data em que o mínimo foi atingido.');
     res.avisos = avisos;
     res.avaliacoes = avaliacoes;
@@ -285,16 +315,19 @@
   function editor(analise, enq, aoMudar) {
     var box = C.el('div', 'enquadramento');
     box.appendChild(C.el('h4', null, 'Enquadramento do tempo (opcional)'));
-    box.appendChild(C.el('p', 'dica', 'O CNIS não diz se o trabalho foi especial. Marque aqui os períodos especiais, indenizados ou fora do CNIS. Isso fica só neste navegador; você pode salvar em arquivo para retomar depois.'));
+    box.appendChild(C.el('p', 'dica', 'O CNIS não diz se o trabalho foi especial. Marque aqui os períodos especiais, indenizados ou fora do CNIS. Não entram na lista: segurado especial e facultativo. Contribuinte individual só até 28/04/1995 e empregado rural só a partir de 01/11/1991. Isso fica só neste navegador; você pode salvar em arquivo para retomar depois.'));
     var grade = C.el('div', 'grade-campos');
     function campo(rotulo, el) { var l = C.el('label', 'campo'); l.appendChild(C.el('span', null, rotulo)); l.appendChild(el); return l; }
     var selV = document.createElement('select'); selV.id = 'enq-vinculo';
     var o0 = document.createElement('option'); o0.value = '0'; o0.textContent = 'Período fora do CNIS'; selV.appendChild(o0);
     analise.vinculos.forEach(function (v) {
       if (!v.valido) return;
+      var rg = regraEnq(v);
+      if (!rg) return;
+      var di = rg.min !== null ? Math.max(v.inicio.ord, rg.min) : v.inicio.ord, df = rg.max !== null ? Math.min(v.fimContado.ord, rg.max) : v.fimContado.ord;
       var o = document.createElement('option'); o.value = String(v.seq);
-      o.textContent = 'Seq. ' + v.seq + ' – ' + (v.nome || v.tipo || 'vínculo') + ' (' + rot(v.inicio) + ' a ' + rot(v.fimContado) + ')';
-      o.dataset.ini = rot(v.inicio); o.dataset.fim = rot(v.fimContado);
+      o.textContent = 'Seq. ' + v.seq + ' – ' + (v.nome || v.tipo || 'vínculo') + ' (' + rot(C.dataDeOrd(di)) + ' a ' + rot(C.dataDeOrd(df)) + ')' + (rg.motivo ? ' – ' + rg.motivo : '');
+      o.dataset.ini = rot(C.dataDeOrd(di)); o.dataset.fim = rot(C.dataDeOrd(df));
       selV.appendChild(o);
     });
     var selN = document.createElement('select'); selN.id = 'enq-natureza';
@@ -331,7 +364,13 @@
       var i = ordDe(ini.value), f = ordDe(fim.value);
       if (!i || !f || f.ord < i.ord) { msg.textContent = 'Informe um período válido (início até o fim).'; return; }
       msg.textContent = '';
-      enq.push({ seq: +selV.value || 0, inicio: i, fim: f, natureza: selN.value, nota: '' });
+      var sq = +selV.value || 0, vv = analise.vinculos.filter(function (x) { return x.seq === sq; })[0], rg = vv ? regraEnq(vv) : null;
+      if (sq && rg) {
+        if (rg.min !== null && i.ord < rg.min) { i = C.dataDeOrd(rg.min); msg.textContent = 'Início ajustado para ' + rot(i) + ' (' + rg.motivo + ').'; }
+        if (rg.max !== null && f.ord > rg.max) { f = C.dataDeOrd(rg.max); msg.textContent = 'Fim ajustado para ' + rot(f) + ' (' + rg.motivo + ').'; }
+        if (f.ord < i.ord) { msg.textContent = 'Período fora do limite permitido (' + rg.motivo + ').'; return; }
+      }
+      enq.push({ seq: sq, inicio: i, fim: f, natureza: selN.value, nota: '' });
       desenhar(); aoMudar();
     });
     salvar.addEventListener('click', function () {
@@ -358,7 +397,7 @@
     return { sexo: g('tc-sexo').value, nascimento: g('tc-nasc').value, der: g('tc-der').value };
   }
 
-  var api = { aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
+  var api = { regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.TEMPO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
