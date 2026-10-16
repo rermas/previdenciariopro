@@ -244,3 +244,18 @@ console.log('aposentadoria do professor ok');
   assert.equal(r.avaliacao.ok, true);
 })();
 console.log('aposentadoria PcD ok');
+
+// ===== Comparador de regras =====
+(function () {
+  const D = C.dataDe;
+  const an = C.analisar(vinculo([1992, 1], [2025, 12], '31/12/2025').replace('EMPRESA', 'ESCOLA ESTADUAL X'), HOJE);
+  const cmp = T.comparar(an, { sexo: 'F', nascimento: '1966-03-10', der: '2026-02-02', enquadramento: [], professor: [1], pcd: [{ grau: 'leve', inicio: D('01/01/2000'), fim: null }] }, HOJE);
+  const g = (nome) => cmp.linhas.filter((l) => l.grupo === nome);
+  assert.ok(g('Idade').length === 1 && g('Tempo de contribuição').length === 4 && g('Professor').length === 6 && g('Pessoa com deficiência').length === 2);
+  assert.ok(cmp.avisoEspecial, 'sem enquadramento especial');
+  assert.equal(g('Tempo de contribuição').find((l) => /pontos/i.test(l.regra)).ok, true);
+  assert.ok(cmp.linhas.every((l) => l.sit));
+  // sem dados
+  assert.equal(T.comparar(an, { sexo: 'F' }, HOJE).semDados, true);
+})();
+console.log('comparador ok');

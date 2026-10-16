@@ -1170,6 +1170,9 @@
       gTC.appendChild(gTC.editorProf);
     }
     bloco.appendChild(gTC);
+    var botaoCmp = C.el('button', 'btn btn-leve', 'Comparar todas as aposentadorias'); botaoCmp.type = 'button'; botaoCmp.id = 'dir-comparar';
+    botaoCmp.title = 'Roda todas as regras com o sexo, o nascimento, a DER, o enquadramento, os vínculos de professor e os períodos de deficiência informados.';
+    gTC.appendChild(botaoCmp);
 
     var edVinc = editorVinculos(extras, function () {
       analise = comExtras(analiseBase, extras);
@@ -1246,6 +1249,13 @@
       resultado.appendChild(renderizar(salarioMaternidade(analise, campos, hojeAgora())));
     }
     botao.addEventListener('click', executar);
+    botaoCmp.addEventListener('click', function () {
+      analise = comExtras(analiseBase, extras);
+      resultado.textContent = '';
+      var cc = Object.assign(root.TEMPO.lerCampos(), respostas, { enquadramento: enq, professor: prof.slice(), pcd: pcd.slice() });
+      resultado.appendChild(root.TEMPO.renderizarComparador(root.TEMPO.comparar(analise, cc, hojeAgora())));
+      if (extras.length) resultado.insertBefore(blocoExtras(extras), resultado.firstChild);
+    });
     // Cartão recolhido: quem só quer analisar o CNIS não é obrigado a ver o formulário
     var sec = C.el('section', 'bloco convite');
     sec.id = 'cnis-direito';

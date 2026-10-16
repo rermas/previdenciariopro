@@ -141,8 +141,8 @@
       r('Tempo de contribuição', tcDias >= req, dur(tcDias), (sexo === 'F' ? 30 : 35) + ' anos');
       r('Idade mínima progressiva', idadeM >= im, textoMeses(Math.max(0, idadeM)), textoMeses(im) + ' em ' + ano);
     } else if (regra === 'pedagio50') {
-      var elegivel = ctx.tcEC >= req - 2 * 365;
-      r('Faltavam até 2 anos para o tempo mínimo em 13/11/2019', elegivel, dur(ctx.tcEC) + ' em 13/11/2019', ctx.tcEC >= req ? 'Nada faltava: o tempo mínimo (' + (sexo === 'F' ? 30 : 35) + ' anos) já estava cumprido em 13/11/2019 (pedágio zero); veja também o direito adquirido' : (sexo === 'F' ? 28 : 33) + ' anos a menos de ' + (sexo === 'F' ? 30 : 35));
+      var elegivel = ctx.tcEC > req - 2 * 365;
+      r('Mais de ' + (sexo === 'F' ? 28 : 33) + ' anos de contribuição em 13/11/2019 (faltavam menos de 2 anos)', elegivel, dur(ctx.tcEC) + ' em 13/11/2019', ctx.tcEC >= req ? 'Nada faltava: o tempo mínimo (' + (sexo === 'F' ? 30 : 35) + ' anos) já estava cumprido em 13/11/2019 (pedágio zero); veja também o direito adquirido' : 'mais de ' + (sexo === 'F' ? 28 : 33) + ' anos');
       var exigido = req + falta * 0.5;
       r('Tempo de contribuição com pedágio de 50%', tcDias >= exigido, dur(tcDias), dur(exigido) + (ctx.tcEC >= req ? ' (pedágio zero: já tinha o tempo mínimo em 13/11/2019)' : ' (pedágio de ' + dur(falta * 0.5) + ')'));
     } else if (regra === 'pedagio100') {
@@ -157,7 +157,7 @@
   var REGRAS = [
     { id: 'pontos', nome: 'Regra dos pontos', norma: 'art. 15 da EC 103/2019', desc: 'Tempo mínimo de 30 anos (mulher) ou 35 (homem) e soma de idade e tempo de contribuição, que sobe 1 ponto por ano.' },
     { id: 'idade', nome: 'Idade mínima progressiva', norma: 'art. 16 da EC 103/2019', desc: 'Tempo mínimo de 30/35 anos e idade mínima que sobe 6 meses por ano (mulher até 62, homem até 65).' },
-    { id: 'pedagio50', nome: 'Pedágio de 50%', norma: 'art. 17 da EC 103/2019', desc: 'Para quem em 13/11/2019 estava a até 2 anos do tempo mínimo: cumprir o tempo mínimo mais 50% do que faltava, sem idade mínima.' },
+    { id: 'pedagio50', nome: 'Pedágio de 50%', norma: 'art. 17 da EC 103/2019', desc: 'Para quem em 13/11/2019 tinha mais de 28 anos (mulher) ou 33 (homem) de contribuição: cumprir o tempo mínimo mais 50% do que faltava, sem idade mínima.' },
     { id: 'pedagio100', nome: 'Pedágio de 100%', norma: 'art. 20 da EC 103/2019', desc: 'Idade mínima de 57 (mulher) ou 60 (homem) e o tempo mínimo mais 100% do que faltava em 13/11/2019.' }
   ];
 
@@ -799,6 +799,68 @@
     return box;
   }
 
+  // ---------- Comparador de regras ----------
+  // Roda todas as aposentadorias avaliáveis com os dados informados e devolve uma linha por regra.
+  function comparar(analise, entrada, hoje) {
+    var der = lerData(entrada.der), nasc = lerData(entrada.nascimento);
+    var out = { fato: { data: der }, linhas: [], semDados: !der || !nasc };
+    if (out.semDados) return out;
+    function status(ok, aplica, quando, extra) {
+      if (!aplica) return { sit: 'Não se aplica', ok: false, quando: null };
+      if (ok) return { sit: 'Cumprida na DER', ok: true, quando: der };
+      return { sit: 'Não cumprida na DER', ok: false, quando: quando || null };
+    }
+    function add(grupo, regra, st, obs) { out.linhas.push({ grupo: grupo, regra: regra, sit: st.sit, ok: st.ok, quando: st.quando, obs: obs || '' }); }
+    // Idade urbana
+    if (I && I.aposentadoriaIdade) {
+      var ri = I.aposentadoriaIdade(analise, { modalidade: 'urbana', sexo: entrada.sexo, nascimento: entrada.nascimento, der: entrada.der, compEmp: entrada.compEmp, compCI: entrada.compCI }, hoje);
+      if (ri.conclusao && ri.conclusao.status !== 'incompleta') {
+        var okI = ri.conclusao.status === 'provavel';
+        var dtI = ri.idade && ri.idade.dataCumprimento && ri.idade.dataCumprimento.ord > der.ord ? ri.idade.dataCumprimento : null;
+        add('Idade', 'Aposentadoria por idade urbana (programada)', status(okI, true, dtI), okI ? '' : (dtI ? 'Idade mínima só em ' + rot(dtI) + '; confira também carência e tempo.' : ri.conclusao.rotulo));
+      }
+    }
+    // Tempo de contribuição (transição)
+    var rt = aposentadoriaTempo(analise, entrada, hoje);
+    if (rt.avaliacoes) rt.avaliacoes.forEach(function (a) { add('Tempo de contribuição', a.regra.nome + ' (' + a.regra.norma + ')', status(a.ok, a.aplicavel, a.quando), a.aplicavel ? '' : 'Primeiro vínculo posterior a 13/11/2019'); });
+    // Especial
+    var ent2 = Object.assign({}, entrada);
+    var re = aposentadoriaEspecial(analise, ent2, hoje);
+    (re.blocos || []).forEach(function (b) { b.regras.forEach(function (a) { add('Especial', a.regra.nome + ' - ' + b.esp.n + ' anos (' + a.regra.norma + ')', status(a.ok, a.aplicavel, a.quando)); }); });
+    if (!(re.blocos || []).length) out.avisoEspecial = 'Nenhum período especial enquadrado: a aposentadoria especial não foi comparada.';
+    // Professor
+    if ((entrada.professor || []).length) {
+      var rp = aposentadoriaProfessor(analise, entrada, hoje);
+      (rp.avaliacoes || []).forEach(function (a) { add('Professor', a.regra.nome + ' (' + a.regra.norma + ')', status(a.ok, a.aplicavel, a.quando)); });
+    } else out.avisoProfessor = 'Nenhum vínculo de professor marcado: a aposentadoria do professor não foi comparada.';
+    // PcD
+    if ((entrada.pcd || []).length) {
+      ['tempo', 'idade'].forEach(function (m) {
+        var rc = aposentadoriaPcd(analise, entrada, hoje, m);
+        if (rc.avaliacao) add('Pessoa com deficiência', 'Por ' + (m === 'tempo' ? 'tempo de contribuição' : 'idade') + ' (IN 128, ' + (m === 'tempo' ? 'art. 314' : 'art. 311') + ')', status(rc.avaliacao.ok, true, rc.avaliacao.quando));
+      });
+    } else out.avisoPcd = 'Nenhum período de deficiência informado: as aposentadorias da pessoa com deficiência não foram comparadas.';
+    var datas = out.linhas.filter(function (l) { return l.quando; }).sort(function (x, y) { return x.quando.ord - y.quando.ord; });
+    out.primeira = datas.length ? datas[0] : null;
+    return out;
+  }
+  function renderizarComparador(r) {
+    var topo = C.el('div', 'direito');
+    topo.appendChild(C.el('h3', null, 'Comparação das aposentadorias'));
+    topo.appendChild(C.el('p', 'dica', 'Compara os requisitos de cada regra com os dados informados (CNIS, enquadramento, vínculos de professor e períodos de deficiência). Não calcula o valor do benefício: o valor depende das remunerações corrigidas desde 07/1994 e deve ser conferido regra a regra.'));
+    if (r.semDados) { topo.appendChild(C.el('p', 'msg', 'Informe sexo, data de nascimento e a data do requerimento (DER).')); return topo; }
+    var cum = r.linhas.filter(function (l) { return l.ok; });
+    var caixa = C.el('div', 'conclusao conclusao-' + (cum.length ? 'provavel' : 'nao_demonstrado'));
+    caixa.appendChild(C.el('strong', null, cum.length ? cum.length + ' regra(s) cumprida(s) na DER (' + rot(r.fato.data) + ')' : 'Nenhuma regra cumprida na DER (' + rot(r.fato.data) + ')'));
+    if (!cum.length && r.primeira) caixa.appendChild(C.el('p', null, 'Mantidas as condições, a primeira regra a ser cumprida seria "' + r.primeira.regra + '", em ' + rot(r.primeira.quando) + '.'));
+    topo.appendChild(caixa);
+    var avs = [r.avisoEspecial, r.avisoProfessor, r.avisoPcd].filter(Boolean);
+    if (avs.length) topo.appendChild(lista(avs));
+    topo.appendChild(C.tabela(['Aposentadoria', 'Regra', 'Situação na DER', 'Cumprida em', 'Observação'], r.linhas.map(function (l) { return [l.grupo, l.regra, l.sit, l.quando ? (l.ok ? 'Já na DER' : rot(l.quando)) : '-', l.obs || '']; })));
+    topo.appendChild(C.el('p', 'dica', 'A data prevista supõe que o segurado continue contribuindo (e, nas regras especial, de professor e da pessoa com deficiência, mantenha a mesma atividade ou condição). Direito adquirido anterior à EC 103/2019 (tempo até 16/12/1998 e até 13/11/2019) ainda não está neste comparativo.'));
+    return topo;
+  }
+
   // ---------- Tela ----------
   function lista(itens) { return D.util.lista(itens); }
   function renderizar(r) {
@@ -956,7 +1018,7 @@
     return { sexo: g('tc-sexo').value, nascimento: g('tc-nasc').value, der: g('tc-der').value };
   }
 
-  var api = { aposentadoriaPcd: aposentadoriaPcd, editorPcd: editorPcd, avaliaPcdTempo: avaliaPcdTempo, tempoPcd: tempoPcd, aposentadoriaProfessor: aposentadoriaProfessor, editorProfessor: editorProfessor, sugereProfessor: sugereProfessor, aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
+  var api = { comparar: comparar, renderizarComparador: renderizarComparador, aposentadoriaPcd: aposentadoriaPcd, editorPcd: editorPcd, avaliaPcdTempo: avaliaPcdTempo, tempoPcd: tempoPcd, aposentadoriaProfessor: aposentadoriaProfessor, editorProfessor: editorProfessor, sugereProfessor: sugereProfessor, aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.TEMPO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -116,7 +116,7 @@ assert.deepEqual(r.faltantes.map(f => f.seq), [3, 2, 5], 'faltantes também em o
 const s = r.resumo;
 assert.equal(s.diasBrutos, 1294);
 assert.equal(s.diasUnicos, 1263, 'desconta os 31 dias de agosto/2010 em comum entre os vínculos 2 e 4');
-assert.equal(s.duracao, '3 anos, 5 meses e 18 dias');
+assert.equal(s.duracaoVinculos, '3 anos, 5 meses e 18 dias'); assert.equal(s.duracao, require('../assets/cnis.js').formatarDuracao(s.diasUnicos + s.diasBenInc), 'o tempo contado inclui o benefício intercalado');
 assert.equal(s.competencias, 34, '6 + 16 + 7 + 2 + 3, sem repetir agosto/2010');
 assert.equal(s.mesesSemRemuneracao, 5);
 assert.equal(s.mesesAnteriores94, 3);
@@ -151,7 +151,7 @@ assert.equal(r.mapa[CNIS.mesDe(2010, 8)], 'ok', 'agosto/2010 tem remuneração n
 assert.equal(r.mapa[CNIS.mesDe(2020, 5)], 'beninc-e', 'maio/2020: mês de saída do auxílio por incapacidade (15/04 a 20/05), antes marcado como falta');
 
 const txt = CNIS.resumoEmTexto(r);
-assert.match(txt, /Tempo contado: 3 anos, 5 meses e 18 dias/);
+assert.match(txt, /Tempo contado: 3 anos, 5 meses e 23 dias/); assert.match(txt, /Só vínculos: 3 anos, 5 meses e 18 dias/);
 assert.ok(txt.indexOf('Seq. 1 -') < txt.indexOf('Seq. 3 -') && txt.indexOf('Seq. 3 -') < txt.indexOf('Seq. 2 -'), 'resumo em ordem cronológica');
 
 // ---------- Mês coberto por dois vínculos, com remuneração em só um deles ----------

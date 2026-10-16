@@ -178,3 +178,9 @@ Em "Verificar direito" > "Aposentadoria do professor (educação básica)" (IN P
 ## Aposentadoria da pessoa com deficiência
 
 Duas opções em "Verificar direito" (LC 142/2013; IN PRES/INSS 128, arts. 303 a 315): **por tempo de contribuição** (20/24/28 anos mulher e 25/29/33 homem, para deficiência grave/moderada/leve) e **por idade** (55/60 anos e 15 anos de contribuição como pessoa com deficiência). O CNIS não informa a deficiência: a pessoa informa os períodos (grau, início do impedimento, fim opcional). O tempo como pessoa com deficiência é o contribuído por dia dentro desses períodos (sem contar o concomitante duas vezes); havendo alternância de graus ou de tempo com e sem deficiência, converte-se para o grau preponderante pela tabela do Anexo XVIII (fatores citados de memória em `CONV_PCD`, em `assets/tempo.js`: confira). Não aplica a conversão do tempo especial (Anexo XIX). Exige deficiência na DER.
+
+## Comparador de regras e conferência das tabelas
+
+- **"Comparar todas as aposentadorias"** (botão no bloco de dados da aposentadoria): roda de uma vez idade urbana, as 4 regras de transição por tempo, a especial (se houver período enquadrado), a do professor (se houver vínculos marcados) e as da pessoa com deficiência (se houver períodos), e mostra uma tabela com a situação na DER e a data em que cada regra seria cumprida. Não calcula valor.
+- **Tempo contado no resumo** agora inclui o benefício por incapacidade intercalado com atividade (Lei 8.213, art. 55, II); o resumo mostra também o tempo só dos vínculos (`resumo.duracaoVinculos`).
+- **Conferidos com o texto oficial** (outubro/2026): fatores de conversão do tempo especial (Decreto 3.048, art. 70), tabela de conversão da pessoa com deficiência (Decreto 3.048, art. 70-E), tabela do art. 142 da Lei 8.213, pontos e idades dos arts. 15, 16, 17, 19, 20 e 21 da EC 103 e percentuais do art. 26. Ajuste: o pedágio de 50% exige **mais de** 28 (mulher) ou 33 (homem) anos em 13/11/2019.
