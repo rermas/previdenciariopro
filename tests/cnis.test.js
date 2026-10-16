@@ -122,7 +122,7 @@ assert.equal(s.mesesSemRemuneracao, 5);
 assert.equal(s.mesesAnteriores94, 3);
 assert.equal(s.erros, 0);
 assert.equal(s.atencoes, 3, 'PREM-EXT, PREC-MENOR-MIN e PEXT');
-assert.equal(s.infos, 5, 'AVRC-DEF, competência repetida, vínculo em aberto, concomitância e lacunas longas');
+assert.equal(s.infos, 6, 'AVRC-DEF, competência repetida, vínculo em aberto, concomitância, lacunas longas e benefício por incapacidade intercalado');
 
 const msgs = r.pendencias.map(p => p.msg).join(' | ');
 assert.match(msgs, /PREM-EXT: remuneração informada fora do prazo em 1 competência\(s\): 06\/2000/);
@@ -132,7 +132,7 @@ assert.match(msgs, /AVRC-DEF: acerto confirmado pelo INSS/);
 assert.match(msgs, /Competência com mais de uma remuneração \(valores somados\): 06\/2000/);
 assert.match(msgs, /contado até 31\/08\/2023/);
 assert.match(msgs, /Período concomitante com Seq\. 4 \(31 dias\)/);
-assert.deepEqual(r.pendencias.map(p => p.sev), ['atencao', 'atencao', 'atencao', 'info', 'info', 'info', 'info', 'info'], 'atenção antes de nota');
+assert.deepEqual(r.pendencias.map(p => p.sev), ['atencao', 'atencao', 'atencao', 'info', 'info', 'info', 'info', 'info', 'info'], 'atenção antes de nota');
 assert.match(r.pendencias[0].ref, /Seq\. 3/, 'dentro do grupo, ordem cronológica');
 
 assert.equal(r.beneficios.length, 2);
@@ -421,6 +421,22 @@ console.log('abaixo do mínimo fora do tempo ok');
   assert.match(r3.pendencias.map((p) => p.msg).join(' | '), /Empregado rural a partir de 01\/11\/1991 conta normalmente/);
 })();
 console.log('segurado especial sem fim ok');
+
+// ---------- Benefício por incapacidade intercalado: mostrado à parte ----------
+(function () {
+  const N = '1.111.111.111-1';
+  const txt = [
+    `1 ${N} 11.111.111/0001-11 EMPRESA A Empregado 01/01/2000 31/12/2000`,
+    `2 ${N} 1234567890 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO 01/01/2001 31/03/2001 2 - CESSADO`,
+    `3 ${N} 22.222.222/0001-22 EMPRESA B Empregado 01/04/2001 31/12/2001`
+  ].join('\n');
+  const r = CNIS.analisar(txt, { y: 2026, m: 10, d: 16 });
+  assert.equal(r.resumo.diasUnicos, 366 + 275);
+  assert.equal(r.resumo.diasBenInc, 31 + 28 + 31, 'benefício intercalado soma à parte');
+  const r2 = CNIS.analisar(`1 ${N} 11.111.111/0001-11 EMPRESA A Empregado 01/01/2000 31/12/2000\n2 ${N} 1234567890 Benefício 31 - AUXILIO DOENCA PREVIDENCIARIO 01/01/2001 31/03/2001 2 - CESSADO`, { y: 2026, m: 10, d: 16 });
+  assert.equal(r2.resumo.diasBenInc, 0, 'sem atividade depois, não é intercalado');
+})();
+console.log('benefício intercalado ok');
 
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);

@@ -962,6 +962,35 @@
     if (cI !== null) diasUnicos += cF - cI + 1;
     var diasBrutos = validos.reduce(function (t, v) { return t + v.dias; }, 0);
 
+    // Benefício por incapacidade intercalado com períodos de atividade conta como tempo de contribuição (art. 55, II, da Lei 8.213/91).
+    // Não entra no "Tempo contado" acima: mostra-se à parte quanto ele soma, fora do que os vínculos já cobrem.
+    var diasBenInc = 0;
+    (function () {
+      var uni = [];
+      segs.forEach(function (sg) {
+        if (uni.length && sg[0] <= uni[uni.length - 1][1] + 1) uni[uni.length - 1][1] = Math.max(uni[uni.length - 1][1], sg[1]);
+        else uni.push([sg[0], sg[1]]);
+      });
+      var bi = [];
+      lido.beneficios.forEach(function (b) {
+        if (!b.inicio || !b.fim || b.datasBrutas.length === 0 || /indeferid/i.test(b.nome || '')) return;
+        if (!/AUX[IÍ]LIO[ -]DOEN|INCAPACIDADE\s+TEMPOR/i.test(b.nome || '') || /AUX[IÍ]LIO[ -]ACIDENTE/i.test(b.nome || '')) return;
+        var antes = uni.some(function (u) { return u[1] < b.inicio.ord; }), depois = uni.some(function (u) { return u[0] > b.fim.ord; });
+        if (antes && depois) bi.push([b.inicio.ord, b.fim.ord]);
+      });
+      bi.sort(function (x, y) { return x[0] - y[0]; });
+      var mb = [];
+      bi.forEach(function (x) { if (mb.length && x[0] <= mb[mb.length - 1][1] + 1) mb[mb.length - 1][1] = Math.max(mb[mb.length - 1][1], x[1]); else mb.push([x[0], x[1]]); });
+      mb.forEach(function (x) {
+        var d = x[1] - x[0] + 1;
+        uni.forEach(function (u) { var i = Math.max(x[0], u[0]), f = Math.min(x[1], u[1]); if (f >= i) d -= f - i + 1; });
+        diasBenInc += Math.max(0, d);
+      });
+    })();
+    if (diasBenInc > 0) {
+      nova('info', '', 'Benefício por incapacidade (auxílio por incapacidade temporária) intercalado com atividade soma mais ' + formatarDuracao(diasBenInc) + ' (' + diasBenInc + ' dias) fora dos vínculos. Esse período não entra no "Tempo contado" acima, mas conta como tempo de contribuição na aposentadoria por tempo (a simulação já o considera, chegando a ' + formatarDuracao(diasUnicos + diasBenInc) + '). Como carência, depende do benefício e da data do requerimento.');
+    }
+
     var carencia = null;
     if (!semLeitura) {
       var antes94 = {};
@@ -1092,6 +1121,7 @@
         validos: validos.length,
         competencias: Object.keys(ok).length,
         diasUnicos: diasUnicos,
+        diasBenInc: diasBenInc,
         diasBrutos: diasBrutos,
         duracao: formatarDuracao(diasUnicos),
         mesesSemRemuneracao: mesesSem,
@@ -1117,6 +1147,7 @@
     var s = r.resumo, l = [];
     l.push('Análise do CNIS (pontos de atenção para conferência, não é parecer)');
     l.push('Vínculos: ' + s.totalVinculos + ' | Tempo contado: ' + s.duracao + ' (' + s.diasUnicos + ' dias)');
+    if (s.diasBenInc) l.push('Com benefício por incapacidade intercalado: ' + formatarDuracao(s.diasUnicos + s.diasBenInc) + ' (' + (s.diasUnicos + s.diasBenInc) + ' dias), conforme a simulação de aposentadoria por tempo');
     l.push('Competências com remuneração: ' + s.competencias + ' | Meses sem remuneração: ' + s.mesesSemRemuneracao);
     if (r.vinculos.length) {
       l.push('', 'Vínculos em ordem de início:');
@@ -1262,7 +1293,7 @@
 
     var figs = el('dl', 'figuras');
     [
-      [s.duracao, 'Tempo contado (' + s.diasUnicos + ' dias)'],
+      [s.duracao, 'Tempo contado (' + s.diasUnicos + ' dias)' + (s.diasBenInc ? '. Com benefício por incapacidade intercalado: ' + formatarDuracao(s.diasUnicos + s.diasBenInc) : '')],
       [s.semRemuneracoes ? '-' : String(s.competencias), 'Competências com remuneração'],
       [s.semRemuneracoes ? '-' : String(s.mesesSemRemuneracao), 'Meses sem remuneração nos vínculos'],
       [String(s.erros + s.atencoes), 'Pontos de atenção']
