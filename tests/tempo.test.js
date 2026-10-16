@@ -186,3 +186,30 @@ console.log('vínculos incluídos manualmente ok');
   assert.ok(r.valor.linhas.length && r.documentos.length);
 })();
 console.log('aposentadoria especial ok');
+
+// ===== Aposentadoria do professor (IN 128, arts. 250 a 254) =====
+(function () {
+  const lin = (n, nome, ini, ate, fim) => vinculo(ini, ate, fim, null, n).replace('EMPRESA', nome);
+  const txt = lin(1, 'ESCOLA MUNICIPAL ABC', [1995, 1], [2019, 10], '31/10/2019') + '\n' + lin(2, 'LOJA XYZ LTDA', [2019, 11], [2025, 12], '31/12/2025');
+  const an = C.analisar(txt, HOJE);
+  assert.equal(T.sugereProfessor(an.vinculos[0]), true); assert.equal(T.sugereProfessor(an.vinculos[1]), false);
+  const pf = (sel, ent) => T.aposentadoriaProfessor(an, Object.assign({ professor: sel }, ent), HOJE);
+  // Mulher, 24a10m de magistério até 2019: não completa 25 anos em 13/11/2019; em 2026 tem os 25 anos e 56 anos de idade
+  let r = pf([1], { sexo: 'F', nascimento: '1970-01-01', der: '2026-10-01' });
+  const a = (id) => r.avaliacoes.find((x) => x.regra.id === id);
+  assert.equal(a('adquirido').ok, false);
+  assert.equal(a('permanente').aplicavel, false);
+  assert.equal(r.tempo.tEC, 9070); // 01/01/1995 a 31/10/2019
+  // Sem vínculos marcados
+  r = pf([], { sexo: 'F', nascimento: '1970-01-01', der: '2026-10-01' });
+  assert.equal(r.conclusao.status, 'incompleta');
+  // Só o vínculo de professor conta: o outro não entra no tempo de magistério
+  r = pf([1], { sexo: 'M', nascimento: '1965-01-01', der: '2026-10-01' });
+  assert.equal(r.tempo.tDer, 9070);
+  // Direito adquirido: 31 anos de magistério até 2019 (homem)
+  const an2 = C.analisar(lin(1, 'COLEGIO X', [1985, 1], [2019, 10], '31/10/2019'), HOJE);
+  r = T.aposentadoriaProfessor(an2, { professor: [1], sexo: 'M', nascimento: '1962-01-01', der: '2026-10-01' }, HOJE);
+  assert.equal(r.avaliacoes.find((x) => x.regra.id === 'adquirido').ok, true);
+  assert.equal(r.conclusao.status, 'provavel');
+})();
+console.log('aposentadoria do professor ok');

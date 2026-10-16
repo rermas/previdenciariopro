@@ -408,10 +408,204 @@
     return topo;
   }
 
+  // ---------- Aposentadoria do professor (IN PRES/INSS 128, arts. 250 a 254) ----------
+  var NORMAS_PROF = [
+    { nome: 'EC 103/2019, arts. 19, § 1º, II, 15, § 3º, 16, parágrafo único e 20, § 1º; Constituição, art. 201, § 8º', vigencia: 'Professor da educação infantil, do ensino fundamental e do ensino médio, com tempo exclusivamente de efetivo exercício de magistério. Confira o texto compilado.' },
+    { nome: 'IN PRES/INSS 128/2022, arts. 250 a 254 (com alterações posteriores)', vigencia: 'Art. 250: filiados a partir de 14/11/2019. Art. 251: direito adquirido até 13/11/2019. Arts. 252 a 254: regras de transição (pontos, idade progressiva e pedágio de 100%). Confira o texto vigente.' },
+    { nome: 'Lei 8.213/91, art. 25, II', vigencia: 'Carência de 180 contribuições (tabela do art. 142 para quem se filiou até 24/07/1991).' },
+    { nome: 'IN PRES/INSS 128/2022, art. 233, IV e VI (cálculo)', vigencia: 'O valor segue o inciso VI (art. 250), a alínea "a" do inciso IV (art. 251), a alínea "c" (arts. 252 e 253) e a alínea "e" (art. 254). O valor não é calculado nesta versão.' }
+  ];
+  // Sugestão automática de vínculos de magistério pelo nome do empregador (educação básica).
+  var RX_PROF = /col[eé]gio|escola|munic[ií]pio|prefeitura|\bestado\b|secretaria|educa[cç]|ensino|creche|\bcei\b|\bemei\b|\bemef\b|\bseduc\b|instituto de educa|funda[cç][aã]o educ|cooperativa educ/i;
+  function sugereProfessor(v) { return !!(v && v.valido && RX_PROF.test(v.nome || '')) && !/facultativ|individual|especial/i.test(v.tipo || ''); }
+
+  function ptsProf(sexo, ano) { return sexo === 'F' ? Math.min(92, 81 + Math.max(0, ano - 2019)) : Math.min(100, 91 + Math.max(0, ano - 2019)); }
+  function idadeProf(sexo, ano) { var base = sexo === 'F' ? 51 * 12 : 56 * 12, teto = sexo === 'F' ? 57 * 12 : 60 * 12; return Math.min(teto, base + 6 * Math.max(0, ano - 2019)); }
+
+  function aposentadoriaProfessor(analise, entrada, hoje) {
+    var res = { beneficio: 'aposentadoria-professor', titulo: 'aposentadoria do professor', normas: NORMAS_PROF, entrada: entrada, fato: { data: null } };
+    var nasc = lerData(entrada.nascimento), der = lerData(entrada.der), sexo = entrada.sexo === 'M' ? 'M' : 'F';
+    if (!nasc || !der) {
+      res.conclusao = { status: 'incompleta', rotulo: 'Análise incompleta', texto: 'Informe a data de nascimento e a data do requerimento (DER).', pendencias: [] };
+      return res;
+    }
+    res.fato.data = der;
+    var sel = (entrada.professor || []).map(Number);
+    var dEC = C.dataDeOrd(EC);
+    var apenas = Object.assign({}, analise, { vinculos: analise.vinculos.filter(function (v) { return sel.indexOf(+v.seq) >= 0; }) });
+    var ent0 = { sexo: sexo, enquadramento: [], indenizaEspecial: false };
+    var ct = contar(apenas, ent0, der), ctEC = contar(apenas, ent0, dEC);
+    var tDer = ct.brutoDer, tEC = ctEC.brutoDer;
+    var tAte98 = (function () { var c98 = contar(apenas, ent0, C.dataDe('16/12/1998')); return c98.brutoDer; })();
+    var primeira = null;
+    analise.vinculos.forEach(function (v) { if (v.valido && v.inicio && (!primeira || v.inicio.ord < primeira.ord)) primeira = v.inicio; });
+    var filiadoAteEC = primeira ? primeira.ord <= EC : null;
+    var usaTabela = !!(primeira && primeira.ord <= C.ordemDe(1991, 7, 24));
+    var carDer = Object.keys(I.montarMeses(analise, { sexo: sexo, enquadramento: [] }, der, { modalidade: 'urbana' }).contados).length;
+    var carEC = Object.keys(I.montarMeses(analise, { sexo: sexo, enquadramento: [] }, dEC, { modalidade: 'urbana' }).contados).length;
+    var exDer = I.carenciaExigida(der.y, usaTabela), exEC = I.carenciaExigida(2019, usaTabela);
+    var req = (sexo === 'F' ? 25 : 30) * 365;
+    var ap = sexo === 'F' ? 'mulher' : 'homem';
+
+    function reqs(id, d, tempo, car, tEc) {
+      var out = [], im = ageMeses(nasc, d);
+      function r(nome, ok, atual, exigido) { out.push({ nome: nome, ok: ok, atual: atual, exigido: exigido }); }
+      if (id === 'adquirido') {
+        r('Tempo de magistério até 13/11/2019', tEc >= req, dur(tEc), (sexo === 'F' ? 25 : 30) + ' anos');
+        r('Carência em 13/11/2019', carEC >= exEC, carEC + ' meses', exEC + ' meses');
+        return out;
+      }
+      if (id === 'adquirido98') {
+        var comAcr = tAte98 * (sexo === 'F' ? 1.2 : 1.17) + Math.max(0, tEc - tAte98), ex35 = (sexo === 'F' ? 30 : 35) * 365;
+        r('Tempo de magistério até 13/11/2019, com acréscimo sobre o período até 16/12/1998 (' + (sexo === 'F' ? '20%' : '17%') + ')', comAcr >= ex35, dur(comAcr), (sexo === 'F' ? 30 : 35) + ' anos');
+        r('Carência em 13/11/2019', carEC >= exEC, carEC + ' meses', exEC + ' meses');
+        return out;
+      }
+      r('Tempo de magistério (exclusivamente)', tempo >= req, dur(tempo), (sexo === 'F' ? 25 : 30) + ' anos');
+      if (id === 'permanente') r('Idade mínima', im >= (sexo === 'F' ? 57 : 60) * 12, textoMeses(Math.max(0, im)), (sexo === 'F' ? 57 : 60) + ' anos');
+      else if (id === 'pontos') { var pts = (d.ord - nasc.ord) / 365.25 + tempo / 365; r('Pontos (idade + tempo de magistério, em dias)', pts >= ptsProf(sexo, d.y), pts.toFixed(2).replace('.', ','), ptsProf(sexo, d.y) + ' pontos em ' + d.y); }
+      else if (id === 'idade') { var mi = idadeProf(sexo, d.y); r('Idade mínima progressiva', im >= mi, textoMeses(Math.max(0, im)), textoMeses(mi) + ' em ' + d.y); }
+      else if (id === 'pedagio') {
+        var falta = Math.max(0, req - tEc), exig = req + falta;
+        out[0] = { nome: 'Tempo de magistério com pedágio de 100%', ok: tempo >= exig, atual: dur(tempo), exigido: dur(exig) + (falta ? ' (pedágio de ' + dur(falta) + ')' : ' (pedágio zero: já tinha o tempo mínimo em 13/11/2019)') };
+        r('Idade mínima', im >= (sexo === 'F' ? 52 : 55) * 12, textoMeses(Math.max(0, im)), (sexo === 'F' ? 52 : 55) + ' anos');
+      }
+      r('Carência', car >= exDer, car + ' meses', exDer + ' meses');
+      return out;
+    }
+    var REG = [
+      { id: 'permanente', nome: 'Regra permanente (aposentadoria programada do professor)', norma: 'IN 128, art. 250', desc: 'Para filiados a partir de 14/11/2019: 57 anos (mulher) ou 60 (homem) e 25 anos de contribuição exclusivamente em magistério.', aplicavel: filiadoAteEC !== true },
+      { id: 'adquirido', nome: 'Direito adquirido até 13/11/2019', norma: 'IN 128, art. 251', desc: '25 anos (mulher) ou 30 (homem) de magistério e carência cumpridos em 13/11/2019, sem idade mínima. Pode ser requerido depois.', aplicavel: filiadoAteEC !== false },
+      { id: 'adquirido98', nome: 'Direito adquirido, com acréscimo do tempo até 16/12/1998', norma: 'IN 128, art. 251, § 1º', desc: 'Para quem não tinha as condições em 16/12/1998: o magistério até essa data ganha 17% (homem) ou 20% (mulher), e exige 35 anos (homem) ou 30 (mulher) exclusivamente de magistério até 13/11/2019.', aplicavel: filiadoAteEC !== false },
+      { id: 'pontos', nome: 'Transição por pontos', norma: 'IN 128, art. 252', desc: '25/30 anos de magistério e 81 pontos (mulher) ou 91 (homem), com 1 ponto a mais a cada ano desde 2020, até 92 e 100. Idade e tempo em dias.', aplicavel: filiadoAteEC !== false },
+      { id: 'idade', nome: 'Transição por idade progressiva', norma: 'IN 128, art. 253', desc: '25/30 anos de magistério e idade de 51 (mulher) ou 56 (homem), com 6 meses a mais por ano desde 2020, até 57 e 60.', aplicavel: filiadoAteEC !== false },
+      { id: 'pedagio', nome: 'Transição com pedágio de 100%', norma: 'IN 128, art. 254', desc: 'Idade de 52 (mulher) ou 55 (homem), 25/30 anos de magistério e período adicional de 100% do que faltava em 13/11/2019.', aplicavel: filiadoAteEC !== false }
+    ];
+    res.avaliacoes = REG.map(function (rg) {
+      var rs = (rg.id === 'adquirido' || rg.id === 'adquirido98') ? reqs(rg.id, dEC, 0, 0, tEC) : reqs(rg.id, der, tDer, carDer, tEC);
+      var ok = rs.every(function (x) { return x.ok; });
+      var quando = null;
+      if (!ok && rg.aplicavel && rg.id !== 'adquirido' && rg.id !== 'adquirido98' && tDer > 0) {
+        for (var dd = 1; dd <= 365 * 25; dd++) {
+          var dt = C.dataDeOrd(der.ord + dd);
+          if (reqs(rg.id, dt, tDer + dd, carDer + Math.floor(dd / 30), tEC).every(function (x) { return x.ok; })) { quando = dt; break; }
+        }
+      }
+      return { regra: rg, reqs: rs, ok: ok, aplicavel: rg.aplicavel, quando: quando };
+    });
+    var linhas = [];
+    var nomes = apenas.vinculos.map(function (v) { return v.nome; });
+    linhas.push('Vínculos marcados como magistério: **' + apenas.vinculos.length + '**' + (nomes.length ? ' (' + nomes.slice(0, 6).join('; ') + (nomes.length > 6 ? '; ...' : '') + ')' : '') + '.');
+    linhas.push('Tempo de magistério contado, sem contar duas vezes o que é concomitante: **' + dur(tDer) + '** até a DER (' + rot(der) + ') e **' + dur(tEC) + '** até 13/11/2019. Tempo total de contribuição em todos os vínculos: ' + dur(contar(analise, ent0, der).brutoDer) + '.');
+    linhas.push('Só conta o tempo de **efetivo exercício de magistério na educação infantil, no ensino fundamental e no ensino médio** (inclui direção, coordenação e assessoramento pedagógico na escola básica). Não há conversão de tempo especial, e universidade, ensino superior e outras funções ficam de fora.');
+    if (!apenas.vinculos.length) linhas.push('Nenhum vínculo foi marcado como magistério. Marque acima os vínculos de professor.');
+    var ex = ct.mm.ex;
+    if (ex.abaixoEmp.length) linhas.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo não foram contados (' + I.faixas(ex.abaixoEmp) + ').');
+    if (ex.aposFG.length) linhas.push(ex.aposFG.length + ' competência(s) paga(s) depois da DER não contam (' + I.faixas(ex.aposFG) + ').');
+    res.tempo = { linhas: linhas, tDer: tDer, tEC: tEC };
+    res.carencia = { total: carDer, exigida: exDer, ok: carDer >= exDer, linhas: ['Carência no CNIS até a DER (todos os vínculos): **' + carDer + ' meses**. Exigidos: **' + exDer + '**. Em 13/11/2019: **' + carEC + ' meses**.'] };
+    var avisos = [];
+    if (filiadoAteEC === true) avisos.push('O primeiro vínculo é anterior a 14/11/2019: a regra permanente do art. 250 não se aplica. Valem o direito adquirido e as regras de transição.');
+    if (filiadoAteEC === false) avisos.push('O primeiro vínculo é posterior a 13/11/2019: só vale a regra permanente do art. 250.');
+    res.avisos = avisos;
+    var oks = res.avaliacoes.filter(function (a) { return a.ok && a.aplicavel; });
+    var prev = res.avaliacoes.filter(function (a) { return !a.ok && a.aplicavel && a.quando; }).sort(function (x, y) { return x.quando.ord - y.quando.ord; });
+    var conc;
+    if (!apenas.vinculos.length) conc = { status: 'incompleta', rotulo: 'Marque os vínculos de magistério', texto: 'Indique quais vínculos são de professor para avaliar a aposentadoria.' };
+    else if (oks.length) conc = { status: 'provavel', rotulo: 'Requisitos cumpridos em ' + oks.length + ' regra(s) pelos dados informados', texto: 'Cumpridas: ' + oks.map(function (a) { return a.regra.nome; }).join('; ') + '. Confirme o efetivo exercício de magistério na educação básica.' };
+    else conc = { status: 'nao_demonstrado', rotulo: 'Requisitos ainda não demonstrados', texto: prev.length ? 'Mantido o magistério a partir da DER, a primeira regra a ser cumprida seria ' + prev[0].regra.nome + ', em ' + rot(prev[0].quando) + '.' : 'Nenhuma regra é cumprida pelos dados atuais, nem nos próximos 25 anos mantido o magistério.' };
+    conc.pendencias = ['Declaração da escola e da rede de ensino com a função de magistério, o nível de ensino (educação básica) e o período de cada vínculo.'];
+    res.conclusao = conc;
+    res.valor = { linhas: ['Não calculado nesta versão: exige a correção monetária das remunerações desde 07/1994, que o CNIS não traz.', 'Art. 250: inciso VI do art. 233. Art. 251: alínea "a" do inciso IV. Arts. 252 e 253: alínea "c". Art. 254: alínea "e". Confira o texto vigente.'] };
+    res.documentos = ['Documento de identificação com a data de nascimento', 'CTPS e contratos dos vínculos de magistério', 'Declaração da escola ou da rede (função de professor, nível de ensino e períodos)', 'Atos de nomeação, para servidores com CTC, quando houver', 'Certidão de tempo de contribuição (CTC) de regime próprio, se houver'];
+    return res;
+  }
+  function renderizarProfessor(r) {
+    var topo = C.el('div', 'direito');
+    topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
+    topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa a função: só entram os vínculos que você marcou como de professor.'));
+    var c = r.conclusao;
+    var caixa = C.el('div', 'conclusao conclusao-' + c.status);
+    caixa.appendChild(C.el('strong', null, c.rotulo));
+    caixa.appendChild(C.el('p', null, c.texto));
+    if (c.pendencias && c.pendencias.length) { caixa.appendChild(C.el('p', 'dica', 'Para concluir:')); caixa.appendChild(lista(c.pendencias)); }
+    topo.appendChild(caixa);
+    if (!r.fato.data) return topo;
+    if (r.avisos && r.avisos.length) topo.appendChild(lista(r.avisos));
+    var s1 = C.sec('1. Tempo de magistério'); s1.appendChild(lista(r.tempo.linhas)); topo.appendChild(s1);
+    var s2 = C.sec('2. Carência');
+    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', 'selo selo-' + (r.carencia.ok ? 'confirmada' : 'nao_demonstrada'), r.carencia.ok ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS'));
+    s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas)); topo.appendChild(s2);
+    var s3 = C.sec('3. Regras');
+    r.avaliacoes.forEach(function (a) {
+      var bloco = C.el('div', 'regra-tc');
+      bloco.appendChild(C.el('h4', null, a.regra.nome + ' (' + a.regra.norma + ')'));
+      var sel = C.el('p', 'selo-linha');
+      sel.appendChild(C.el('span', 'selo selo-' + (a.ok && a.aplicavel ? 'confirmada' : 'nao_demonstrada'), a.ok && a.aplicavel ? 'Cumprida' : (a.aplicavel ? 'Não cumprida' : 'Não se aplica')));
+      bloco.appendChild(sel);
+      bloco.appendChild(C.el('p', 'dica', a.regra.desc));
+      bloco.appendChild(C.tabela(['Requisito', 'Situação', 'Atual', 'Exigido'], a.reqs.map(function (x) { return [x.nome, x.ok ? 'Cumprido' : 'Não cumprido', x.atual, x.exigido]; })));
+      if (!a.ok && a.quando && a.aplicavel) bloco.appendChild(C.el('p', null, 'Mantido o magistério a partir da DER, esta regra seria cumprida em ' + rot(a.quando) + '.'));
+      s3.appendChild(bloco);
+    });
+    topo.appendChild(s3);
+    var s4 = C.sec('4. Valor'); s4.appendChild(lista(r.valor.linhas)); topo.appendChild(s4);
+    var s8 = C.sec('Documentos a reunir'); s8.appendChild(lista(r.documentos)); topo.appendChild(s8);
+    var s9 = C.sec('Normas usadas');
+    s9.appendChild(C.tabela(['Norma', 'Vigência / conferência'], r.normas.map(function (x) { return [x.nome, x.vigencia]; })));
+    topo.appendChild(s9);
+    return topo;
+  }
+  // Seletor dos vínculos de magistério. `sel` é a lista de seq marcados; novos vínculos que casam com o filtro entram marcados.
+  function editorProfessor(analise, sel, aoMudar) {
+    var box = C.el('div', 'enquadramento');
+    var vistos = {};
+    box.appendChild(C.el('h4', null, 'Vínculos de professor (educação básica)'));
+    box.appendChild(C.el('p', 'dica', 'Marque os vínculos em que o segurado foi professor da educação infantil, do ensino fundamental ou do ensino médio. Os que têm no nome colégio, escola, município, prefeitura, estado, secretaria ou educação já vêm marcados: confira e desmarque o que não for magistério.'));
+    var barra = C.el('div', 'acoes');
+    var bSug = C.el('button', 'btn btn-leve', 'Marcar sugeridos'); bSug.type = 'button';
+    var bTodos = C.el('button', 'btn btn-leve', 'Marcar todos'); bTodos.type = 'button';
+    var bNenhum = C.el('button', 'btn btn-leve', 'Limpar'); bNenhum.type = 'button';
+    barra.appendChild(bSug); barra.appendChild(bTodos); barra.appendChild(bNenhum); box.appendChild(barra);
+    var lst = C.el('div', 'lista-prof'); box.appendChild(lst);
+    var atual = analise;
+    function desenhar() {
+      lst.textContent = '';
+      var vs = atual.vinculos.filter(function (v) { return v.valido && !/facultativ|individual|especial/i.test(v.tipo || ''); });
+      if (!vs.length) lst.appendChild(C.el('p', 'dica', 'Nenhum vínculo de empregado encontrado.'));
+      vs.forEach(function (v) {
+        var l = C.el('label'); l.style.display = 'block';
+        var i = document.createElement('input'); i.type = 'checkbox'; i.checked = sel.indexOf(+v.seq) >= 0; i.setAttribute('data-seq', v.seq);
+        i.addEventListener('change', function () {
+          var k = sel.indexOf(+v.seq);
+          if (i.checked && k < 0) sel.push(+v.seq); if (!i.checked && k >= 0) sel.splice(k, 1);
+          if (aoMudar) aoMudar();
+        });
+        l.appendChild(i);
+        l.appendChild(document.createTextNode(' ' + (v.rotulo || ('Seq. ' + v.seq + ' - ' + v.nome)) + (v.inicio ? ' (' + rot(v.inicio) + ' a ' + (v.fim ? rot(v.fim) : 'em aberto') + ')' : '')));
+        lst.appendChild(l);
+      });
+    }
+    function sugere(novos) {
+      atual.vinculos.forEach(function (v) {
+        if (novos && vistos[v.seq]) return;
+        vistos[v.seq] = true;
+        if (sugereProfessor(v) && sel.indexOf(+v.seq) < 0) sel.push(+v.seq);
+      });
+    }
+    box.atualizar = function (a) { atual = a; sugere(true); desenhar(); };
+    bSug.addEventListener('click', function () { sugere(false); desenhar(); if (aoMudar) aoMudar(); });
+    bTodos.addEventListener('click', function () { atual.vinculos.forEach(function (v) { if (v.valido && sel.indexOf(+v.seq) < 0) sel.push(+v.seq); }); desenhar(); if (aoMudar) aoMudar(); });
+    bNenhum.addEventListener('click', function () { sel.length = 0; desenhar(); if (aoMudar) aoMudar(); });
+    sugere(true); desenhar();
+    return box;
+  }
+
   // ---------- Tela ----------
   function lista(itens) { return D.util.lista(itens); }
   function renderizar(r) {
     if (r.beneficio === 'aposentadoria-especial') return renderizarEspecial(r);
+    if (r.beneficio === 'aposentadoria-professor') return renderizarProfessor(r);
     var topo = C.el('div', 'direito');
     topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
     topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa atividade especial: o tempo especial só entra se você o enquadrar acima.'));
@@ -563,7 +757,7 @@
     return { sexo: g('tc-sexo').value, nascimento: g('tc-nasc').value, der: g('tc-der').value };
   }
 
-  var api = { aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
+  var api = { aposentadoriaProfessor: aposentadoriaProfessor, editorProfessor: editorProfessor, sugereProfessor: sugereProfessor, aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.TEMPO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
