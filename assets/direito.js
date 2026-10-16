@@ -1131,6 +1131,7 @@
       gi.appendChild(campo('Doença ou lesão anterior à filiação?', selecao('ai-pre', [['nao', 'Não, começou depois de se filiar'], ['sim', 'Sim, já existia ao se filiar, sem agravamento'], ['agravamento', 'Já existia, mas se agravou depois']])));
       gAI.appendChild(gi);
       var gp = C.el('div', 'grade-campos'); gp.id = 'ai-perm'; gp.hidden = true;
+      gp.appendChild(campo('Data da perícia que definiu a incapacidade permanente (se precedida de auxílio temporário)', entrada('ai-pericia', 'date')));
       gp.appendChild(campo('Sexo (para estimar o percentual do valor)', selecao('ai-sexo', [['', 'Não informar'], ['F', 'Mulher'], ['M', 'Homem']])));
       gp.appendChild(marca('ai-grande', 'Grande invalidez (precisa de assistência permanente de outra pessoa)'));
       gAI.appendChild(gp);

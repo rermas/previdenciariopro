@@ -229,3 +229,10 @@ console.log('benefício integral ok');
   assert.equal(incap(t, { dii: '2023-03-01' }).beneficio, 'auxilio-incapacidade-temporaria');
 })();
 console.log('incapacidade permanente ok');
+(function () {
+  const t = vinculo([1995, 1], [2023, 3], '15/03/2023', '2.500,00');
+  const r = B.aposentadoriaIncapacidade(C.analisar(t, HOJE), { dii: '2023-03-01', origem: 'comum', preexistente: 'nao', pericia: '2023-06-10' }, HOJE);
+  assert.equal(r.inicio.dib.d + '/' + r.inicio.dib.m + '/' + r.inicio.dib.y, '10/6/2023');
+  assert.match(r.inicio.linhas.join(' '), /art\. 326, § 6º, I/);
+})();
+console.log('DIB pela perícia ok');

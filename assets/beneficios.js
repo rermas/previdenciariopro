@@ -23,6 +23,7 @@
   var N_PERM = [
     { nome: 'Lei 8.213/91, arts. 42 a 47 (aposentadoria por incapacidade permanente, antiga aposentadoria por invalidez), art. 25, I (carência de 12 contribuições) e art. 26, II (dispensa)', vigencia: 'Redação atual, com a nova denominação dada pela EC 103/2019. Confira o texto compilado.' },
     { nome: 'Lei 8.213/91, art. 42, § 2º (doença ou lesão anterior à filiação) e art. 43 (início do benefício)', vigencia: 'Redação das Leis 9.032/95, 9.876/99 e 13.846/2019. Confira o texto compilado.' },
+    { nome: 'IN PRES/INSS 128/2022, arts. 326 a 329 (aposentadoria por incapacidade permanente)', vigencia: 'Requisitos, início do benefício, acréscimo de 25% e vedação de transformação em aposentadoria por idade. Confira o texto vigente.' },
     { nome: 'Lei 8.213/91, art. 45 (acréscimo de 25% na grande invalidez) e art. 101 (reavaliação periódica)', vigencia: 'O acréscimo de 25% vale ainda que o valor ultrapasse o teto. Confira o texto compilado.' },
     { nome: 'EC 103/2019, art. 26, §§ 2º a 4º (valor: 60% da média mais 2 pontos por ano que exceder 20 anos de contribuição, homem, ou 15, mulher; 100% se decorrente de acidente de trabalho, doença profissional ou do trabalho)', vigencia: 'Para benefícios com início desde 13/11/2019. Antes disso, 100% do salário de benefício. Confira o texto da emenda e o Decreto 3.048/99.' },
     N_QUALIDADE
@@ -420,9 +421,17 @@
       else { ini.dib = dibBase; ini.linhas.push('Requerimento em ' + rot(req) + ', em até 30 dias do afastamento: início na data acima.'); }
     } else { ini.dib = dibBase; ini.linhas.push('Requerimento não informado: foi considerado dentro de 30 dias do afastamento.'); }
     if (perm) {
+      var per = lerData(entrada.pericia);
       var temp = beneficioEmGozo(analise, dii.ord, /AUX[IÍ]LIO[ -]DOEN|INCAPACIDADE TEMPOR/i);
-      if (temp.length) { var fimT = temp.reduce(function (m, b) { var f = b.fim && b.fim.ord !== undefined ? b.fim.ord : null; return f !== null && (m === null || f > m) ? f : m; }, null); if (fimT !== null) { ini.dib = dObj(fimT + 1); ini.linhas.push('Conversão de auxílio por incapacidade temporária: início no **dia seguinte à cessação do auxílio** (' + rot(ini.dib) + '), art. 43, caput.'); } }
-      ini.linhas.push('Se a incapacidade permanente for constatada por perícia sem auxílio anterior: empregado, a partir do 16º dia do afastamento; demais segurados, da DII, ou da data do requerimento se feito depois de 30 dias do afastamento (art. 43, § 1º).');
+      if (temp.length || per) {
+        if (per) { ini.dib = per; ini.linhas.push('Benefício **precedido de auxílio por incapacidade temporária**: início na **data da perícia que definiu a incapacidade permanente** (' + rot(per) + '), IN PRES/INSS 128, art. 326, § 6º, I.'); }
+        else ini.linhas.push('Há auxílio por incapacidade temporária em gozo: o benefício começa na **data da perícia que definiu a incapacidade permanente** (IN 128, art. 326, § 6º, I). Informe essa data no campo próprio.');
+      }
+      ini.linhas.push('Sem auxílio anterior (IN 128, art. 327): **empregado**, a partir do 16º dia do afastamento, ou da DER se o requerimento vier mais de 30 dias depois do afastamento; **demais segurados**, da DII, ou da DER se passarem mais de 30 dias entre a incapacidade e o requerimento. Se a DII for fixada depois da DER, vale a DII (art. 327, § 3º).');
+      if (!per && req && dii.ord > req.ord) ini.dib = dii;
+      ini.linhas.push('Segurado com mais de uma atividade: exige o afastamento de **todas**, e a DIB considera a data do último afastamento (art. 327, § 2º).');
+      ini.linhas.push('O benefício é devido estando ou não em gozo de auxílio temporário, inclusive acidentário (art. 326, § 2º). A doença anterior à filiação só dá direito se houver progressão ou agravamento (art. 326, § 4º).');
+      ini.linhas.push('É **vedada** a transformação de aposentadoria por incapacidade permanente ou auxílio temporário em aposentadoria por idade ou programada em requerimentos desde 31/12/2008 (art. 329).');
       ini.linhas.push('O aposentado por incapacidade permanente é submetido à **reavaliação periódica** (art. 101), salvo as exceções legais (por exemplo, idade igual ou superior a 60 anos, ou 55 anos com 15 anos de aposentadoria). Se for recuperada a capacidade, o benefício cessa.');
       ini.linhas.push('Prescrição quinquenal das parcelas.');
     } else {
@@ -433,7 +442,7 @@
     // ----- Valor -----
     var dibOrd = ini.dib ? ini.dib.ord : dii.ord;
     if (perm) {
-      res.valor = { calculado: false, linhas: ['Não calculado nesta versão: exige correção monetária das remunerações desde 07/1994, que o CNIS não traz.'] };
+      res.valor = { calculado: false, linhas: ['Não calculado nesta versão: exige correção monetária das remunerações desde 07/1994, que o CNIS não traz. Cálculo pelo inciso II do art. 233 da IN 128 (art. 326, § 7º).'] };
       var posEC = dibOrd >= C.ordemDe(2019, 11, 13);
       var trab = origem === 'acidente';
       if (posEC) {
@@ -451,8 +460,8 @@
         res.valor.linhas.push('Início antes de 13/11/2019: **100% do salário de benefício** (média dos 80% maiores salários de contribuição desde 07/1994, Leis 9.876/99 e 8.213/91, art. 44).');
       }
       res.valor.linhas.push('Piso de um salário mínimo (' + (C.minimoDe(mesOrd(dii)) ? dinheiro(C.minimoDe(mesOrd(dii))) : 'valor não cadastrado') + ' na DII) e teto do RGPS.');
-      if (entrada.grandeInvalidez) res.valor.linhas.push('**Grande invalidez** (precisa de assistência permanente de outra pessoa): acréscimo de **25%** sobre o valor, mesmo que ultrapasse o teto (art. 45). Depende de laudo pericial; a EC 103 mantém o acréscimo.');
-      else res.valor.linhas.push('Se o segurado precisar da assistência permanente de outra pessoa, há acréscimo de 25% (art. 45); marque "grande invalidez" para registrar.');
+      if (entrada.grandeInvalidez) res.valor.linhas.push('**Grande invalidez** (precisa de assistência permanente de outra pessoa): acréscimo de **25%** sobre o valor, mesmo que ultrapasse o teto e independentemente da data do início (IN 128, art. 328): devido desde o início do benefício se comprovado na perícia que sugeriu a aposentadoria, ou desde o pedido do acréscimo se a situação surgiu depois. Cessa com a morte e não passa à pensão.');
+      else res.valor.linhas.push('Se o segurado precisar da assistência permanente de outra pessoa, há acréscimo de 25% (art. 45 da Lei 8.213 e art. 328 da IN 128); marque "grande invalidez" para registrar.');
     } else
     res.valor = { calculado: false, linhas: [
       'Não calculado nesta versão: exige correção monetária das remunerações desde 07/1994, que o CNIS não traz.',
@@ -599,7 +608,7 @@
     return {
       dii: g('ai-dii').value, afastamento: g('ai-afast').value, requerimento: g('ai-req').value, origem: g('ai-origem').value,
       preexistente: g('ai-pre').value, desemprego: g('dir-desemprego').checked,
-      sexo: g('ai-sexo') ? g('ai-sexo').value : '', grandeInvalidez: !!(g('ai-grande') && g('ai-grande').checked)
+      sexo: g('ai-sexo') ? g('ai-sexo').value : '', pericia: g('ai-pericia') ? g('ai-pericia').value : '', grandeInvalidez: !!(g('ai-grande') && g('ai-grande').checked)
     };
   }
 
