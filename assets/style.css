@@ -302,3 +302,7 @@ p { margin: 0 0 1rem; }
 #dir-beneficio option { padding: 0.35rem 0.5rem; background: var(--branco); color: var(--tinta); }
 #dir-beneficio option:nth-child(even) { background: var(--azul-suave); }
 #dir-beneficio option:checked { background: var(--azul); color: var(--branco); }
+
+/* Alerta em vermelho para dado essencial que falta */
+.alerta-erro { margin: 0.6rem 0; padding: 0.55rem 0.8rem; border: 1px solid var(--coral); border-left-width: 4px; border-radius: 6px; background: var(--coral-suave); color: var(--coral-texto); font-weight: 600; }
+.campo-erro, .campo select.campo-erro, .campo input.campo-erro { border-color: var(--coral) !important; box-shadow: 0 0 0 2px var(--coral-suave); }

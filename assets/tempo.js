@@ -791,11 +791,12 @@
     }
     add.addEventListener('click', function () {
       var i = lerData(di.value), f = lerData(df.value);
-      if (!i) { window.alert('Informe a data de início do impedimento.'); return; }
-      if (f && f.ord < i.ord) { window.alert('O fim é anterior ao início.'); return; }
+      if (!i) { C.erroEm(msgP, 'Falta a data de início do impedimento.', ['pcd-inicio']); return; }
+      if (f && f.ord < i.ord) { C.erroEm(msgP, 'O fim é anterior ao início.', ['pcd-fim']); return; }
+      C.limpaErro(msgP);
       lst.push({ grau: sg.value, inicio: i, fim: f }); di.value = ''; df.value = ''; desenhar(); if (aoMudar) aoMudar();
     });
-    box.appendChild(add); box.appendChild(ul); desenhar();
+    var msgP = C.el('p', 'msg'); box.appendChild(add); box.appendChild(msgP); box.appendChild(ul); desenhar();
     return box;
   }
 
@@ -803,7 +804,7 @@
   // Roda todas as aposentadorias avaliáveis com os dados informados e devolve uma linha por regra.
   function comparar(analise, entrada, hoje) {
     var der = lerData(entrada.der), nasc = lerData(entrada.nascimento);
-    var out = { fato: { data: der }, linhas: [], semDados: !der || !nasc };
+    var out = { fato: { data: der }, nasc: nasc, linhas: [], semDados: !der || !nasc };
     if (out.semDados) return out;
     function status(ok, aplica, quando, extra) {
       if (!aplica) return { sit: 'Não se aplica', ok: false, quando: null };
@@ -851,7 +852,7 @@
     var topo = C.el('div', 'direito');
     topo.appendChild(C.el('h3', null, 'Comparação das aposentadorias'));
     topo.appendChild(C.el('p', 'dica', 'Compara os requisitos de cada regra com os dados informados (CNIS, enquadramento, vínculos de professor e períodos de deficiência). Não calcula o valor do benefício: o valor depende das remunerações corrigidas desde 07/1994 e deve ser conferido regra a regra.'));
-    if (r.semDados) { topo.appendChild(C.el('p', 'msg', 'Informe sexo, data de nascimento e a data do requerimento (DER).')); return topo; }
+    if (r.semDados) { topo.appendChild(C.alerta('Falta preencher: ' + [!r.nasc && 'data de nascimento', !r.fato.data && 'data do requerimento (DER)'].filter(Boolean).join(' e ') + '.', [!r.nasc && 'tc-nasc', !r.fato.data && 'tc-der'])); return topo; }
     var cum = r.linhas.filter(function (l) { return l.ok; });
     var caixa = C.el('div', 'conclusao conclusao-' + (cum.length ? 'provavel' : 'nao_demonstrado'));
     caixa.appendChild(C.el('strong', null, cum.length ? cum.length + ' regra(s) cumprida(s) na DER (' + rot(r.fato.data) + ')' : 'Nenhuma regra cumprida na DER (' + rot(r.fato.data) + ')'));
@@ -1109,13 +1110,13 @@
     }
     add.addEventListener('click', function () {
       var i = ordDe(ini.value), f = ordDe(fim.value);
-      if (!i || !f || f.ord < i.ord) { msg.textContent = 'Informe um período válido (início até o fim).'; return; }
-      msg.textContent = '';
+      if (!i || !f || f.ord < i.ord) { C.erroEm(msg, !i || !f ? 'Falta preencher: ' + [!i && 'data de início', !f && 'data de fim'].filter(Boolean).join(' e ') + '.' : 'O fim não pode ser anterior ao início.', [!i && 'enq-inicio', !f && 'enq-fim']); return; }
+      C.limpaErro(msg);
       var sq = +selV.value || 0, vv = ref.a.vinculos.filter(function (x) { return x.seq === sq; })[0], rg = vv ? regraEnq(vv) : null;
       if (sq && rg) {
         if (rg.min !== null && i.ord < rg.min) { i = C.dataDeOrd(rg.min); msg.textContent = 'Início ajustado para ' + rot(i) + ' (' + rg.motivo + ').'; }
         if (rg.max !== null && f.ord > rg.max) { f = C.dataDeOrd(rg.max); msg.textContent = 'Fim ajustado para ' + rot(f) + ' (' + rg.motivo + ').'; }
-        if (f.ord < i.ord) { msg.textContent = 'Período fora do limite permitido (' + rg.motivo + ').'; return; }
+        if (f.ord < i.ord) { C.erroEm(msg, 'Período fora do limite permitido (' + rg.motivo + ').', ['enq-inicio', 'enq-fim']); return; }
       }
       enq.push({ seq: sq, inicio: i, fim: f, natureza: selN.value, nota: '' });
       desenhar(); aoMudar();
@@ -1131,7 +1132,7 @@
       var fr = new FileReader();
       fr.onload = function () {
         try { var novos = carregar(String(fr.result)); enq.length = 0; novos.forEach(function (x) { enq.push(x); }); msg.textContent = novos.length + ' enquadramento(s) carregado(s).'; desenhar(); aoMudar(); }
-        catch (e) { msg.textContent = 'Arquivo inválido.'; }
+        catch (e) { C.erroEm(msg, 'Arquivo inválido: use um arquivo de enquadramento salvo por esta ferramenta.'); }
       };
       fr.readAsText(f);
     });

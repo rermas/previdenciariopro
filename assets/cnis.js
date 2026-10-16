@@ -1499,6 +1499,30 @@
     });
     return out;
   }
+  // Alertas em vermelho para dado essencial que falta. `campos` são ids de campos a destacar.
+  function marcarCampos(campos) {
+    var primeiro = null;
+    (campos || []).forEach(function (id) {
+      var c = id && document.getElementById(id);
+      if (!c) return;
+      c.classList.add('campo-erro'); c.setAttribute('aria-invalid', 'true');
+      if (!primeiro) primeiro = c;
+      var limpa = function () { c.classList.remove('campo-erro'); c.removeAttribute('aria-invalid'); };
+      c.addEventListener('input', limpa, { once: true }); c.addEventListener('change', limpa, { once: true });
+    });
+    if (primeiro && primeiro.focus) { try { primeiro.focus({ preventScroll: true }); } catch (e) { primeiro.focus(); } }
+  }
+  function alerta(texto, campos) {
+    var p = el('p', 'alerta-erro', texto); p.setAttribute('role', 'alert');
+    marcarCampos(campos);
+    return p;
+  }
+  function erroEm(msgEl, texto, campos) {
+    msgEl.textContent = texto; msgEl.classList.add('alerta-erro'); msgEl.setAttribute('role', 'alert');
+    marcarCampos(campos);
+  }
+  function limpaErro(msgEl) { msgEl.classList.remove('alerta-erro'); msgEl.removeAttribute('role'); msgEl.textContent = ''; }
+
   function lerPdf(arquivo) {
     if (!root.pdfjsLib) return Promise.reject(new Error('O leitor de PDF não carregou. Recarregue a página ou cole o texto do extrato.'));
     root.pdfjsLib.GlobalWorkerOptions.workerSrc = root.PDF_WORKER_URL || (BASE + 'vendor/pdf.worker.min.js');
@@ -1527,17 +1551,18 @@
     function hoje() { var a = new Date(); return { y: a.getFullYear(), m: a.getMonth() + 1, d: a.getDate() }; }
 
     function limpar() {
-      texto.value = ''; arquivo.value = ''; saida.textContent = ''; msg.textContent = '';
+      texto.value = ''; arquivo.value = ''; saida.textContent = ''; limpaErro(msg);
     }
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
       saida.textContent = '';
+      limpaErro(msg);
       msg.textContent = 'Lendo o extrato...';
       var pdf = arquivo.files && arquivo.files[0];
       var origem = pdf ? lerPdf(pdf) : Promise.resolve(texto.value);
       origem.then(function (conteudo) {
-        if (!conteudo || !conteudo.trim()) throw new Error('Não encontrei texto. Se o PDF for uma imagem escaneada, copie o texto do extrato e cole no campo.');
+        if (!conteudo || !conteudo.trim()) { var vazio = new Error(pdf ? 'Não encontrei texto no PDF. Se ele for uma imagem escaneada, copie o texto do extrato e cole no campo.' : 'Falta o extrato: escolha o PDF do CNIS ou cole o texto do extrato no campo.'); vazio.campos = pdf ? ['cnis-arquivo'] : ['cnis-texto']; throw vazio; }
         var analise = analisar(conteudo, hoje());
         renderizar(saida, analise);
         msg.textContent = '';
@@ -1545,19 +1570,19 @@
         var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         saida.scrollIntoView({ behavior: reduz ? 'auto' : 'smooth', block: 'start' });
       }).catch(function (err) {
-        msg.textContent = (err && err.message) || 'Não foi possível ler o arquivo.';
+        erroEm(msg, (err && err.message) || 'Não foi possível ler o arquivo.', err && err.campos);
       });
     });
 
     bExemplo.addEventListener('click', function () {
-      arquivo.value = ''; var ex = gerarExemplo(); texto.value = ex.texto; msg.textContent = 'Exemplo fictício carregado (' + ex.descricao + '). Clique em Analisar. Clique em Carregar exemplo de novo para gerar outro caso.';
+      limpaErro(msg); arquivo.value = ''; var ex = gerarExemplo(); texto.value = ex.texto; msg.textContent = 'Exemplo fictício carregado (' + ex.descricao + '). Clique em Analisar. Clique em Carregar exemplo de novo para gerar outro caso.';
     });
     bLimpar.addEventListener('click', limpar);
   }
 
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
-    gerarRelatorio: gerarRelatorio, formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
+    alerta: alerta, erroEm: erroEm, limpaErro: limpaErro, gerarRelatorio: gerarRelatorio, formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
     resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO, gerarExemplo: gerarExemplo,
     el: el, sec: sec, tabela: tabela, ordemDe: ordemDe, dataDeOrd: dataDeOrd, rotuloData: rotuloData, ultimoDiaDoMes: ultimoDiaDoMes, ehRural: ehRural, INICIO_PBC: INICIO_PBC, INDICADORES: INDICADORES
   };

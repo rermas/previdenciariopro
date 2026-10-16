@@ -1036,9 +1036,9 @@
     }
     add.addEventListener('click', function () {
       var i = iso(ini.value), f = iso(fim.value);
-      if (!i || !f || f.ord < i.ord) { msg.textContent = 'Informe a data de início e a data de fim (o fim não pode ser anterior ao início).'; return; }
-      if (i.y < 1900 || f.y > 2100) { msg.textContent = 'Data fora do intervalo esperado.'; return; }
-      msg.textContent = '';
+      if (!i || !f || f.ord < i.ord) { C.erroEm(msg, !i || !f ? 'Falta preencher: ' + [!i && 'data de início', !f && 'data de fim'].filter(Boolean).join(' e ') + '.' : 'O fim não pode ser anterior ao início.', [!i && ini.id, !f && fim.id]); return; }
+      if (i.y < 1900 || f.y > 2100) { C.erroEm(msg, 'Data fora do intervalo esperado.', [ini.id, fim.id]); return; }
+      C.limpaErro(msg);
       extras.push({ nome: (nome.value || '').trim().slice(0, 80) || rotuloTipoExtra(tipo.value), tipo: tipo.value, inicio: i, fim: f });
       nome.value = ''; ini.value = ''; fim.value = '';
       desenhar(); aoMudar();
@@ -1198,11 +1198,14 @@
     var botaoRel = C.el('button', 'btn btn-leve', 'Gerar relatório da simulação (PDF)'); botaoRel.type = 'button'; botaoRel.id = 'dir-relatorio';
     botaoRel.title = 'Somente o resultado desta verificação. Na janela de impressão, escolha "Salvar como PDF".';
     botaoRel.addEventListener('click', function () {
-      if (!document.getElementById('dir-resultado').firstChild) { window.alert('Clique em Verificar direito antes de gerar o relatório.'); return; }
+      var rr = document.getElementById('dir-resultado');
+      if (!rr.firstChild || rr.querySelector('.alerta-erro')) { C.erroEm(avisoRel, 'Ainda não há resultado: preencha os dados e clique em Verificar direito antes de gerar o relatório.'); return; }
+      C.limpaErro(avisoRel);
       C.gerarRelatorio('direito');
     });
     acoes.appendChild(botaoRel);
     bloco.appendChild(acoes);
+    var avisoRel = C.el('p', 'msg'); avisoRel.id = 'dir-aviso'; bloco.appendChild(avisoRel);
     var resultado = C.el('div'); resultado.id = 'dir-resultado'; resultado.setAttribute('aria-live', 'polite');
     bloco.appendChild(resultado);
     var respostas = {}; // respostas às perguntas de carência (complementar, vínculo comprovado)
@@ -1216,39 +1219,39 @@
       resultado.textContent = '';
       if (selBen.value === 'pensao-por-morte' && root.PENSAO) {
         var cp = root.PENSAO.lerCampos();
-        if (!cp.obito) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do óbito.')); return; }
+        if (!cp.obito) { resultado.appendChild(C.alerta('Falta a data do óbito do segurado.', ['pm-obito'])); return; }
         resultado.appendChild(root.PENSAO.renderizar(root.PENSAO.pensaoPorMorte(analise, cp, hojeAgora())));
         return;
       }
       if (selBen.value === 'auxilio-reclusao' && root.BENEFICIOS) {
         var cr = Object.assign(root.BENEFICIOS.lerCamposReclusao(), respostas);
-        if (!cr.prisao) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do recolhimento à prisão.')); return; }
+        if (!cr.prisao) { resultado.appendChild(C.alerta('Falta a data do recolhimento à prisão.', ['ar-prisao'])); return; }
         resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioReclusao(analise, cr, hojeAgora())));
         return;
       }
       if ((selBen.value === 'auxilio-incapacidade-temporaria' || selBen.value === 'aposentadoria-incapacidade-permanente') && root.BENEFICIOS) {
         var ci = Object.assign(root.BENEFICIOS.lerCamposIncapacidade(), respostas);
-        if (!ci.dii) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de início da incapacidade.')); return; }
+        if (!ci.dii) { resultado.appendChild(C.alerta('Falta a data de início da incapacidade (DII).', ['ai-dii'])); return; }
         resultado.appendChild(root.BENEFICIOS.renderizar(selBen.value === 'aposentadoria-incapacidade-permanente' ? root.BENEFICIOS.aposentadoriaIncapacidade(analise, ci, hojeAgora()) : root.BENEFICIOS.auxilioIncapacidade(analise, ci, hojeAgora())));
         return;
       }
       if ((selBen.value === 'aposentadoria-tempo' || selBen.value === 'aposentadoria-adquirido' || selBen.value === 'aposentadoria-especial' || selBen.value === 'aposentadoria-professor' || selBen.value.indexOf('aposentadoria-pcd') === 0) && root.TEMPO) {
         var ctc = Object.assign(root.TEMPO.lerCampos(), respostas, { enquadramento: enq, professor: prof.slice(), pcd: pcd.slice() });
-        if (!ctc.nascimento || !ctc.der) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de nascimento e a data do requerimento.')); return; }
+        if (!ctc.nascimento || !ctc.der) { resultado.appendChild(C.alerta('Falta preencher: ' + [!ctc.nascimento && 'data de nascimento', !ctc.der && 'data do requerimento (DER)'].filter(Boolean).join(' e ') + '.', [!ctc.nascimento && 'tc-nasc', !ctc.der && 'tc-der'])); return; }
         resultado.appendChild(root.TEMPO.renderizar(selBen.value === 'aposentadoria-especial' ? root.TEMPO.aposentadoriaEspecial(analise, ctc, hojeAgora()) : selBen.value === 'aposentadoria-adquirido' ? root.TEMPO.aposentadoriaAdquirida(analise, ctc, hojeAgora()) : selBen.value === 'aposentadoria-professor' ? root.TEMPO.aposentadoriaProfessor(analise, ctc, hojeAgora()) : selBen.value.indexOf('aposentadoria-pcd') === 0 ? root.TEMPO.aposentadoriaPcd(analise, ctc, hojeAgora(), selBen.value === 'aposentadoria-pcd-idade' ? 'idade' : 'tempo') : root.TEMPO.aposentadoriaTempo(analise, ctc, hojeAgora())));
         return;
       }
       if (selBen.value.indexOf('aposentadoria-idade') === 0 && root.IDADE) {
         var cap = Object.assign(root.IDADE.lerCampos(selBen.value === 'aposentadoria-idade-rural' ? 'rural' : selBen.value === 'aposentadoria-idade-hibrida' ? 'hibrida' : 'urbana'), respostas);
-        if (!cap.nascimento || !cap.der) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de nascimento e a data do requerimento.')); return; }
+        if (!cap.nascimento || !cap.der) { resultado.appendChild(C.alerta('Falta preencher: ' + [!cap.nascimento && 'data de nascimento', !cap.der && 'data do requerimento (DER)'].filter(Boolean).join(' e ') + '.', [!cap.nascimento && 'ap-nasc', !cap.der && 'ap-der'])); return; }
         resultado.appendChild(root.IDADE.renderizar(root.IDADE.aposentadoriaIdade(analise, cap, hojeAgora())));
         return;
       }
       var campos = Object.assign(lerCampos(), respostas);
-      if (!campos.data) { resultado.appendChild(C.el('p', 'msg', 'Informe a data do fato gerador.')); return; }
+      if (!campos.data) { resultado.appendChild(C.alerta('Falta a data do fato gerador.', ['dir-data'])); return; }
       resultado.appendChild(renderizar(salarioMaternidade(analise, campos, hojeAgora())));
     }
-    botao.addEventListener('click', executar);
+    botao.addEventListener('click', function () { C.limpaErro(avisoRel); executar(); });
     botaoCmp.addEventListener('click', function () {
       analise = comExtras(analiseBase, extras);
       resultado.textContent = '';
