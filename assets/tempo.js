@@ -59,7 +59,7 @@
     var enq = (entrada.enquadramento || []).filter(function (e) { return e && e.inicio && e.fim && NAT[e.natureza]; });
     var ajustes = [];
     enq = enq.map(function (e) {
-      if (!e.seq) return e;
+      if (!e.seq || e.livre) return e;
       var v = analise.vinculos.filter(function (x) { return x.seq === e.seq; })[0];
       if (!v || !v.valido) return e;
       var rg = regraEnq(v);
@@ -601,11 +601,210 @@
     return box;
   }
 
+  // ---------- Aposentadoria da pessoa com deficiência (LC 142/2013; IN PRES/INSS 128, arts. 303 a 315) ----------
+  var NORMAS_PCD = [
+    { nome: 'Lei Complementar 142/2013, arts. 3º a 9º, e Decreto 3.048/99, arts. 70-A a 70-I', vigencia: 'Aposentadoria por tempo de contribuição (20/24/28 anos mulher, 25/29/33 homem, conforme o grau grave, moderado ou leve) e por idade (55/60 anos e 15 anos de contribuição como pessoa com deficiência). Confira o texto compilado.' },
+    { nome: 'IN PRES/INSS 128/2022, arts. 303 a 315 (com alterações posteriores)', vigencia: 'Avaliação médica e do serviço social, graus de deficiência, conversão entre graus e entre tempo com e sem deficiência (art. 309, Anexo XVIII), carência de 180 contribuições sem exigir concomitância com a deficiência.' },
+    { nome: 'IN PRES/INSS 128/2022, art. 233, VIII e IX (cálculo)', vigencia: 'O valor segue o inciso VIII (tempo de contribuição) e o inciso IX (idade). O valor não é calculado nesta versão.' },
+    { nome: 'Tabela de conversão (Anexo XVIII da IN 128, Decreto 3.048/99, art. 70-E)', vigencia: 'Fatores usados citados de memória do texto do decreto: confira o anexo vigente.' }
+  ];
+  // Fatores de conversão entre graus (e tempo sem deficiência): [de][para]
+  var CONV_PCD = {
+    F: { grave: { moderada: 1.20, leve: 1.40, sem: 1.50 }, moderada: { grave: 0.83, leve: 1.17, sem: 1.25 }, leve: { grave: 0.71, moderada: 0.86, sem: 1.07 }, sem: { grave: 0.67, moderada: 0.80, leve: 0.93 } },
+    M: { grave: { moderada: 1.16, leve: 1.32, sem: 1.40 }, moderada: { grave: 0.86, leve: 1.14, sem: 1.21 }, leve: { grave: 0.76, moderada: 0.88, sem: 1.06 }, sem: { grave: 0.71, moderada: 0.83, leve: 0.94 } }
+  };
+  var ESCALA_PCD = { F: { grave: 20, moderada: 24, leve: 28 }, M: { grave: 25, moderada: 29, leve: 33 } };
+  var GRAUS_PCD = [['grave', 'Grave'], ['moderada', 'Moderada'], ['leve', 'Leve']];
+
+  // Tempo contribuído por grau, por dia e sem repetir o concomitante: usa a contagem por dia, marcando o período da deficiência como "especial 25" interno.
+  function tempoPcd(analise, entrada, der, sexo) {
+    var base = contar(analise, { sexo: sexo, enquadramento: [] }, der);
+    var seqs = analise.vinculos.filter(function (v) { return v.valido; }).map(function (v) { return v.seq; })
+      .concat((analise.beneficios || []).map(function (b) { return b.seq; })).filter(function (x, i, a) { return x && a.indexOf(x) === i; });
+    var out = { sem: 0, leve: 0, moderada: 0, grave: 0 }, total = base.brutoDer;
+    GRAUS_PCD.forEach(function (g) {
+      var enq = [];
+      (entrada.pcd || []).forEach(function (pp) {
+        if (pp.grau !== g[0] || !pp.inicio) return;
+        var fim = pp.fim && pp.fim.ord < der.ord ? pp.fim : der;
+        if (fim.ord < pp.inicio.ord) return;
+        seqs.forEach(function (sq) { enq.push({ seq: sq, inicio: pp.inicio, fim: fim, natureza: 'esp25', livre: true }); });
+      });
+      out[g[0]] = enq.length ? contar(analise, { sexo: sexo, enquadramento: enq }, der).tot.esp25 : 0;
+    });
+    out.sem = Math.max(0, total - out.leve - out.moderada - out.grave);
+    out.total = total; out.mm = base.mm;
+    return out;
+  }
+  // Avalia o tempo de contribuição: grau preponderante e conversão (art. 309).
+  function avaliaPcdTempo(t, sexo) {
+    var graus = GRAUS_PCD.map(function (g) { return g[0]; }).filter(function (g) { return t[g] > 0; });
+    if (!graus.length) return null;
+    var P = graus.reduce(function (m, g) { return t[g] > t[m] ? g : m; }, graus[0]);
+    var temSem = t.sem > 0, alterna = graus.length > 1 || temSem;
+    var f = CONV_PCD[sexo], soma = 0, linhas = [];
+    ['sem', 'leve', 'moderada', 'grave'].forEach(function (g) {
+      if (!t[g]) return;
+      var fator = g === P ? 1 : (alterna ? f[g][P] : 1);
+      soma += t[g] * fator;
+      linhas.push([g, t[g], fator]);
+    });
+    return { preponderante: P, alterna: alterna, convertido: soma, exigido: ESCALA_PCD[sexo][P] * 365, linhas: linhas };
+  }
+  function nomeGrau(g) { return g === 'sem' ? 'Sem deficiência' : g === 'grave' ? 'Deficiência grave' : g === 'moderada' ? 'Deficiência moderada' : 'Deficiência leve'; }
+
+  function aposentadoriaPcd(analise, entrada, hoje, modo) {
+    var ehIdade = modo === 'idade';
+    var res = { beneficio: ehIdade ? 'aposentadoria-pcd-idade' : 'aposentadoria-pcd-tempo', titulo: 'aposentadoria da pessoa com deficiência por ' + (ehIdade ? 'idade' : 'tempo de contribuição'), normas: NORMAS_PCD, entrada: entrada, fato: { data: null } };
+    var nasc = lerData(entrada.nascimento), der = lerData(entrada.der), sexo = entrada.sexo === 'M' ? 'M' : 'F';
+    if (!nasc || !der) {
+      res.conclusao = { status: 'incompleta', rotulo: 'Análise incompleta', texto: 'Informe a data de nascimento e a data do requerimento (DER).', pendencias: [] };
+      return res;
+    }
+    res.fato.data = der;
+    var pcd = (entrada.pcd || []).filter(function (x) { return x && x.inicio && x.grau; });
+    var t = tempoPcd(analise, { pcd: pcd }, der, sexo);
+    var primeira = null;
+    analise.vinculos.forEach(function (v) { if (v.valido && v.inicio && (!primeira || v.inicio.ord < primeira.ord)) primeira = v.inicio; });
+    var usaTabela = !!(primeira && primeira.ord <= C.ordemDe(1991, 7, 24));
+    var carDer = Object.keys(I.montarMeses(analise, { sexo: sexo, enquadramento: [] }, der, { modalidade: 'urbana' }).contados).length;
+    var exDer = I.carenciaExigida(der.y, usaTabela);
+    var tPcdTotal = t.leve + t.moderada + t.grave;
+    var condDer = pcd.some(function (x) { return x.inicio.ord <= der.ord && (!x.fim || x.fim.ord >= der.ord); });
+    var ultimo = pcd.filter(function (x) { return x.inicio.ord <= der.ord && (!x.fim || x.fim.ord >= der.ord); })[0];
+    var linhas = [];
+    linhas.push('Tempo de contribuição total contado pelo CNIS, sem repetir o concomitante: **' + dur(t.total) + '** até a DER (' + rot(der) + ').');
+    ['grave', 'moderada', 'leve', 'sem'].forEach(function (g) { if (t[g]) linhas.push(nomeGrau(g) + ': **' + dur(t[g]) + '**.'); });
+    linhas.push('Conta como tempo de pessoa com deficiência só o contribuído **depois do início do impedimento** fixado pela perícia, no grau informado. A carência de 180 contribuições não exige que tenha sido cumprida com a deficiência.');
+    var ex = t.mm.ex;
+    if (ex.abaixoEmp.length) linhas.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo não foram contados (' + I.faixas(ex.abaixoEmp) + ').');
+    if (ex.aposFG.length) linhas.push(ex.aposFG.length + ' competência(s) paga(s) depois da DER não contam (' + I.faixas(ex.aposFG) + ').');
+    linhas.push('A conversão do tempo especial (Anexo XIX) em tempo de pessoa com deficiência, quando mais favorável, **não foi aplicada** nesta versão. Ela não acumula com a redução da deficiência no mesmo período (art. 310).');
+    res.tempo = { linhas: linhas, t: t };
+    res.carencia = { total: carDer, exigida: exDer, ok: carDer >= exDer, linhas: ['Carência no CNIS até a DER: **' + carDer + ' meses**. Exigidos: **' + exDer + '**.'] };
+    var avisos = [];
+    if (!pcd.length) avisos.push('Nenhum período de deficiência foi informado. Informe o grau e a data de início do impedimento, conforme a avaliação do INSS.');
+    else if (!condDer) avisos.push('A deficiência não cobre a DER: a aposentadoria exige a condição de pessoa com deficiência na DER ou na data em que os requisitos foram implementados (IN 128, arts. 311, III e 314, § 2º). Sem isso, pode ser pedida a aposentadoria comum por idade ou tempo, com a conversão (art. 309, § 4º).');
+    avisos.push('O grau, a data de início do impedimento e as variações são fixados pela perícia médica e pelo serviço social do INSS (art. 305). Prova exclusivamente testemunhal não basta.');
+    res.avisos = avisos;
+
+    function reqIdade(d, tp, car) {
+      var im = ageMeses(nasc, d), out = [];
+      out.push({ nome: 'Idade', ok: im >= (sexo === 'F' ? 55 : 60) * 12, atual: textoMeses(Math.max(0, im)), exigido: (sexo === 'F' ? 55 : 60) + ' anos' });
+      out.push({ nome: 'Tempo de contribuição como pessoa com deficiência (sem conversão)', ok: tp >= 15 * 365, atual: dur(tp), exigido: '15 anos' });
+      out.push({ nome: 'Carência', ok: car >= exDer, atual: car + ' meses', exigido: exDer + ' meses' });
+      out.push({ nome: 'Condição de pessoa com deficiência na DER', ok: condDer, atual: condDer ? 'Sim' : 'Não', exigido: 'Sim' });
+      return out;
+    }
+    var rs, ok, quando = null, info = null;
+    if (ehIdade) {
+      rs = reqIdade(der, tPcdTotal, carDer);
+      ok = rs.every(function (x) { return x.ok; });
+      if (!ok && condDer) for (var dd = 1; dd <= 365 * 25; dd++) { var dt = C.dataDeOrd(der.ord + dd); if (reqIdade(dt, tPcdTotal + dd, carDer + Math.floor(dd / 30)).slice(0, 3).every(function (x) { return x.ok; })) { quando = dt; break; } }
+    } else {
+      info = avaliaPcdTempo(t, sexo);
+      rs = [];
+      if (info) {
+        var mk = function (conv, car) { return [
+          { nome: 'Tempo de contribuição (grau preponderante: ' + nomeGrau(info.preponderante).toLowerCase() + (info.alterna ? ', com conversão' : ', sem conversão') + ')', ok: conv >= info.exigido, atual: dur(conv), exigido: dur(info.exigido) },
+          { nome: 'Carência', ok: car >= exDer, atual: car + ' meses', exigido: exDer + ' meses' },
+          { nome: 'Condição de pessoa com deficiência na DER', ok: condDer, atual: condDer ? 'Sim' : 'Não', exigido: 'Sim' }]; };
+        rs = mk(info.convertido, carDer);
+        ok = rs.every(function (x) { return x.ok; });
+        if (!ok && condDer && ultimo) for (var d2 = 1; d2 <= 365 * 25; d2++) {
+          var t2 = Object.assign({}, t); t2[ultimo.grau] = t[ultimo.grau] + d2;
+          var i2 = avaliaPcdTempo(t2, sexo);
+          if (mk(i2.convertido, carDer + Math.floor(d2 / 30))[0].ok && carDer + Math.floor(d2 / 30) >= exDer) { quando = C.dataDeOrd(der.ord + d2); break; }
+        }
+      } else ok = false;
+    }
+    res.info = info;
+    res.avaliacao = { reqs: rs, ok: !!ok, quando: quando };
+    var conc;
+    if (!pcd.length) conc = { status: 'incompleta', rotulo: 'Informe a deficiência', texto: 'Informe o grau da deficiência e a data de início do impedimento.' };
+    else if (!ehIdade && !info) conc = { status: 'nao_demonstrado', rotulo: 'Sem contribuição como pessoa com deficiência', texto: 'Nenhuma contribuição ocorreu depois do início do impedimento informado.' };
+    else if (ok) conc = { status: 'provavel', rotulo: 'Requisitos cumpridos pelos dados informados', texto: 'Os requisitos de idade/tempo e carência estão cumpridos pelo CNIS e pelos períodos de deficiência informados. A deficiência e o grau dependem da avaliação do INSS.' };
+    else conc = { status: 'nao_demonstrado', rotulo: 'Requisitos ainda não demonstrados', texto: quando ? 'Mantida a deficiência e as contribuições a partir da DER, os requisitos seriam cumpridos em ' + rot(quando) + '.' : 'Os requisitos não são cumpridos pelos dados atuais.' };
+    conc.pendencias = ['Avaliação médica e funcional (perícia e serviço social do INSS), com o grau e a data de início do impedimento.', 'Laudos, exames e documentos que comprovem a deficiência desde a data informada.'];
+    res.conclusao = conc;
+    res.valor = { linhas: ['Não calculado nesta versão: exige a correção monetária das remunerações desde 07/1994, que o CNIS não traz.', ehIdade ? 'Cálculo pelo inciso IX do art. 233 da IN 128 (art. 313).' : 'Cálculo pelo inciso VIII do art. 233 da IN 128 (art. 315).'] };
+    res.documentos = ['Documento de identificação com a data de nascimento', 'Laudos, exames e prontuários que indiquem o início do impedimento e suas alterações', 'Documentos de cada vínculo e das contribuições', 'Certidão de tempo de contribuição (CTC) de regime próprio, se houver'];
+    return res;
+  }
+  function renderizarPcd(r) {
+    var topo = C.el('div', 'direito');
+    topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
+    topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa a deficiência: só entra o que você informou acima.'));
+    var c = r.conclusao;
+    var caixa = C.el('div', 'conclusao conclusao-' + c.status);
+    caixa.appendChild(C.el('strong', null, c.rotulo));
+    caixa.appendChild(C.el('p', null, c.texto));
+    if (c.pendencias && c.pendencias.length) { caixa.appendChild(C.el('p', 'dica', 'Para concluir:')); caixa.appendChild(lista(c.pendencias)); }
+    topo.appendChild(caixa);
+    if (!r.fato.data) return topo;
+    if (r.avisos && r.avisos.length) topo.appendChild(lista(r.avisos));
+    var s1 = C.sec('1. Tempo de contribuição'); s1.appendChild(lista(r.tempo.linhas));
+    if (r.info && r.info.linhas.length) {
+      s1.appendChild(C.tabela(['Período', 'Tempo', 'Fator para o grau ' + nomeGrau(r.info.preponderante).toLowerCase().replace('deficiência ', ''), 'Tempo convertido'], r.info.linhas.map(function (l) { return [nomeGrau(l[0]), dur(l[1]), String(l[2]).replace('.', ','), dur(l[1] * l[2])]; }).concat([['Total', '', '', dur(r.info.convertido)]])));
+      s1.appendChild(C.el('p', 'dica', r.info.alterna ? 'Houve alternância entre graus ou entre tempo com e sem deficiência: os períodos são convertidos para o grau preponderante (aquele com mais tempo contribuído antes da conversão), art. 309, §§ 1º e 2º.' : 'Não houve alternância: não há conversão (art. 309, § 3º).'));
+    }
+    topo.appendChild(s1);
+    var s2 = C.sec('2. Carência');
+    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', 'selo selo-' + (r.carencia.ok ? 'confirmada' : 'nao_demonstrada'), r.carencia.ok ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS'));
+    s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas)); topo.appendChild(s2);
+    var s3 = C.sec('3. Requisitos');
+    var a = r.avaliacao;
+    var sel = C.el('p', 'selo-linha'); sel.appendChild(C.el('span', 'selo selo-' + (a.ok ? 'confirmada' : 'nao_demonstrada'), a.ok ? 'Cumpridos na DER' : 'Não cumpridos na DER')); s3.appendChild(sel);
+    if (a.reqs.length) s3.appendChild(C.tabela(['Requisito', 'Situação', 'Atual', 'Exigido'], a.reqs.map(function (x) { return [x.nome, x.ok ? 'Cumprido' : 'Não cumprido', x.atual, x.exigido]; })));
+    if (!a.ok && a.quando) s3.appendChild(C.el('p', null, 'Mantidas a deficiência e as contribuições a partir da DER, os requisitos seriam cumpridos em ' + rot(a.quando) + '.'));
+    topo.appendChild(s3);
+    var s4 = C.sec('4. Valor'); s4.appendChild(lista(r.valor.linhas)); topo.appendChild(s4);
+    var s8 = C.sec('Documentos a reunir'); s8.appendChild(lista(r.documentos)); topo.appendChild(s8);
+    var s9 = C.sec('Normas usadas');
+    s9.appendChild(C.tabela(['Norma', 'Vigência / conferência'], r.normas.map(function (x) { return [x.nome, x.vigencia]; })));
+    topo.appendChild(s9);
+    return topo;
+  }
+  // Editor dos períodos de deficiência: grau, início do impedimento e fim (opcional).
+  function editorPcd(lst, aoMudar) {
+    var box = C.el('div', 'enquadramento');
+    box.appendChild(C.el('h4', null, 'Períodos de deficiência'));
+    box.appendChild(C.el('p', 'dica', 'Informe o grau e a data de início do impedimento fixados pela avaliação do INSS. Se o grau mudou, inclua um período para cada grau. Deixe o fim em branco se a deficiência continua.'));
+    var linha = C.el('div', 'grade-campos');
+    function campo(rot2, el) { var l = C.el('label'); l.appendChild(C.el('span', null, rot2)); l.appendChild(el); return l; }
+    var sg = document.createElement('select'); sg.id = 'pcd-grau';
+    GRAUS_PCD.forEach(function (g) { var o = document.createElement('option'); o.value = g[0]; o.textContent = g[1]; sg.appendChild(o); });
+    var di = document.createElement('input'); di.type = 'date'; di.id = 'pcd-inicio';
+    var df = document.createElement('input'); df.type = 'date'; df.id = 'pcd-fim';
+    linha.appendChild(campo('Grau', sg)); linha.appendChild(campo('Início do impedimento', di)); linha.appendChild(campo('Fim (opcional)', df));
+    box.appendChild(linha);
+    var add = C.el('button', 'btn btn-leve', 'Adicionar período'); add.type = 'button';
+    var ul = C.el('ul', 'lista-simples');
+    function desenhar() {
+      ul.textContent = '';
+      lst.forEach(function (x, i) {
+        var li = C.el('li', null, nomeGrau(x.grau) + ': ' + rot(x.inicio) + ' a ' + (x.fim ? rot(x.fim) : 'em aberto') + ' ');
+        var rm = C.el('button', 'btn btn-leve', 'Remover'); rm.type = 'button';
+        rm.addEventListener('click', function () { lst.splice(i, 1); desenhar(); if (aoMudar) aoMudar(); });
+        li.appendChild(rm); ul.appendChild(li);
+      });
+    }
+    add.addEventListener('click', function () {
+      var i = lerData(di.value), f = lerData(df.value);
+      if (!i) { window.alert('Informe a data de início do impedimento.'); return; }
+      if (f && f.ord < i.ord) { window.alert('O fim é anterior ao início.'); return; }
+      lst.push({ grau: sg.value, inicio: i, fim: f }); di.value = ''; df.value = ''; desenhar(); if (aoMudar) aoMudar();
+    });
+    box.appendChild(add); box.appendChild(ul); desenhar();
+    return box;
+  }
+
   // ---------- Tela ----------
   function lista(itens) { return D.util.lista(itens); }
   function renderizar(r) {
     if (r.beneficio === 'aposentadoria-especial') return renderizarEspecial(r);
     if (r.beneficio === 'aposentadoria-professor') return renderizarProfessor(r);
+    if (/^aposentadoria-pcd/.test(r.beneficio)) return renderizarPcd(r);
     var topo = C.el('div', 'direito');
     topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
     topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa atividade especial: o tempo especial só entra se você o enquadrar acima.'));
@@ -757,7 +956,7 @@
     return { sexo: g('tc-sexo').value, nascimento: g('tc-nasc').value, der: g('tc-der').value };
   }
 
-  var api = { aposentadoriaProfessor: aposentadoriaProfessor, editorProfessor: editorProfessor, sugereProfessor: sugereProfessor, aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
+  var api = { aposentadoriaPcd: aposentadoriaPcd, editorPcd: editorPcd, avaliaPcdTempo: avaliaPcdTempo, tempoPcd: tempoPcd, aposentadoriaProfessor: aposentadoriaProfessor, editorProfessor: editorProfessor, sugereProfessor: sugereProfessor, aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.TEMPO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

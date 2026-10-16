@@ -213,3 +213,34 @@ console.log('aposentadoria especial ok');
   assert.equal(r.conclusao.status, 'provavel');
 })();
 console.log('aposentadoria do professor ok');
+
+// ===== Aposentadoria da pessoa com deficiência (LC 142; IN 128, arts. 303-315) =====
+(function () {
+  const D = C.dataDe;
+  const an = C.analisar(vinculo([2000, 1], [2025, 12], null), HOJE);
+  const ent = (pcd, extra) => Object.assign({ sexo: 'M', nascimento: '1970-01-01', der: '2026-01-02', pcd }, extra);
+  // Sem deficiência informada
+  let r = T.aposentadoriaPcd(an, ent([]), HOJE, 'tempo');
+  assert.equal(r.conclusao.status, 'incompleta');
+  // Grave desde 01/01/2010 (aberta): 16 anos como PcD; 10 anos antes sem deficiência
+  r = T.aposentadoriaPcd(an, ent([{ grau: 'grave', inicio: D('01/01/2010'), fim: null }]), HOJE, 'tempo');
+  assert.equal(r.tempo.t.grave, 5844); assert.equal(r.tempo.t.sem, 3653);
+  assert.equal(r.info.preponderante, 'grave'); assert.equal(r.info.alterna, true);
+  assert.ok(Math.abs(r.info.convertido - (5844 + 3653 * 0.71)) < 1);
+  assert.equal(r.avaliacao.ok, false);          // 16a + 7,1a = 23,1 < 25
+  // Mulher, mesmo caso: sem->grave 0,67; 20 anos exigidos: 16 + 6,7 = 22,7 => cumprido
+  r = T.aposentadoriaPcd(an, ent([{ grau: 'grave', inicio: D('01/01/2010'), fim: null }], { sexo: 'F' }), HOJE, 'tempo');
+  assert.equal(r.avaliacao.ok, true);
+  // Sem alternância: só PcD moderada desde o início (homem, 26 anos, exige 29): sem conversão, não cumpre
+  r = T.aposentadoriaPcd(an, ent([{ grau: 'moderada', inicio: D('01/01/1999'), fim: null }]), HOJE, 'tempo');
+  assert.equal(r.info.alterna, false); assert.equal(r.avaliacao.ok, false); assert.ok(r.avaliacao.quando);
+  // Deficiência que não cobre a DER
+  r = T.aposentadoriaPcd(an, ent([{ grau: 'grave', inicio: D('01/01/2010'), fim: D('31/12/2015') }]), HOJE, 'tempo');
+  assert.match(r.avisos.join(' '), /não cobre a DER/);
+  // Idade: homem de 56 anos com 16 anos como PcD: falta idade (60)
+  r = T.aposentadoriaPcd(an, ent([{ grau: 'leve', inicio: D('01/01/2010'), fim: null }], { nascimento: '1970-01-01' }), HOJE, 'idade');
+  assert.equal(r.avaliacao.ok, false); assert.ok(r.avaliacao.quando);
+  r = T.aposentadoriaPcd(an, ent([{ grau: 'leve', inicio: D('01/01/2010'), fim: null }], { nascimento: '1960-01-01' }), HOJE, 'idade');
+  assert.equal(r.avaliacao.ok, true);
+})();
+console.log('aposentadoria PcD ok');

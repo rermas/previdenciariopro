@@ -1053,7 +1053,7 @@
     var bloco = C.el('div', 'convite-corpo');
     bloco.appendChild(C.el('p', 'dica', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.'));
     var topo = C.el('div', 'grade-campos');
-    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)'], ['aposentadoria-incapacidade-permanente', 'Aposentadoria por incapacidade permanente (invalidez)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural'], ['aposentadoria-idade-hibrida', 'Aposentadoria por idade híbrida (rural + urbana)']] : [], root.TEMPO ? [['aposentadoria-tempo', 'Aposentadoria por tempo de contribuição (regras de transição)'], ['aposentadoria-especial', 'Aposentadoria especial (15, 20 ou 25 anos de exposição)'], ['aposentadoria-professor', 'Aposentadoria do professor (educação básica)']] : []));
+    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)'], ['aposentadoria-incapacidade-permanente', 'Aposentadoria por incapacidade permanente (invalidez)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural'], ['aposentadoria-idade-hibrida', 'Aposentadoria por idade híbrida (rural + urbana)']] : [], root.TEMPO ? [['aposentadoria-tempo', 'Aposentadoria por tempo de contribuição (regras de transição)'], ['aposentadoria-especial', 'Aposentadoria especial (15, 20 ou 25 anos de exposição)'], ['aposentadoria-professor', 'Aposentadoria do professor (educação básica)'], ['aposentadoria-pcd-tempo', 'Aposentadoria da pessoa com deficiência por tempo de contribuição'], ['aposentadoria-pcd-idade', 'Aposentadoria da pessoa com deficiência por idade']] : []));
     topo.appendChild(campo('Benefício', selBen));
     bloco.appendChild(topo);
 
@@ -1153,6 +1153,7 @@
     var gTC = C.el('div'); gTC.id = 'dir-grupo-tc'; gTC.hidden = true;
     var enq = [];
     var prof = [];
+    var pcd = [];
     if (root.TEMPO) {
       var gt = C.el('div', 'grade-campos');
       gt.appendChild(campo('Sexo', selecao('tc-sexo', [['F', 'Mulher'], ['M', 'Homem']])));
@@ -1163,6 +1164,9 @@
       gTC.appendChild(gTC.editorEnq);
       gTC.editorProf = root.TEMPO.editorProfessor(analise, prof, function () { if (resultado.firstChild) executar(); });
       gTC.editorProf.hidden = true;
+      gTC.editorPcd = root.TEMPO.editorPcd(pcd, function () { if (resultado.firstChild) executar(); });
+      gTC.editorPcd.hidden = true;
+      gTC.appendChild(gTC.editorPcd);
       gTC.appendChild(gTC.editorProf);
     }
     bloco.appendChild(gTC);
@@ -1181,7 +1185,7 @@
     selBen.addEventListener('change', function () {
       var v = selBen.value;
       gSM.hidden = v !== 'salario-maternidade'; gPM.hidden = v !== 'pensao-por-morte'; gAR.hidden = v !== 'auxilio-reclusao'; gAI.hidden = v !== 'auxilio-incapacidade-temporaria' && v !== 'aposentadoria-incapacidade-permanente'; var gpp = document.getElementById('ai-perm'); if (gpp) gpp.hidden = v !== 'aposentadoria-incapacidade-permanente';
-      gAP.hidden = v.indexOf('aposentadoria-idade') !== 0; gTC.hidden = v !== 'aposentadoria-tempo' && v !== 'aposentadoria-especial' && v !== 'aposentadoria-professor'; if (gTC.editorEnq) gTC.editorEnq.hidden = v === 'aposentadoria-professor'; if (gTC.editorProf) gTC.editorProf.hidden = v !== 'aposentadoria-professor'; comuns.hidden = gAP.hidden === false || !gTC.hidden;
+      gAP.hidden = v.indexOf('aposentadoria-idade') !== 0; var ehPcd = v.indexOf('aposentadoria-pcd') === 0; gTC.hidden = v !== 'aposentadoria-tempo' && v !== 'aposentadoria-especial' && v !== 'aposentadoria-professor' && !ehPcd; if (gTC.editorEnq) gTC.editorEnq.hidden = v === 'aposentadoria-professor' || ehPcd; if (gTC.editorPcd) gTC.editorPcd.hidden = !ehPcd; if (gTC.editorProf) gTC.editorProf.hidden = v !== 'aposentadoria-professor'; comuns.hidden = gAP.hidden === false || !gTC.hidden;
       resultado.textContent = '';
     });
 
@@ -1225,10 +1229,10 @@
         resultado.appendChild(root.BENEFICIOS.renderizar(selBen.value === 'aposentadoria-incapacidade-permanente' ? root.BENEFICIOS.aposentadoriaIncapacidade(analise, ci, hojeAgora()) : root.BENEFICIOS.auxilioIncapacidade(analise, ci, hojeAgora())));
         return;
       }
-      if ((selBen.value === 'aposentadoria-tempo' || selBen.value === 'aposentadoria-especial' || selBen.value === 'aposentadoria-professor') && root.TEMPO) {
-        var ctc = Object.assign(root.TEMPO.lerCampos(), respostas, { enquadramento: enq, professor: prof.slice() });
+      if ((selBen.value === 'aposentadoria-tempo' || selBen.value === 'aposentadoria-especial' || selBen.value === 'aposentadoria-professor' || selBen.value.indexOf('aposentadoria-pcd') === 0) && root.TEMPO) {
+        var ctc = Object.assign(root.TEMPO.lerCampos(), respostas, { enquadramento: enq, professor: prof.slice(), pcd: pcd.slice() });
         if (!ctc.nascimento || !ctc.der) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de nascimento e a data do requerimento.')); return; }
-        resultado.appendChild(root.TEMPO.renderizar(selBen.value === 'aposentadoria-especial' ? root.TEMPO.aposentadoriaEspecial(analise, ctc, hojeAgora()) : selBen.value === 'aposentadoria-professor' ? root.TEMPO.aposentadoriaProfessor(analise, ctc, hojeAgora()) : root.TEMPO.aposentadoriaTempo(analise, ctc, hojeAgora())));
+        resultado.appendChild(root.TEMPO.renderizar(selBen.value === 'aposentadoria-especial' ? root.TEMPO.aposentadoriaEspecial(analise, ctc, hojeAgora()) : selBen.value === 'aposentadoria-professor' ? root.TEMPO.aposentadoriaProfessor(analise, ctc, hojeAgora()) : selBen.value.indexOf('aposentadoria-pcd') === 0 ? root.TEMPO.aposentadoriaPcd(analise, ctc, hojeAgora(), selBen.value === 'aposentadoria-pcd-idade' ? 'idade' : 'tempo') : root.TEMPO.aposentadoriaTempo(analise, ctc, hojeAgora())));
         return;
       }
       if (selBen.value.indexOf('aposentadoria-idade') === 0 && root.IDADE) {
@@ -1253,7 +1257,7 @@
     var tit = C.el('strong', null, 'Verificar direito a um benefício');
     tit.appendChild(C.el('em', 'convite-opcional', 'opcional'));
     txt.appendChild(tit);
-    txt.appendChild(C.el('span', null, 'Salário-maternidade, pensão por morte, auxílio-reclusão, incapacidade temporária e permanente, aposentadoria por idade, por tempo de contribuição, especial e de professor'));
+    txt.appendChild(C.el('span', null, 'Salário-maternidade, pensão por morte, auxílio-reclusão, incapacidade temporária e permanente, aposentadoria por idade, por tempo de contribuição, especial, de professor e da pessoa com deficiência'));
     sum.appendChild(alvo); sum.appendChild(txt);
     sum.appendChild(C.el('span', 'convite-seta'));
     det.appendChild(sum);
