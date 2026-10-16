@@ -152,3 +152,10 @@ Módulo `assets/tempo.js` (testes em `tests/tempo.test.js`). Avalia, de uma vez,
 ## Versão em arquivo único (offline)
 
 `node tools/gerar-offline.js` gera `dist/analise-cnis.html`: a ferramenta inteira (CSS, fontes, leitor de PDF e todos os módulos) em um HTML só, que abre com duplo clique, sem internet e sem servidor. Gere de novo a cada alteração nos arquivos de `assets/`.
+
+## Tempo rural na análise geral
+
+- O "Tempo contado" inclui segurado especial e empregado rural. Segurado especial sem data de fim conta até hoje, ou até o dia anterior ao início de aposentadoria concedida depois do início do período (com aviso).
+- Cada benefício decide em "Verificar direito" se esse período entra (tempo e carência); a análise geral traz só a observação.
+- O tipo vem de "Tipo Filiado no Vínculo"; se for "Empregado", o nome do empregador (fazenda, sítio, haras etc.) indica emprego rural. No mapa: marrom claro = segurado especial, marrom mais escuro = empregado rural.
+- Células do PDF quebradas em duas linhas (primeira linha acima do registro) são reagrupadas ao registro correto.

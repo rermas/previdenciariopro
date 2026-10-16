@@ -391,6 +391,37 @@ const ciMin2 = CNIS.analisar(texto(
 assert.equal(ciMin2.vinculos[0].dias, 31 + 31 + 30, 'CI abaixo do mínimo sai do tempo');
 console.log('abaixo do mínimo fora do tempo ok');
 
+// ---------- Segurado especial sem data de fim e célula quebrada em duas linhas ----------
+(function () {
+  const N = '1.111.111.111-1';
+  const txt = [
+    'Seq. NIT Código Emp./NB Origem do Vínculo Tipo Filiado no Vínculo Trabalhador Data Início Data Fim Últ. Remun. Indicadores',
+    `1 ${N} 50.002.36589/84 EMPRESA TESTE Empregado 01/06/2010 04/2011 PEXT`,
+    'PERÍODO DE ATIVIDADE DE SEGURADO PSE-POS',
+    `2 ${N} Segurado Especial 13/11/2012`,
+    'ESPECIAL ISE-CVU',
+    '32 - APOSENTADORIA INVALIDEZ',
+    `3 ${N} 7301413786 Não Informado 02/05/2022`,
+    'PREVIDENCIARIA'
+  ].join('\n');
+  const r = CNIS.analisar(txt, { y: 2026, m: 10, d: 16 });
+  assert.equal(r.vinculos.length, 2, 'a aposentadoria não vira vínculo');
+  assert.equal(r.beneficios.length, 1);
+  assert.equal(r.vinculos[0].nome, 'EMPRESA TESTE');
+  const se = r.vinculos.find((v) => v.seq === 2);
+  assert.equal(se.nome, 'PERÍODO DE ATIVIDADE DE SEGURADO ESPECIAL');
+  assert.equal(se.valido, true, 'segurado especial sem fim conta');
+  assert.equal(se.fimOrd, CNIS.dataDe('01/05/2022').ord, 'até o dia anterior à aposentadoria');
+  assert.match(r.pendencias.map((p) => p.msg).join(' | '), /O tempo contado inclui tempo rural \(segurado especial\)/);
+  const r2 = CNIS.analisar(`1 ${N} Segurado Especial 01/01/2020`, { y: 2026, m: 10, d: 16 });
+  assert.equal(r2.vinculos[0].fimOrd, CNIS.dataDe('16/10/2026').ord, 'sem aposentadoria, conta até hoje');
+  // empregado rural: marrom mais escuro no mapa; segurado especial, marrom claro
+  const r3 = CNIS.analisar(`1 ${N} 11.111.111/0001-11 FAZENDA SANTA FÉ Empregado 01/01/1992 31/03/1992\nRemunerações\n01/1992 100,00 02/1992 100,00 03/1992 100,00`, { y: 2026, m: 10, d: 16 });
+  assert.equal(r3.mapa[CNIS.mesDe(1992, 2)], 'ruralemp');
+  assert.match(r3.pendencias.map((p) => p.msg).join(' | '), /Empregado rural a partir de 01\/11\/1991 conta normalmente/);
+})();
+console.log('segurado especial sem fim ok');
+
 // ---------- Texto vazio ----------
 const vazio = CNIS.analisar('', HOJE);
 assert.equal(vazio.resumo.totalVinculos, 0);
@@ -542,7 +573,7 @@ console.log('facultativo concomitante ok');
   const r1 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 SÍTIO BOA VISTA Segurado Especial 01/01/2020 31/03/2020`, HOJE);
   assert.equal(r1.mapa[CNIS.mesDe(2020, 2)], 'rural');
   const r2 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 FAZENDA TRÊS IRMÃOS Empregado 01/01/2020 31/03/2020\nRemunerações\n01/2020 1.500,00 02/2020 1.500,00 03/2020 1.500,00`, HOJE);
-  assert.equal(r2.mapa[CNIS.mesDe(2020, 2)], 'rural', 'empregado rural pelo nome do empregador');
+  assert.equal(r2.mapa[CNIS.mesDe(2020, 2)], 'ruralemp', 'empregado rural pelo nome do empregador: marrom mais escuro');
   const r3 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 LOJA CENTRO Empregado 01/01/2020 31/03/2020\nRemunerações\n01/2020 1.500,00 02/2020 1.500,00 03/2020 1.500,00`, HOJE);
   assert.equal(r3.mapa[CNIS.mesDe(2020, 2)], 'ok');
   const r4 = CNIS.analisar(`1 ${NITr} 11.111.111/0001-11 SÍTIO BOA VISTA Segurado Especial 01/01/2020 31/03/2020\n2 ${NITr} 22.222.222/0001-22 LOJA CENTRO Empregado 01/02/2020 29/02/2020\nRemunerações\n02/2020 1.500,00`, HOJE);

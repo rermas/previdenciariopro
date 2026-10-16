@@ -503,20 +503,39 @@
   function interpretar(texto) {
     var linhas = String(texto || '').split(/\r?\n/);
     var vinculos = [], beneficios = [], eventos = [], orfas = [], orfas13 = [], notas = [];
-    var atual = null, modo = null, aceitaNome = false;
+    var atual = null, modo = null, aceitaNome = false, ultimaCont = null;
 
     linhas.forEach(function (bruta) {
       var linha = bruta.replace(/\s+/g, ' ').trim();
       if (!linha) return;
+      // Célula quebrada em duas linhas: a primeira pode vir acima da linha do registro seguinte (PDF com o texto centralizado na célula).
+      var prevCont = ultimaCont; ultimaCont = null;
 
       if (RE_FIM.test(linha)) { modo = 'fim'; atual = null; aceitaNome = false; return; }
 
       var h = RE_CAB.exec(linha);
       if (h) {
         var resto = h[2] || '';
+        var pre = null;
+        if (prevCont && prevCont.rec === atual) {
+          var mnb = /^(\d{10})\s+(.*)$/.exec(resto);
+          if (mnb && /^\d{2}\s*-\s/.test(prevCont.txt)) { resto = mnb[1] + ' ' + prevCont.txt + ' ' + mnb[2]; pre = prevCont; }
+          else pre = prevCont;
+        }
         var tipoReg = /\b(?:\d{10}|\d{3}\.\d{3}\.\d{3}-\d)\s+Benef[ií]cio\b|\bNB\b|^(?:\d{10}|\d{3}\.\d{3}\.\d{3}-\d)\s+\d{2}\s*-\s/i.test(resto) ? 'beneficio'
           : /evento\s+previdenci/i.test(resto) ? 'evento' : 'vinculo';
+        var antigo = atual;
         atual = novoRegistro(tipoReg, +h[1], resto);
+        if (pre && antigo) {
+          var usar = tipoReg === 'beneficio' || (tipoReg === 'vinculo' && atual.nome === 'Vínculo ' + atual.seq);
+          if (usar) {
+            antigo.nome = antigo.nome.slice(0, Math.max(0, antigo.nome.length - pre.txt.length - 1)).trim();
+            antigo.continuacoes = Math.max(0, antigo.continuacoes - 1);
+            antigo.indicadores = antigo.indicadores.filter(function (c) { return pre.ind.indexOf(c) < 0; });
+            if (tipoReg === 'vinculo') atual.nome = pre.txt;
+            atual.indicadores = atual.indicadores.concat(pre.ind);
+          }
+        }
         (tipoReg === 'beneficio' ? beneficios : tipoReg === 'evento' ? eventos : vinculos).push(atual);
         modo = 'rem';
         aceitaNome = tipoReg === 'vinculo';
@@ -554,8 +573,15 @@
 
       // Nome do empregador que passou para a linha de baixo.
       if (aceitaNome && atual && atual.continuacoes < 2 && linha.length <= 60 && linha !== 'INSS' && RE_CONTINUACAO.test(linha) && /[A-ZÀ-Ý]{2}/.test(linha)) {
-        atual.nome += ' ' + linha;
-        atual.continuacoes++;
+        var indC = indicadoresDe(linha), txtC = linha.replace(RE_IND, '').replace(/\s+/g, ' ').trim();
+        if (txtC) {
+          atual.nome += ' ' + txtC;
+          atual.continuacoes++;
+          atual.indicadores = atual.indicadores.concat(indC);
+          ultimaCont = { rec: atual, txt: txtC, ind: indC };
+        } else {
+          atual.indicadores = atual.indicadores.concat(indC);
+        }
       }
     });
 
@@ -712,12 +738,22 @@
         var ultima = -1;
         Object.keys(presentes).forEach(function (k) { if (+k > ultima && +k <= hojeMes) ultima = +k; });
         if (ultima < 0 && semLeitura && v.ultRemun !== undefined && v.ultRemun <= hojeMes) ultima = v.ultRemun;
-        if (ultima < 0) {
+        if (ultima < 0 && /especial/i.test(v.tipo || '')) {
+          // Segurado especial não tem remuneração no CNIS: conta até hoje, ou até o dia anterior ao início de aposentadoria concedida depois do início do período.
+          var limiteSE = hojeOrd, motivoSE = 'hoje';
+          lido.beneficios.forEach(function (b) {
+            if (!b.inicio || b.datasBrutas.length === 0 || !/APOSENTADORIA/i.test(b.nome || '') || /indeferid/i.test(b.nome || '') || b.inicio.ord <= v.inicio.ord) return;
+            if (b.inicio.ord - 1 < limiteSE) { limiteSE = b.inicio.ord - 1; motivoSE = 'o dia anterior ao início da aposentadoria (' + rotuloData(b.inicio) + ')'; }
+          });
+          fim = dataDeOrd(Math.max(v.inicio.ord, limiteSE));
+          nova('atencao', rotulo, 'Período de segurado especial sem data de fim: contado até ' + rotuloData(fim) + ' (' + motivoSE + '). Confira a data de encerramento da atividade rural.');
+        } else if (ultima < 0) {
           nova('atencao', rotulo, 'Vínculo sem data de fim e sem remuneração: não foi contado.');
           return;
+        } else {
+          fim = dataDeOrd(Math.max(v.inicio.ord, Math.min(hojeOrd, ultimoDiaDoMes(ultima))));
+          nova('info', rotulo, 'Vínculo sem data de fim: contado até ' + rotuloData(fim) + ' (fim do mês da última remuneração, ' + rotuloMes(ultima) + '). Confira se ele continua ativo.');
         }
-        fim = dataDeOrd(Math.max(v.inicio.ord, Math.min(hojeOrd, ultimoDiaDoMes(ultima))));
-        nova('info', rotulo, 'Vínculo sem data de fim: contado até ' + rotuloData(fim) + ' (fim do mês da última remuneração, ' + rotuloMes(ultima) + '). Confira se ele continua ativo.');
       }
       var mFim = mesDe(fim.y, fim.m);
 
@@ -984,6 +1020,20 @@
     // Vínculo de segurado especial ou de empregado rural: marrom claro nos meses do período, salvo se outra atividade tiver remuneração no mês.
     var seqRural = {};
     validos.forEach(function (v) { if (ehRural(v)) seqRural[v.seq] = true; });
+    // Aviso sobre o tempo rural: o tempo contado aqui o inclui, mas cada benefício trata esse período de um jeito.
+    (function () {
+      var lim91 = ordemDe(1991, 10, 31), temSE = false, temEmpAntes = false, temEmpDepois = false;
+      validos.forEach(function (v) {
+        if (!seqRural[v.seq]) return;
+        if (/especial/i.test(v.tipo || '')) temSE = true;
+        else if (v.inicioOrd <= lim91) temEmpAntes = true;
+        else temEmpDepois = true;
+      });
+      if (temSE || temEmpAntes) {
+        nova('info', '', 'O tempo contado inclui tempo rural (' + [temSE ? 'segurado especial' : '', temEmpAntes ? 'empregado rural até 31/10/1991' : ''].filter(Boolean).join(' e ') + '). Conforme o benefício requerido, esse período pode ser desconsiderado, e há divergência sobre contá-lo como carência: na aposentadoria por tempo de contribuição, o segurado especial conta até 31/10/1991 sem indenização e, depois disso, só com indenização; na aposentadoria por idade urbana não conta como carência; na rural e na híbrida conta sem recolhimento. A conferência de cada benefício fica em "Verificar direito".');
+      }
+      if (temEmpDepois) nova('info', '', 'Empregado rural a partir de 01/11/1991 conta normalmente como tempo e carência, inclusive em benefício urbano.');
+    })();
     // O período rural sem remuneração não é "falta" quando outra atividade tem remuneração no mês.
     var faltaNaoRural = {};
     itens.forEach(function (it) { if (!seqRural[it.seq]) (it.mesesFaltantes || []).forEach(function (kk) { faltaNaoRural[kk] = true; }); });
@@ -993,7 +1043,7 @@
       for (var kr = mesDe(v.inicio.y, v.inicio.m); kr <= mesDe(v.fimContado.y, v.fimContado.m); kr++) {
         var est = mapa[kr], vsr = valores[kr];
         var soRural = !vsr || vsr.every(function (x) { return seqRural[x.seq]; });
-        if ((est === undefined || est === 'falta' || est === 'pre94' || est === 'ok' || est === 'okci' || est === 'okfac' || est === 'parcial') && soRural) mapa[kr] = 'rural';
+        if ((est === undefined || est === 'falta' || est === 'pre94' || est === 'ok' || est === 'okci' || est === 'okfac' || est === 'parcial') && soRural) mapa[kr] = /especial/i.test(v.tipo || '') ? 'rural' : 'ruralemp';
       }
     });
     // Meses em benefício por incapacidade temporária ou salário-maternidade: cor própria, com tom mais claro nos meses de entrada e de saída.
@@ -1118,7 +1168,7 @@
     return s;
   }
 
-  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'vínculo de segurado especial ou empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento' };
+  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'segurado especial (rural)', ruralemp: 'empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento' };
 
   function desenharMapa(mapa, valores, vinculosPorMes) {
     valores = valores || {};
@@ -1159,7 +1209,7 @@
     box.appendChild(t);
     var leg = el('ul', 'legenda');
     var presentes = {}; Object.keys(mapa).forEach(function (k) { presentes[mapa[k]] = true; });
-    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['rural', 'Segurado especial ou empregado rural'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento']].forEach(function (x) {
+    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['rural', 'Segurado especial'], ['ruralemp', 'Empregado rural'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento']].forEach(function (x) {
       if ((/^ben/.test(x[0]) || x[0] === 'segdes' || x[0] === 'okci' || x[0] === 'okfac' || x[0] === 'rural') && !presentes[x[0]]) return;
       var li = el('li'); li.appendChild(el('i', 'c-' + x[0])); li.appendChild(document.createTextNode(x[1])); leg.appendChild(li);
     });
