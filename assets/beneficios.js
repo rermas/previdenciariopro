@@ -20,6 +20,14 @@
     N_QUALIDADE
   ];
 
+  var N_PERM = [
+    { nome: 'Lei 8.213/91, arts. 42 a 47 (aposentadoria por incapacidade permanente, antiga aposentadoria por invalidez), art. 25, I (carência de 12 contribuições) e art. 26, II (dispensa)', vigencia: 'Redação atual, com a nova denominação dada pela EC 103/2019. Confira o texto compilado.' },
+    { nome: 'Lei 8.213/91, art. 42, § 2º (doença ou lesão anterior à filiação) e art. 43 (início do benefício)', vigencia: 'Redação das Leis 9.032/95, 9.876/99 e 13.846/2019. Confira o texto compilado.' },
+    { nome: 'Lei 8.213/91, art. 45 (acréscimo de 25% na grande invalidez) e art. 101 (reavaliação periódica)', vigencia: 'O acréscimo de 25% vale ainda que o valor ultrapasse o teto. Confira o texto compilado.' },
+    { nome: 'EC 103/2019, art. 26, §§ 2º a 4º (valor: 60% da média mais 2 pontos por ano que exceder 20 anos de contribuição, homem, ou 15, mulher; 100% se decorrente de acidente de trabalho, doença profissional ou do trabalho)', vigencia: 'Para benefícios com início desde 13/11/2019. Antes disso, 100% do salário de benefício. Confira o texto da emenda e o Decreto 3.048/99.' },
+    N_QUALIDADE
+  ];
+
   // Limite de renda do auxílio-reclusão por ano (média dos salários de contribuição dos 12 meses anteriores à prisão).
   var LIMITE_RENDA = { 2019: 1364.43, 2020: 1425.56, 2021: 1503.25, 2022: 1655.98, 2023: 1754.18, 2024: 1819.26, 2025: 1906.04, 2026: 1980.38 };
   var ANO_LIMITE_MAX = 2026;
@@ -318,10 +326,16 @@
 
   // ===================== AUXÍLIO POR INCAPACIDADE TEMPORÁRIA =====================
 
-  function auxilioIncapacidade(analise, entrada, hoje) {
+  function aposentadoriaIncapacidade(analise, entrada, hoje) { return auxilioIncapacidade(analise, entrada, hoje, true); }
+  function auxilioIncapacidade(analise, entrada, hoje, perm) {
     var res = {
-      beneficio: 'auxilio-incapacidade-temporaria', titulo: 'auxílio por incapacidade temporária', normas: N_INCAP, entrada: entrada,
-      regras: [
+      beneficio: perm ? 'aposentadoria-incapacidade-permanente' : 'auxilio-incapacidade-temporaria', titulo: perm ? 'aposentadoria por incapacidade permanente' : 'auxílio por incapacidade temporária', normas: perm ? N_PERM : N_INCAP, entrada: entrada,
+      regras: perm ? [
+        '**Incapacidade total e permanente** para qualquer atividade que garanta a subsistência, sem possibilidade de reabilitação (art. 42), confirmada em perícia médica do INSS.',
+        '**Carência de 12 contribuições** (art. 25, I), exceto acidente de qualquer natureza, doença profissional ou do trabalho e doenças graves da lista oficial (art. 26, II).',
+        '**Qualidade de segurado na data de início da incapacidade (DII)**, e não na data do requerimento.',
+        '**Incapacidade anterior à filiação não dá direito**, salvo progressão ou agravamento posterior (art. 42, § 2º).'
+      ] : [
         '**Carência de 12 contribuições** (art. 25, I), exceto acidente de qualquer natureza, doença profissional ou do trabalho e doenças graves da lista oficial (art. 26, II).',
         '**Qualidade de segurado na data de início da incapacidade (DII)**, e não na data do requerimento.',
         '**Incapacidade anterior à filiação não dá direito**, salvo progressão ou agravamento posterior (art. 59, parágrafo único).',
@@ -382,9 +396,11 @@
     // ----- Benefícios em gozo e outros impedimentos -----
     var imp = [];
     var apos = beneficioEmGozo(analise, dii.ord, /APOSENT/i);
-    if (apos.length) imp.push('O CNIS mostra aposentadoria em gozo na DII (NB ' + apos.map(function (b) { return b.nb || 's/n'; }).join(', ') + '). O aposentado não recebe auxílio por incapacidade temporária; em geral só há direito a uma nova atividade, e não ao benefício acumulado com a aposentadoria.');
+    if (apos.length && perm) imp.push('O CNIS mostra aposentadoria em gozo na DII (NB ' + apos.map(function (b) { return b.nb || 's/n'; }).join(', ') + '). Confira se ela já havia cessado: o INSS não paga duas aposentadorias do RGPS ao mesmo tempo.');
+    else if (apos.length) imp.push('O CNIS mostra aposentadoria em gozo na DII (NB ' + apos.map(function (b) { return b.nb || 's/n'; }).join(', ') + '). O aposentado não recebe auxílio por incapacidade temporária; em geral só há direito a uma nova atividade, e não ao benefício acumulado com a aposentadoria.');
     var mesmo = beneficioEmGozo(analise, dii.ord, /AUX[IÍ]LIO[ -]DOEN|INCAPACIDADE TEMPOR/i);
-    if (mesmo.length) imp.push('Já havia auxílio por incapacidade temporária em gozo na DII (NB ' + mesmo.map(function (b) { return b.nb || 's/n'; }).join(', ') + '): o caso é de prorrogação ou pedido de reconsideração, não de novo benefício.');
+    if (mesmo.length && perm) imp.push('Havia auxílio por incapacidade temporária em gozo na DII (NB ' + mesmo.map(function (b) { return b.nb || 's/n'; }).join(', ') + '): é o caso de **conversão** em aposentadoria, com início no dia seguinte ao da cessação do auxílio (art. 43, caput).');
+    else if (mesmo.length) imp.push('Já havia auxílio por incapacidade temporária em gozo na DII (NB ' + mesmo.map(function (b) { return b.nb || 's/n'; }).join(', ') + '): o caso é de prorrogação ou pedido de reconsideração, não de novo benefício.');
     if (imp.length) res.requisitos.push({ titulo: 'Benefícios em gozo na DII', linhas: imp });
 
     // ----- Início do benefício -----
@@ -403,11 +419,41 @@
       if (req.ord - afast.ord > 30) { ini.dib = req; ini.linhas.push('Requerimento em ' + rot(req) + ', mais de **30 dias** depois do afastamento: o benefício conta da **data do requerimento**, sem retroativo (art. 60, § 1º).'); }
       else { ini.dib = dibBase; ini.linhas.push('Requerimento em ' + rot(req) + ', em até 30 dias do afastamento: início na data acima.'); }
     } else { ini.dib = dibBase; ini.linhas.push('Requerimento não informado: foi considerado dentro de 30 dias do afastamento.'); }
+    if (perm) {
+      var temp = beneficioEmGozo(analise, dii.ord, /AUX[IÍ]LIO[ -]DOEN|INCAPACIDADE TEMPOR/i);
+      if (temp.length) { var fimT = temp.reduce(function (m, b) { var f = b.fim && b.fim.ord !== undefined ? b.fim.ord : null; return f !== null && (m === null || f > m) ? f : m; }, null); if (fimT !== null) { ini.dib = dObj(fimT + 1); ini.linhas.push('Conversão de auxílio por incapacidade temporária: início no **dia seguinte à cessação do auxílio** (' + rot(ini.dib) + '), art. 43, caput.'); } }
+      ini.linhas.push('Se a incapacidade permanente for constatada por perícia sem auxílio anterior: empregado, a partir do 16º dia do afastamento; demais segurados, da DII, ou da data do requerimento se feito depois de 30 dias do afastamento (art. 43, § 1º).');
+      ini.linhas.push('O aposentado por incapacidade permanente é submetido à **reavaliação periódica** (art. 101), salvo as exceções legais (por exemplo, idade igual ou superior a 60 anos, ou 55 anos com 15 anos de aposentadoria). Se for recuperada a capacidade, o benefício cessa.');
+      ini.linhas.push('Prescrição quinquenal das parcelas.');
+    } else {
     ini.linhas.push('O benefício dura **enquanto o segurado permanecer incapaz**. A perícia fixa a data de cessação (DCB) ou o pedido de prorrogação. Quando a incapacidade é permanente, passa a ser aposentadoria por incapacidade permanente.');
     ini.linhas.push('Prescrição quinquenal das parcelas.');
+    }
 
     // ----- Valor -----
     var dibOrd = ini.dib ? ini.dib.ord : dii.ord;
+    if (perm) {
+      res.valor = { calculado: false, linhas: ['Não calculado nesta versão: exige correção monetária das remunerações desde 07/1994, que o CNIS não traz.'] };
+      var posEC = dibOrd >= C.ordemDe(2019, 11, 13);
+      var trab = origem === 'acidente';
+      if (posEC) {
+        res.valor.linhas.push('Início desde 13/11/2019: **60% da média de todos os salários de contribuição desde 07/1994, mais 2 pontos percentuais por ano de contribuição que exceder 20 anos (homem) ou 15 anos (mulher)** (EC 103/2019, art. 26, § 2º, III).');
+        if (trab) res.valor.linhas.push('Incapacidade decorrente de **acidente de trabalho, doença profissional ou doença do trabalho**: **100% da média** (art. 26, § 3º, II). A comunicação (CAT) e o nexo são avaliados pelo INSS.');
+        else if (origem === 'acidente') res.valor.linhas.push('Acidente de qualquer natureza que não seja de trabalho não dá o percentual de 100% pela EC 103: vale o cálculo de 60% mais 2 pontos por ano.');
+        var T = root.TEMPO || (typeof require === 'function' ? (function () { try { return require('./tempo.js'); } catch (e) { return null; } })() : null);
+        var sx = entrada.sexo === 'M' ? 'M' : (entrada.sexo === 'F' ? 'F' : null);
+        if (T && T.contar && sx && !trab) {
+          var ctp = T.contar(analise, { sexo: sx, enquadramento: entrada.enquadramento || [] }, ini.dib || dii);
+          var anos = ctp.convDer / 365.25, ex = Math.max(0, Math.floor(anos - (sx === 'M' ? 20 : 15)));
+          res.valor.linhas.push('Tempo de contribuição contado pelo CNIS até o início do benefício: **' + C.formatarDuracao(Math.round(ctp.convDer)) + '**. Excedente sobre ' + (sx === 'M' ? 20 : 15) + ' anos: ' + ex + ' ano(s) completo(s). Percentual estimado: **' + Math.min(100, 60 + 2 * ex) + '%** da média (sujeito ao tempo reconhecido pelo INSS).');
+        } else if (!trab && !sx) res.valor.linhas.push('Informe o sexo para estimar o percentual (o excedente é contado a partir de 20 anos para homem e 15 para mulher).');
+      } else {
+        res.valor.linhas.push('Início antes de 13/11/2019: **100% do salário de benefício** (média dos 80% maiores salários de contribuição desde 07/1994, Leis 9.876/99 e 8.213/91, art. 44).');
+      }
+      res.valor.linhas.push('Piso de um salário mínimo (' + (C.minimoDe(mesOrd(dii)) ? dinheiro(C.minimoDe(mesOrd(dii))) : 'valor não cadastrado') + ' na DII) e teto do RGPS.');
+      if (entrada.grandeInvalidez) res.valor.linhas.push('**Grande invalidez** (precisa de assistência permanente de outra pessoa): acréscimo de **25%** sobre o valor, mesmo que ultrapasse o teto (art. 45). Depende de laudo pericial; a EC 103 mantém o acréscimo.');
+      else res.valor.linhas.push('Se o segurado precisar da assistência permanente de outra pessoa, há acréscimo de 25% (art. 45); marque "grande invalidez" para registrar.');
+    } else
     res.valor = { calculado: false, linhas: [
       'Não calculado nesta versão: exige correção monetária das remunerações desde 07/1994, que o CNIS não traz.',
       dibOrd >= C.ordemDe(2019, 11, 13)
@@ -423,9 +469,9 @@
     if (!qOk) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: qualidade de segurado na DII', texto: 'Os dados do CNIS não demonstram a qualidade de segurado na data de início da incapacidade. Não é conclusão definitiva: outras provas e a DII fixada pela perícia podem mudar o resultado.' };
     else if (preBloqueia) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: incapacidade anterior à filiação', texto: 'A incapacidade já existia ao se filiar, sem agravamento posterior: o benefício é negado (art. 59, parágrafo único).' };
     else if (!carOk) conc = { status: 'nao_demonstrado', rotulo: 'Direito não demonstrado: carência', texto: 'O CNIS mostra ' + car.total + ' contribuição(ões) válida(s)' + (car.perda && car.total >= 12 ? ', mas houve perda da qualidade e depois do retorno há ' + car.depoisDoRetorno + ' (mínimo de 6)' : '') + '; a carência é de 12, salvo acidente ou doença da lista. Documentos que completem a carência podem mudar o resultado.' };
-    else if (apos.length) conc = { status: 'nao_demonstrado', rotulo: 'Segurado em gozo de aposentadoria', texto: 'O CNIS mostra aposentadoria em gozo na DII, o que em regra impede o auxílio por incapacidade temporária. Confira se a aposentadoria já havia cessado.' };
-    else conc = { status: 'depende', rotulo: 'Depende da perícia médica', texto: 'Qualidade de segurado' + (dispensada ? '' : ' e carência') + ' estão compatíveis com o CNIS' + (q.status === 'confirmada' ? '' : ', com pontos a validar') + '. A incapacidade para o trabalho por mais de 15 dias e a DII precisam ser confirmadas pela perícia médica do INSS.' };
-    pend.push('Incapacidade e DII: comprovar em perícia médica do INSS.');
+    else if (apos.length) conc = { status: 'nao_demonstrado', rotulo: 'Segurado em gozo de aposentadoria', texto: 'O CNIS mostra aposentadoria em gozo na DII, o que em regra impede ' + (perm ? 'outra aposentadoria do RGPS' : 'o auxílio por incapacidade temporária') + '. Confira se a aposentadoria já havia cessado.' };
+    else conc = { status: 'depende', rotulo: 'Depende da perícia médica', texto: 'Qualidade de segurado' + (dispensada ? '' : ' e carência') + ' estão compatíveis com o CNIS' + (q.status === 'confirmada' ? '' : ', com pontos a validar') + '. ' + (perm ? 'A incapacidade total e permanente para qualquer atividade, sem possibilidade de reabilitação, e a DII precisam ser confirmadas pela perícia médica do INSS.' : 'A incapacidade para o trabalho por mais de 15 dias e a DII precisam ser confirmadas pela perícia médica do INSS.') };
+    pend.push(perm ? 'Incapacidade total e permanente (e a DII): comprovar em perícia médica do INSS, que também avalia a impossibilidade de reabilitação.' : 'Incapacidade e DII: comprovar em perícia médica do INSS.');
     if (car.extra) { conc.texto += ' Observação: a carência foi contada com as premissas informadas (complementação até o salário mínimo ou vínculo comprovado).'; doc('Guias de complementação até o salário mínimo, se for o caso'); }
     conc.pendencias = pend;
     res.conclusao = conc;
@@ -552,12 +598,13 @@
     var g = function (id) { return document.getElementById(id); };
     return {
       dii: g('ai-dii').value, afastamento: g('ai-afast').value, requerimento: g('ai-req').value, origem: g('ai-origem').value,
-      preexistente: g('ai-pre').value, desemprego: g('dir-desemprego').checked
+      preexistente: g('ai-pre').value, desemprego: g('dir-desemprego').checked,
+      sexo: g('ai-sexo') ? g('ai-sexo').value : '', grandeInvalidez: !!(g('ai-grande') && g('ai-grande').checked)
     };
   }
 
   var api = {
-    auxilioReclusao: auxilioReclusao, auxilioIncapacidade: auxilioIncapacidade, renderizar: renderizar,
+    auxilioReclusao: auxilioReclusao, auxilioIncapacidade: auxilioIncapacidade, aposentadoriaIncapacidade: aposentadoriaIncapacidade, renderizar: renderizar,
     lerCamposReclusao: lerCamposReclusao, lerCamposIncapacidade: lerCamposIncapacidade, LIMITE_RENDA: LIMITE_RENDA
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -205,3 +205,27 @@ console.log('linhaRetorno ok');
   assert.match(r.carencia.linhas.join(' '), /dentro de benefício por incapacidade pago por inteiro/);
 }
 console.log('benefício integral ok');
+
+// ===== Aposentadoria por incapacidade permanente =====
+(function () {
+  const perm = (txt, ent) => B.aposentadoriaIncapacidade(C.analisar(txt, HOJE), ent, HOJE);
+  const t = vinculo([1995, 1], [2023, 3], '15/03/2023', '2.500,00');
+  let r = perm(t, { dii: '2023-03-01', origem: 'comum', preexistente: 'nao', sexo: 'M' });
+  assert.equal(r.beneficio, 'aposentadoria-incapacidade-permanente');
+  assert.equal(r.conclusao.status, 'depende');
+  assert.match(r.valor.linhas.join(' '), /60% da média/);
+  assert.match(r.valor.linhas.join(' '), /\*\*76%\*\*/);
+  r = perm(t, { dii: '2023-03-01', origem: 'comum', preexistente: 'nao', sexo: 'F' });
+  assert.match(r.valor.linhas.join(' '), /\*\*86%\*\*/);
+  r = perm(t, { dii: '2023-03-01', origem: 'acidente', preexistente: 'nao', sexo: 'M', grandeInvalidez: true });
+  assert.match(r.valor.linhas.join(' '), /100% da média/);
+  assert.match(r.valor.linhas.join(' '), /25%/);
+  r = perm(t, { dii: '2018-03-01', origem: 'comum', preexistente: 'nao' });
+  assert.match(r.valor.linhas.join(' '), /100% do salário de benefício/);
+  // incapacidade preexistente bloqueia
+  r = perm(t, { dii: '2023-03-01', origem: 'comum', preexistente: 'sim' });
+  assert.equal(r.conclusao.status, 'nao_demonstrado');
+  // a verificação do auxílio temporário continua igual
+  assert.equal(incap(t, { dii: '2023-03-01' }).beneficio, 'auxilio-incapacidade-temporaria');
+})();
+console.log('incapacidade permanente ok');

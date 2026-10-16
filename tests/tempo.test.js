@@ -149,3 +149,40 @@ console.log('regras do enquadramento ok');
   assert.equal(base.vinculos.length, 1);
 })();
 console.log('vínculos incluídos manualmente ok');
+
+// ===== Aposentadoria especial (IN 128, arts. 260 a 262) =====
+(function () {
+  const D = C.dataDe;
+  const esp = (txt, ent, enq) => T.aposentadoriaEspecial(C.analisar(txt, HOJE), Object.assign({ enquadramento: enq || [] }, ent), HOJE);
+  const bl = (r, n) => r.blocos.find((b) => b.esp.n === n);
+  const regra = (b, id) => b.regras.find((a) => a.regra.id === id);
+  // Sem enquadramento: nada a avaliar
+  let r = esp(vinculo([1995, 1], [2019, 10], '31/10/2019'), { nascimento: '1970-01-01', der: '2026-02-02' });
+  assert.equal(r.blocos.length, 0); assert.equal(r.conclusao.status, 'nao_demonstrado');
+  // Direito adquirido: 25 anos especiais completos até 13/11/2019 (01/1995 a 10/2019 = 24a10m) não completam; 01/1994 sim
+  let txt = vinculo([1994, 1], [2019, 10], '31/10/2019');
+  const enq = [{ seq: 0, inicio: D('01/01/1994'), fim: D('31/10/2019'), natureza: 'esp25' }];
+  r = esp(txt, { nascimento: '1975-01-01', der: '2026-02-02' }, enq);
+  assert.equal(regra(bl(r, 25), 'adquirido').ok, true);
+  assert.equal(r.conclusao.status, 'provavel');
+  // Pontos: nascido em 1975, 51 anos na DER + 25,8 anos de exposição, mas só 25 anos até 2019 e depois sem atividade: tempo 25a10m = 25,8; pontos 51,1+25,8 = 76,9 < 86
+  assert.equal(regra(bl(r, 25), 'pontos').ok, false);
+  // Filiado antes da EC: a regra permanente de idade não se aplica
+  assert.equal(regra(bl(r, 25), 'idade').aplicavel, false);
+  // Filiado depois da EC: só a regra de idade; 55 anos e 15 anos de exposição
+  txt = vinculo([2020, 1], [2036, 1], null);
+  const enq2 = [{ seq: 0, inicio: D('01/01/2020'), fim: D('31/12/2035'), natureza: 'esp15' }];
+  r = esp(txt, { nascimento: '1975-01-01', der: '2036-01-01' }, enq2);
+  assert.equal(regra(bl(r, 15), 'idade').aplicavel, true);
+  assert.equal(regra(bl(r, 15), 'adquirido').aplicavel, false);
+  assert.equal(regra(bl(r, 15), 'pontos').aplicavel, false);
+  // Natureza não completa a outra: 10 anos de 25 + 10 de 15 não somam
+  r = esp(vinculo([2000, 1], [2019, 10], '31/10/2019'), { nascimento: '1970-01-01', der: '2026-02-02' }, [
+    { seq: 0, inicio: D('01/01/2000'), fim: D('31/12/2009'), natureza: 'esp25' },
+    { seq: 0, inicio: D('01/01/2010'), fim: D('31/12/2019'), natureza: 'esp15' }]);
+  assert.ok(bl(r, 25).tempo < 25 * 365 && bl(r, 15).tempo < 15 * 365);
+  assert.equal(r.conclusao.status, 'nao_demonstrado');
+  // Não quebra na renderização por texto
+  assert.ok(r.valor.linhas.length && r.documentos.length);
+})();
+console.log('aposentadoria especial ok');

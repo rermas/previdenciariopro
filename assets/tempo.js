@@ -249,9 +249,169 @@
     return res;
   }
 
+  // ---------- Aposentadoria especial (IN PRES/INSS 128, arts. 260 a 262) ----------
+  var NORMAS_ESP = [
+    { nome: 'EC 103/2019, arts. 19, § 1º, I, 21 e 25, § 2º', vigencia: 'Regra permanente (idade mínima de 55, 58 ou 60 anos, para 15, 20 ou 25 anos de exposição), regra de transição por pontos (66, 76 ou 86) e fim da conversão de tempo especial em comum depois de 13/11/2019.' },
+    { nome: 'IN PRES/INSS 128/2022, arts. 260 a 262 (com alterações posteriores)', vigencia: 'Art. 260: filiados a partir de 14/11/2019. Art. 261: direito adquirido até 13/11/2019, sem idade mínima. Art. 262: filiados até 13/11/2019, por pontos. Confira o texto vigente.' },
+    { nome: 'Lei 8.213/91, arts. 25, II, 57 e 58 e Decreto 3.048/99, arts. 64 a 70', vigencia: 'Carência de 180 contribuições; exposição habitual e permanente, não ocasional nem intermitente, a agentes nocivos; comprovação por PPP e LTCAT. Até 28/04/1995 o enquadramento pode ser por categoria profissional; depois, só por agente nocivo.' },
+    { nome: 'IN PRES/INSS 128/2022, art. 233, V (cálculo)', vigencia: 'O valor segue o inciso V do art. 233 (art. 260) e a alínea "b" desse inciso (art. 262). O valor não é calculado nesta versão.' }
+  ];
+  var ESPECIAIS = [
+    { n: 25, id: 'esp25', idade: 60, pontos: 86 },
+    { n: 20, id: 'esp20', idade: 58, pontos: 76 },
+    { n: 15, id: 'esp15', idade: 55, pontos: 66 }
+  ];
+  function aposentadoriaEspecial(analise, entrada, hoje) {
+    var res = { beneficio: 'aposentadoria-especial', titulo: 'aposentadoria especial', normas: NORMAS_ESP, entrada: entrada, fato: { data: null } };
+    var nasc = lerData(entrada.nascimento), der = lerData(entrada.der);
+    if (!nasc || !der) {
+      res.conclusao = { status: 'incompleta', rotulo: 'Análise incompleta', texto: 'Informe a data de nascimento e a data do requerimento (DER).', pendencias: [] };
+      return res;
+    }
+    res.fato.data = der;
+    var dEC = C.dataDeOrd(EC);
+    var ct = contar(analise, entrada, der);
+    var ctEC = contar(analise, entrada, dEC);
+    var primeira = null;
+    analise.vinculos.forEach(function (v) { if (v.valido && v.inicio && (!primeira || v.inicio.ord < primeira.ord)) primeira = v.inicio; });
+    var manualPrimeira = (entrada.enquadramento || []).filter(function (e) { return e && e.inicio && !e.seq; }).reduce(function (m, e) { return !m || e.inicio.ord < m.ord ? e.inicio : m; }, null);
+    if (manualPrimeira && (!primeira || manualPrimeira.ord < primeira.ord)) primeira = manualPrimeira;
+    var filiadoAteEC = primeira ? primeira.ord <= EC : null;
+    var usaTabela = !!(primeira && primeira.ord <= C.ordemDe(1991, 7, 24));
+    var carDer = Object.keys(I.montarMeses(analise, entrada, der, { modalidade: 'urbana' }).contados).length;
+    var carEC = Object.keys(I.montarMeses(analise, entrada, dEC, { modalidade: 'urbana' }).contados).length;
+    var exDer = I.carenciaExigida(der.y, usaTabela), exEC = I.carenciaExigida(2019, usaTabela);
+
+    function reqsDe(regra, esp, d, tempo, car) {
+      var out = [];
+      function r(nome, ok, atual, exigido) { out.push({ nome: nome, ok: ok, atual: atual, exigido: exigido }); }
+      var im = ageMeses(nasc, d);
+      if (regra === 'adquirido') {
+        r('Tempo de atividade especial de ' + esp.n + ' anos até 13/11/2019', tempo >= esp.n * 365, dur(tempo), esp.n + ' anos');
+        r('Carência em 13/11/2019', car >= exEC, car + ' meses', exEC + ' meses');
+        return out;
+      }
+      r('Tempo de exposição efetiva (atividade especial de ' + esp.n + ' anos)', tempo >= esp.n * 365, dur(tempo), esp.n + ' anos');
+      if (regra === 'idade') r('Idade mínima', im >= esp.idade * 12, textoMeses(Math.max(0, im)), esp.idade + ' anos');
+      else { var pts = (d.ord - nasc.ord) / 365.25 + tempo / 365; r('Pontos (idade + tempo de exposição, em dias)', pts >= esp.pontos, pts.toFixed(2).replace('.', ','), esp.pontos + ' pontos'); }
+      r('Carência', car >= exDer, car + ' meses', exDer + ' meses');
+      return out;
+    }
+    var REG = [
+      { id: 'idade', nome: 'Regra permanente: idade mínima', norma: 'IN 128, art. 260, e EC 103, art. 19, § 1º, I', desc: 'Para filiados a partir de 14/11/2019: idade mínima de 55, 58 ou 60 anos e 15, 20 ou 25 anos de exposição, conforme o agente.', aplicavel: filiadoAteEC !== true },
+      { id: 'adquirido', nome: 'Direito adquirido até 13/11/2019', norma: 'IN 128, art. 261', desc: 'Carência e 15, 20 ou 25 anos de atividade especial já cumpridos em 13/11/2019, sem idade mínima. O benefício pode ser requerido depois.', aplicavel: filiadoAteEC !== false },
+      { id: 'pontos', nome: 'Regra de transição por pontos', norma: 'IN 128, art. 262, e EC 103, art. 21', desc: 'Para filiados até 13/11/2019: soma de idade e tempo de exposição de 66, 76 ou 86 pontos, com 15, 20 ou 25 anos de exposição efetiva. Idade e tempo são apurados em dias.', aplicavel: filiadoAteEC !== false }
+    ];
+    var blocos = [];
+    ESPECIAIS.forEach(function (esp) {
+      var tempo = ct.tot[esp.id], tempoEC = ctEC.tot[esp.id];
+      if (!tempo && !tempoEC) return;
+      var regras = REG.map(function (rg) {
+        var reqs = rg.id === 'adquirido' ? reqsDe(rg.id, esp, dEC, tempoEC, carEC) : reqsDe(rg.id, esp, der, tempo, carDer);
+        var ok = reqs.every(function (x) { return x.ok; });
+        var quando = null;
+        if (!ok && rg.aplicavel && rg.id !== 'adquirido') {
+          for (var dd = 1; dd <= 365 * 25; dd++) {
+            var dt = C.dataDeOrd(der.ord + dd);
+            var rr = reqsDe(rg.id, esp, dt, tempo + dd, carDer + Math.floor(dd / 30));
+            if (rr.every(function (x) { return x.ok; })) { quando = dt; break; }
+          }
+        }
+        return { regra: rg, reqs: reqs, ok: ok, aplicavel: rg.aplicavel, quando: quando };
+      });
+      blocos.push({ esp: esp, tempo: tempo, tempoEC: tempoEC, regras: regras });
+    });
+    res.blocos = blocos;
+    res.tabela = ct;
+    var linhasTempo = [];
+    linhasTempo.push('Tempo total contado pelo CNIS e pelo enquadramento: **' + dur(ct.brutoDer) + '** até a DER (' + rot(der) + '); destes, em atividade especial: **' + dur(ct.tot.esp25 + ct.tot.esp20 + ct.tot.esp15) + '**.');
+    linhasTempo.push('Na aposentadoria especial conta só o tempo de **exposição efetiva** a agentes nocivos, **sem conversão** em tempo comum. Cada natureza (15, 20 ou 25 anos) é avaliada separadamente: o tempo de uma natureza não completa o de outra.');
+    linhasTempo.push('Pelos dados do CNIS não dá para saber a atividade especial: só entra o que você enquadrar acima. Até 28/04/1995 o enquadramento pode ser pela categoria profissional; depois só pela exposição comprovada a agente nocivo.');
+    var ex = ct.mm.ex;
+    if (ex.abaixoEmp.length) linhasTempo.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo não foram contados (' + I.faixas(ex.abaixoEmp) + ').');
+    if (ex.aposFG.length) linhasTempo.push(ex.aposFG.length + ' competência(s) paga(s) depois da DER não contam (' + I.faixas(ex.aposFG) + ').');
+    res.tempo = { linhas: linhasTempo };
+    res.carencia = { total: carDer, exigida: exDer, ok: carDer >= exDer, linhas: ['Carência no CNIS até a DER: **' + carDer + ' meses**. Exigidos: **' + exDer + '**. Em 13/11/2019: **' + carEC + ' meses**.'] };
+    var avisos = [];
+    (ct.ajustes || []).forEach(function (x) { avisos.push('Enquadramento: ' + x); });
+    if (filiadoAteEC === true) avisos.push('O primeiro vínculo é anterior a 14/11/2019: a regra permanente de idade mínima (art. 260) não se aplica. Valem o direito adquirido (art. 261) e a regra de pontos (art. 262).');
+    if (filiadoAteEC === false) avisos.push('O primeiro vínculo é posterior a 13/11/2019: só vale a regra permanente de idade mínima (art. 260).');
+    if (!blocos.length) avisos.push('Nenhum período foi enquadrado como especial. Marque no enquadramento os períodos de exposição a agentes nocivos e a natureza (15, 20 ou 25 anos).');
+    res.avisos = avisos;
+    var oks = [];
+    blocos.forEach(function (b) { b.regras.forEach(function (a) { if (a.ok && a.aplicavel) oks.push(a.regra.nome + ' (' + b.esp.n + ' anos)'); }); });
+    var prev = [];
+    blocos.forEach(function (b) { b.regras.forEach(function (a) { if (!a.ok && a.aplicavel && a.quando) prev.push({ nome: a.regra.nome + ' (' + b.esp.n + ' anos)', quando: a.quando }); }); });
+    prev.sort(function (x, y) { return x.quando.ord - y.quando.ord; });
+    var conc;
+    if (!blocos.length) conc = { status: 'nao_demonstrado', rotulo: 'Sem período especial enquadrado', texto: 'Nenhum período foi enquadrado como atividade especial. Sem isso não há como avaliar a aposentadoria especial.' };
+    else if (oks.length) conc = { status: 'provavel', rotulo: 'Requisitos cumpridos em ' + oks.length + ' hipótese(s) pelos dados informados', texto: 'Cumpridas: ' + oks.join('; ') + '. A exposição aos agentes nocivos precisa ser comprovada (PPP e LTCAT) e reconhecida pelo INSS.' };
+    else conc = { status: 'nao_demonstrado', rotulo: 'Requisitos ainda não demonstrados', texto: prev.length ? 'Mantida a mesma atividade especial a partir da DER, a primeira hipótese a ser cumprida seria ' + prev[0].nome + ', em ' + rot(prev[0].quando) + '.' : 'Nenhuma hipótese é cumprida pelos dados atuais, nem nos próximos 25 anos mantida a atividade.' };
+    conc.pendencias = ['PPP, LTCAT e demais provas da exposição habitual e permanente aos agentes nocivos em cada período enquadrado.'];
+    if ((entrada.enquadramento || []).some(function (e) { return !e.seq; })) conc.pendencias.push('Provas dos períodos informados fora do CNIS.');
+    res.conclusao = conc;
+    res.valor = { linhas: [
+      'Não calculado nesta versão: exige a correção monetária das remunerações desde 07/1994, que o CNIS não traz.',
+      'Direito adquirido até 13/11/2019 (art. 261): em regra **100% do salário de benefício** (Lei 8.213/91, art. 57, § 1º), sem fator previdenciário. Art. 260: cálculo do inciso V do art. 233 da IN 128. Art. 262: alínea "b" do mesmo inciso. Confira o texto vigente.'
+    ] };
+    res.documentos = ['Documento de identificação com a data de nascimento', 'PPP (perfil profissiográfico previdenciário) de cada período especial', 'LTCAT ou laudo técnico, quando exigido', 'CTPS e documentos dos vínculos sem remuneração ou sem data de fim', 'Prova da categoria profissional, para períodos até 28/04/1995 enquadrados por categoria'];
+    return res;
+  }
+  function renderizarEspecial(r) {
+    var topo = C.el('div', 'direito');
+    topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
+    topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa atividade especial: o tempo especial só entra se você o enquadrar acima.'));
+    var c = r.conclusao;
+    var caixa = C.el('div', 'conclusao conclusao-' + c.status);
+    caixa.appendChild(C.el('strong', null, c.rotulo));
+    caixa.appendChild(C.el('p', null, c.texto));
+    if (c.pendencias && c.pendencias.length) { caixa.appendChild(C.el('p', 'dica', 'Para concluir:')); caixa.appendChild(lista(c.pendencias)); }
+    topo.appendChild(caixa);
+    if (!r.fato.data) return topo;
+    if (r.avisos && r.avisos.length) topo.appendChild(lista(r.avisos));
+    var s1 = C.sec('1. Tempo de atividade especial');
+    s1.appendChild(lista(r.tempo.linhas));
+    var t = r.tabela;
+    s1.appendChild(C.tabela(['Natureza', 'Até 13/11/2019', 'Total até a DER'], [
+      ['Comum', dur(t.ate.comum), dur(t.tot.comum)],
+      ['Especial de 25 anos', dur(t.ate.esp25), dur(t.tot.esp25)],
+      ['Especial de 20 anos', dur(t.ate.esp20), dur(t.tot.esp20)],
+      ['Especial de 15 anos', dur(t.ate.esp15), dur(t.tot.esp15)]
+    ]));
+    topo.appendChild(s1);
+    var s2 = C.sec('2. Carência');
+    var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', 'selo selo-' + (r.carencia.ok ? 'confirmada' : 'nao_demonstrada'), r.carencia.ok ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS'));
+    s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas));
+    topo.appendChild(s2);
+    var s3 = C.sec('3. Hipóteses de aposentadoria especial');
+    if (!r.blocos.length) s3.appendChild(C.el('p', null, 'Nenhuma natureza especial enquadrada.'));
+    r.blocos.forEach(function (b) {
+      s3.appendChild(C.el('h4', null, 'Atividade especial de ' + b.esp.n + ' anos'));
+      b.regras.forEach(function (a) {
+        var bloco = C.el('div', 'regra-tc');
+        bloco.appendChild(C.el('h4', null, a.regra.nome + ' (' + a.regra.norma + ')'));
+        var sel = C.el('p', 'selo-linha');
+        sel.appendChild(C.el('span', 'selo selo-' + (a.ok && a.aplicavel ? 'confirmada' : 'nao_demonstrada'), a.ok && a.aplicavel ? 'Cumprida' : (a.aplicavel ? 'Não cumprida' : 'Não se aplica')));
+        bloco.appendChild(sel);
+        bloco.appendChild(C.el('p', 'dica', a.regra.desc));
+        bloco.appendChild(C.tabela(['Requisito', 'Situação', 'Atual', 'Exigido'], a.reqs.map(function (x) { return [x.nome, x.ok ? 'Cumprido' : 'Não cumprido', x.atual, x.exigido]; })));
+        if (!a.ok && a.quando && a.aplicavel) bloco.appendChild(C.el('p', null, 'Mantida a mesma atividade especial a partir da DER, esta hipótese seria cumprida em ' + rot(a.quando) + '.'));
+        s3.appendChild(bloco);
+      });
+    });
+    topo.appendChild(s3);
+    var s4 = C.sec('4. Valor'); s4.appendChild(lista(r.valor.linhas)); topo.appendChild(s4);
+    var s8 = C.sec('Documentos a reunir'); s8.appendChild(lista(r.documentos)); topo.appendChild(s8);
+    var s9 = C.sec('Normas usadas');
+    s9.appendChild(C.tabela(['Norma', 'Vigência / conferência'], r.normas.map(function (x) { return [x.nome, x.vigencia]; })));
+    topo.appendChild(s9);
+    return topo;
+  }
+
   // ---------- Tela ----------
   function lista(itens) { return D.util.lista(itens); }
   function renderizar(r) {
+    if (r.beneficio === 'aposentadoria-especial') return renderizarEspecial(r);
     var topo = C.el('div', 'direito');
     topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
     topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa atividade especial: o tempo especial só entra se você o enquadrar acima.'));
@@ -403,7 +563,7 @@
     return { sexo: g('tc-sexo').value, nascimento: g('tc-nasc').value, der: g('tc-der').value };
   }
 
-  var api = { regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
+  var api = { aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.TEMPO = api;
 })(typeof window !== 'undefined' ? window : globalThis);

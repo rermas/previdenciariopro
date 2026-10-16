@@ -163,3 +163,10 @@ Módulo `assets/tempo.js` (testes em `tests/tempo.test.js`). Avalia, de uma vez,
 ## Vínculos incluídos manualmente
 
 Em "Verificar direito" há o bloco "Vínculos que faltam no CNIS (opcional)": nome, tipo (empregado, empregado rural, segurado especial, contribuinte individual, CTC), início e fim. Os vínculos entram na análise usada pela simulação (`DIREITO.comExtras`), com Seq. a partir de 9001, e valem para todos os benefícios. CTC conta como empregado urbano; contribuinte individual é tratado como recolhido no mínimo em todas as competências. A contagem é por dia (tempo) e por competência (carência), então sobreposições não somam em dobro. O resultado traz a observação de que o tempo incluído deve ser comprovado no INSS e aceito conforme a legislação em vigor.
+
+## Aposentadoria especial e por incapacidade permanente
+
+Em "Verificar direito":
+
+- **Aposentadoria especial** (IN PRES/INSS 128, arts. 260 a 262): usa o mesmo enquadramento do tempo (natureza de 15, 20 ou 25 anos), sem conversão em tempo comum. Para cada natureza avalia a regra permanente de idade (55/58/60, só para filiados a partir de 14/11/2019), o direito adquirido até 13/11/2019 (art. 261, sem idade mínima) e os pontos (66/76/86, filiados até 13/11/2019, idade e tempo em dias). A natureza de um tempo não completa a de outro. Valor não calculado.
+- **Aposentadoria por incapacidade permanente**: reaproveita a verificação do auxílio temporário (qualidade na DII, carência de 12 com dispensas, preexistência), com início (conversão do auxílio, art. 43), reavaliação, grande invalidez (+25%) e estimativa do percentual da EC 103 (60% + 2% por ano acima de 20 anos, homem, ou 15, mulher; 100% se acidente de trabalho).

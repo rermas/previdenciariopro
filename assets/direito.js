@@ -1053,7 +1053,7 @@
     var bloco = C.el('div', 'convite-corpo');
     bloco.appendChild(C.el('p', 'dica', 'Escolha o benefício, informe os dados e clique em Verificar direito. A conferência usa o extrato já lido.'));
     var topo = C.el('div', 'grade-campos');
-    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural'], ['aposentadoria-idade-hibrida', 'Aposentadoria por idade híbrida (rural + urbana)']] : [], root.TEMPO ? [['aposentadoria-tempo', 'Aposentadoria por tempo de contribuição (regras de transição)']] : []));
+    var selBen = selecao('dir-beneficio', [['salario-maternidade', 'Salário-maternidade']].concat(root.PENSAO ? [['pensao-por-morte', 'Pensão por morte']] : [], root.BENEFICIOS ? [['auxilio-reclusao', 'Auxílio-reclusão'], ['auxilio-incapacidade-temporaria', 'Auxílio por incapacidade temporária (auxílio-doença)'], ['aposentadoria-incapacidade-permanente', 'Aposentadoria por incapacidade permanente (invalidez)']] : [], root.IDADE ? [['aposentadoria-idade-urbana', 'Aposentadoria por idade urbana'], ['aposentadoria-idade-rural', 'Aposentadoria por idade rural'], ['aposentadoria-idade-hibrida', 'Aposentadoria por idade híbrida (rural + urbana)']] : [], root.TEMPO ? [['aposentadoria-tempo', 'Aposentadoria por tempo de contribuição (regras de transição)'], ['aposentadoria-especial', 'Aposentadoria especial (15, 20 ou 25 anos de exposição)']] : []));
     topo.appendChild(campo('Benefício', selBen));
     bloco.appendChild(topo);
 
@@ -1130,6 +1130,10 @@
       gi.appendChild(campo('Origem da incapacidade', selecao('ai-origem', [['comum', 'Doença ou lesão comum'], ['acidente', 'Acidente de qualquer natureza ou doença profissional/do trabalho'], ['doenca_lista', 'Doença grave da lista oficial (isenta carência)']])));
       gi.appendChild(campo('Doença ou lesão anterior à filiação?', selecao('ai-pre', [['nao', 'Não, começou depois de se filiar'], ['sim', 'Sim, já existia ao se filiar, sem agravamento'], ['agravamento', 'Já existia, mas se agravou depois']])));
       gAI.appendChild(gi);
+      var gp = C.el('div', 'grade-campos'); gp.id = 'ai-perm'; gp.hidden = true;
+      gp.appendChild(campo('Sexo (para estimar o percentual do valor)', selecao('ai-sexo', [['', 'Não informar'], ['F', 'Mulher'], ['M', 'Homem']])));
+      gp.appendChild(marca('ai-grande', 'Grande invalidez (precisa de assistência permanente de outra pessoa)'));
+      gAI.appendChild(gp);
     }
     bloco.appendChild(gAI);
 
@@ -1170,8 +1174,8 @@
 
     selBen.addEventListener('change', function () {
       var v = selBen.value;
-      gSM.hidden = v !== 'salario-maternidade'; gPM.hidden = v !== 'pensao-por-morte'; gAR.hidden = v !== 'auxilio-reclusao'; gAI.hidden = v !== 'auxilio-incapacidade-temporaria';
-      gAP.hidden = v.indexOf('aposentadoria-idade') !== 0; gTC.hidden = v !== 'aposentadoria-tempo'; comuns.hidden = gAP.hidden === false || !gTC.hidden;
+      gSM.hidden = v !== 'salario-maternidade'; gPM.hidden = v !== 'pensao-por-morte'; gAR.hidden = v !== 'auxilio-reclusao'; gAI.hidden = v !== 'auxilio-incapacidade-temporaria' && v !== 'aposentadoria-incapacidade-permanente'; var gpp = document.getElementById('ai-perm'); if (gpp) gpp.hidden = v !== 'aposentadoria-incapacidade-permanente';
+      gAP.hidden = v.indexOf('aposentadoria-idade') !== 0; gTC.hidden = v !== 'aposentadoria-tempo' && v !== 'aposentadoria-especial'; comuns.hidden = gAP.hidden === false || !gTC.hidden;
       resultado.textContent = '';
     });
 
@@ -1209,16 +1213,16 @@
         resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioReclusao(analise, cr, hojeAgora())));
         return;
       }
-      if (selBen.value === 'auxilio-incapacidade-temporaria' && root.BENEFICIOS) {
+      if ((selBen.value === 'auxilio-incapacidade-temporaria' || selBen.value === 'aposentadoria-incapacidade-permanente') && root.BENEFICIOS) {
         var ci = Object.assign(root.BENEFICIOS.lerCamposIncapacidade(), respostas);
         if (!ci.dii) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de início da incapacidade.')); return; }
-        resultado.appendChild(root.BENEFICIOS.renderizar(root.BENEFICIOS.auxilioIncapacidade(analise, ci, hojeAgora())));
+        resultado.appendChild(root.BENEFICIOS.renderizar(selBen.value === 'aposentadoria-incapacidade-permanente' ? root.BENEFICIOS.aposentadoriaIncapacidade(analise, ci, hojeAgora()) : root.BENEFICIOS.auxilioIncapacidade(analise, ci, hojeAgora())));
         return;
       }
-      if (selBen.value === 'aposentadoria-tempo' && root.TEMPO) {
+      if ((selBen.value === 'aposentadoria-tempo' || selBen.value === 'aposentadoria-especial') && root.TEMPO) {
         var ctc = Object.assign(root.TEMPO.lerCampos(), respostas, { enquadramento: enq });
         if (!ctc.nascimento || !ctc.der) { resultado.appendChild(C.el('p', 'msg', 'Informe a data de nascimento e a data do requerimento.')); return; }
-        resultado.appendChild(root.TEMPO.renderizar(root.TEMPO.aposentadoriaTempo(analise, ctc, hojeAgora())));
+        resultado.appendChild(root.TEMPO.renderizar(selBen.value === 'aposentadoria-especial' ? root.TEMPO.aposentadoriaEspecial(analise, ctc, hojeAgora()) : root.TEMPO.aposentadoriaTempo(analise, ctc, hojeAgora())));
         return;
       }
       if (selBen.value.indexOf('aposentadoria-idade') === 0 && root.IDADE) {
@@ -1243,7 +1247,7 @@
     var tit = C.el('strong', null, 'Verificar direito a um benefício');
     tit.appendChild(C.el('em', 'convite-opcional', 'opcional'));
     txt.appendChild(tit);
-    txt.appendChild(C.el('span', null, 'Salário-maternidade, pensão por morte, auxílio-reclusão, incapacidade temporária, aposentadoria por idade e por tempo de contribuição'));
+    txt.appendChild(C.el('span', null, 'Salário-maternidade, pensão por morte, auxílio-reclusão, incapacidade temporária e permanente, aposentadoria por idade, por tempo de contribuição e especial'));
     sum.appendChild(alvo); sum.appendChild(txt);
     sum.appendChild(C.el('span', 'convite-seta'));
     det.appendChild(sum);
