@@ -259,3 +259,28 @@ console.log('aposentadoria PcD ok');
   assert.equal(T.comparar(an, { sexo: 'F' }, HOJE).semDados, true);
 })();
 console.log('comparador ok');
+
+// ===== Direito adquirido antes da EC 103 =====
+(function () {
+  const D = C.dataDe;
+  const an = C.analisar(vinculo([1985, 1], [2019, 10], '31/10/2019'), HOJE);
+  const ent = { sexo: 'F', nascimento: '1965-06-01', der: '2026-10-01', enquadramento: [] };
+  const r = T.aposentadoriaAdquirida(an, ent, HOJE);
+  const g = (t) => r.regras.find((x) => x.nome.indexOf(t) === 0);
+  assert.equal(g('Aposentadoria por tempo de serviço integral').ok, false, '13 anos até 1998');
+  assert.equal(g('Aposentadoria proporcional').ok, false);
+  const integral = g('Integral por tempo de contribuição até 13/11/2019');
+  assert.equal(integral.ok, true);
+  // 30 anos a partir de 01/01/1985: 30 anos = 10957 dias, em 31/12/2014 ou 01/01/2015 (conforme os bissextos)
+  assert.ok(integral.implementada.y === 2014 || integral.implementada.y === 2015);
+  assert.ok(Math.abs(integral.implementada.ord - D('01/01/2015').ord) <= 10);
+  assert.equal(g('Fórmula 85/95').ok, true);
+  assert.equal(g('Proporcional da EC 20').ok, true, 'idade 54 e pedágio cumprido');
+  assert.equal(r.conclusao.status, 'provavel');
+  // Quem se filiou depois da EC 20 não tem a proporcional da EC 20
+  const an2 = C.analisar(vinculo([2005, 1], [2019, 10], '31/10/2019'), HOJE);
+  const r2 = T.aposentadoriaAdquirida(an2, ent, HOJE);
+  assert.equal(r2.regras.find((x) => /EC 20/.test(x.nome)).aplicavel, false);
+  assert.equal(r2.conclusao.status, 'nao_demonstrado');
+})();
+console.log('direito adquirido ok');

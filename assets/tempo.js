@@ -823,6 +823,9 @@
     // Tempo de contribuição (transição)
     var rt = aposentadoriaTempo(analise, entrada, hoje);
     if (rt.avaliacoes) rt.avaliacoes.forEach(function (a) { add('Tempo de contribuição', a.regra.nome + ' (' + a.regra.norma + ')', status(a.ok, a.aplicavel, a.quando), a.aplicavel ? '' : 'Primeiro vínculo posterior a 13/11/2019'); });
+    // Direito adquirido antes da EC 103
+    var rq = aposentadoriaAdquirida(analise, entrada, hoje);
+    (rq.regras || []).forEach(function (a) { add('Direito adquirido (antes da EC 103)', a.nome, a.aplicavel ? (a.ok ? { sit: a.podePedir ? 'Cumprida na DER' : 'Direito adquirido', ok: true, quando: a.implementada || der } : { sit: 'Não implementado até ' + rot(a.lim), ok: false, quando: null }) : { sit: 'Não se aplica', ok: false, quando: null }, a.ok && a.implementada ? 'Implementada em ' + rot(a.implementada) : ''); });
     // Especial
     var ent2 = Object.assign({}, entrada);
     var re = aposentadoriaEspecial(analise, ent2, hoje);
@@ -861,12 +864,135 @@
     return topo;
   }
 
+  // ---------- Direito adquirido antes da EC 103/2019 ----------
+  var NORMAS_ADQ = [
+    { nome: 'EC 103/2019, art. 3º (direito adquirido) e art. 25', vigencia: 'Quem implementou os requisitos de uma aposentadoria antes de 13/11/2019 pode requerê-la depois, pelas regras da época. A conversão de tempo especial vale para o período até 13/11/2019.' },
+    { nome: 'EC 20/1998, arts. 3º e 9º, e Lei 8.213/91, arts. 52 a 56 e 142 (redação anterior)', vigencia: 'Aposentadoria por tempo de serviço (integral e proporcional) até 16/12/1998 e regra de transição da EC 20 (idade de 53/48 anos e pedágio de 40%). Carência pela tabela do art. 142, conforme o ano em que os requisitos foram cumpridos.' },
+    { nome: 'Lei 9.876/1999, art. 6º, e art. 29, I e § 7º da Lei 8.213/91', vigencia: 'Fator previdenciário em vigor desde 29/11/1999; quem cumpriu os requisitos até 28/11/1999 tem o cálculo anterior, sem o fator.' },
+    { nome: 'Lei 13.183/2015 (art. 29-C da Lei 8.213/91): fórmula 85/95 progressiva', vigencia: 'Soma de idade e tempo de contribuição de 85 (mulher) e 95 (homem) até 30/12/2018, e de 86 e 96 de 31/12/2018 a 30/12/2020, com 30/35 anos de contribuição, sem fator previdenciário. Confira o texto vigente.' },
+    { nome: 'IN PRES/INSS 128/2022, arts. 233 e seguintes (cálculo)', vigencia: 'O valor depende do cálculo da época do direito adquirido e não é calculado nesta versão.' }
+  ];
+  function aposentadoriaAdquirida(analise, entrada, hoje) {
+    var res = { beneficio: 'aposentadoria-adquirido', titulo: 'aposentadoria por tempo com direito adquirido antes da EC 103/2019', normas: NORMAS_ADQ, entrada: entrada, fato: { data: null } };
+    var nasc = lerData(entrada.nascimento), der = lerData(entrada.der), sexo = entrada.sexo === 'M' ? 'M' : 'F';
+    if (!nasc || !der) {
+      res.conclusao = { status: 'incompleta', rotulo: 'Análise incompleta', texto: 'Informe a data de nascimento e a data do requerimento (DER).', pendencias: [] };
+      return res;
+    }
+    res.fato.data = der;
+    var D98 = C.dataDe('16/12/1998'), D99 = C.dataDe('28/11/1999'), DEC = C.dataDeOrd(EC);
+    var primeira = null;
+    analise.vinculos.forEach(function (v) { if (v.valido && v.inicio && (!primeira || v.inicio.ord < primeira.ord)) primeira = v.inicio; });
+    var manual = (entrada.enquadramento || []).filter(function (e) { return e && e.inicio && !e.seq; }).reduce(function (m, e) { return !m || e.inicio.ord < m.ord ? e.inicio : m; }, null);
+    if (manual && (!primeira || manual.ord < primeira.ord)) primeira = manual;
+    var usaTabela = !!(primeira && primeira.ord <= C.ordemDe(1991, 7, 24));
+    var tc = sexo === 'F' ? 30 : 35, tp = sexo === 'F' ? 25 : 30;
+    var cache = {};
+    function em(d) {
+      if (!cache[d.ord]) {
+        var c = contar(analise, entrada, d);
+        cache[d.ord] = { t: c.convDer, car: Object.keys(I.montarMeses(analise, entrada, d, { modalidade: 'urbana' }).contados).length };
+      }
+      return cache[d.ord];
+    }
+    var t98 = em(D98).t;
+    function pts(d, t) { return (d.ord - nasc.ord) / 365.25 + t / 365; }
+    function mk(nome, lim, aplicavel, avalia, obs, calculo) { return { nome: nome, lim: lim, aplicavel: aplicavel, avalia: avalia, obs: obs, calculo: calculo }; }
+    var REGS = [
+      mk('Aposentadoria por tempo de serviço integral até 16/12/1998', D98, true, function (d, e) {
+        return [{ nome: 'Tempo de serviço', ok: e.t >= tc * 365, atual: dur(e.t), exigido: tc + ' anos' }, { nome: 'Carência', ok: e.car >= I.carenciaExigida(d.y, usaTabela), atual: e.car + ' meses', exigido: I.carenciaExigida(d.y, usaTabela) + ' meses' }];
+      }, 'Sem idade mínima. Renda de 100% do salário de benefício (média dos 36 últimos salários, sem fator previdenciário).', 'Cálculo anterior à EC 20 e à Lei 9.876.'),
+      mk('Aposentadoria proporcional por tempo de serviço até 16/12/1998', D98, true, function (d, e) {
+        return [{ nome: 'Tempo de serviço', ok: e.t >= tp * 365, atual: dur(e.t), exigido: tp + ' anos' }, { nome: 'Carência', ok: e.car >= I.carenciaExigida(d.y, usaTabela), atual: e.car + ' meses', exigido: I.carenciaExigida(d.y, usaTabela) + ' meses' }];
+      }, 'Sem idade mínima. 70% do salário de benefício com 25 (mulher) ou 30 anos (homem), mais 6% por ano que exceder, até 100%.', 'Cálculo anterior à EC 20 e à Lei 9.876.'),
+      mk('Integral por tempo de contribuição até 28/11/1999 (antes do fator previdenciário)', D99, true, function (d, e) {
+        return [{ nome: 'Tempo de contribuição', ok: e.t >= tc * 365, atual: dur(e.t), exigido: tc + ' anos' }, { nome: 'Carência', ok: e.car >= I.carenciaExigida(d.y, usaTabela), atual: e.car + ' meses', exigido: I.carenciaExigida(d.y, usaTabela) + ' meses' }];
+      }, 'Sem idade mínima e sem fator previdenciário (Lei 9.876, art. 6º): média dos 36 últimos salários de contribuição.', ''),
+      mk('Proporcional da EC 20/1998 (art. 9º, § 1º): idade e pedágio de 40%', DEC, !primeira || primeira.ord <= D98.ord, function (d, e) {
+        var falta = Math.max(0, tp * 365 - t98), exig = tp * 365 + 0.4 * falta, im = ageMeses(nasc, d);
+        return [{ nome: 'Tempo de contribuição com pedágio de 40% do que faltava em 16/12/1998', ok: e.t >= exig, atual: dur(e.t), exigido: dur(exig) + ' (pedágio de ' + dur(0.4 * falta) + ')' },
+          { nome: 'Idade', ok: im >= (sexo === 'F' ? 48 : 53) * 12, atual: textoMeses(Math.max(0, im)), exigido: (sexo === 'F' ? 48 : 53) + ' anos' },
+          { nome: 'Carência', ok: e.car >= I.carenciaExigida(d.y, usaTabela), atual: e.car + ' meses', exigido: I.carenciaExigida(d.y, usaTabela) + ' meses' }];
+      }, 'Só para quem era filiado até 16/12/1998. 70% do salário de benefício mais 5% por ano que exceder o tempo mínimo, até 100%, com fator previdenciário.', ''),
+      mk('Integral por tempo de contribuição até 13/11/2019 (30/35 anos), com fator previdenciário', DEC, true, function (d, e) {
+        return [{ nome: 'Tempo de contribuição (com conversão do tempo especial)', ok: e.t >= tc * 365, atual: dur(e.t), exigido: tc + ' anos' }, { nome: 'Carência', ok: e.car >= I.carenciaExigida(d.y, usaTabela), atual: e.car + ' meses', exigido: I.carenciaExigida(d.y, usaTabela) + ' meses' }];
+      }, 'Sem idade mínima. Aplica-se o fator previdenciário, a menos que a pessoa também alcance os pontos da fórmula 85/95.', ''),
+      mk('Fórmula 85/95 progressiva (Lei 13.183/2015), sem fator previdenciário', DEC, true, function (d, e) {
+        var exig = d.ord <= C.ordemDe(2018, 12, 30) ? (sexo === 'F' ? 85 : 95) : (sexo === 'F' ? 86 : 96), p = pts(d, e.t);
+        return [{ nome: 'Tempo de contribuição', ok: e.t >= tc * 365, atual: dur(e.t), exigido: tc + ' anos' },
+          { nome: 'Pontos (idade + tempo, em ' + d.y + ')', ok: p >= exig && d.ord >= C.ordemDe(2015, 6, 18), atual: p.toFixed(2).replace('.', ','), exigido: exig + ' pontos' },
+          { nome: 'Carência', ok: e.car >= I.carenciaExigida(d.y, usaTabela), atual: e.car + ' meses', exigido: I.carenciaExigida(d.y, usaTabela) + ' meses' }];
+      }, 'Vale a partir de 18/06/2015. Renda de 100% do salário de benefício (média dos 80% maiores salários), sem fator previdenciário.', '')
+    ];
+    var inicio = primeira ? primeira.ord : EC;
+    function implementada(r) {
+      function ok(d) { return r.avalia(d, em(d)).every(function (x) { return x.ok; }); }
+      if (!ok(r.lim)) return null;
+      var lo = inicio, hi = r.lim.ord;
+      if (lo > hi) return null;
+      while (lo < hi) { var mid = Math.floor((lo + hi) / 2); if (ok(C.dataDeOrd(mid))) hi = mid; else lo = mid + 1; }
+      return C.dataDeOrd(lo);
+    }
+    res.regras = REGS.map(function (r) {
+      var reqs = r.avalia(r.lim, em(r.lim));
+      var ok = r.aplicavel && reqs.every(function (x) { return x.ok; });
+      var quando = ok ? implementada(r) : null;
+      return { nome: r.nome, lim: r.lim, aplicavel: r.aplicavel, reqs: reqs, ok: ok, implementada: quando, obs: r.obs, calculo: r.calculo, podePedir: ok && quando && quando.ord <= der.ord };
+    });
+    var linhas = [];
+    var ctEC = em(DEC);
+    linhas.push('Tempo de contribuição até 13/11/2019 (com conversão do tempo especial): **' + dur(ctEC.t) + '**; até 16/12/1998: **' + dur(t98) + '**; carência em 13/11/2019: **' + ctEC.car + ' meses**.');
+    linhas.push('O direito adquirido vale mesmo que o requerimento seja feito hoje: o cálculo usa as regras da data em que os requisitos foram cumpridos. A conversão do tempo especial em comum é feita pelo enquadramento informado acima.');
+    linhas.push('A carência segue a tabela do art. 142 da Lei 8.213 (para quem se filiou até 24/07/1991) conforme o ano em que os requisitos foram cumpridos.');
+    res.tempo = { linhas: linhas };
+    var oks = res.regras.filter(function (r) { return r.ok; });
+    var conc;
+    if (oks.length) conc = { status: 'provavel', rotulo: 'Direito adquirido em ' + oks.length + ' regra(s) pelos dados informados', texto: 'Implementado(s): ' + oks.map(function (r) { return r.nome + ' (em ' + rot(r.implementada || r.lim) + ')'; }).join('; ') + '. Compare com as regras de transição da EC 103: o direito adquirido pode render mais ou menos conforme o cálculo.' };
+    else conc = { status: 'nao_demonstrado', rotulo: 'Nenhum direito adquirido demonstrado', texto: 'Pelos dados do CNIS e do enquadramento informado, nenhuma das regras anteriores à EC 103 foi cumprida até a respectiva data limite.' };
+    conc.pendencias = ['Provas do tempo e, para períodos especiais, PPP e LTCAT. O direito adquirido depende de o tempo estar comprovado até a data limite.'];
+    res.conclusao = conc;
+    res.documentos = ['Documento de identificação com a data de nascimento', 'CTPS e documentos dos vínculos sem remuneração ou sem data de fim', 'PPP e LTCAT dos períodos de atividade especial', 'Certidão de tempo de contribuição (CTC) de regime próprio, se houver'];
+    return res;
+  }
+  function renderizarAdquirido(r) {
+    var topo = C.el('div', 'direito');
+    topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
+    topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O valor não é calculado: cada regra tem o cálculo da sua época.'));
+    var c = r.conclusao;
+    var caixa = C.el('div', 'conclusao conclusao-' + c.status);
+    caixa.appendChild(C.el('strong', null, c.rotulo));
+    caixa.appendChild(C.el('p', null, c.texto));
+    if (c.pendencias && c.pendencias.length) { caixa.appendChild(C.el('p', 'dica', 'Para concluir:')); caixa.appendChild(lista(c.pendencias)); }
+    topo.appendChild(caixa);
+    if (!r.fato.data) return topo;
+    var s1 = C.sec('1. Tempo e carência'); s1.appendChild(lista(r.tempo.linhas)); topo.appendChild(s1);
+    var s2 = C.sec('2. Regras anteriores à EC 103/2019');
+    r.regras.forEach(function (a) {
+      var bloco = C.el('div', 'regra-tc');
+      bloco.appendChild(C.el('h4', null, a.nome));
+      var sel = C.el('p', 'selo-linha');
+      sel.appendChild(C.el('span', 'selo selo-' + (a.ok ? 'confirmada' : 'nao_demonstrada'), a.ok ? 'Direito adquirido' : (a.aplicavel ? 'Não implementado até ' + rot(a.lim) : 'Não se aplica')));
+      bloco.appendChild(sel);
+      if (a.ok && a.implementada) bloco.appendChild(C.el('p', null, 'Requisitos cumpridos em ' + rot(a.implementada) + '.'));
+      bloco.appendChild(C.el('p', 'dica', a.obs));
+      bloco.appendChild(C.tabela(['Requisito (em ' + rot(a.lim) + ')', 'Situação', 'Atual', 'Exigido'], a.reqs.map(function (x) { return [x.nome, x.ok ? 'Cumprido' : 'Não cumprido', x.atual, x.exigido]; })));
+      s2.appendChild(bloco);
+    });
+    topo.appendChild(s2);
+    var s8 = C.sec('Documentos a reunir'); s8.appendChild(lista(r.documentos)); topo.appendChild(s8);
+    var s9 = C.sec('Normas usadas');
+    s9.appendChild(C.tabela(['Norma', 'Vigência / conferência'], r.normas.map(function (x) { return [x.nome, x.vigencia]; })));
+    topo.appendChild(s9);
+    return topo;
+  }
+
   // ---------- Tela ----------
   function lista(itens) { return D.util.lista(itens); }
   function renderizar(r) {
     if (r.beneficio === 'aposentadoria-especial') return renderizarEspecial(r);
     if (r.beneficio === 'aposentadoria-professor') return renderizarProfessor(r);
     if (/^aposentadoria-pcd/.test(r.beneficio)) return renderizarPcd(r);
+    if (r.beneficio === 'aposentadoria-adquirido') return renderizarAdquirido(r);
     var topo = C.el('div', 'direito');
     topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
     topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa atividade especial: o tempo especial só entra se você o enquadrar acima.'));
@@ -1018,7 +1144,7 @@
     return { sexo: g('tc-sexo').value, nascimento: g('tc-nasc').value, der: g('tc-der').value };
   }
 
-  var api = { comparar: comparar, renderizarComparador: renderizarComparador, aposentadoriaPcd: aposentadoriaPcd, editorPcd: editorPcd, avaliaPcdTempo: avaliaPcdTempo, tempoPcd: tempoPcd, aposentadoriaProfessor: aposentadoriaProfessor, editorProfessor: editorProfessor, sugereProfessor: sugereProfessor, aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
+  var api = { aposentadoriaAdquirida: aposentadoriaAdquirida, comparar: comparar, renderizarComparador: renderizarComparador, aposentadoriaPcd: aposentadoriaPcd, editorPcd: editorPcd, avaliaPcdTempo: avaliaPcdTempo, tempoPcd: tempoPcd, aposentadoriaProfessor: aposentadoriaProfessor, editorProfessor: editorProfessor, sugereProfessor: sugereProfessor, aposentadoriaEspecial: aposentadoriaEspecial, contar: contar, regraEnq: regraEnq, aposentadoriaTempo: aposentadoriaTempo, renderizar: renderizar, editor: editor, lerCampos: lerCampos, serializar: serializar, carregar: carregar, pontosExigidos: pontosExigidos, idadeProgressivaMeses: idadeProgressivaMeses, FATOR: FATOR, NATUREZAS: NATUREZAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.TEMPO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
