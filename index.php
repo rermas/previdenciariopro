@@ -17,7 +17,7 @@ date_default_timezone_set('America/Sao_Paulo');
 // Artigos: o texto de cada um fica em posts/{slug}.html.
 // 'data' no futuro mantém o artigo oculto até o dia.
 $POSTS = [
-    ['slug' => 'o-que-e-o-cnis', 'data' => '2026-10-07', 'revisado' => '2026-10-07',
+    ['slug' => 'o-que-e-o-cnis', 'data' => '2026-10-07', 'revisado' => '2026-10-17',
      'titulo' => 'O que é o CNIS e o que conferir no extrato',
      'resumo' => 'Entenda o que aparece no extrato do CNIS e quais pontos merecem conferência.'],
     ['slug' => 'salarios-faltantes-no-cnis', 'data' => '2026-10-07', 'revisado' => '2026-10-07',
@@ -29,7 +29,7 @@ $POSTS = [
     ['slug' => 'como-emitir-o-extrato-do-cnis', 'data' => '2026-10-13', 'revisado' => '2026-10-13',
      'titulo' => 'Como emitir o extrato do CNIS no Meu INSS e o que conferir',
      'resumo' => 'Passo a passo gratuito para tirar o extrato, qual tipo escolher e quando pedir a atualização do CNIS.'],
-    ['slug' => 'aposentadoria-por-idade-regras-e-carencia', 'data' => '2026-10-13', 'revisado' => '2026-10-13',
+    ['slug' => 'aposentadoria-por-idade-regras-e-carencia', 'data' => '2026-10-13', 'revisado' => '2026-10-17',
      'titulo' => 'Aposentadoria por idade: regras, carência e o que o CNIS mostra',
      'resumo' => 'Idade, tempo de contribuição e carência na aposentadoria por idade urbana e rural, e como conferir no CNIS.'],
     ['slug' => 'documentos-para-comprovar-vinculo-de-emprego', 'data' => '2026-10-14', 'revisado' => '2026-10-14',
@@ -268,6 +268,7 @@ function topo(string $titulo, string $desc, string $caminho, array $o = []): voi
 <?php endif; ?>
 </head>
 <body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="topo">
   <div class="wrap topo-in">
     <a class="marca" href="<?= e(u('/')) ?>"><?= marca_svg() ?><?= e(SITE_NOME) ?></a>
@@ -325,7 +326,7 @@ function mapa_exemplo(): void {
 function pagina_404(): void {
     http_response_code(404);
     topo('Página não encontrada | ' . SITE_NOME, 'Página não encontrada.', '/', ['noindex' => true]);
-    echo '<main class="wrap pagina"><h1>Página não encontrada</h1><p>O endereço não existe ou o artigo ainda não foi publicado.</p>'
+    echo '<main id="conteudo" class="wrap pagina"><h1>Página não encontrada</h1><p>O endereço não existe ou o artigo ainda não foi publicado.</p>'
         . '<p><a href="' . e(u('/')) . '">Ir para o início</a> ou <a href="' . e(u('/blog/')) . '">ver o blog</a>.</p></main>';
     rodape();
 }
@@ -345,12 +346,15 @@ $rota = '/' . trim($rota, '/');
 
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: strict-origin-when-cross-origin');
+header('X-Frame-Options: SAMEORIGIN');
+header('Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()');
+if (PHP_SAPI !== 'cli-server') header('Strict-Transport-Security: max-age=31536000');
 
 if ($rota === '/') {
     $recentes = array_slice(publicados(), 0, 3);
     topo(SITE_NOME . ' | Confira o seu CNIS mês a mês', 'Guias e uma ferramenta gratuita para encontrar salários faltantes, pendências e o tempo contado no extrato do CNIS.', '/');
     ?>
-<main class="wrap">
+<main id="conteudo" class="wrap">
   <section class="hero">
     <div class="hero-texto">
       <h1>Confira o seu CNIS mês a mês</h1>
@@ -419,7 +423,7 @@ if ($rota === '/') {
 } elseif ($rota === '/blog') {
     topo('Blog | ' . SITE_NOME, 'Guias sobre o extrato do CNIS, vínculos, remunerações e pendências.', '/blog/');
     ?>
-<main class="wrap pagina">
+<main id="conteudo" class="wrap pagina">
   <h1>Blog</h1>
   <p class="lead">Guias curtos sobre o extrato do CNIS e a conferência de vínculos.</p>
   <ul class="lista-posts">
@@ -453,10 +457,10 @@ if ($rota === '/') {
         ],
     ]);
     ?>
-<main class="wrap pagina">
+<main id="conteudo" class="wrap pagina">
   <article class="artigo">
     <h1><?= e($post['titulo']) ?></h1>
-    <p class="meta">Publicado em <?= e(data_br($post['data'])) ?><?php if (!empty($post['revisado'])): ?>. Revisado em <?= e(data_br($post['revisado'])) ?>.<?php endif; ?></p>
+    <p class="meta">Publicado em <?= e(data_br($post['data'])) ?><?php if (!empty($post['revisado']) && $post['revisado'] !== $post['data']): ?>. Revisado em <?= e(data_br($post['revisado'])) ?>.<?php endif; ?></p>
     <?php readfile($arquivo); ?>
     <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
     <?php anuncio(); ?>
@@ -469,7 +473,7 @@ if ($rota === '/') {
 } elseif ($rota === '/indicadores') {
     topo('Indicadores do CNIS: significado e o que conferir | ' . SITE_NOME, 'Lista dos indicadores do extrato do CNIS, como PSC-MEN-SM-EC103, IREM-INDPEND e PEXT, com o significado e o que conferir em cada um.', '/indicadores/');
     ?>
-<main class="wrap pagina">
+<main id="conteudo" class="wrap pagina">
   <h1>Indicadores do CNIS</h1>
   <p class="lead texto">Os códigos que aparecem ao lado de vínculos e remunerações no extrato. Cada página explica o que o indicador quer dizer e o que conferir.</p>
   <?php foreach (['Pendência' => 'Pendências', 'Informativo' => 'Informativos'] as $g => $titulo): ?>
@@ -503,7 +507,7 @@ if ($rota === '/') {
     ]);
     $parecidos = array_slice(array_keys(array_filter($INDICADORES, fn($x, $k) => $k !== $cod && $x['grupo'] === $i['grupo'], ARRAY_FILTER_USE_BOTH)), 0, 4);
     ?>
-<main class="wrap pagina">
+<main id="conteudo" class="wrap pagina">
   <article class="artigo">
     <p class="migalha"><a href="<?= e(u('/indicadores/')) ?>">Indicadores do CNIS</a></p>
     <h1><code class="cod"><?= e($cod) ?></code> no CNIS: o que significa</h1>
@@ -543,7 +547,7 @@ if ($rota === '/') {
 } elseif ($rota === '/legislacao') {
     topo('Legislação previdenciária | ' . SITE_NOME, 'Links oficiais para a Lei 8.213/91, o Decreto 3.048/99 e a IN PRES/INSS 128/2022.', '/legislacao/');
     ?>
-<main class="wrap pagina">
+<main id="conteudo" class="wrap pagina">
   <h1>Legislação previdenciária</h1>
   <p class="lead texto">As normas usadas como referência nos guias. Os links levam às fontes oficiais.</p>
   <ul class="normas">
@@ -563,7 +567,7 @@ if ($rota === '/') {
 } elseif ($rota === '/privacidade') {
     topo('Política de privacidade | ' . SITE_NOME, 'Como o site trata dados de visitantes e por que o extrato do CNIS não sai do seu navegador.', '/privacidade/');
     ?>
-<main class="wrap pagina">
+<main id="conteudo" class="wrap pagina">
   <article class="artigo">
     <h1>Política de privacidade</h1>
     <p class="meta">Atualizada em 07/10/2026.</p>
@@ -603,7 +607,7 @@ if ($rota === '/') {
         'rastreio' => false, 'noindex' => !FERRAMENTA_PUBLICA,
     ]);
     ?>
-<main class="wrap pagina">
+<main id="conteudo" class="wrap pagina">
   <h1>Análise de CNIS</h1>
   <p class="lead texto">Envie o PDF do extrato ou cole o texto para ver o tempo contado, os salários faltantes e as pendências.</p>
   <p class="aviso-privacidade">Tudo acontece no seu navegador. O extrato não é enviado, salvo ou registrado.</p>

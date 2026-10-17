@@ -306,3 +306,7 @@ p { margin: 0 0 1rem; }
 /* Alerta em vermelho para dado essencial que falta */
 .alerta-erro { margin: 0.6rem 0; padding: 0.55rem 0.8rem; border: 1px solid var(--coral); border-left-width: 4px; border-radius: 6px; background: var(--coral-suave); color: var(--coral-texto); font-weight: 600; }
 .campo-erro, .campo select.campo-erro, .campo input.campo-erro { border-color: var(--coral) !important; box-shadow: 0 0 0 2px var(--coral-suave); }
+
+/* Atalho de teclado para pular o menu */
+.pular { position: absolute; left: -9999px; top: 0; z-index: 10; padding: 0.6rem 1rem; background: var(--azul); color: var(--branco); border-radius: 0 0 6px 0; }
+.pular:focus { left: 0; }
