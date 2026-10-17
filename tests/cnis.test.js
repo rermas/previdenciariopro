@@ -619,3 +619,31 @@ console.log('autônomo ok');
   assert.deepEqual(rv.vinculosPorMes[CNIS.mesDe(1993, 2)], [{ seq: 1, nome: 'EMPRESA ANTIGA' }]);
 }
 console.log('vínculos por mês ok');
+
+// Lançamento manual: extrato sintético com salário mínimo em todas as competências
+{
+  const P = (tipo, ini, fim) => ({ tipo, ini, fim, campoTipo: 't', campoIni: 'i', campoFim: 'f' });
+  const t = CNIS.gerarTextoManual([
+    P('Empregado', { y: 2010, m: 1, d: 1 }, { y: 2010, m: 12, d: 31 }),
+    P('Contribuinte Individual', { y: 2011, m: 1, d: 1 }, { y: 2011, m: 6, d: 30 }),
+    P('Empregado Doméstico', { y: 2012, m: 1, d: 10 }, null),
+    P('Segurado Especial', { y: 1990, m: 1, d: 1 }, { y: 1990, m: 12, d: 31 }),
+    P('Facultativo', { y: 2020, m: 1, d: 1 }, { y: 2020, m: 3, d: 31 })
+  ], HOJE);
+  const a = CNIS.analisar(t, HOJE);
+  assert.equal(a.vinculos.length, 5);
+  assert.ok(a.vinculos.every((v) => v.valido), 'todos os períodos contam');
+  assert.equal(a.resumo.erros, 0);
+  assert.equal(a.vinculos.find((v) => v.tipo === 'Empregado').faltantes, 0, 'sem competência faltante');
+  assert.equal(a.vinculos.find((v) => v.tipo === 'Empregado').dias, 365);
+  assert.match(t, /01\/2010 510,00/, 'salário mínimo de 01/2010');
+  assert.match(t, /01\/2020 [\d.,]+ [\d.,]+ ?/, 'recolhimento do facultativo');
+  const erroCom = (periodos, re, campo) => assert.throws(() => CNIS.gerarTextoManual(periodos, HOJE), (e) => re.test(e.message) && (!campo || e.campos.includes(campo)));
+  erroCom([], /ao menos um período/);
+  erroCom([{ tipo: '', ini: { y: 2010, m: 1, d: 1 }, campoTipo: 't1' }], /tipo de vínculo/, 't1');
+  erroCom([{ tipo: 'Empregado', ini: null, campoIni: 'i1' }], /data de início/, 'i1');
+  erroCom([{ tipo: 'Empregado', ini: { y: 2010, m: 2, d: 30 }, campoIni: 'i1' }], /inválida/, 'i1');
+  erroCom([{ tipo: 'Empregado', ini: { y: 2027, m: 1, d: 1 }, campoIni: 'i1' }], /futuro/, 'i1');
+  erroCom([{ tipo: 'Empregado', ini: { y: 2010, m: 5, d: 1 }, fim: { y: 2010, m: 4, d: 1 }, campoFim: 'f1' }], /anterior ao início/, 'f1');
+}
+console.log('lançamento manual ok');

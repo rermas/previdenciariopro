@@ -188,3 +188,7 @@ Duas opções em "Verificar direito" (LC 142/2013; IN PRES/INSS 128, arts. 303 a
 ## Direito adquirido antes da EC 103/2019
 
 Opção "Aposentadoria por tempo: direito adquirido antes da EC 103/2019" (e linhas no comparador). Avalia, com o tempo convertido pelo enquadramento: tempo de serviço integral e proporcional até 16/12/1998; integral até 28/11/1999 (sem fator previdenciário); proporcional da EC 20 (53/48 anos e pedágio de 40%); integral até 13/11/2019 (30/35 anos, com fator); e a fórmula 85/95 progressiva (Lei 13.183/2015). Para cada regra mostra os requisitos na data limite, a data em que foram implementados (busca binária dia a dia) e a carência pela tabela do art. 142 do ano da implementação. Não calcula valor.
+
+## Lançamento manual de tempo
+
+Sem o PDF, o botão "Lançar tempo manualmente" (em `/analise-cnis/`) abre uma lista de períodos: tipo de vínculo (empregado, doméstico, contribuinte individual, facultativo ou segurado especial), início e fim (em branco = em aberto). `CNIS.gerarTextoManual` monta um extrato sintético com o salário mínimo de cada competência (a partir de 07/1994) e ele passa pela mesma análise do PDF, então todas as simulações de benefício funcionam. O resultado traz um aviso fixo de que é estimativa. Nada é salvo ou enviado.

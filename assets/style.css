@@ -310,3 +310,11 @@ p { margin: 0 0 1rem; }
 /* Atalho de teclado para pular o menu */
 .pular { position: absolute; left: -9999px; top: 0; z-index: 10; padding: 0.6rem 1rem; background: var(--azul); color: var(--branco); border-radius: 0 0 6px 0; }
 .pular:focus { left: 0; }
+
+/* Lançamento manual de tempo */
+.man-titulo { margin: 0; font-size: 1.15rem; }
+.man-lista { display: grid; gap: 0.8rem; }
+.man-linha { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) auto; gap: 0.6rem; align-items: end; padding: 0.8rem; border: 1px solid var(--linha); border-radius: 8px; background: var(--papel); }
+.man-linha .campo { font-size: 0.9rem; }
+.man-linha .btn { padding: 0.55rem 0.8rem; }
+@media (max-width: 40rem) { .man-linha { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .man-linha .campo:first-child { grid-column: 1 / -1; } .man-linha .btn { grid-column: 1 / -1; } }

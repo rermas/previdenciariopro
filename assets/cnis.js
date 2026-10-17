@@ -1523,6 +1523,73 @@
   }
   function limpaErro(msgEl) { msgEl.classList.remove('alerta-erro'); msgEl.removeAttribute('role'); msgEl.textContent = ''; }
 
+  // ---------- Lançamento manual ----------
+  // Monta um extrato sintético a partir de períodos digitados (sem PDF). Toda remuneração ou contribuição é o salário mínimo
+  // da competência. Cada período: { tipo, ini: {y,m,d}, fim: {y,m,d}|null, campoIni, campoFim } (fim vazio = em aberto até hoje).
+  var TIPOS_MANUAIS = [
+    ['Empregado', 'Empregado'], ['Empregado Doméstico', 'Empregado doméstico'], ['Contribuinte Individual', 'Contribuinte individual'],
+    ['Facultativo', 'Facultativo'], ['Segurado Especial', 'Segurado especial (rural)']
+  ];
+  function gerarTextoManual(periodos, hojeD) {
+    var pad = function (n, t) { return String(n).padStart(t || 2, '0'); };
+    var dataOk = function (d) { return d && d.y >= 1950 && d.m >= 1 && d.m <= 12 && d.d >= 1 && d.d <= new Date(d.y, d.m, 0).getDate(); };
+    var fmt = function (d) { return pad(d.d) + '/' + pad(d.m) + '/' + d.y; };
+    var comp = function (k) { return pad(k % 12 + 1) + '/' + Math.floor(k / 12); };
+    var hojeOrd = ordemDe(hojeD.y, hojeD.m, hojeD.d), hojeMes = mesDe(hojeD.y, hojeD.m);
+    function erro(msg, campos) { var e = new Error(msg); e.campos = campos || []; return e; }
+    if (!periodos || !periodos.length) throw erro('Falta lançar ao menos um período: escolha o tipo de vínculo e informe o início.', []);
+    var linhas = ['CNIS - Cadastro Nacional de Informações Sociais', 'Extrato Previdenciário - Lançamento manual (simulação)', 'Identificação do Filiado',
+      'Nit: 000.00000.00-0 CPF: 000.000.000-00 Nome: LANÇAMENTO MANUAL', 'Relações Previdenciárias'];
+    var cabV = 'Seq. NIT Código Emp. Origem do Vínculo Trabalhador Tipo Filiado Dt. Início Dt. Fim';
+    var dinheiro = function (n) { return n.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+    periodos.forEach(function (p, i) {
+      var n = i + 1, rot = 'Período ' + n + ': ';
+      if (!p.tipo) throw erro(rot + 'escolha o tipo de vínculo.', [p.campoTipo]);
+      if (!p.ini) throw erro(rot + 'informe a data de início.', [p.campoIni]);
+      if (!dataOk(p.ini)) throw erro(rot + 'a data de início é inválida.', [p.campoIni]);
+      p.ini.ord = ordemDe(p.ini.y, p.ini.m, p.ini.d);
+      if (p.ini.ord > hojeOrd) throw erro(rot + 'o início não pode ser no futuro.', [p.campoIni]);
+      if (p.fim) {
+        if (!dataOk(p.fim)) throw erro(rot + 'a data de fim é inválida.', [p.campoFim]);
+        p.fim.ord = ordemDe(p.fim.y, p.fim.m, p.fim.d);
+        if (p.fim.ord < p.ini.ord) throw erro(rot + 'o fim é anterior ao início.', [p.campoFim]);
+        if (p.fim.ord > hojeOrd) throw erro(rot + 'o fim não pode ser no futuro. Deixe em branco se o vínculo continua.', [p.campoFim]);
+      }
+    });
+    periodos.forEach(function (p, i) {
+      var nome = 'LANÇAMENTO MANUAL ' + (i + 1);
+      var ks = [], kIni = Math.max(mesDe(p.ini.y, p.ini.m), mesDe(1994, 7));
+      var kFim = p.fim ? mesDe(p.fim.y, p.fim.m) : hojeMes - 1;
+      for (var k = kIni; k <= kFim; k++) ks.push(k);
+      var fimTxt = p.fim ? ' ' + fmt(p.fim) : '';
+      linhas.push(cabV);
+      if (p.tipo === 'Segurado Especial') {
+        linhas.push((i + 1) + ' 000.00000.00-0 ' + nome + ' Segurado Especial ' + fmt(p.ini) + fimTxt);
+        linhas.push('Indicadores:');
+      } else if (p.tipo === 'Contribuinte Individual' || p.tipo === 'Facultativo') {
+        linhas.push((i + 1) + ' 000.00000.00-0 RECOLHIMENTO ' + p.tipo + ' ' + fmt(p.ini) + fimTxt);
+        linhas.push('Indicadores:');
+        linhas.push('Contribuições');
+        linhas.push('Compet. Data Pgto. Contribuição Salário Contrib. Indicadores Compet. Data Pgto. Contribuição Salário Contrib. Indicadores');
+        var cel = [];
+        ks.forEach(function (k) {
+          var sal = minimoDe(k) || 0, kp = k + 1;
+          cel.push(comp(k) + ' 15/' + comp(kp) + ' ' + dinheiro(Math.round(sal * 20) / 100) + ' ' + dinheiro(sal));
+        });
+        for (var j = 0; j < cel.length; j += 2) linhas.push(cel.slice(j, j + 2).join(' '));
+      } else {
+        linhas.push((i + 1) + ' 000.00000.00-0 00.000.000/0001-00 ' + nome + ' ' + p.tipo + ' ' + fmt(p.ini) + fimTxt);
+        linhas.push('Indicadores:');
+        linhas.push('Remunerações');
+        linhas.push('Competência Remuneração Indicadores Competência Remuneração Indicadores Competência Remuneração');
+        var c3 = [];
+        ks.forEach(function (k) { c3.push(comp(k) + ' ' + dinheiro(minimoDe(k) || 0)); });
+        for (var j3 = 0; j3 < c3.length; j3 += 3) linhas.push(c3.slice(j3, j3 + 3).join(' '));
+      }
+    });
+    return linhas.join('\n');
+  }
+
   function lerPdf(arquivo) {
     if (!root.pdfjsLib) return Promise.reject(new Error('O leitor de PDF não carregou. Recarregue a página ou cole o texto do extrato.'));
     root.pdfjsLib.GlobalWorkerOptions.workerSrc = root.PDF_WORKER_URL || (BASE + 'vendor/pdf.worker.min.js');
@@ -1550,40 +1617,110 @@
 
     function hoje() { var a = new Date(); return { y: a.getFullYear(), m: a.getMonth() + 1, d: a.getDate() }; }
 
-    function limpar() {
+    var limpar = function () {
       texto.value = ''; arquivo.value = ''; saida.textContent = ''; limpaErro(msg);
-    }
+    };
 
-    form.addEventListener('submit', function (ev) {
-      ev.preventDefault();
+    // Roda a análise sobre o texto de origem (PDF, texto colado ou lançamento manual) e mostra o resultado.
+    function executar(origem, msgEl, aoConcluir, manual) {
       saida.textContent = '';
-      limpaErro(msg);
-      msg.textContent = 'Lendo o extrato...';
-      var pdf = arquivo.files && arquivo.files[0];
-      var origem = pdf ? lerPdf(pdf) : Promise.resolve(texto.value);
+      limpaErro(msgEl);
+      msgEl.textContent = manual ? 'Analisando os lançamentos...' : 'Lendo o extrato...';
       origem.then(function (conteudo) {
-        if (!conteudo || !conteudo.trim()) { var vazio = new Error(pdf ? 'Não encontrei texto no PDF. Se ele for uma imagem escaneada, copie o texto do extrato e cole no campo.' : 'Falta o extrato: escolha o PDF do CNIS ou cole o texto do extrato no campo.'); vazio.campos = pdf ? ['cnis-arquivo'] : ['cnis-texto']; throw vazio; }
+        if (!conteudo || !conteudo.trim()) { var vazio = new Error(origemVazia); vazio.campos = campoVazio; throw vazio; }
         var analise = analisar(conteudo, hoje());
+        if (manual) {
+          analise.pendencias.push({ sev: 'atencao', ref: '', n: -1, msg: 'Simulação por lançamento manual: todas as competências foram consideradas com o salário mínimo da época e não há extrato do INSS. O resultado só vale como estimativa. Confira com o CNIS real antes de qualquer conclusão.' });
+          analise.resumo.atencoes++;
+          var ordemSev = { erro: 0, atencao: 1, info: 2 };
+          analise.pendencias.sort(function (x, y) { return ordemSev[x.sev] - ordemSev[y.sev] || x.n - y.n; });
+        }
         renderizar(saida, analise);
-        msg.textContent = '';
-        texto.value = ''; arquivo.value = '';
+        msgEl.textContent = '';
+        if (aoConcluir) aoConcluir();
         var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         saida.scrollIntoView({ behavior: reduz ? 'auto' : 'smooth', block: 'start' });
       }).catch(function (err) {
-        erroEm(msg, (err && err.message) || 'Não foi possível ler o arquivo.', err && err.campos);
+        erroEm(msgEl, (err && err.message) || 'Não foi possível ler o arquivo.', err && err.campos);
       });
+    }
+    var origemVazia = '', campoVazio = [];
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var pdf = arquivo.files && arquivo.files[0];
+      origemVazia = pdf ? 'Não encontrei texto no PDF. Se ele for uma imagem escaneada, copie o texto do extrato e cole no campo.' : 'Falta o extrato: escolha o PDF do CNIS ou cole o texto do extrato no campo. Sem o PDF, use "Lançar tempo manualmente".';
+      campoVazio = pdf ? ['cnis-arquivo'] : ['cnis-texto'];
+      executar(pdf ? lerPdf(pdf) : Promise.resolve(texto.value), msg, function () { texto.value = ''; arquivo.value = ''; }, false);
     });
+
+    // ----- Lançamento manual -----
+    var bManual = document.getElementById('cnis-manual');
+    var painelMan = document.getElementById('man-painel');
+    if (bManual && painelMan) {
+      var lista = document.getElementById('man-lista');
+      var msgMan = document.getElementById('man-msg');
+      var contador = 0;
+      var parteData = function (v) {
+        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || '');
+        return m ? { y: +m[1], m: +m[2], d: +m[3] } : null;
+      };
+      var campoDe = function (rotulo, controle) {
+        var l = el('label', 'campo', rotulo); l.appendChild(controle); return l;
+      };
+      var novaLinha = function () {
+        var n = ++contador, linha = el('div', 'man-linha');
+        var sel = el('select'); sel.id = 'man-tipo-' + n;
+        var ph = el('option', null, 'Escolha o tipo'); ph.value = ''; sel.appendChild(ph);
+        TIPOS_MANUAIS.forEach(function (t) { var o = el('option', null, t[1]); o.value = t[0]; sel.appendChild(o); });
+        var ini = el('input'); ini.type = 'date'; ini.id = 'man-ini-' + n; ini.min = '1950-01-01';
+        var fim = el('input'); fim.type = 'date'; fim.id = 'man-fim-' + n;
+        var rem = el('button', 'btn btn-leve', 'Remover'); rem.type = 'button';
+        rem.setAttribute('aria-label', 'Remover este período');
+        rem.addEventListener('click', function () { linha.remove(); if (!lista.children.length) lista.appendChild(novaLinha()); });
+        linha.appendChild(campoDe('Tipo de vínculo', sel));
+        linha.appendChild(campoDe('Início', ini));
+        linha.appendChild(campoDe('Fim (opcional)', fim));
+        linha.appendChild(rem);
+        return linha;
+      };
+      var reiniciar = function () { lista.textContent = ''; contador = 0; lista.appendChild(novaLinha()); limpaErro(msgMan); };
+      reiniciar();
+      bManual.addEventListener('click', function () {
+        var abrir = painelMan.hidden;
+        painelMan.hidden = !abrir;
+        bManual.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+        if (abrir) { var s1 = lista.querySelector('select'); if (s1) s1.focus(); }
+      });
+      document.getElementById('man-add').addEventListener('click', function () {
+        var l = novaLinha(); lista.appendChild(l); l.querySelector('select').focus();
+      });
+      document.getElementById('man-analisar').addEventListener('click', function () {
+        var periodos = [];
+        Array.prototype.forEach.call(lista.children, function (linha) {
+          var sel = linha.querySelector('select'), ini = linha.querySelectorAll('input')[0], fim = linha.querySelectorAll('input')[1];
+          if (!sel.value && !ini.value && !fim.value) return;
+          periodos.push({ tipo: sel.value, ini: parteData(ini.value), fim: parteData(fim.value), campoTipo: sel.id, campoIni: ini.id, campoFim: fim.id });
+        });
+        origemVazia = ''; campoVazio = [];
+        var texto2;
+        try { texto2 = gerarTextoManual(periodos, hoje()); } catch (e) { saida.textContent = ''; erroEm(msgMan, e.message, e.campos); return; }
+        executar(Promise.resolve(texto2), msgMan, null, true);
+      });
+      var limparBase = limpar;
+      limpar = function () { limparBase(); reiniciar(); };
+    }
 
     bExemplo.addEventListener('click', function () {
       limpaErro(msg); arquivo.value = ''; var ex = gerarExemplo(); texto.value = ex.texto; msg.textContent = 'Exemplo fictício carregado (' + ex.descricao + '). Clique em Analisar. Clique em Carregar exemplo de novo para gerar outro caso.';
     });
-    bLimpar.addEventListener('click', limpar);
+    bLimpar.addEventListener('click', function () { limpar(); });
   }
 
   var api = {
     analisar: analisar, interpretar: interpretar, dataDe: dataDe, valorDe: valorDe,
     alerta: alerta, erroEm: erroEm, limpaErro: limpaErro, gerarRelatorio: gerarRelatorio, formatarDuracao: formatarDuracao, formatarValor: formatarValor, minimoDe: minimoDe, duracaoCurta: duracaoCurta, agrupar: agrupar, rotuloMes: rotuloMes, mesDe: mesDe,
-    resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO, gerarExemplo: gerarExemplo,
+    gerarTextoManual: gerarTextoManual, TIPOS_MANUAIS: TIPOS_MANUAIS, resumoEmTexto: resumoEmTexto, textoDaPagina: textoDaPagina, EXEMPLO: EXEMPLO, gerarExemplo: gerarExemplo,
     el: el, sec: sec, tabela: tabela, ordemDe: ordemDe, dataDeOrd: dataDeOrd, rotuloData: rotuloData, ultimoDiaDoMes: ultimoDiaDoMes, ehRural: ehRural, INICIO_PBC: INICIO_PBC, INDICADORES: INDICADORES
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

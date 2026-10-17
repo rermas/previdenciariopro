@@ -621,11 +621,23 @@ if ($rota === '/') {
     </label>
     <div class="acoes">
       <button class="btn" type="submit">Analisar</button>
+      <button class="btn btn-leve" type="button" id="cnis-manual" aria-expanded="false" aria-controls="man-painel">Lançar tempo manualmente</button>
       <button class="btn btn-leve" type="button" id="cnis-exemplo">Carregar exemplo fictício</button>
       <button class="btn btn-leve" type="button" id="cnis-limpar">Limpar</button>
     </div>
     <p class="msg" id="cnis-msg" role="status"></p>
   </form>
+
+  <section id="man-painel" class="painel" hidden aria-labelledby="man-titulo">
+    <h2 id="man-titulo" class="man-titulo">Lançar tempo manualmente</h2>
+    <p class="texto">Sem o PDF, informe o tipo de vínculo e o período. Cada mês será considerado com o salário mínimo da época, então serve para simular e não substitui o CNIS. Deixe o fim em branco se o vínculo continua.</p>
+    <div id="man-lista" class="man-lista"></div>
+    <div class="acoes">
+      <button class="btn btn-leve" type="button" id="man-add">Adicionar período</button>
+      <button class="btn" type="button" id="man-analisar">Analisar lançamentos</button>
+    </div>
+    <p class="msg" id="man-msg" role="status"></p>
+  </section>
 
   <div id="cnis-resultado" aria-live="polite"></div>
 </main>
