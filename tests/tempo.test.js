@@ -284,3 +284,28 @@ console.log('comparador ok');
   assert.equal(r2.conclusao.status, 'nao_demonstrado');
 })();
 console.log('direito adquirido ok');
+
+// Pendências do Anexo V e plano simplificado
+{
+  const ci = (cod) => {
+    const l = [`1 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2015 31/12/2016`, 'Contribuições'];
+    for (let y = 2015; y <= 2016; y++) for (let m = 1; m <= 12; m++) l.push(`${pad(m)}/${y} 15/${pad(m === 12 ? 1 : m + 1)}/${m === 12 ? y + 1 : y} 200,00 1.000,00${cod ? ' ' + cod : ''}`);
+    return l.join('\n');
+  };
+  const ent = { sexo: 'M', nascimento: '1960-01-01', der: '2026-01-02' };
+  const semLC = ap(ci(''), ent), comLC = ap(ci('IREC-LC123'), ent);
+  assert.ok(semLC.tempo.brutoDer > 700, 'CI comum conta no tempo');
+  assert.equal(comLC.tempo.brutoDer, 0, 'plano simplificado não conta no tempo de contribuição');
+  assert.ok(comLC.perguntas.some((p) => p.id === 'compLC123'), 'pergunta sobre complementar');
+  assert.equal(comLC.carencia.total, 24, 'para a carência conta');
+  const complementa = ap(ci('IREC-LC123'), Object.assign({ compLC123: true }, ent));
+  assert.equal(complementa.tempo.brutoDer, semLC.tempo.brutoDer, 'com complementação entra no tempo');
+  // Empregado com competência pendente: sai do tempo e da carência
+  const txtP = vinculo([2015, 1], [2015, 12], '31/12/2015').replace('03/2015 3.000,00', '03/2015 3.000,00 PREM-EMPR');
+  const rp = ap(txtP, ent);
+  assert.equal(rp.carencia.total, 11);
+  assert.ok(rp.tempo.linhas.some((l) => /pendência que impede o cômputo/.test(l)));
+  const reg = T.aposentadoriaTempo(C.analisar(txtP, HOJE).semExclusao, ent, HOJE);
+  assert.equal(reg.carencia.total, 12, 'simulada como regularizada');
+}
+console.log('pendências e plano simplificado ok');

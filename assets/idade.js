@@ -74,7 +74,7 @@
     compl.ciBaixo.forEach(function (k) { baixoCI[k] = true; });
     var contados = {};      // mês -> lista de intervalos [ini, fim] em dias
     var notas = [];
-    var ex = { abaixoEmp: [], abaixoCI: [], atraso: [], aposFG: [], domesticoAntes: [], ruralAntes91: [], rpps: 0, especial: 0 };
+    var ex = { abaixoEmp: [], abaixoCI: [], atraso: [], aposFG: [], domesticoAntes: [], ruralAntes91: [], pendentes: [], simplificado: [], rpps: 0, especial: 0 };
     function marca(k, ini, fim, origem) {
       if (!contados[k]) contados[k] = { ints: [], origem: {} };
       contados[k].ints.push([ini, fim, curSeq]); contados[k].origem[origem] = true;
@@ -128,6 +128,8 @@
           if (rur && !tcmode && k < RURAL_EMP91) { ex.ruralAntes91.push(k); continue; }
           if (cl === 'domestica' && k < DOM_PRESUMIDO && !(v.contribuicoes && v.contribuicoes[k] !== undefined)) { ex.domesticoAntes.push(k); continue; }
           if (baixoEmp[k] && !resp.compEmp) { ex.abaixoEmp.push(k); continue; }
+          // Competência com pendência do Anexo V que impede o cômputo (a análise do CNIS já a marcou).
+          if (v.mesesPendentes && v.mesesPendentes[k] && !(v.contribuicoes && v.contribuicoes[k] !== undefined)) { ex.pendentes.push(k); continue; }
           marca(k, Math.max(v.inicioOrd, primeiroDia(k)), Math.min(v.fimOrd, ultimoDia(k)), 'emprego');
           presenca[k] = true;
         }
@@ -138,6 +140,8 @@
         Object.keys(v.contribuicoes || {}).forEach(function (ks) {
           var k = +ks;
           if (k < PISO94 || k > derMes) return;
+          // Plano simplificado (11% ou 5%, MEI, baixa renda): no tempo de contribuição só conta com complementação para 20%.
+          if (tcmode && v.mesesTC && v.mesesTC[k]) { ex.simplificado.push(k); if (!entrada.compLC123) return; }
           candCI.push({ k: k, v: v });
         });
       }

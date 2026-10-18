@@ -151,7 +151,24 @@
     'IREC-INDPEND': 'Guias pagas e comprovantes de pagamento',
     'PSC-MEN-SM-EC103': 'Guias de complementação, se houver',
     'PREC-MENOR-MIN': 'Guias de complementação, se houver',
-    'PREC-FACULTCONC': 'Comprovante da categoria correta de contribuição'
+    'PREC-FACULTCONC': 'Comprovante da categoria correta de contribuição',
+    'PDIV-DADOS-GFIP': 'Documentos pessoais e do vínculo que provem a titularidade (CTPS, holerites, termo de rescisão)',
+    'PVIN-IRREG': 'CTPS, contrato, holerites, extrato do FGTS e outros documentos contemporâneos do vínculo',
+    'PVIN-REC-PROC-TRAB': 'Sentença ou acordo trabalhista, provas materiais do vínculo e guias das contribuições (IN 128/2022, art. 172)',
+    'PVIN-RESP-INDIRETO-PROC-TRAB': 'Sentença ou acordo trabalhista, provas materiais do vínculo e guias das contribuições (IN 128/2022, art. 172)',
+    'PREM-VINC-PROC-TRAB': 'Sentença ou acordo trabalhista e provas das remunerações do período',
+    'PVIN-ADMISSAO-PROC-TRAB': 'Provas materiais do período acrescentado pelo processo trabalhista',
+    'PVIN-DESLIG-PROC-TRAB': 'Provas materiais do período entre a última remuneração e o desligamento',
+    'PVIN-MAND-ELETIVO-TOTAL': 'Opção pela filiação como facultativo e guias de 02/1998 a 09/2004 (IN 128/2022, arts. 138 a 149)',
+    'PREC-PMIG-DOM': 'CTPS e documentos do vínculo de empregado doméstico',
+    'PREC-CSE': 'Autodeclaração e documentos da atividade rural para ratificação',
+    'PSE-PEN': 'Autodeclaração e documentos da atividade rural, ou pedido de exclusão do período',
+    'PSE-NEG': 'Autodeclaração e documentos da atividade rural, ou pedido de exclusão do período',
+    'PREM-OBITO': 'Certidão de óbito e documentos para corrigir a data no CNIS, se estiver errada',
+    'PREC-OBITO': 'Certidão de óbito e comprovantes das datas de pagamento',
+    'PVIN-DESLIG-OBITO': 'Certidão de óbito e termo de rescisão para corrigir as datas',
+    'PEMP-IDINV': 'CTPS e documentos que identifiquem o empregador',
+    'PREC-FBR': 'Comprovante de inscrição atualizada no CadÚnico e de renda familiar'
   };
 
   function lerData(x) {
@@ -1185,6 +1202,40 @@
     comuns.appendChild(marca('dir-desemprego', 'Seguro-desemprego/SINE'));
     bloco.appendChild(comuns);
 
+    // Pendências do Anexo V que impedem o cômputo: ficam fora por padrão; dá para simular como regularizadas.
+    var px = analiseBase.pendentesExcluidos || { vinculos: [], competencias: [] };
+    var temPend = !!analiseBase.semExclusao && (px.vinculos.length + px.competencias.length > 0);
+    var chkPend = null;
+    if (temPend) {
+      var caixaPend = C.el('div', 'regras pend-box');
+      var inteiros = px.vinculos.filter(function (x) { return x.tipo === 'inteiro'; }), cortes = px.vinculos.filter(function (x) { return x.tipo === 'corte'; });
+      var partesTxt = [];
+      if (inteiros.length) partesTxt.push(inteiros.length + ' vínculo(s) inteiro(s)');
+      if (cortes.length) partesTxt.push('parte de ' + cortes.length + ' vínculo(s)');
+      if (px.competencias.length) partesTxt.push(px.competencias.length + ' competência(s)');
+      caixaPend.appendChild(C.el('p', null, 'Pendências que impedem o cômputo (Portaria DIRBEN/INSS 990/2022, Anexo V): ' + partesTxt.join(', ') + ' ficaram fora da simulação, como o INSS faz até a pendência ser tratada.'));
+      var ulP = C.el('ul', 'lista-simples');
+      inteiros.concat(cortes).slice(0, 8).forEach(function (x) { ulP.appendChild(C.el('li', null, x.rotulo + ': ' + x.codigos.join(', ') + (x.partes ? ' (fora: ' + x.partes.join(' e ') + ')' : ''))); });
+      var porSeqC = {};
+      px.competencias.forEach(function (x) { (porSeqC[x.rotulo] = porSeqC[x.rotulo] || []).push(x); });
+      Object.keys(porSeqC).slice(0, 6).forEach(function (r) { ulP.appendChild(C.el('li', null, r + ': ' + porSeqC[r].length + ' competência(s) (' + porSeqC[r].map(function (x) { return x.codigos.join(', '); }).filter(function (c, i, a) { return a.indexOf(c) === i; }).join('; ') + ')')); });
+      caixaPend.appendChild(ulP);
+      var lp = marca('dir-pend-regularizado', 'Simular como se as pendências estivessem regularizadas (vínculo comprovado ou pendência tratada no CNIS)');
+      caixaPend.appendChild(lp);
+      chkPend = lp.querySelector('input');
+      chkPend.addEventListener('change', function () { if (resultado.firstChild) executar(); });
+      bloco.appendChild(caixaPend);
+    }
+    function baseAtual() { return temPend && chkPend && chkPend.checked ? analiseBase.semExclusao : analiseBase; }
+    function avisoPend() {
+      if (!temPend || !resultado.firstChild) return;
+      var t = chkPend.checked
+        ? 'Simulação com as pendências do Anexo V tratadas como regularizadas. O resultado só vale se elas forem comprovadas ou tratadas no CNIS.'
+        : 'Vínculos e competências com pendência que impede o cômputo (Anexo V) ficaram fora desta simulação. Marque a opção acima para simular como regularizados.';
+      var b = C.el('p', 'pend-aviso', t);
+      resultado.insertBefore(b, resultado.firstChild);
+    }
+
     selBen.addEventListener('change', function () {
       var v = selBen.value;
       gSM.hidden = v !== 'salario-maternidade'; gPM.hidden = v !== 'pensao-por-morte'; gAR.hidden = v !== 'auxilio-reclusao'; gAI.hidden = v !== 'auxilio-incapacidade-temporaria' && v !== 'aposentadoria-incapacidade-permanente'; var gpp = document.getElementById('ai-perm'); if (gpp) gpp.hidden = v !== 'aposentadoria-incapacidade-permanente';
@@ -1211,9 +1262,10 @@
     var respostas = {}; // respostas às perguntas de carência (complementar, vínculo comprovado)
     api.responder = function (id, v) { respostas[id] = v; executar(); };
     function executar() {
-      analise = comExtras(analiseBase, extras);
+      analise = comExtras(baseAtual(), extras);
       executarBase();
       if (extras.length && resultado.firstChild) resultado.insertBefore(blocoExtras(extras), resultado.firstChild);
+      if (!resultado.querySelector('.alerta-erro')) avisoPend();
     }
     function executarBase() {
       resultado.textContent = '';
@@ -1253,11 +1305,12 @@
     }
     botao.addEventListener('click', function () { C.limpaErro(avisoRel); executar(); });
     botaoCmp.addEventListener('click', function () {
-      analise = comExtras(analiseBase, extras);
+      analise = comExtras(baseAtual(), extras);
       resultado.textContent = '';
       var cc = Object.assign(root.TEMPO.lerCampos(), respostas, { enquadramento: enq, professor: prof.slice(), pcd: pcd.slice() });
       resultado.appendChild(root.TEMPO.renderizarComparador(root.TEMPO.comparar(analise, cc, hojeAgora())));
       if (extras.length) resultado.insertBefore(blocoExtras(extras), resultado.firstChild);
+      avisoPend();
     });
     // Cartão recolhido: quem só quer analisar o CNIS não é obrigado a ver o formulário
     var sec = C.el('section', 'bloco convite');

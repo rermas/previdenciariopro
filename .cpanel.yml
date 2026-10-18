@@ -5,4 +5,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home1/simul637/public_html/previdenciariopro/
-    - '[ "$(pwd -P)" = "$(cd ${DEPLOYPATH} && pwd -P)" ] || { /bin/mkdir -p ${DEPLOYPATH}assets ${DEPLOYPATH}posts && /bin/cp -f index.php .htaccess robots.txt ads.txt ${DEPLOYPATH} && /bin/cp -Rf assets/. ${DEPLOYPATH}assets/ && /bin/cp -Rf posts/. ${DEPLOYPATH}posts/; }'
+    - '[ "$(pwd -P)" = "$(cd ${DEPLOYPATH} && pwd -P)" ] || { /bin/mkdir -p ${DEPLOYPATH}assets ${DEPLOYPATH}posts ${DEPLOYPATH}dados && /bin/cp -f index.php .htaccess robots.txt ads.txt ${DEPLOYPATH} && /bin/cp -Rf assets/. ${DEPLOYPATH}assets/ && /bin/cp -Rf posts/. ${DEPLOYPATH}posts/ && /bin/cp -Rf dados/. ${DEPLOYPATH}dados/; }'

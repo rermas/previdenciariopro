@@ -19,31 +19,221 @@
 
   var MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 
-  // Indicadores do CNIS. Os da legenda oficial do extrato usam o texto dela; os demais vêm de
-  // artigos de escritórios de advocacia previdenciária. O código original sempre aparece junto.
+  // <indicadores> Gerado por tools/gerar-indicadores.js a partir de dados/indicadores.json. Não edite à mão.
+  // Fonte: Portaria DIRBEN/INSS nº 990, de 28/03/2022, Anexo V (Relação dos indicadores disponibilizados no CNIS), alterada pela Portaria DIRBEN/INSS nº 1.316, de 24/11/2025. Conferido em 18/10/2026.
+  // [gravidade, descrição oficial, efeito]. Efeito: vinculo/competencia = não computado até tratar; mandato = até 18/09/2004 não conta como empregado;
+  // datas-* = trecho alterado por processo trabalhista precisa de prova; idade-minima; tc = só fora da aposentadoria por tempo sem complementação;
+  // minimo = tratado pelo valor; atencao = sem exclusão automática; info = informativo.
   var INDICADORES = {
-    'AVRC-DEF': ['info', 'acerto confirmado pelo INSS'],
-    'IREM-ACD': ['info', 'remuneração possui parcela de acordo, convenção ou dissídio coletivo'],
-    'IREM-INDPEND': ['atencao', 'remunerações com indicadores ou pendências'],
-    'PSC-MEN-SM-EC103': ['atencao', 'salário de contribuição menor que o mínimo mensal; a competência pode ser complementada, utilizada ou agrupada conforme a EC 103/2019'],
-    'IVIN-PROC-TRAB': ['atencao', 'vínculo possui processo trabalhista'],
-    'IREC-MEI': ['info', 'contribuição da competência recolhida com código MEI'],
-    'PREC-MENOR-MIN': ['atencao', 'contribuição abaixo do salário mínimo'],
-    'PREM-EXT': ['atencao', 'remuneração informada fora do prazo'],
-    'PEXT': ['atencao', 'vínculo extemporâneo (registrado fora do prazo)'],
-    'IREC-INDPEND': ['atencao', 'recolhimentos com indicadores ou pendências'],
-    'PREM-FVIN': ['atencao', 'remuneração depois do fim do vínculo'],
-    'PREM-IVIN': ['atencao', 'remuneração antes do início do vínculo'],
-    'PADM-EMPR': ['atencao', 'admissão anterior ao início da atividade do empregador'],
-    'PREM-EMPR': ['atencao', 'remuneração anterior ao início da atividade do empregador'],
-    'PRES-EMPR': ['atencao', 'rescisão anterior ao início da atividade do empregador'],
-    'PEMP-CAD': ['atencao', 'dados cadastrais do empregador ausentes ou inconsistentes'],
-    'PREC-FACULTCONC': ['atencao', 'contribuição facultativa concomitante com outro vínculo'],
-    'PRPPS': ['info', 'período em regime próprio de previdência'],
-    'IEAN': ['info', 'exposição a agente nocivo informada pelo empregador'],
-    'AEXT-VT': ['info', 'correção de vínculo extemporâneo validada pelo INSS'],
-    'IREC-LC123': ['info', 'recolhimento no Plano Simplificado de Previdência Social (LC 123/2006)']
+    "PDESFAZ-AJ-EC103": ["atencao", "pendência por desfazimento de agrupamento ou utilização", "atencao"],
+    "PMOV-INCONSIST": ["atencao", "pendência de registro inconsistente de movimentação entre competências", "atencao"],
+    "PREM-BLOQ-EC103": ["atencao", "pendência de bloqueio de remuneração/contribuição para ajuste entre competências", "atencao"],
+    "PSC-MEN-SM-EC103": ["atencao", "pendência que sinaliza que a competência possui salário de contribuição menor do que o mínimo. Competência não tratada, passível de complementação, utilização ou agrupamento", "minimo"],
+    "PREC-CDCONC": ["atencao", "recolhimento ou período atividade de contribuinte em dobro concomitante com outro TFV (Tipo de Filiado no Vínculo)", "competencia"],
+    "PREC-COD1821": ["atencao", "recolhimento com código de pagamento 1821 - Mandato Eletivo", "competencia"],
+    "PREC-CSE": ["atencao", "recolhimento de segurado especial pendente de comprovação da atividade", "competencia"],
+    "PREC-FACULTCONC": ["atencao", "recolhimento ou período de contribuinte facultativo concomitante com outros vínculos", "competencia"],
+    "PREC-FBR": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda não validado", "competencia"],
+    "FBR-AUT-BAT": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com atualização cadastral/elos no CNIS aguardando batimentos", "competencia"],
+    "FBR-AUT-CONCBEN": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda concomitante com benefício incompatível (previdenciário/BPC/PA)", "competencia"],
+    "FBR-AUT-CONCQSA": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda participante de quadro societário (QSA) de empresa", "competencia"],
+    "FBR-AUT-CONCSD": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda concomitante com período de Seguro Desemprego (SD/SDPA)", "competencia"],
+    "FBR-AUT-DUPGRUPFAM": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com duplicidade de grupo familiar", "competencia"],
+    "FBR-AUT-EXPCAD": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda sem atualização bienal no CadÚnico", "competencia"],
+    "FBR-AUT-FACULTCONC": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda concomitante com filiação incompatível (segurado obrigatório)", "competencia"],
+    "FBR-AUT-OBITO": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com óbito anterior à competência de referência ou à data do pagamento", "competencia"],
+    "FBR-AUT-PENDCAD": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda sem cadastro no CadÚnico", "competencia"],
+    "FBR-AUT-PENDPROCES": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda pendente de processamento no CadÚnico", "competencia"],
+    "FBR-AUT-RENPES": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com renda pessoal informada no CadÚnico", "competencia"],
+    "FBR-AUT-RENSUP": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com renda familiar superior a 2 salários mínimos", "competencia"],
+    "PREC-FBR-ANT": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda anterior a 09/2011 (inválido)", "competencia"],
+    "PREC-LC150-DOM": ["atencao", "pagamento de doméstica em GPS em período de remuneração de fonte INSS/eSocial", "competencia"],
+    "PREC-MENOR-MIN": ["atencao", "recolhimento abaixo do valor mínimo", "minimo"],
+    "PREC-OBITO": ["atencao", "competência do recolhimento posterior ao mês do óbito", "competencia"],
+    "PREC-PMIG-DOM": ["atencao", "recolhimento de empregado doméstico sem comprovação de vínculo", "competencia"],
+    "PREM-EXT": ["atencao", "remuneração informada fora do prazo, passível de comprovação", "competencia"],
+    "PREM-TSVE-PER-QUARENTENA": ["atencao", "remuneração informada após o término do TSVE referente ao período de Quarentena", "competencia"],
+    "PREM-TSVE-PER-TERM-JUD": ["atencao", "pendência de Remuneração após o término do TSVE reconhecido judicialmente com data anterior a competências de remunerações já informadas no eSocial", "competencia"],
+    "PREM-TSVE-POS-QUARENTENA": ["atencao", "pendência de Remuneração informada para TSVE após o período de Quarentena", "competencia"],
+    "PREM-TSVE-POS-TERM-JUD": ["atencao", "pendência de Remuneração após o período entre o término do TSVE e o último dia trabalhado", "competencia"],
+    "PREM-TSVE-PROC-TRAB": ["atencao", "pendência de Reconhecimento de Remuneração de Trabalhador sem Vínculo oriundo de Processo Trabalhista", "competencia"],
+    "PDT-NASC-FIL-INV": ["atencao", "idade do filiado menor que a permitida pela legislação", "idade-minima"],
+    "PDT-NASC-FIL-MENOR-INV": ["atencao", "idade do filiado menor aprendiz menor que a permitida pela legislação", "idade-minima"],
+    "PREM-NASC": ["atencao", "remuneração antes da data de nascimento do Filiado", "competencia"],
+    "PDARF-ALT-COMP-FORA-VIG": ["info", "indicador de Darf incluído por alteração de competência fora do período de vigência", "info"],
+    "PDARF-ALT-CPF": ["info", "darf desassociado do CPF originário pela RFB", "info"],
+    "PDARF-EVENTO-INCONSISTENTE": ["info", "evento inconsistente", "info"],
+    "PDARF-INV-ALT-CODRECEITA": ["info", "indicador de Darf invalidado por alteração pela RFB para código de receita não tratado", "info"],
+    "PDARF-RESTIT-PARCIAL": ["info", "indicador de Darf com Valor Restituído Parcial", "info"],
+    "PDARF-RESTIT-TOTAL": ["info", "indicador de Darf com Valor Restituído Total", "info"],
+    "PNIT-CRIT": ["atencao", "nIT em faixa crítica", "atencao"],
+    "PNIT-IND": ["atencao", "nIT Indeterminado", "atencao"],
+    "PNIT-O094": ["atencao", "nIT invalidado pertencente à faixa crítica do tipo Ofício INSS 094", "atencao"],
+    "PNIT-SC": ["atencao", "nIT não encontrado cadastrado/inexistente", "atencao"],
+    "PNIT-SUP": ["atencao", "nIT com indício de superposição de dados", "atencao"],
+    "PSE-NEG": ["atencao", "período Segurado Especial Negativo", "vinculo"],
+    "PSE-PEN": ["atencao", "período Segurado Especial Pendente", "vinculo"],
+    "PSE-POS": ["atencao", "período Segurado Especial Positivo", "atencao"],
+    "NDET": ["atencao", "data de início de atividade foi estimada na migração", "atencao"],
+    "PADM-EMPR": ["atencao", "data de admissão anterior ao início da atividade do empregador", "atencao"],
+    "PCEI-EQP-INV": ["atencao", "empregador com identificador inválido", "atencao"],
+    "PDIV-DADOS-GFIP": ["atencao", "vínculo ou remuneração pendente por divergência de dado cadastral do trabalhador em GFIP", "vinculo"],
+    "PEMP-CAD": ["atencao", "faltam dados cadastrais do empregador (CNPJ ou CEI)", "vinculo"],
+    "PEMP-IDINV": ["atencao", "empregador com identificador inválido", "atencao"],
+    "PEXT": ["atencao", "vínculo com informação extemporânea, passível de comprovação", "vinculo"],
+    "PREC-COD1821_FORA_VIG": ["atencao", "recolhimento com código de pagamento 1821 - mandato eletivo, fora da vigência", "competencia"],
+    "PREM-EMPR": ["atencao", "remunerações após a data de encerramento da atividade do empregador", "competencia"],
+    "PREM-FORA-ATIV-INTERM": ["atencao", "remuneração de trabalho intermitente fora do período de atividade de intermitente", "competencia"],
+    "PREM-FORA-CONVOC": ["atencao", "remuneração de trabalho intermitente não coberta por Convocatória", "competencia"],
+    "PREM-FORA-REINTEG-ANISTIA": ["atencao", "pendência de Remuneração fora do período da Reintegração por Anistia Legal", "competencia"],
+    "PREM-FORA-REINTEG-OUTROSTIPOS": ["atencao", "pendência de Remuneração fora do período da Reintegração por iniciativa do empregador ou por outros motivos", "competencia"],
+    "PREM-FORA-REINTEG-PROC-TRAB": ["atencao", "pendência de Remuneração fora do período da Reintegração oriunda de Processo Trabalhista", "competencia"],
+    "PREM-FVIN": ["atencao", "remuneração após o fim do vínculo", "competencia"],
+    "PREM-IVIN": ["atencao", "remuneração antes do início do vínculo", "competencia"],
+    "PREM-OBITO": ["atencao", "remuneração após óbito", "competencia"],
+    "PREM-PER-DESLIG-APOSENT": ["atencao", "pendência de Remuneração após o desligamento por aposentadoria de servidor com data anterior à competência de remuneração já informada no eSocial", "competencia"],
+    "PREM-PER-DESLIG-JUD": ["atencao", "pendência de Remuneração após o desligamento reconhecido judicialmente com data anterior à competência de remuneração já informada no eSocial", "competencia"],
+    "PREM-POS-DESLIG-APOSENT": ["atencao", "pendência de Remuneração após o período entre o desligamento por aposentadoria de servidor e o último dia trabalhado", "competencia"],
+    "PREM-POS-DESLIG-JUD": ["atencao", "pendência de Remuneração após o período entre o desligamento e o último dia trabalhado", "competencia"],
+    "PREM-POSQRT": ["atencao", "remuneração posterior ao período de quarentena", "competencia"],
+    "PREM-POS-QUARENTENA": ["atencao", "pendência de Remuneração informada após o período de Quarentena", "competencia"],
+    "PREM-REINTEG-ANISTIA": ["atencao", "pendência em Remuneração de período de Anistia Legal", "competencia"],
+    "PREM-REINTEG-OUTROSTIPOS": ["atencao", "pendência em Remuneração de período de Reintegração por iniciativa do empregador ou por outros motivos", "competencia"],
+    "PREM-VINC-PROC-TRAB": ["atencao", "pendência de Reconhecimento de Remuneração no Vínculo oriunda de Processo Trabalhista", "competencia"],
+    "PRES-EMPR": ["atencao", "data de rescisão posterior à data de encerramento da atividade do empregador", "atencao"],
+    "PRPPS": ["atencao", "vínculo de empregado com informações de Regime Próprio (Servidor Público)", "atencao"],
+    "PRPSE": ["atencao", "vínculo de empregado do Regime de Previdência no Exterior", "vinculo"],
+    "PSUC-DIVERG-DT-ADM": ["info", "pendência que indica que o vínculo é sucessor e foram encontradas uma ou mais divergências envolvendo a data de admissão do vínculo sucedido e este sucessor", "info"],
+    "PVIN-ADMISSAO-DESLIG-PROC-TRAB": ["atencao", "pendência por Alteração da Data de Admissão e Inclusão ou Alteração da Data de Desligamento, oriundas de Processo Trabalhista", "datas"],
+    "PVIN-ADMISSAO-PROC-TRAB": ["atencao", "pendência por Alteração da Data de Admissão oriunda de Processo Trabalhista", "datas-inicio"],
+    "PVIN-ADM-OBITO": ["atencao", "data de admissão posterior ao óbito", "vinculo"],
+    "PVIN-AGRUP-INC": ["atencao", "pendência que sinaliza inconsistência em Vínculo agrupador quando não foi possível encontrar todos os seus vínculos agrupados relacionados", "vinculo"],
+    "PVIN-CAGED": ["atencao", "vínculo Oriundo da fonte CAGED", "vinculo"],
+    "PVIN-DESLIG-JUSTICA-TRAB": ["atencao", "pendência por Inclusão da Data de Desligamento feita pela Justiça do Trabalho por meio do Evento S-8299 – Baixa Judicial do Vínculo do eSocial", "datas-fim"],
+    "PVIN-DESLIG-OBITO": ["atencao", "data do desligamento posterior à data do óbito", "vinculo"],
+    "PVIN-DESLIG-PROC-TRAB": ["atencao", "pendência por Inclusão ou Alteração da Data de Desligamento oriunda de Processo Trabalhista", "datas-fim"],
+    "PVIN-IRREG": ["atencao", "vínculo em situação de irregularidade", "vinculo"],
+    "PVIN-MAND-ELETIVO-TOTAL": ["atencao", "vínculo totalmente caracterizado como mandato eletivo", "mandato"],
+    "PVIN-ME": ["atencao", "vínculo de mandato eletivo, passível de comprovação", "mandato"],
+    "PVIN-OBITO": ["atencao", "data de admissão posterior ao óbito", "vinculo"],
+    "PVIN-RE": ["info", "causa de rescisão estimada por não ter sido informada pela fonte (RAIS/FGTS/GRE)", "info"],
+    "PVIN-REC-PROC-TRAB": ["atencao", "pendência de Reconhecimento de Vínculo oriundo de Processo Trabalhista", "vinculo"],
+    "PVIN-RESP-INDIRETO-PROC-TRAB": ["atencao", "pendência de Reconhecimento de Vínculo informado por Responsável Indireto em Processo Trabalhista", "vinculo"],
+    "PVIN-SUBSTIT-INC": ["atencao", "pendência que sinaliza inconsistência em Vínculo prevalente quando não foi possível encontrar todos os seus vínculos relacionados", "atencao"],
+    "PVIN-TRAB-INTERM": ["atencao", "pendência relaciona da a Vínculo que possui informações de trabalho intermitente", "atencao"],
+    "PVIN-UNIC-CONTR-PROC-TRAB": ["atencao", "pendência de Vínculo que possui Unicidade Contratual oriunda de Processo Trabalhista", "datas"],
+    "PVIN-UNIC-CONTR-TSVE-PROC-TRAB": ["atencao", "pendência de Vínculo que possui Unicidade Contratual do período de TSVE oriunda de Processo Trabalhista", "datas"],
+    "IAGRUP-MN-SM-EC103": ["info", "indicador de competência objeto de agrupamento que recebeu de outra competência mas permaneceu abaixo do mínimo (favorecida)", "info"],
+    "IAGRUP-SM-EC103": ["info", "indicador de competência objeto de agrupamento que resultou em salário de contribuição igual ao valor mínimo (favorecida)", "info"],
+    "IAGRUP-VR-EC103": ["info", "indicador de competência objeto de agrupamento onde restou valor residual (desfavorecida)", "info"],
+    "IAGRUP-ZER-EC103": ["info", "indicador de competência objeto de agrupamento que restou zerada (desfavorecida)", "info"],
+    "ICOMPL-VR-SM-EC103": ["info", "indicador de competência que possui recolhimento de complementação para o valor mínimo", "info"],
+    "IVLR-DARF-LIMITADO": ["info", "valor de DARF foi limitado de forma que o valor total da competência não ultrapasse o valor do Salário Mínimo na competência", "info"],
+    "IREL-PREV-POSSUI-COMP-AJUST": ["info", "relação Previdenciária possui alguma competência que foi ajustada (favorecida/desfavorecida)", "info"],
+    "ICED-VR-EXC-EC103": ["info", "indicador de competência que cedeu valor excedente para outra competência", "info"],
+    "IUTILIZ-EXC-EC103": ["info", "indicador de competência que foi favorecida por valor de remuneração(-ões) excedente(s) de outra(s) competência(s)", "info"],
+    "IUTILIZ-EXC-MN-SM-EC103": ["info", "indicador de competência que foi favorecida por valor de remuneração(-ões) excedente(s) de outra(s) competência(s), mas permaneceu inferior ao mínimo", "info"],
+    "GFIP": ["info", "indica que remuneração da competência foi declarada em GFIP", "info"],
+    "IREC-DESINDEXA": ["info", "indica que a contribuição da competência foi desindexada", "info"],
+    "IREC-FBR": ["info", "recolhimento de segurado Facultativo de Baixa Renda (L 12470/2011)", "tc"],
+    "IREC-FBR-DEF": ["info", "recolhimento de segurado Facultativo de Baixa Renda deferido/válido via Portal CNIS", "info"],
+    "IREC-FBR-IND": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda indeferido/inválido via Portal CNIS", "competencia"],
+    "IREC-INDPEND": ["atencao", "recolhimentos com indicadores/pendências", "atencao"],
+    "IREC-LC123": ["info", "recolhimento no Plano Simplificado de Previdência Social (LC 123/2006)", "tc"],
+    "IREC-LC123-SUP": ["info", "recolhimento no Plano Simplificado de Previdência Social (LC 123/2006) superior ao salário mínimo", "info"],
+    "IREC-LIM-SM": ["info", "indica que a contribuição da competência foi limitada ao salário mínimo", "info"],
+    "IREC-MEI": ["info", "indica que a contribuição da competência foi recolhida com código MEI", "tc"],
+    "IRECOL": ["info", "indica que a contribuição da competência é recolhimento", "info"],
+    "ILEI123": ["info", "indica que a contribuição da competência foi recolhida com código da Lei Complementar 123", "tc"],
+    "IMEI": ["info", "indica que a contribuição da competência foi recolhida com código MEI", "tc"],
+    "IREM-TSVE-PER-QUARENTENA": ["info", "remuneração informada após o término do TSVE referente ao período de Quarentena", "info"],
+    "ISALMIN": ["info", "indica que a contribuição da competência foi limitada ao salário mínimo", "info"],
+    "IDARF-CPF-NAO-INF": ["info", "indicador de Darf para CPF não informado no evento", "info"],
+    "IDARF-ESPECIE-CI-INVALIDA": ["info", "indicador de Darf para Espécie CI inválida na competência", "info"],
+    "IDARF-EXT-SEM-ANO-CIV": ["info", "indicador de Darf para a inexistência de ano civil presente na Extrato", "info"],
+    "IDARF-FIL-CAD-DIV": ["info", "indicador de DARF para filiado com dados cadastrais divergentes entre CNIS e RFB", "info"],
+    "IDARF-FIL-NAO-ENC": ["info", "indicador de Darf para filiado não encontrado no cadastro de pessoas físicas", "info"],
+    "IDARF-SEM-EMISS-ANT": ["info", "indicador de Darf sem emissão registrada anteriormente", "info"],
+    "IDARF-TIPO-FILIADO-INVALIDO": ["info", "indicador de Darf para Tipo de Filiado inválido na competência", "info"],
+    "IDARF-TIPO-FILIADO-NAO-INFORMADO": ["info", "indicador de Darf para Tipo de Filiado não informado na competência", "info"],
+    "IDARF-ALT-CODRECEITA": ["info", "indicador de Darf incluído por alteração de código de receita aplicável pelo INSS por outro código também aplicável", "info"],
+    "IDARF-ALT-COMPETENCIA": ["info", "indicador de Darf incluído por alteração de competência dentro do período de vigência", "info"],
+    "IDARF-ALT-CPF": ["info", "indicador de Darf alterado pela RFB para o CPF do titular", "info"],
+    "IDARF-ALT-DADOS": ["info", "indicador de Darf incluído por alteração de dados", "info"],
+    "IDARF-DESFAZ-CANCEL": ["info", "indicador de Darf com Cancelamento Desfeito", "info"],
+    "IDARF-DESFAZRESTIT-PARCIAL": ["info", "indicador de Darf com Valor Restituído Parcial Desfeito", "info"],
+    "IDARF-DESFAZRESTIT-TOTAL": ["info", "indicador de Darf com Valor Restituído Total Desfeito", "info"],
+    "PCTC-NTR": ["info", "certidão de Tempo de Contribuição pendente de análise do INSS", "info"],
+    "ISE-CVU": ["atencao", "período de segurado especial concomitante com outro período urbano", "atencao"],
+    "IDT": ["info", "indicador de Demanda de Natureza Trabalhista", "info"],
+    "IEAN": ["info", "exposição a agente nocivo informada pelo empregador, passível de comprovação", "info"],
+    "IREM-ACD": ["info", "remuneração possui parcela de Acordo, Convenção ou Dissídio Coletivo", "info"],
+    "IREM-INDPEND": ["atencao", "remunerações com indicadores/pendência", "atencao"],
+    "IREM-PARC-CEDIDO": ["info", "remuneração possui parcela de remuneração decorrente de Trabalhador Cedido", "info"],
+    "IREM-PARC-DIR-SIND": ["info", "remuneração possui parcela de remuneração decorrente de Dirigente Sindical", "info"],
+    "IREM-PERQRT": ["info", "remuneração em período de quarentena", "info"],
+    "IREM-PER-QUARENTENA": ["info", "remuneração informada após o desligamento referente ao período de quarentena", "info"],
+    "IREM-RECL-TRAB": ["info", "remuneração possui parcela de reclamatória trabalhista", "info"],
+    "IREM-REINTEG-PARC-PROC-TRAB": ["info", "remuneração de período de Reintegração parcial oriunda de Processo Trabalhista", "info"],
+    "IREM-REINTEG-TOT-PROC-TRAB": ["info", "remuneração de período de Reintegração total oriunda de Processo Trabalhista", "info"],
+    "IREM-TRAB-INTERM": ["info", "remuneração relacionada a Trabalho Intermitente", "info"],
+    "IREM-TRAB-VERDE-AMARELO": ["info", "indicador remunerações pertencentes aos Vínculo que possua algum período de categoria relacionada a carteira verde amarela", "info"],
+    "IREM-VINC-PROC-TRAB": ["info", "remuneração no Vínculo oriunda de Processo Trabalhista", "info"],
+    "IVIN-AGRUP-VINC": ["info", "indicador de Vínculo Trabalhista gerado pelo Serviço de agrupamento de vínculos", "info"],
+    "IVIN-AGRUP-VINC-PART": ["info", "indicador que marca o vínculo que foi alvo do Serviço de agrupamento de vínculos", "info"],
+    "IVIN-DESLIG-JUSTICA-TRAB": ["info", "inclusão da Data de Desligamento feita pela Justiça do Trabalho por meio do Evento S-8299 – Baixa Judicial do Vínculo do eSocial", "info"],
+    "IVIN-JORN-DIFERENCIADA": ["info", "vínculo possui regime de jornada diferenciada", "info"],
+    "IVIN-MAND-ELETIVO-PARCIAL": ["atencao", "vínculo parcialmente caracterizado como mandato eletivo", "atencao"],
+    "IVIN-POSSUI-REG-PRELIM": ["info", "indicador que informa que a Relação Trabalhista possui um registro preliminar informado anteriormente em eSocial", "info"],
+    "IVIN-POSSUI-REM-TRAB-INTERM": ["info", "relação Trabalhista possui Remunerações de Trabalho Intermitente", "info"],
+    "IVIN-POSSUI-REM-TRANS": ["info", "vínculo possui remuneração que foi transferida para este por Cessionário de Dirigente Sindical ou Trabalhador Cedido", "info"],
+    "IVIN-PROC-TRAB": ["info", "vínculo possui Processo Trabalhista", "info"],
+    "IVIN-REG-PRELIM": ["atencao", "indicador que informa que a Relação Trabalhista é um registro preliminar de vínculo informado eSocial", "atencao"],
+    "IVIN-REINTEG": ["info", "vínculo possui reintegração no último desligamento por 1- Reintegração por decisão judicial ou 3- Reversão de servidor público ou 4- Recondução de servidor público ou 5- Reinclusão de militar", "info"],
+    "IVIN-REINTEG-ANISTIA": ["info", "indicador de Reintegração por Anistia Legal", "info"],
+    "IVIN-REINTEG-OUTROSTIPOS": ["info", "vínculo possui reintegração no último desligamento por iniciativa do empregador ou por outros motivos", "info"],
+    "IVIN-REINTEG-PARC": ["info", "sentença trabalhista determinando reintegração do trabalhador e pagamento de remunerações de período parcial", "info"],
+    "IVIN-REINTEG-PARC-PROC-TRAB": ["info", "vínculo possui reintegração parcial oriunda de Processo Trabalhista", "info"],
+    "IVIN-REINTEG-PROC-TRAB": ["info", "vínculo possui reintegração no último desligamento oriunda de Processo Trabalhista", "info"],
+    "IVIN-REINTEG-TOT": ["info", "sentença trabalhista determinando reintegração e pagamento de remunerações retroativas do período total", "info"],
+    "IVIN-REINTEG-TOT-PROC-TRAB": ["info", "vínculo possui reintegração total oriunda de Processo Trabalhista", "info"],
+    "IVIN-TRAB-INTERM": ["info", "indicador de Vínculo que possui informações de trabalho intermitente", "info"],
+    "IVIN-TRAB-VERDE-AMARELO": ["info", "indicador de Vínculo que possua algum período de categoria(eSocial ou GFIP) relacionada a carteira verde amarela", "info"],
+    "IVIN-UNIC-CONTR-PROC-TRAB": ["info", "vínculo possui Unicidade Contratual oriunda de Processo Trabalhista", "info"],
+    "IVIN-UNIC-CONTR-TSVE-PROC-TRAB": ["info", "vínculo possui Unicidade Contratual do período de TSVE oriunda de Processo Trabalhista", "info"],
+    "ASE-DEF": ["info", "acerto Período Segurado Especial Deferido", "info"],
+    "ASE-DEFJ": ["info", "acerto Período Segurado Especial Deferido Judicial", "info"],
+    "ASE-DEFR": ["info", "acerto Período Segurado Especial Deferido Recursal", "info"],
+    "ASEF-DEF": ["info", "acerto Período Segurado Especial FUNAI Deferido", "info"],
+    "ASEF-DEFJ": ["info", "acerto Período Segurado Especial FUNAI Deferido Judicial", "info"],
+    "ASE-IND": ["atencao", "acerto Período Segurado Especial Indeferido", "vinculo"],
+    "ASE-INDR": ["atencao", "acerto Período Segurado Especial Indeferido Recursal", "atencao"],
+    "ASE-NSE": ["atencao", "acerto Período Não Segurado Especial", "vinculo"],
+    "ASE-RNEG": ["atencao", "acerto Período Segurado Especial Negativo Ratificado", "vinculo"],
+    "ASE-RPOS": ["info", "acerto Período Segurado Especial Positivo Ratificado", "info"],
+    "ACNISVR": ["info", "acerto realizado pelo INSS", "info"],
+    "ADIV-DADOS-GFIP": ["info", "validação de vínculo ou remuneração com divergência de dado cadastral do trabalhador em GFIP", "info"],
+    "AEXT-IND": ["atencao", "vínculo extemporâneo não confirmado pelo INSS", "vinculo"],
+    "AEXT-INDJ": ["atencao", "vínculo extemporâneo não confirmado por decisão judicial", "vinculo"],
+    "AEXT-INDR": ["atencao", "vínculo extemporâneo não confirmado por decisão recursal", "vinculo"],
+    "AEXT-VP": ["atencao", "vínculo extemporâneo confirmado parcialmente pelo INSS", "atencao"],
+    "AEXT-VPR": ["atencao", "vínculo extemporâneo confirmado parcialmente por decisão recursal", "atencao"],
+    "AEXT-VPT": ["atencao", "vínculo extemporâneo confirmado parcialmente por decisão judicial", "atencao"],
+    "AEXT-VT": ["info", "vínculo extemporâneo confirmado pelo INSS", "info"],
+    "AEXT-VTJ": ["info", "vínculo extemporâneo confirmado por decisão judicial", "info"],
+    "AEXT-VTR": ["info", "vínculo extemporâneo confirmado por decisão recursal", "info"],
+    "AVRC-AGPVINC": ["info", "acerto de Agrupamento de Vínculos", "info"],
+    "AVRC-DEF": ["info", "acerto confirmado pelo INSS", "info"],
+    "AVRC-DEFJ": ["info", "acerto confirmado por decisão judicial", "info"],
+    "AVRC-DEFR": ["info", "acerto confirmado por decisão recursal", "info"],
+    "AVRC-DGPVINC": ["info", "acerto de Desagrupamento de Vínculos", "info"],
+    "AVRC-IND": ["atencao", "acerto negado pelo INSS", "atencao"],
+    "AVRC-INDJ": ["atencao", "acerto negado por decisão judicial", "atencao"],
+    "AVRC-INDR": ["atencao", "acerto negado por decisão recursal", "atencao"]
   };
+  var CANCELA_IND = {"PDIV-DADOS-GFIP":["ADIV-DADOS-GFIP"],"PEXT":["AEXT-VT","AEXT-VTJ","AEXT-VTR"]};
+  // </indicadores>
+
 
   // Salário mínimo nacional por competência: [ano, mês de início da vigência, valor]. Conferir antes de usar em peça.
   var MINIMOS = [
@@ -64,8 +254,15 @@
     ['Aposentadoria por idade, por tempo de contribuição e especial', 180]
   ];
 
-  var RE_IND = /\b(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|IREC|IREM|IVIN|ISE|AEXTV|AEXT|AVRC|ACNIS|IGFIP)(?:-[A-Z0-9]+)+\b|\b(?:IEAN|PEXT|PRPPS|ACNISVR)\b/g;
-  var RE_SO_IND = /^(?:(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|IREC|IREM|IVIN|ISE|AEXTV|AEXT|AVRC|ACNIS|IGFIP)(?:-[A-Z0-9]+)+|IEAN|PEXT|PRPPS|ACNISVR)(?:[\s,]+(?:(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|IREC|IREM|IVIN|ISE|AEXTV|AEXT|AVRC|ACNIS|IGFIP)(?:-[A-Z0-9]+)+|IEAN|PEXT|PRPPS|ACNISVR))*$/;
+  // Códigos de indicadores: os do Anexo V (lista acima) e, por segurança, outros com os mesmos prefixos.
+  var PADRAO_IND = (function () {
+    var cods = Object.keys(INDICADORES).filter(function (c) { return c !== 'GFIP'; }).sort(function (a, b) { return b.length - a.length; })
+      .map(function (c) { return c.replace(/[-_]/g, function (x) { return '\\' + x; }).replace('JUSTICA', 'JUSTI[CÇ]A'); });
+    var generico = '(?:PREC|PREM|PVIN|PADM|PRES|PEMP|PSE|PSC|PDT|PNIT|PDARF|PCEI|PDIV|PSUC|PMOV|PDESFAZ|IREC|IREM|IVIN|ISE|IAGRUP|ICOMPL|IUTILIZ|ICED|IREL|IVLR|IDARF|AEXTV|AEXT|AVRC|ACNIS|ASEF|ASE|ADIV|FBR|IGFIP)(?:-[A-Z0-9_]+)+';
+    return '(?:' + cods.join('|') + '|' + generico + ')(?![\\w-])';
+  })();
+  var RE_IND = new RegExp('\\b' + PADRAO_IND, 'g');
+  var RE_SO_IND = new RegExp('^' + PADRAO_IND + '(?:[\\s,]+' + PADRAO_IND + ')*$');
   var RE_DATA = /\b\d{2}\/\d{2}\/\d{4}\b/g;
   var RE_VALOR = /(?:^|[^\d.,])((?:\d{1,3}(?:\.\d{3})+|\d+),\d{2})(?!\d)/;
   var NIT = '(?:\\d{1,3}(?:\\.\\d{3}){2,3}-\\d|\\d{3}\\.\\d{5}\\.\\d{2}-\\d)';
@@ -427,7 +624,7 @@
 
   // ---------- Leitura do texto ----------
 
-  function indicadoresDe(trecho) { return trecho.match(RE_IND) || []; }
+  function indicadoresDe(trecho) { return (trecho.match(RE_IND) || []).map(function (c) { return c.replace('Ç', 'C'); }); }
 
   // Pares "competência valor [indicadores]" de uma linha, até 3 por linha no CNIS.
   var RE_VALORES = /(?:^|[^\d.,])((?:\d{1,3}(?:\.\d{3})+|\d+),\d{2})(?!\d)/g;
@@ -593,15 +790,86 @@
 
   function rotuloDe(r) { return 'Seq. ' + r.seq + ' - ' + (r.nome || 'sem nome').slice(0, 60); }
 
+  // ---------- Pendências que impedem o cômputo (Portaria DIRBEN/INSS 990/2022, Anexo V) ----------
+  var EXCL_CELULA = { vinculo: 1, competencia: 1, 'idade-minima': 1 };
+  var MANDATO_FIM = ordemDe(2004, 9, 18); // até aqui o mandato eletivo não conta como empregado (Lei 10.887/2004)
+  function efeitoDe(c) { var d = INDICADORES[c]; return d ? d[2] : null; }
+  function descDe(c) { var d = INDICADORES[c]; return d ? d[1] : 'indicador do INSS'; }
+  // Tira os códigos cancelados por um acerto presente no mesmo registro (ex.: PEXT com AEXT-VT).
+  function semCancelados(cods, contexto) {
+    return cods.filter(function (c) { var can = CANCELA_IND[c]; return !(can && can.some(function (a) { return contexto.indexOf(a) >= 0; })); });
+  }
+  // Idade mínima para o trabalho na data: 14 (Constituição de 1946), 12 (de 15/03/1967), 14 ou 12 como aprendiz (de 05/10/1988), 16 ou 14 como aprendiz (EC 20/1998).
+  function idadeMinimaEm(ord, aprendiz) {
+    if (ord < ordemDe(1967, 3, 15)) return 14;
+    if (ord < ordemDe(1988, 10, 5)) return 12;
+    if (ord < ordemDe(1998, 12, 16)) return aprendiz ? 12 : 14;
+    return aprendiz ? 14 : 16;
+  }
+  function primeiroDiaPermitido(ini, nasc, aprendiz) {
+    if (!nasc) return null;
+    var aniv = function (n) { return ordemDe(nasc.y + n, nasc.m, nasc.d); };
+    var cands = [ini, aniv(12), aniv(14), aniv(16), ordemDe(1967, 3, 15), ordemDe(1988, 10, 5), ordemDe(1998, 12, 16)]
+      .filter(function (c) { return c >= ini; }).sort(function (a, b) { return a - b; });
+    for (var i = 0; i < cands.length; i++) {
+      var d = dataDeOrd(cands[i]);
+      var idade = d.y - nasc.y - ((d.m < nasc.m || (d.m === nasc.m && d.d < nasc.d)) ? 1 : 0);
+      if (idade >= idadeMinimaEm(cands[i], aprendiz)) return cands[i];
+    }
+    return null;
+  }
+  // Para cada vínculo: códigos que tiram o vínculo inteiro, cortes de período e competências pendentes.
+  function planejarPendencias(lido, nasc) {
+    lido.vinculos.forEach(function (v) {
+      var p = { inteiro: [], corteIni: null, corteFim: null, motivos: [], mesesPend: {}, mesesTC: {}, tcTodos: false };
+      v.plano = p;
+      if (!v.inicio) return;
+      var cab = semCancelados(v.indicadores, v.indicadores);
+      var rems = (v.remuneracoes || []).filter(function (r) { return r.valor > 0; }).map(function (r) { return r.mes; });
+      var primeira = rems.length ? Math.min.apply(null, rems) : null, ultima = rems.length ? Math.max.apply(null, rems) : null;
+      cab.forEach(function (c) {
+        var ef = efeitoDe(c);
+        if (ef === 'vinculo') p.inteiro.push(c);
+        else if (ef === 'tc') p.tcTodos = true;
+        else if (ef === 'mandato') { p.corteIni = Math.max(p.corteIni || 0, MANDATO_FIM + 1); p.motivos.push({ cod: c, tipo: ef }); }
+        else if (ef === 'datas-inicio' || ef === 'datas' || ef === 'datas-fim') {
+          if (primeira === null) { p.motivos.push({ cod: c, tipo: 'sem-remuneracao' }); return; }
+          if (ef !== 'datas-fim') { var ci = ordemDe(Math.floor(primeira / 12), primeira % 12 + 1, 1); if (ci > v.inicio.ord) p.corteIni = Math.max(p.corteIni || 0, ci); }
+          if (ef !== 'datas-inicio' && v.fim) { var cf = ultimoDiaDoMes(ultima); if (cf < v.fim.ord) p.corteFim = p.corteFim === null ? cf : Math.min(p.corteFim, cf); }
+          p.motivos.push({ cod: c, tipo: ef });
+        } else if (ef === 'idade-minima') {
+          var pd = primeiroDiaPermitido(v.inicio.ord, nasc, c === 'PDT-NASC-FIL-MENOR-INV');
+          if (pd === null) p.inteiro.push(c);
+          else { if (pd > v.inicio.ord) p.corteIni = Math.max(p.corteIni || 0, pd); p.motivos.push({ cod: c, tipo: ef }); }
+        }
+      });
+      if (!p.inteiro.length && p.corteIni !== null && v.fim && p.corteIni > v.fim.ord) p.inteiro = p.motivos.map(function (m) { return m.cod; });
+      (v.remuneracoes || []).forEach(function (r) {
+        var ri = r.indicadores || [];
+        var cods = semCancelados(ri, ri.concat(v.indicadores)).filter(function (c) { return EXCL_CELULA[efeitoDe(c)]; });
+        if (cods.length) p.mesesPend[r.mes] = (p.mesesPend[r.mes] || []).concat(cods.filter(function (c) { return (p.mesesPend[r.mes] || []).indexOf(c) < 0; }));
+        if (ri.some(function (c) { return efeitoDe(c) === 'tc'; })) p.mesesTC[r.mes] = true;
+      });
+    });
+  }
+  function listaCodigos(cods) { return cods.map(function (c) { return c + ' (' + descDe(c) + ')'; }).join('; '); }
+
   // ---------- Análise ----------
 
   // hoje: { y, m, d }. Devolve resumo, vínculos (em ordem de início), faltantes, pendências,
   // benefícios, eventos e mapa de competências.
-  function analisar(texto, hoje) {
+  // opcoes.incluirPendentes: conta vínculos e competências com pendência impeditiva, como se já estivessem regularizados.
+  function analisar(texto, hoje, opcoes) {
+    opcoes = opcoes || {};
+    var excluir = !opcoes.incluirPendentes;
     var lido = interpretar(texto);
     var pend = lido.notas.slice();
     var hojeOrd = ordemDe(hoje.y, hoje.m, hoje.d);
     var hojeMes = mesDe(hoje.y, hoje.m);
+    var mNasc = /Data\s+de\s+Nascimento:?\s*(\d{2}\/\d{2}\/\d{4})/i.exec(texto);
+    var nascimento = mNasc ? dataDe(mNasc[1]) : null;
+    var excluidos = { vinculos: [], competencias: [] }, mesesPend = {};
+    planejarPendencias(lido, nascimento);
     var itens = [], validos = [], faltantes = [];
     var ok = {}, falta = {}, pre94 = {}, valores = {};
     var totalRem = lido.orfas.length;
@@ -653,7 +921,11 @@
       var sev = d ? d[0] : 'info';
       var desc = d ? d[1] : 'indicador do INSS, confira o significado na legenda do próprio extrato';
       var onde = meses.length ? ' em ' + meses.length + ' competência(s): ' + textoFaixas(meses, 4) : '';
-      nova(sev, ref, c + ': ' + desc + onde + '.');
+      var ef = d ? d[2] : null, extra = '';
+      if (ef === 'tc') extra = ' Não conta na aposentadoria por tempo de contribuição nem na CTC sem complementação para 20%; para carência e aposentadoria por idade conta normalmente.';
+      else if (EXCL_CELULA[ef] && !excluir) extra = ' É pendência que impede o cômputo: nesta conta foi considerada regularizada.';
+      else if (ef === 'competencia' && !meses.length) extra = ' Impede o cômputo da competência, mas o extrato não indica qual: confira no detalhamento das remunerações.';
+      nova(sev, ref, c + ': ' + desc + onde + '.' + extra);
     }
 
     // Vínculos em ordem cronológica de início (empate: ordem do extrato; datas inválidas no fim).
@@ -666,6 +938,7 @@
       var marca = function (ini, fim) { for (var kk = mesDe(ini.y, ini.m); kk <= mesDe(fim.y, fim.m); kk++) bloqFac[kk] = true; };
       lido.vinculos.forEach(function (v) {
         if (!v.inicio || /facultativ|especial/i.test(v.tipo || '') || v.inicio.ord > hojeOrd) return;
+        if (excluir && v.plano && v.plano.inteiro.length) return;
         var fim = v.fim;
         if (!fim) {
           var ult = -1;
@@ -696,6 +969,42 @@
       if (v.inicio.ord > hojeOrd || v.inicio.y < 1900) { nova('erro', rotulo, 'Data de início fora do intervalo esperado (' + rotuloData(v.inicio) + ').'); return; }
       if (v.fim && v.fim.ord < v.inicio.ord) { nova('erro', rotulo, 'Data de fim anterior à data de início.'); return; }
 
+      // Pendência do Anexo V que tira o vínculo inteiro: fica fora do tempo e da carência até ser tratada.
+      var pl = v.plano || { inteiro: [], motivos: [], mesesPend: {}, mesesTC: {} };
+      if (excluir && pl.inteiro.length) {
+        item.excluidoPendencia = pl.inteiro.slice();
+        excluidos.vinculos.push({ seq: v.seq, rotulo: rotulo, codigos: pl.inteiro.slice(), tipo: 'inteiro', de: v.inicio, ate: v.fim });
+        var remsX = v.remuneracoes.filter(function (r) { return r.valor > 0; }).map(function (r) { return r.mes; });
+        var fimX = v.fim ? mesDe(v.fim.y, v.fim.m) : (remsX.length ? Math.max.apply(null, remsX) : mesDe(v.inicio.y, v.inicio.m));
+        for (var kx = mesDe(v.inicio.y, v.inicio.m); kx <= Math.min(fimX, hojeMes); kx++) mesesPend[kx] = true;
+        nova('atencao', rotulo, 'Vínculo com pendência que impede o cômputo: ' + listaCodigos(pl.inteiro) + '. O INSS não computa o vínculo para reconhecimento de direitos enquanto a pendência não for tratada (Portaria DIRBEN/INSS 990/2022, Anexo V). Ele ficou fora do tempo contado e da carência; em "Verificar direito" dá para simular como regularizado.');
+        return;
+      }
+      if (excluir && (pl.corteIni !== null || pl.corteFim !== null)) {
+        var ni = pl.corteIni !== null && pl.corteIni > v.inicio.ord ? dataDeOrd(pl.corteIni) : v.inicio;
+        var nf = v.fim && pl.corteFim !== null && pl.corteFim < v.fim.ord ? dataDeOrd(pl.corteFim) : v.fim;
+        var partes = [];
+        if (ni !== v.inicio) partes.push(rotuloData(v.inicio) + ' a ' + rotuloData(dataDeOrd(ni.ord - 1)));
+        if (nf !== v.fim) partes.push(rotuloData(dataDeOrd(nf.ord + 1)) + ' a ' + rotuloData(v.fim));
+        if (partes.length) {
+          var codsC = pl.motivos.filter(function (m) { return m.tipo !== 'sem-remuneracao'; }).map(function (m) { return m.cod; });
+          excluidos.vinculos.push({ seq: v.seq, rotulo: rotulo, codigos: codsC, tipo: 'corte', partes: partes });
+          if (ni !== v.inicio) for (var kc1 = mesDe(v.inicio.y, v.inicio.m); kc1 < mesDe(ni.y, ni.m); kc1++) mesesPend[kc1] = true;
+          if (nf !== v.fim) for (var kc2 = mesDe(nf.y, nf.m) + 1; kc2 <= mesDe(v.fim.y, v.fim.m); kc2++) mesesPend[kc2] = true;
+          var porque = pl.motivos.some(function (m) { return m.tipo === 'mandato'; }) ? 'O mandato eletivo até 18/09/2004 não conta como segurado empregado; de 02/1998 a 09/2004 pode contar como facultativo, com opção e recolhimento.'
+            : pl.motivos.some(function (m) { return m.tipo === 'idade-minima'; }) ? 'Períodos anteriores à idade mínima permitida na época não são considerados pelos sistemas de benefícios, salvo tratamento específico.'
+            : 'O trecho alterado por processo trabalhista precisa ser comprovado (IN PRES/INSS 128/2022, arts. 172 e seguintes). Como o extrato não mostra as datas anteriores, foi deixado de fora o período sem remuneração no início ou no fim do vínculo.';
+          nova('atencao', rotulo, 'Pendência ' + listaCodigos(codsC) + ': fora da contagem ' + partes.join(' e ') + '. ' + porque);
+          var mI = mesDe(ni.y, ni.m), mF = nf ? mesDe(nf.y, nf.m) : Infinity;
+          v = Object.assign({}, v, { inicio: ni, fim: nf, remuneracoes: v.remuneracoes.filter(function (r) { return r.mes >= mI && r.mes <= mF; }) });
+          item.inicioCNIS = item.inicio; item.fimCNIS = item.fim;
+          item.inicio = ni; item.fim = nf;
+        }
+      }
+      pl.motivos.filter(function (m) { return m.tipo === 'sem-remuneracao'; }).forEach(function (m) {
+        nova('atencao', rotulo, 'Pendência ' + m.cod + ' (' + descDe(m.cod) + '): o trecho do vínculo alterado por processo trabalhista precisa ser comprovado, mas o extrato não traz remunerações para localizá-lo. O vínculo foi contado inteiro: confira as datas.');
+      });
+
       var mIni = mesDe(v.inicio.y, v.inicio.m);
       var excluidosFac = [];
       if (/facultativ/i.test(v.tipo || '')) {
@@ -703,6 +1012,14 @@
         excluidosFac.sort(function (x, y) { return x - y; });
         item.excluidosFacultativo = excluidosFac;
         if (excluidosFac.length) nova('atencao', rotulo, 'Recolhimento de facultativo em ' + excluidosFac.length + ' competência(s) com vínculo de empregado ou contribuinte individual, ou benefício (salário-maternidade, incapacidade ou aposentadoria), concomitante: ' + textoFaixas(excluidosFac, 4) + '. A contribuição de facultativo não vale nesses meses e foi desconsiderada de todas as contagens.');
+      }
+      var excluidosPend = {};
+      if (excluir) {
+        v.remuneracoes = v.remuneracoes.filter(function (r) {
+          var cp = pl.mesesPend[r.mes];
+          if (cp && (r.indicadores || []).some(function (x) { return cp.indexOf(x) >= 0; })) { excluidosPend[r.mes] = cp; return false; }
+          return true;
+        });
       }
       var somas = {}, vistos = {}, repetidas = [], zeradas = [], semValor = [], indic = {};
       v.indicadores.forEach(function (c) { indic[c] = indic[c] || []; });
@@ -728,7 +1045,19 @@
         var d = r.pagamento && dataDe(r.pagamento);
         if (d) (item.pagamentos[r.mes] = item.pagamentos[r.mes] || []).push(d.ord);
       });
-      item.codigosIndicadores = Object.keys(indic);
+      item.codigosIndicadores = Object.keys(indic).concat(Object.keys(excluidosPend).reduce(function (l, k) { return l.concat(excluidosPend[k]); }, [])).filter(function (c, i, a) { return a.indexOf(c) === i; });
+      item.mesesPendentes = {};
+      var perdidos = Object.keys(excluidosPend).map(Number).filter(function (k) { return !presentes[k]; }).sort(function (a, b) { return a - b; });
+      perdidos.forEach(function (k) { item.mesesPendentes[k] = excluidosPend[k]; mesesPend[k] = true; excluidos.competencias.push({ seq: v.seq, rotulo: rotulo, mes: k, codigos: excluidosPend[k] }); });
+      if (perdidos.length) {
+        var porCod = {};
+        perdidos.forEach(function (k) { excluidosPend[k].forEach(function (c) { (porCod[c] = porCod[c] || []).push(k); }); });
+        Object.keys(porCod).forEach(function (c) {
+          nova('atencao', rotulo, c + ' (' + descDe(c) + ') em ' + porCod[c].length + ' competência(s): ' + textoFaixas(porCod[c], 4) + '. A competência não é computada para reconhecimento de direitos enquanto a pendência não for tratada (Portaria DIRBEN/INSS 990/2022, Anexo V); ficou fora do tempo e da carência.');
+        });
+      }
+      item.mesesTC = {};
+      Object.keys(item.contribuicoes).forEach(function (k) { if (pl.tcTodos || pl.mesesTC[k]) item.mesesTC[k] = true; });
       item.ultRemun = v.ultRemun;
       item.comRemuneracao = Object.keys(presentes).length;
 
@@ -807,7 +1136,10 @@
       if (repetidas.length) nova('info', rotulo, 'Competência com mais de uma remuneração (valores somados): ' + textoFaixas(repetidas, 6) + '.');
       if (fora.length) nova('atencao', rotulo, 'Remuneração fora do período do vínculo: ' + textoFaixas(fora, 6) + '.');
       if (semValor.length) nova('atencao', rotulo, 'Competência sem valor lido: ' + textoFaixas(semValor, 6) + '.');
-      Object.keys(indic).forEach(function (c) { avisoIndicador(rotulo, c, indic[c]); });
+      Object.keys(indic).forEach(function (c) {
+        if (excluir && pl.motivos.some(function (m) { return m.cod === c; })) return;
+        avisoIndicador(rotulo, c, indic[c]);
+      });
 
       // Valor muito diferente dos vizinhos. Os meses de início e fim do vínculo ficam de fora (podem ser proporcionais).
       var mesesVal = Object.keys(somas).map(Number).filter(function (k) { return somas[k] > 0 && k > mIni && k < mFim; }).sort(function (a, b) { return a - b; });
@@ -829,7 +1161,7 @@
       // Salários faltantes: meses do vínculo sem remuneração (ou com valor zero).
       var sem = [], ant = [];
       for (var k = mIni; k <= mFim; k++) {
-        if (presentes[k] || (excluidosFac.length && bloqFac[k] && /facultativ/i.test(v.tipo || ''))) continue;
+        if (presentes[k] || item.mesesPendentes[k] || (excluidosFac.length && bloqFac[k] && /facultativ/i.test(v.tipo || ''))) continue;
         if (k < INICIO_PBC) { ant.push(k); pre94[k] = true; } else { sem.push(k); falta[k] = true; }
       }
       item.faltantes = sem.length;
@@ -931,8 +1263,8 @@
       a.seqs.forEach(function (sq) { (exclSeq[sq] = exclSeq[sq] || {})[a.mes] = true; });
     });
     validos.forEach(function (v) {
-      var em = exclSeq[v.seq];
-      if (!em) return;
+      var em = Object.assign({}, exclSeq[v.seq] || {}, v.mesesPendentes || {});
+      if (!Object.keys(em).length) return;
       var novos = [], n = 0;
       v.segmentos.forEach(function (sg) {
         var ini = null;
@@ -1096,6 +1428,8 @@
       var a = mesDe(e.inicio.y, e.inicio.m), z = e.fim ? mesDe(e.fim.y, e.fim.m) : a;
       for (var k = a; k <= z; k++) if (mapa[k] === undefined) mapa[k] = 'segdes';
     });
+    // Meses que só tinham vínculo ou competência com pendência impeditiva.
+    Object.keys(mesesPend).forEach(function (k) { var e = mapa[k]; if (e === undefined || e === 'falta' || e === 'pre94' || e === 'segdes') mapa[k] = 'pend'; });
 
     var mesesSem = faltantes.reduce(function (t, f) { return t + f.meses; }, 0);
     var mesesAnt = itens.reduce(function (t, v) { return t + v.anteriores94; }, 0);
@@ -1104,8 +1438,11 @@
     var cont = { erro: 0, atencao: 0, info: 0 };
     pend.forEach(function (p) { cont[p.sev]++; });
 
-    return {
+    var res = {
       vinculos: itens,
+      pendentesExcluidos: excluidos,
+      nascimento: nascimento,
+      incluiPendentes: !excluir,
       faltantes: faltantes,
       pendencias: pend,
       beneficios: bens,
@@ -1136,9 +1473,14 @@
         eventos: evs.length,
         abaixoMinimo: abaixo.length,
         lacunasLongas: longas,
-        semRemuneracoes: semLeitura
+        semRemuneracoes: semLeitura,
+        vinculosExcluidos: excluidos.vinculos.filter(function (x) { return x.tipo === 'inteiro'; }).length,
+        competenciasExcluidas: excluidos.competencias.length
       }
     };
+    // Para a simulação poder considerar as pendências regularizadas, sem reler o extrato.
+    if (excluir && (excluidos.vinculos.length || excluidos.competencias.length)) res.semExclusao = analisar(texto, hoje, { incluirPendentes: true });
+    return res;
   }
 
   function fimDoItem(v) {
@@ -1243,7 +1585,7 @@
     box.appendChild(t);
     var leg = el('ul', 'legenda');
     var presentes = {}; Object.keys(mapa).forEach(function (k) { presentes[mapa[k]] = true; });
-    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['rural', 'Segurado especial'], ['ruralemp', 'Empregado rural'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento']].forEach(function (x) {
+    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['rural', 'Segurado especial'], ['ruralemp', 'Empregado rural'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento'], ['pend', 'Pendência que impede o cômputo (Anexo V)']].forEach(function (x) {
       if ((/^ben/.test(x[0]) || x[0] === 'segdes' || x[0] === 'okci' || x[0] === 'okfac' || x[0] === 'rural') && !presentes[x[0]]) return;
       var li = el('li'); li.appendChild(el('i', 'c-' + x[0])); li.appendChild(document.createTextNode(x[1])); leg.appendChild(li);
     });

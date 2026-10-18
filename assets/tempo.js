@@ -52,6 +52,30 @@
     return { min: min, max: max, motivo: motivo };
   }
 
+  // Competências fora da contagem por pendência do CNIS (Anexo V) ou por recolhimento no plano simplificado.
+  function unicos(l) { return l.filter(function (k, i, a) { return a.indexOf(k) === i; }).sort(function (a, b) { return a - b; }); }
+  function linhasPendCnis(ex, entrada) {
+    var l = [], pe = unicos(ex.pendentes || []), si = unicos(ex.simplificado || []);
+    if (pe.length) l.push('**' + pe.length + '** mês(es) de empregado com pendência que impede o cômputo no CNIS (Anexo V da Portaria DIRBEN/INSS 990/2022) não foram contados (' + I.faixas(pe) + ').');
+    if (si.length) l.push(entrada.compLC123 === true
+      ? '**' + si.length + '** competência(s) do plano simplificado (11% ou 5%) foram contadas **condicionadas à complementação para 20%** (' + I.faixas(si) + ').'
+      : '**' + si.length + '** competência(s) recolhidas no plano simplificado (11% ou 5%, inclusive MEI e facultativo de baixa renda) **não foram contadas** no tempo de contribuição, porque só contam com complementação para 20% (' + I.faixas(si) + '). Para a carência elas contam.');
+    return l;
+  }
+  function perguntaLC(ex, entrada) {
+    var si = unicos(ex.simplificado || []);
+    if (!si.length) return null;
+    return { id: 'compLC123', texto: 'Há **' + si.length + '** competência(s) no plano simplificado de previdência (' + I.faixas(si) + '), com indicador IREC-LC123, IREC-MEI ou IREC-FBR. Na aposentadoria por tempo de contribuição elas só contam com **complementação para 20%** (Lei 8.212/91, art. 21, § 3º). **O segurado vai complementar?** Se sim, entram na contagem do tempo.', resposta: entrada.compLC123 === undefined ? null : !!entrada.compLC123 };
+  }
+  // Nas outras aposentadorias por tempo, a pergunta aparece logo depois da seção de tempo.
+  function anexarPerguntaLC(no, r) {
+    if (!r.perguntaLC || !no) return no;
+    var s = no.querySelector('section.bloco');
+    var ui = D.perguntasUI([r.perguntaLC]);
+    if (s) s.appendChild(ui); else no.appendChild(ui);
+    return no;
+  }
+
   // ---------- Contagem por dia, com o enquadramento ----------
   function contar(analise, entrada, der) {
     var mm = I.montarMeses(analise, entrada, der, { modalidade: 'urbana', modo: 'tc', indenizaEspecial: entrada.indenizaEspecial === true });
@@ -209,9 +233,10 @@
     if (ex.abaixoCI.length) linhasTempo.push(ex.abaixoCI.length + ' mês(es) de contribuinte individual ou facultativo abaixo do mínimo não foram contados (' + I.faixas(ex.abaixoCI) + ').');
     if (ex.aposFG.length) linhasTempo.push(ex.aposFG.length + ' competência(s) paga(s) depois da DER não contam (' + I.faixas(ex.aposFG) + ').');
     if (ex.domesticoAntes.length) linhasTempo.push(ex.domesticoAntes.length + ' mês(es) de doméstico antes de 06/2015 sem recolhimento não foram contados (' + I.faixas(ex.domesticoAntes) + ').');
+    linhasPendCnis(ex, entrada).forEach(function (x) { linhasTempo.push(x); });
     if (ex.rpps) linhasTempo.push('Há vínculo de regime próprio (servidor): o tempo só entra com certidão de tempo de contribuição (CTC). Use "Período indenizado ou com CTC" no enquadramento.');
     if (ct.mm.incap && ct.mm.incap.contados) linhasTempo.push(ct.mm.incap.contados + ' benefício(s) por incapacidade intercalado(s) com contribuição foram contados como tempo (Lei 8.213, art. 55, II).');
-    linhasTempo.push('Competências com alíquota de 5%, 11% ou 12% não aparecem como tal no CNIS e só contam como tempo de contribuição com complementação para 20%.');
+    if (!(ex.simplificado || []).length) linhasTempo.push('Recolhimentos no plano simplificado (11% ou 5%, inclusive MEI) só contam como tempo de contribuição com complementação para 20%. O CNIS os identifica pelos indicadores IREC-LC123, IREC-MEI e IREC-FBR; nenhum foi encontrado.');
     res.tempo = { brutoDer: ct.brutoDer, brutoEC: ct.brutoEC, convDer: ct.convDer, convEC: ct.convEC, linhas: linhasTempo, tabela: ct };
 
     var linhasCar = ['Carência no CNIS até a DER: **' + carenciaMeses + ' meses**. Exigidos: **' + ctx.carenciaExigida + '**.'];
@@ -234,6 +259,8 @@
       perguntas.unshift({ id: 'indenizaEspecial', texto: 'Há **' + espInd.length + '** mês(es) de segurado especial a partir de 11/1991 (' + I.faixas(espInd) + '). Na aposentadoria por tempo de contribuição esse tempo só conta com **indenização** (pagamento das contribuições do período). **O segurado vai indenizar?** Se sim, o período entra na contagem do tempo; o valor deve ser calculado pelo INSS.', resposta: respInd === undefined ? null : !!respInd });
       linhasTempo.push(respInd === true ? '**' + espInd.length + '** mês(es) de segurado especial a partir de 11/1991 foram incluídos **condicionados à indenização** (' + I.faixas(espInd) + '). Eles não contam como carência.' : '**' + espInd.length + '** mês(es) de segurado especial a partir de 11/1991 **não foram contados**, porque dependem de indenização (' + I.faixas(espInd) + ').');
     }
+    var pLC = perguntaLC(ex, entrada);
+    if (pLC) perguntas.unshift(pLC);
     res.perguntas = perguntas;
     var conc;
     if (filiadoAteEC === false) conc = { status: 'nao_demonstrado', rotulo: 'Regras de transição não se aplicam', texto: 'O primeiro vínculo é posterior a 13/11/2019.' };
@@ -330,6 +357,8 @@
     var ex = ct.mm.ex;
     if (ex.abaixoEmp.length) linhasTempo.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo não foram contados (' + I.faixas(ex.abaixoEmp) + ').');
     if (ex.aposFG.length) linhasTempo.push(ex.aposFG.length + ' competência(s) paga(s) depois da DER não contam (' + I.faixas(ex.aposFG) + ').');
+    linhasPendCnis(ex, entrada).forEach(function (x) { linhasTempo.push(x); });
+    res.perguntaLC = perguntaLC(ex, entrada);
     res.tempo = { linhas: linhasTempo };
     res.carencia = { total: carDer, exigida: exDer, ok: carDer >= exDer, linhas: ['Carência no CNIS até a DER: **' + carDer + ' meses**. Exigidos: **' + exDer + '**. Em 13/11/2019: **' + carEC + ' meses**.'] };
     var avisos = [];
@@ -502,6 +531,8 @@
     var ex = ct.mm.ex;
     if (ex.abaixoEmp.length) linhas.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo não foram contados (' + I.faixas(ex.abaixoEmp) + ').');
     if (ex.aposFG.length) linhas.push(ex.aposFG.length + ' competência(s) paga(s) depois da DER não contam (' + I.faixas(ex.aposFG) + ').');
+    linhasPendCnis(ex, entrada).forEach(function (x) { linhas.push(x); });
+    res.perguntaLC = perguntaLC(ex, entrada);
     res.tempo = { linhas: linhas, tDer: tDer, tEC: tEC };
     res.carencia = { total: carDer, exigida: exDer, ok: carDer >= exDer, linhas: ['Carência no CNIS até a DER (todos os vínculos): **' + carDer + ' meses**. Exigidos: **' + exDer + '**. Em 13/11/2019: **' + carEC + ' meses**.'] };
     var avisos = [];
@@ -679,6 +710,8 @@
     var ex = t.mm.ex;
     if (ex.abaixoEmp.length) linhas.push(ex.abaixoEmp.length + ' mês(es) de empregado abaixo do salário mínimo não foram contados (' + I.faixas(ex.abaixoEmp) + ').');
     if (ex.aposFG.length) linhas.push(ex.aposFG.length + ' competência(s) paga(s) depois da DER não contam (' + I.faixas(ex.aposFG) + ').');
+    linhasPendCnis(ex, entrada).forEach(function (x) { linhas.push(x); });
+    res.perguntaLC = perguntaLC(ex, entrada);
     linhas.push('A conversão do tempo especial (Anexo XIX) em tempo de pessoa com deficiência, quando mais favorável, **não foi aplicada** nesta versão. Ela não acumula com a redução da deficiência no mesmo período (art. 310).');
     res.tempo = { linhas: linhas, t: t };
     res.carencia = { total: carDer, exigida: exDer, ok: carDer >= exDer, linhas: ['Carência no CNIS até a DER: **' + carDer + ' meses**. Exigidos: **' + exDer + '**.'] };
@@ -945,6 +978,9 @@
     linhas.push('Tempo de contribuição até 13/11/2019 (com conversão do tempo especial): **' + dur(ctEC.t) + '**; até 16/12/1998: **' + dur(t98) + '**; carência em 13/11/2019: **' + ctEC.car + ' meses**.');
     linhas.push('O direito adquirido vale mesmo que o requerimento seja feito hoje: o cálculo usa as regras da data em que os requisitos foram cumpridos. A conversão do tempo especial em comum é feita pelo enquadramento informado acima.');
     linhas.push('A carência segue a tabela do art. 142 da Lei 8.213 (para quem se filiou até 24/07/1991) conforme o ano em que os requisitos foram cumpridos.');
+    var exEC = contar(analise, entrada, DEC).mm.ex;
+    linhasPendCnis(exEC, entrada).forEach(function (x) { linhas.push(x); });
+    res.perguntaLC = perguntaLC(exEC, entrada);
     res.tempo = { linhas: linhas };
     var oks = res.regras.filter(function (r) { return r.ok; });
     var conc;
@@ -990,10 +1026,10 @@
   // ---------- Tela ----------
   function lista(itens) { return D.util.lista(itens); }
   function renderizar(r) {
-    if (r.beneficio === 'aposentadoria-especial') return renderizarEspecial(r);
-    if (r.beneficio === 'aposentadoria-professor') return renderizarProfessor(r);
-    if (/^aposentadoria-pcd/.test(r.beneficio)) return renderizarPcd(r);
-    if (r.beneficio === 'aposentadoria-adquirido') return renderizarAdquirido(r);
+    if (r.beneficio === 'aposentadoria-especial') return anexarPerguntaLC(renderizarEspecial(r), r);
+    if (r.beneficio === 'aposentadoria-professor') return anexarPerguntaLC(renderizarProfessor(r), r);
+    if (/^aposentadoria-pcd/.test(r.beneficio)) return anexarPerguntaLC(renderizarPcd(r), r);
+    if (r.beneficio === 'aposentadoria-adquirido') return anexarPerguntaLC(renderizarAdquirido(r), r);
     var topo = C.el('div', 'direito');
     topo.appendChild(C.el('h3', null, 'Verificação de direito: ' + r.titulo));
     topo.appendChild(C.el('p', 'dica', 'Roteiro de conferência, não é decisão do INSS nem parecer. O CNIS não informa atividade especial: o tempo especial só entra se você o enquadrar acima.'));
@@ -1007,7 +1043,7 @@
     if (r.avisos && r.avisos.length) topo.appendChild(lista(r.avisos));
     var s1 = C.sec('1. Tempo de contribuição');
     s1.appendChild(lista(r.tempo.linhas));
-    var pInd = (r.perguntas || []).filter(function (q) { return q.id === 'indenizaEspecial'; });
+    var pInd = (r.perguntas || []).filter(function (q) { return q.id === 'indenizaEspecial' || q.id === 'compLC123'; });
     if (pInd.length) s1.appendChild(D.perguntasUI(pInd));
     var t = r.tempo.tabela;
     s1.appendChild(C.tabela(['Natureza', 'Até 13/11/2019', 'Total até a DER'], [
@@ -1020,7 +1056,7 @@
     var s2 = C.sec('2. Carência');
     var sc = C.el('p', 'selo-linha'); sc.appendChild(C.el('span', 'selo selo-' + (r.carencia.ok ? 'confirmada' : 'nao_demonstrada'), r.carencia.ok ? 'Cumprida pelos dados do CNIS' : 'Não cumprida pelos dados do CNIS'));
     s2.appendChild(sc); s2.appendChild(lista(r.carencia.linhas));
-    var pCar = (r.perguntas || []).filter(function (q) { return q.id !== 'indenizaEspecial'; });
+    var pCar = (r.perguntas || []).filter(function (q) { return q.id !== 'indenizaEspecial' && q.id !== 'compLC123'; });
     if (pCar.length) s2.appendChild(D.perguntasUI(pCar));
     topo.appendChild(s2);
     var s3 = C.sec('3. Regras de transição');

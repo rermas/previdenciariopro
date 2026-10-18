@@ -75,7 +75,8 @@ assert.deepEqual(nomes.vinculos[0].indicadores, ['IREM-INDPEND']);
 assert.equal(nomes.vinculos[1].nome, 'ESPOLIO DE MARIA ALMEIDA', 'o cabeçalho "INSS" da página não entra no nome');
 
 // ---------- Extrato de exemplo completo ----------
-const r = CNIS.analisar(CNIS.EXEMPLO, HOJE);
+// Contas com a pendência PEXT do Seq. 5 tratada como regularizada (a exclusão padrão é testada logo depois).
+const r = CNIS.analisar(CNIS.EXEMPLO, HOJE, { incluirPendentes: true });
 const v = r.vinculos;
 
 assert.equal(v.length, 6, 'seis vínculos (benefícios e evento ficam de fora)');
@@ -125,9 +126,9 @@ assert.equal(s.atencoes, 3, 'PREM-EXT, PREC-MENOR-MIN e PEXT');
 assert.equal(s.infos, 6, 'AVRC-DEF, competência repetida, vínculo em aberto, concomitância, lacunas longas e benefício por incapacidade intercalado');
 
 const msgs = r.pendencias.map(p => p.msg).join(' | ');
-assert.match(msgs, /PREM-EXT: remuneração informada fora do prazo em 1 competência\(s\): 06\/2000/);
-assert.match(msgs, /PREC-MENOR-MIN: contribuição abaixo do salário mínimo em 1 competência\(s\): 06\/2010/);
-assert.match(msgs, /PEXT: vínculo extemporâneo/);
+assert.match(msgs, /PREM-EXT: remuneração informada fora do prazo, passível de comprovação em 1 competência\(s\): 06\/2000\. É pendência que impede o cômputo/);
+assert.match(msgs, /PREC-MENOR-MIN: recolhimento abaixo do valor mínimo em 1 competência\(s\): 06\/2010/);
+assert.match(msgs, /PEXT: vínculo com informação extemporânea/);
 assert.match(msgs, /AVRC-DEF: acerto confirmado pelo INSS/);
 assert.match(msgs, /Competência com mais de uma remuneração \(valores somados\): 06\/2000/);
 assert.match(msgs, /contado até 31\/08\/2023/);
@@ -153,6 +154,20 @@ assert.equal(r.mapa[CNIS.mesDe(2020, 5)], 'beninc-e', 'maio/2020: mês de saída
 const txt = CNIS.resumoEmTexto(r);
 assert.match(txt, /Tempo contado: 3 anos, 5 meses e 23 dias/); assert.match(txt, /Só vínculos: 3 anos, 5 meses e 18 dias/);
 assert.ok(txt.indexOf('Seq. 1 -') < txt.indexOf('Seq. 3 -') && txt.indexOf('Seq. 3 -') < txt.indexOf('Seq. 2 -'), 'resumo em ordem cronológica');
+
+// ---------- Mesmo extrato, com a exclusão padrão das pendências do Anexo V ----------
+{
+  const rx = CNIS.analisar(CNIS.EXEMPLO, HOJE);
+  const v5 = rx.vinculos.find((x) => x.seq === 5);
+  assert.equal(v5.valido, false, 'PEXT sem acerto: vínculo fora da contagem');
+  assert.deepEqual(v5.excluidoPendencia, ['PEXT']);
+  assert.equal(rx.resumo.diasUnicos, 1263 - 105, 'tira os 105 dias do vínculo extemporâneo');
+  assert.equal(rx.resumo.vinculosExcluidos, 1);
+  assert.equal(rx.mapa[CNIS.mesDe(2020, 3)], 'pend', 'março/2020 só tinha o vínculo pendente');
+  assert.match(rx.pendencias.map((p) => p.msg).join(' | '), /Vínculo com pendência que impede o cômputo: PEXT/);
+  assert.ok(rx.semExclusao && rx.semExclusao.resumo.diasUnicos === 1263, 'guarda a conta com a pendência regularizada');
+  assert.ok(!rx.faltantes.some((f) => f.seq === 5), 'vínculo excluído não gera salário faltante');
+}
 
 // ---------- Mês coberto por dois vínculos, com remuneração em só um deles ----------
 const parcial = CNIS.analisar(texto(
@@ -647,3 +662,53 @@ console.log('vínculos por mês ok');
   erroCom([{ tipo: 'Empregado', ini: { y: 2010, m: 5, d: 1 }, fim: { y: 2010, m: 4, d: 1 }, campoFim: 'f1' }], /anterior ao início/, 'f1');
 }
 console.log('lançamento manual ok');
+
+// ---------- Pendências do Anexo V (Portaria DIRBEN/INSS 990/2022) ----------
+{
+  const o = (y, m, d) => CNIS.ordemDe(y, m, d);
+  // Competência com PREM-EMPR: fora do tempo e da carência, sem virar salário faltante
+  const a = CNIS.analisar(texto(vinc(1, 'A', '01/01/2015', '31/03/2015'), '01/2015 1.000,00 02/2015 1.000,00 PREM-EMPR 03/2015 1.000,00'), HOJE);
+  assert.equal(a.resumo.diasUnicos, 62, 'jan e mar/2015');
+  assert.equal(a.vinculos[0].faltantes, 0);
+  assert.deepEqual(Object.keys(a.vinculos[0].mesesPendentes).map(Number), [CNIS.mesDe(2015, 2)]);
+  assert.equal(a.mapa[CNIS.mesDe(2015, 2)], 'pend');
+  assert.equal(a.pendentesExcluidos.competencias.length, 1);
+  assert.equal(a.semExclusao.resumo.diasUnicos, 90);
+  // Acerto confirmado cancela a pendência do vínculo extemporâneo
+  const b = CNIS.analisar(texto(vinc(1, 'B', '01/01/2015', '31/03/2015'), 'Indicadores: PEXT AEXT-VT', '01/2015 1.000,00 02/2015 1.000,00 03/2015 1.000,00'), HOJE);
+  assert.equal(b.vinculos[0].valido, true);
+  assert.equal(b.semExclusao, undefined, 'nada excluído');
+  // Mandato eletivo: só conta como empregado a partir de 19/09/2004
+  const c = CNIS.analisar(texto(vinc(1, 'CAMARA MUNICIPAL', '01/01/2001', '31/12/2008'), 'Indicadores: PVIN-MAND-ELETIVO-TOTAL', '01/2001 1.000,00 01/2008 1.000,00'), HOJE);
+  assert.equal(c.resumo.diasUnicos, o(2008, 12, 31) - o(2004, 9, 19) + 1);
+  assert.equal(c.vinculos[0].inicioCNIS.y, 2001, 'guarda a data original');
+  // Desligamento por processo trabalhista: o que passa da última remuneração fica de fora
+  const d = CNIS.analisar(texto(vinc(1, 'D', '01/01/2018', '31/12/2018'), 'Indicadores: PVIN-DESLIG-PROC-TRAB', '01/2018 1.000,00 02/2018 1.000,00 03/2018 1.000,00', '04/2018 1.000,00 05/2018 1.000,00 06/2018 1.000,00'), HOJE);
+  assert.equal(d.resumo.diasUnicos, o(2018, 6, 30) - o(2018, 1, 1) + 1);
+  assert.match(d.pendencias.map((p) => p.msg).join(' '), /fora da contagem 01\/07\/2018 a 31\/12\/2018/);
+  // Idade mínima: com a data de nascimento no extrato, só conta a partir dos 16 anos (EC 20/1998)
+  const e = CNIS.analisar('Data de Nascimento: 10/05/1990 Nome da Mãe: X\n' + texto(vinc(1, 'E', '01/01/2004', '31/12/2008'), 'Indicadores: PDT-NASC-FIL-INV', '01/2004 500,00'), HOJE);
+  assert.equal(e.nascimento.y, 1990);
+  assert.equal(e.resumo.diasUnicos, o(2008, 12, 31) - o(2006, 5, 10) + 1);
+  // Vínculo inteiro: PDIV-DADOS-GFIP no cabeçalho
+  const f = CNIS.analisar(texto(vinc(1, 'F', '01/01/2015', '31/03/2015'), 'Indicadores: PDIV-DADOS-GFIP', '01/2015 1.000,00'), HOJE);
+  assert.equal(f.vinculos[0].valido, false);
+  assert.equal(f.resumo.diasUnicos, 0);
+  // Recolhimento de contribuinte individual com pendência na competência
+  const g = CNIS.analisar([`1 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2020 31/03/2020`, 'Contribuições',
+    '01/2020 15/02/2020 209,00 1.045,00 02/2020 15/03/2020 209,00 1.045,00 PREC-CDCONC', '03/2020 15/04/2020 209,00 1.045,00'].join('\n'), HOJE);
+  assert.deepEqual(g.pendentesExcluidos.competencias.map((x) => x.mes), [CNIS.mesDe(2020, 2)]);
+  assert.equal(g.vinculos[0].contribuicoes[CNIS.mesDe(2020, 2)], undefined);
+  // Plano simplificado: marcado para a aposentadoria por tempo, sem sair da análise
+  const h = CNIS.analisar([`1 ${NIT} RECOLHIMENTO Contribuinte Individual 01/01/2020 31/01/2020`, 'Contribuições', '01/2020 15/02/2020 114,95 1.045,00 IREC-LC123'].join('\n'), HOJE);
+  assert.equal(h.vinculos[0].mesesTC[CNIS.mesDe(2020, 1)], true);
+  assert.equal(h.resumo.diasUnicos, 31);
+  // Códigos novos são lidos, inclusive com Ç e sublinhado
+  const i = CNIS.analisar(texto(vinc(1, 'I', '01/01/2015', '31/03/2015'), 'Indicadores: PVIN-DESLIG-JUSTIÇA-TRAB', '01/2015 1.000,00 PREC-COD1821_FORA_VIG 02/2015 1.000,00'), HOJE);
+  assert.ok(i.vinculos[0].codigosIndicadores.indexOf('PREC-COD1821_FORA_VIG') >= 0);
+  assert.ok(i.pendencias.some((p) => /PVIN-DESLIG-JUSTICA-TRAB/.test(p.msg)));
+  // A tabela da ferramenta é a mesma de dados/indicadores.json
+  const dados = require('../dados/indicadores.json');
+  assert.deepEqual(Object.keys(CNIS.INDICADORES).sort(), dados.indicadores.map((x) => x.cod).sort(), 'rode node tools/gerar-indicadores.js');
+}
+console.log('pendências do Anexo V ok');

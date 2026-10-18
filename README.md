@@ -192,3 +192,17 @@ Opção "Aposentadoria por tempo: direito adquirido antes da EC 103/2019" (e lin
 ## Lançamento manual de tempo
 
 Sem o PDF, o botão "Lançar tempo manualmente" (em `/analise-cnis/`) abre uma lista de períodos: tipo de vínculo (empregado, doméstico, contribuinte individual, facultativo ou segurado especial), início e fim (em branco = em aberto). `CNIS.gerarTextoManual` monta um extrato sintético com o salário mínimo de cada competência (a partir de 07/1994) e ele passa pela mesma análise do PDF, então todas as simulações de benefício funcionam. O resultado traz um aviso fixo de que é estimativa. Nada é salvo ou enviado.
+
+## Indicadores do CNIS (Anexo V da Portaria DIRBEN/INSS 990/2022)
+
+`dados/indicadores.json` traz os 205 códigos do Anexo V (alterado pela Portaria DIRBEN/INSS 1.316/2025): descrição e esclarecimento oficiais e o efeito no reconhecimento de direitos (`impacto`). Ele é gerado por `python3 tools/indicadores_anexo_v.py AnexoV.pdf` (a classificação fica no script) e copiado para `assets/cnis.js` por `node tools/gerar-indicadores.js`. O site monta `/indicadores/` e uma página por código a partir dele.
+
+Na análise, por padrão:
+- `vinculo` no cabeçalho do vínculo (PEXT, PDIV-DADOS-GFIP, PEMP-CAD, PVIN-IRREG, PVIN-REC-PROC-TRAB, PRPSE, AEXT-IND...): o vínculo fica fora do tempo e da carência. PEXT com AEXT-VT/VTJ/VTR e PDIV com ADIV não excluem;
+- `competencia` (PREM-EXT, PREM-FVIN, PREM-EMPR, PREC-FACULTCONC, PREC-FBR, PREC-PMIG-DOM...) e `vinculo` dentro de uma competência: só a competência sai;
+- `mandato` (PVIN-MAND-ELETIVO-TOTAL, PVIN-ME): sai o trecho até 18/09/2004;
+- `datas-*` (processo trabalhista que muda admissão ou desligamento): sai o trecho antes da primeira e depois da última remuneração;
+- `idade-minima` (PDT-NASC-FIL-INV): sai o trecho antes da idade mínima da época, se o extrato tiver a data de nascimento;
+- `tc` (IREC-LC123, IREC-MEI, IREC-FBR): só fica fora da aposentadoria por tempo de contribuição, com pergunta sobre a complementação para 20%.
+
+A análise guarda em `semExclusao` a conta com tudo regularizado, e "Verificar direito" tem a opção de simular assim.
