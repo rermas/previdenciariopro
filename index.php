@@ -26,9 +26,13 @@ $POSTS = [
     ['slug' => 'qualidade-de-segurado-e-periodo-de-graca', 'data' => '2026-10-13', 'revisado' => '2026-10-13',
      'titulo' => 'Qualidade de segurado e período de graça: prazos e como conferir',
      'resumo' => 'Quanto tempo a proteção da Previdência dura depois de parar de contribuir e o que olhar no CNIS.'],
-    ['slug' => 'como-emitir-o-extrato-do-cnis', 'data' => '2026-10-13', 'revisado' => '2026-10-13',
+    ['slug' => 'como-emitir-o-extrato-do-cnis', 'data' => '2026-10-13', 'revisado' => '2026-10-18',
      'titulo' => 'Como emitir o extrato do CNIS no Meu INSS e o que conferir',
      'resumo' => 'Passo a passo gratuito para tirar o extrato, qual tipo escolher e quando pedir a atualização do CNIS.'],
+    ['slug' => 'como-baixar-o-cnis-em-pdf-com-remuneracoes', 'data' => '2026-10-18', 'revisado' => '2026-10-18',
+     'titulo' => 'Como baixar o CNIS em PDF com remunerações pelo Meu INSS',
+     'resumo' => 'Passo a passo com as telas do aplicativo Meu INSS para baixar o extrato do CNIS em PDF com vínculos, contribuições e remunerações.',
+     'imagem' => '/assets/img/meu-inss-5-vinculos-contribuicoes-remuneracoes.webp'],
     ['slug' => 'aposentadoria-por-idade-regras-e-carencia', 'data' => '2026-10-13', 'revisado' => '2026-10-17',
      'titulo' => 'Aposentadoria por idade: regras, carência e o que o CNIS mostra',
      'resumo' => 'Idade, tempo de contribuição e carência na aposentadoria por idade urbana e rural, e como conferir no CNIS.'],
@@ -252,6 +256,9 @@ function topo(string $titulo, string $desc, string $caminho, array $o = []): voi
 <meta property="og:description" content="<?= e($desc) ?>">
 <meta property="og:url" content="<?= e($url) ?>">
 <meta property="og:locale" content="pt_BR">
+<?php if (!empty($o['imagem'])): ?><meta property="og:image" content="<?= e(SITE_URL . $o['imagem']) ?>">
+<meta name="twitter:card" content="summary_large_image">
+<?php endif; ?>
 <meta name="theme-color" content="#f5f7fb">
 <link rel="icon" href="<?= e($favicon) ?>">
 <link rel="preload" href="<?= e(u('/assets/fonts/atkinson-400.woff2')) ?>" as="font" type="font/woff2" crossorigin>
@@ -454,7 +461,8 @@ if ($rota === '/') {
             'datePublished' => $post['data'], 'dateModified' => $post['revisado'] ?? $post['data'],
             'author' => ['@type' => 'Organization', 'name' => SITE_NOME],
             'mainEntityOfPage' => SITE_URL . $caminho,
-        ],
+        ] + (!empty($post['imagem']) ? ['image' => SITE_URL . $post['imagem']] : []),
+        'imagem' => $post['imagem'] ?? null,
     ]);
     ?>
 <main id="conteudo" class="wrap pagina">
