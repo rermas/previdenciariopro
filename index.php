@@ -619,6 +619,7 @@ if ($rota === '/') {
   <h1>Análise de CNIS</h1>
   <p class="lead texto">Envie o PDF do extrato ou cole o texto para ver o tempo contado, os salários faltantes e as pendências.</p>
   <p class="aviso-privacidade">Tudo acontece no seu navegador. O extrato não é enviado, salvo ou registrado.</p>
+  <p class="passo-link">Ainda não tem o PDF? <a href="<?= e(u('/blog/como-baixar-o-cnis-em-pdf-com-remuneracoes/')) ?>">Veja o passo a passo com imagens para baixar o extrato no Meu INSS</a>. Escolha a opção <strong>Vínculos, contribuições e remunerações</strong>. Se preferir, use também o botão <em>Lançar tempo manualmente</em>.</p>
 
   <form id="cnis-form" class="painel">
     <label class="campo">PDF do extrato
