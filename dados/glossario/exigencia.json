@@ -1,0 +1,60 @@
+{
+  "termo": "Exigência do INSS",
+  "titulo": "Exigência do INSS: o que é, prazo e como responder",
+  "resumo": "O que significa uma exigência no pedido do INSS, o prazo de 30 dias, o que acontece se não for cumprida e como responder pelo Meu INSS.",
+  "categoria": "processo",
+  "definicao": "Exigência é o **pedido de documentos ou informações** que o INSS faz durante a análise de um requerimento, quando faltam provas para concluir. O pedido fica parado até o segurado responder.",
+  "secoes": [
+    {
+      "titulo": "Prazo",
+      "texto": [
+        "O prazo é de **30 dias** contados da ciência. Pela IN PRES/INSS 212/2026, que alterou a [[fonte:in128|IN 128/2022]], se a exigência não for cumprida no prazo, o pedido é encerrado por desistência, sem análise do mérito."
+      ]
+    },
+    {
+      "titulo": "Como responder",
+      "texto": [
+        [
+          "Leia com atenção o que foi pedido no Meu INSS, em \"Consultar pedidos\".",
+          "Junte exatamente os documentos indicados, legíveis e completos.",
+          "Envie pelo Meu INSS na opção de cumprir exigência e guarde o comprovante.",
+          "Se não tiver o documento, explique e apresente outras provas disponíveis."
+        ]
+      ]
+    },
+    {
+      "titulo": "Exigências comuns",
+      "texto": [
+        "Prova de vínculos com [[extemporaneidade|informação extemporânea]], comprovantes de salário de contribuição faltante, PPP para tempo especial, documentos de dependência na pensão e autodeclaração do segurado especial."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Na análise da aposentadoria de Lúcio, o INSS pediu a carteira de trabalho de um vínculo de 1998 marcado como extemporâneo. Ele enviou as páginas da CTPS e o termo de rescisão em 10 dias, e o período foi reconhecido."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Posso pedir mais prazo?",
+      "resposta": "Em alguns casos o INSS aceita prorrogação justificada, mas o seguro é cumprir dentro dos 30 dias com o que tiver e indicar o restante."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "in128",
+      "dispositivo": "com as alterações da IN 212/2026"
+    },
+    {
+      "fonte": "meuinss"
+    }
+  ],
+  "relacionados": [
+    "der",
+    "extemporaneidade",
+    "atualizacao-do-cnis"
+  ],
+  "artigos": [
+    "exigencia-do-inss-prazo-e-como-responder",
+    "documentos-para-comprovar-vinculo-de-emprego"
+  ],
+  "indicadores": []
+}

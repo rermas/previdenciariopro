@@ -1,0 +1,58 @@
+{
+  "termo": "Pedágio (50% e 100%)",
+  "titulo": "Pedágio de 50% e de 100% na aposentadoria: como calcular",
+  "resumo": "Como funcionam as regras de pedágio de 50% e de 100% da Reforma da Previdência, quem pode usar cada uma, exemplos de cálculo e o valor do benefício.",
+  "categoria": "beneficios",
+  "definicao": "Pedágio é o **tempo adicional de contribuição** que o segurado precisa cumprir, calculado sobre o tempo que **faltava em 13/11/2019** para atingir 30 anos (mulher) ou 35 anos (homem). A EC 103/2019 criou duas regras: com pedágio de 50% e com pedágio de 100%.",
+  "secoes": [
+    {
+      "titulo": "Pedágio de 50% (art. 17)",
+      "texto": [
+        [
+          "Só para quem, em 13/11/2019, tinha **mais de 28 anos** (mulher) ou **mais de 33 anos** (homem) de contribuição.",
+          "Exige o tempo mínimo mais **metade do que faltava** naquela data.",
+          "Não exige idade mínima.",
+          "O valor é a média multiplicada pelo [[fator-previdenciario]]."
+        ]
+      ]
+    },
+    {
+      "titulo": "Pedágio de 100% (art. 20)",
+      "texto": [
+        [
+          "Exige **57 anos** de idade (mulher) ou **60 anos** (homem).",
+          "Exige o tempo mínimo mais **o mesmo tempo que faltava** em 13/11/2019.",
+          "O valor é **100% da média**, sem fator previdenciário.",
+          "O professor da educação básica tem idade de 52/55 anos e tempo de 25/30 anos."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Em 13/11/2019, Fábio tinha 34 anos de contribuição. Faltava 1 ano para os 35. **Pedágio de 50%:** ele precisa de 35 anos + 6 meses, sem idade mínima, com fator previdenciário. **Pedágio de 100%:** precisa de 35 + 1 = 36 anos de contribuição e 60 anos de idade, com 100% da média.",
+    "Já Simone tinha 25 anos de contribuição em 13/11/2019. Ela não pode usar o pedágio de 50% (tinha menos de 28 anos), mas pode usar o de 100%: precisa de 30 + 5 = 35 anos de contribuição e 57 anos de idade."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Qual pedágio é melhor?",
+      "resposta": "Depende da idade e do fator. O de 50% permite aposentar mais cedo, mas o fator pode reduzir muito o valor. O de 100% exige idade, mas paga a média integral."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 17 e 20"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "relacionados": [
+    "regras-de-transicao",
+    "fator-previdenciario",
+    "descarte-de-contribuicoes",
+    "rmi"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

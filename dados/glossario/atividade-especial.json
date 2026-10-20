@@ -1,0 +1,64 @@
+{
+  "termo": "Atividade especial",
+  "titulo": "Atividade especial no INSS: agentes nocivos, prova e conversão",
+  "resumo": "O que é atividade especial para o INSS, como provar a exposição a agentes nocivos em cada época, a conversão de tempo até 2019 e a aposentadoria especial.",
+  "categoria": "tempo",
+  "definicao": "Atividade especial é o trabalho exercido com **exposição a agentes nocivos** à saúde, como ruído, calor, agentes químicos e biológicos, de forma permanente, não ocasional nem intermitente. Ela dá direito à aposentadoria especial com 15, 20 ou 25 anos e, até 13/11/2019, podia ser convertida em tempo comum com acréscimo.",
+  "secoes": [
+    {
+      "titulo": "Como se prova em cada época",
+      "texto": [
+        [
+          "**Até 28/04/1995:** bastava a categoria profissional prevista nos decretos da época (por exemplo, motorista de caminhão, soldador, enfermeiro) ou a exposição ao agente.",
+          "**De 29/04/1995 a 05/03/1997:** passou a ser exigida a prova da exposição efetiva, por formulários como o SB-40 e o DSS-8030.",
+          "**De 06/03/1997 a 31/12/2003:** formulário baseado em laudo técnico (LTCAT).",
+          "**A partir de 01/01/2004:** o [[ppp]] (Perfil Profissiográfico Previdenciário)."
+        ]
+      ]
+    },
+    {
+      "titulo": "Ruído",
+      "texto": [
+        "Os limites de tolerância mudaram com o tempo: acima de **80 dB** até 05/03/1997, **90 dB** até 18/11/2003 e **85 dB** desde então. Para o ruído, o STF decidiu (Tema 555) que o EPI não descaracteriza a atividade especial."
+      ]
+    },
+    {
+      "titulo": "Depois da EC 103/2019",
+      "texto": [
+        "A aposentadoria especial passou a exigir idade mínima (55, 58 ou 60 anos, conforme a atividade de 15, 20 ou 25 anos) para quem se filiou depois da reforma, e uma regra de pontos (66, 76 ou 86) para quem já era filiado. A **conversão de tempo especial em comum** ficou proibida para períodos posteriores a 13/11/2019 (art. 25, § 2º, da [[fonte:ec103|EC 103/2019]]).",
+        "Para o período até 13/11/2019, a conversão continua possível: na atividade de 25 anos, o fator é **1,4 para homens e 1,2 para mulheres**."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Jorge trabalhou 10 anos como soldador exposto a ruído de 92 dB, com PPP, até 2015. Convertidos com o fator 1,4, esses 10 anos viram 14 anos de tempo comum, o que pode antecipar o acesso a uma regra de transição."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O CNIS mostra se o período é especial?",
+      "resposta": "Em geral, não. O extrato pode trazer o código de exposição da GFIP, mas a prova é o PPP e o laudo. O período especial precisa ser pedido e comprovado no requerimento."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 57 e 58"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 64 a 70 e Anexo IV"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 19, § 1º, 21 e 25, § 2º"
+    }
+  ],
+  "relacionados": [
+    "ppp",
+    "tempo-de-contribuicao",
+    "regra-de-pontos",
+    "direito-adquirido"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

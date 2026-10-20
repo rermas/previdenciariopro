@@ -1,0 +1,73 @@
+{
+  "termo": "MEI na Previdência",
+  "titulo": "MEI e INSS: o que a contribuição de 5% garante",
+  "resumo": "Quais benefícios do INSS o MEI tem com a contribuição de 5% no DAS, o que não conta para aposentadoria por tempo e como complementar.",
+  "categoria": "contribuicao",
+  "definicao": "O microempreendedor individual (MEI) é [[contribuinte-individual]] e contribui para o INSS com **5% do salário mínimo**, valor que vem embutido no DAS mensal (art. 18-A da [[fonte:lc123|Lei Complementar 123/2006]]).",
+  "secoes": [
+    {
+      "titulo": "O que o MEI tem",
+      "texto": [
+        [
+          "Aposentadoria por idade e aposentadoria programada, no valor de um salário mínimo.",
+          "Auxílio por incapacidade temporária e aposentadoria por incapacidade permanente, com carência de 12 meses.",
+          "Salário-maternidade, e pensão por morte e auxílio-reclusão para os dependentes."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que fica de fora",
+      "texto": [
+        "Como no [[plano-simplificado]], o período de MEI **não conta para aposentadoria por tempo de contribuição** nem para CTC, salvo se o MEI complementar a contribuição em **15%** sobre o salário mínimo, com juros. Os benefícios também ficam limitados ao salário mínimo."
+      ]
+    },
+    {
+      "titulo": "Pagamento em dia",
+      "texto": [
+        "Para a carência, a regra é a do contribuinte individual: conta a partir do primeiro DAS **pago em dia**. DAS pagos em atraso antes disso contam como tempo, mas não como carência. No CNIS, os recolhimentos aparecem com o indicador [[ind:IREC-MEI]]."
+      ]
+    },
+    {
+      "titulo": "MEI com carteira assinada",
+      "texto": [
+        "Quem é MEI e também é empregado tem as duas filiações. O tempo de empregado conta normalmente, e o salário de contribuição do mês é a soma das duas bases, até o teto."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Diego é MEI desde 2018 e pagou todos os DAS em dia. Em 2026 ele tem 8 anos de carência como MEI. Se quiser usar esse período em uma regra de transição por tempo de contribuição, precisa complementar 15% sobre o salário mínimo de cada mês, com juros."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O MEI pode contribuir com mais para ter benefício maior?",
+      "resposta": "A contribuição do DAS é fixa. Para ter benefícios acima do mínimo, o MEI precisaria de outra filiação, como um vínculo de emprego."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lc123",
+      "dispositivo": "art. 18-A"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 21, §§ 2º e 3º"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "IREC-MEI"
+    }
+  ],
+  "relacionados": [
+    "contribuinte-individual",
+    "plano-simplificado",
+    "aliquotas-de-contribuicao",
+    "carencia"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "IREC-MEI",
+    "IMEI"
+  ]
+}

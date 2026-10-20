@@ -1,0 +1,69 @@
+{
+  "termo": "Contribuição abaixo do mínimo",
+  "titulo": "Contribuição abaixo do salário mínimo: complementar, utilizar ou agrupar",
+  "resumo": "Por que a competência abaixo do salário mínimo não conta desde a EC 103/2019 e as três formas de ajuste: complementação, utilização do excedente e agrupamento.",
+  "categoria": "contribuicao",
+  "definicao": "Desde **13/11/2019**, a competência em que a soma dos salários de contribuição fica **abaixo do salário mínimo** não conta para tempo, carência nem manutenção da qualidade de segurado, a menos que seja ajustada (art. 29 da [[fonte:ec103|EC 103/2019]]).",
+  "secoes": [
+    {
+      "titulo": "Quando acontece",
+      "texto": [
+        "É comum no trabalho intermitente, na jornada parcial com poucas horas, no empregado admitido ou demitido no meio do mês em alguns casos, e no contribuinte individual que presta poucos serviços no mês. No CNIS, a competência recebe o indicador [[ind:PSC-MEN-SM-EC103]]."
+      ]
+    },
+    {
+      "titulo": "As três formas de ajuste",
+      "texto": [
+        [
+          "**Complementação:** pagar a diferença entre o valor recebido e o salário mínimo, com a alíquota da categoria.",
+          "**Utilização do excedente:** usar o valor que passou do mínimo em outra competência do mesmo ano civil para completar a competência deficitária.",
+          "**Agrupamento:** juntar competências do mesmo ano para formar uma ou mais competências com o valor mínimo."
+        ]
+      ]
+    },
+    {
+      "titulo": "Prazo e onde pedir",
+      "texto": [
+        "Os ajustes de utilização e agrupamento valem para competências do mesmo ano civil e são feitos pelo próprio segurado no [[fonte:meuinss|Meu INSS]]. Depois do ajuste, o CNIS passa a mostrar indicadores como [[ind:ICOMPL-VR-SM-EC103]] ou [[ind:IAGRUP-SM-EC103]]."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Bruna trabalha como intermitente. Em março de 2026 recebeu R$ 900,00 e em abril, R$ 2.500,00. Março fica abaixo do mínimo de R$ 1.621,00. Ela pode usar R$ 721,00 do excedente de abril para completar março, e os dois meses passam a contar."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Competências abaixo do mínimo antes de 11/2019 também precisam de ajuste?",
+      "resposta": "Não. A regra vale para competências a partir de 13/11/2019. Antes disso, para o empregado, o mês contava mesmo com valor inferior ao mínimo."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 29"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 19-E e 216"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "PSC-MEN-SM-EC103"
+    }
+  ],
+  "relacionados": [
+    "salario-de-contribuicao",
+    "carencia",
+    "competencia",
+    "aliquotas-de-contribuicao"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "PSC-MEN-SM-EC103",
+    "ICOMPL-VR-SM-EC103",
+    "IAGRUP-SM-EC103",
+    "IUTILIZ-EXC-EC103"
+  ]
+}

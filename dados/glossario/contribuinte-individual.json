@@ -1,0 +1,80 @@
+{
+  "termo": "Contribuinte individual",
+  "titulo": "Contribuinte individual: quem é, como contribui e o que conta",
+  "resumo": "Quem é contribuinte individual no INSS, como recolher, o prazo de pagamento, a retenção pela empresa e o que vale para a carência.",
+  "categoria": "segurados",
+  "definicao": "Contribuinte individual (CI) é o [[segurado-obrigatorio|segurado obrigatório]] que trabalha **por conta própria** ou presta serviço a empresas **sem vínculo de emprego**: autônomos, profissionais liberais, empresários, sócios com pró-labore, diaristas e o [[mei]].",
+  "secoes": [
+    {
+      "titulo": "Como contribui",
+      "texto": [
+        "Quem trabalha por conta própria recolhe ele mesmo, até o **dia 15 do mês seguinte** à competência (Lei 8.212/1991, art. 30, II). A alíquota normal é de 20% sobre a remuneração, respeitados o salário mínimo e o [[teto-do-inss]]. Existe também o [[plano-simplificado]], de 11% sobre o salário mínimo, para quem não presta serviço a empresa.",
+        "Quando presta serviço a empresa, desde 04/2003 é a empresa que desconta 11% da remuneração e recolhe (Lei 10.666/2003, art. 4º). Nesse caso, o mês conta mesmo que a empresa não tenha repassado, porque a obrigação é dela. No CNIS esse período aparece como remuneração de \"contribuinte individual prestador de serviço\"."
+      ]
+    },
+    {
+      "titulo": "O que vale para a carência",
+      "texto": [
+        "Para o CI que recolhe por conta própria, a [[carencia]] conta a partir da primeira contribuição **paga em dia**. Contribuições de meses anteriores pagas depois não contam como carência, embora possam contar como tempo de contribuição (art. 27, II, da Lei 8.213/1991). O mesmo vale para recolhimentos abaixo do salário mínimo, que dependem de complementação.",
+        "Para o período anterior em que trabalhou e não pagou, o CI pode fazer a [[indenizacao-de-periodo|indenização]], desde que comprove o exercício da atividade."
+      ]
+    },
+    {
+      "titulo": "Pontos que costumam dar problema no CNIS",
+      "texto": [
+        [
+          "Recolhimento com código de facultativo por quem trabalha, ou o contrário.",
+          "Pagamento abaixo do mínimo ([[ind:PSC-MEN-SM-EC103]]), que só conta depois de complementado.",
+          "Remuneração de prestador de serviço informada fora do prazo, marcada como extemporânea ([[ind:PREM-EXT]]).",
+          "Plano simplificado ([[ind:IREC-LC123]]), que fica fora da aposentadoria por tempo de contribuição."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Carla é designer autônoma e recolhe 20% sobre R$ 3.000,00 todo mês até o dia 15. Em 2024 ela também prestou serviço para uma agência, que reteve 11% das notas. No CNIS aparecem os dois: os recolhimentos próprios e a remuneração informada pela agência. Como o total não passa do teto, os dois valores somam no salário de contribuição do mês."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Diarista é contribuinte individual ou doméstica?",
+      "resposta": "Quem trabalha até dois dias por semana na mesma residência é contribuinte individual. A partir de três dias por semana, com continuidade, há vínculo de [[empregado-domestico|emprego doméstico]]."
+    },
+    {
+      "pergunta": "O CI tem direito a auxílio por incapacidade?",
+      "resposta": "Sim, com 12 contribuições de carência e qualidade de segurado na data de início da incapacidade."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11, V, e 27, II"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "arts. 21 e 30"
+    },
+    {
+      "fonte": "lei10666",
+      "dispositivo": "art. 4º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 9º, V"
+    }
+  ],
+  "relacionados": [
+    "aliquotas-de-contribuicao",
+    "contribuicao-em-atraso",
+    "mei",
+    "contribuicao-abaixo-do-minimo"
+  ],
+  "artigos": [
+    "contribuicoes-em-atraso-contribuinte-individual-e-facultativo",
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "indicadores": [
+    "PREM-EXT",
+    "PSC-MEN-SM-EC103",
+    "IREC-LC123"
+  ]
+}

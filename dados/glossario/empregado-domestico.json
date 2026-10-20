@@ -1,0 +1,69 @@
+{
+  "termo": "Empregado doméstico",
+  "titulo": "Empregado doméstico no INSS: quem é e como as contribuições contam",
+  "resumo": "Quem é empregado doméstico para o INSS, a diferença para a diarista, o eSocial e a presunção de recolhimento desde 06/2015 pela LC 150.",
+  "categoria": "segurados",
+  "definicao": "Empregado doméstico é quem presta serviço **contínuo, subordinado, oneroso e pessoal**, de finalidade não lucrativa, a pessoa ou família no âmbito residencial, **por mais de dois dias por semana** (Lei Complementar 150/2015, art. 1º).",
+  "secoes": [
+    {
+      "titulo": "Diarista ou doméstica?",
+      "texto": [
+        "Quem trabalha até dois dias por semana na mesma casa é diarista e, para o INSS, [[contribuinte-individual]]: recolhe por conta própria. A partir de três dias por semana, com continuidade, há vínculo doméstico, e o recolhimento é do empregador. Babá, cuidador, motorista particular, caseiro e jardineiro também podem ser domésticos."
+      ]
+    },
+    {
+      "titulo": "Quem recolhe",
+      "texto": [
+        "O empregador doméstico desconta a contribuição do empregado e recolhe junto com a sua cota pelo **eSocial Doméstico** (DAE). Desde a competência **06/2015**, com a [[fonte:lc150|LC 150/2015]], o recolhimento é presumido para o empregado doméstico, como já acontecia com o empregado comum: o mês conta mesmo que o empregador não tenha pago.",
+        "Para períodos anteriores a 06/2015, a jurisprudência e o INSS vêm aceitando o vínculo comprovado, mas o CNIS pode mostrar pendências como [[ind:PREC-LC150-DOM]] ou [[ind:PREC-PMIG-DOM]] quando há recolhimento fora do padrão."
+      ]
+    },
+    {
+      "titulo": "Como comprovar",
+      "texto": [
+        "Carteira de trabalho assinada, recibos de pagamento, extrato do eSocial e guias pagas são as provas principais. Quando o vínculo não aparece no [[cnis]], é possível pedir a inclusão com esses documentos."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Lúcia trabalha de segunda a sexta como babá na casa de uma família desde 2018, com registro no eSocial. Em alguns meses de 2021 o empregador atrasou as guias. Como o recolhimento é presumido desde 06/2015, esses meses contam para o tempo e para a carência de Lúcia; a cobrança da dívida é problema do empregador."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Empregado doméstico tem direito a auxílio-acidente?",
+      "resposta": "Sim, desde a LC 150/2015 o doméstico passou a ter direito ao auxílio-acidente, que antes não tinha."
+    },
+    {
+      "pergunta": "O doméstico sem registro pode ter o tempo reconhecido?",
+      "resposta": "Pode, com prova do vínculo. O caminho é pedir o reconhecimento no INSS com documentos ou, se negado, na Justiça do Trabalho ou Federal."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lc150",
+      "dispositivo": "arts. 1º e 34"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11, II, e 34"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 24"
+    }
+  ],
+  "relacionados": [
+    "segurado-obrigatorio",
+    "contribuinte-individual",
+    "salario-de-contribuicao",
+    "cnis"
+  ],
+  "artigos": [
+    "empregado-domestico-como-comprovar-vinculo-e-contribuicao",
+    "documentos-para-comprovar-vinculo-de-emprego"
+  ],
+  "indicadores": [
+    "PREC-LC150-DOM",
+    "PREC-PMIG-DOM"
+  ]
+}

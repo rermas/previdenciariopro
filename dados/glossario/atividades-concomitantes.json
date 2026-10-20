@@ -1,0 +1,59 @@
+{
+  "termo": "Atividades concomitantes",
+  "titulo": "Atividades concomitantes: dois empregos ao mesmo tempo no INSS",
+  "resumo": "Como o INSS trata dois ou mais vínculos ao mesmo tempo: o tempo conta uma vez, os salários de contribuição se somam até o teto e o que diz o STJ.",
+  "categoria": "tempo",
+  "definicao": "Atividades concomitantes são **dois ou mais vínculos ou recolhimentos no mesmo período**, como dois empregos, ou emprego e trabalho autônomo ao mesmo tempo.",
+  "secoes": [
+    {
+      "titulo": "Tempo de contribuição",
+      "texto": [
+        "O período simultâneo conta **uma única vez** no tempo de contribuição e na carência. Dois empregos de 10 anos no mesmo período somam 10 anos, e não 20."
+      ]
+    },
+    {
+      "titulo": "Salário de contribuição",
+      "texto": [
+        "As remunerações simultâneas **se somam** no mês, respeitado o [[teto-do-inss]]. Antes, a lei mandava calcular separadamente atividade principal e secundária; a regra foi revogada pela Lei 13.846/2019, e o STJ (Tema 1.070) firmou que, depois da Lei 9.876/1999, os salários de contribuição concomitantes devem ser somados para o cálculo."
+      ]
+    },
+    {
+      "titulo": "No CNIS",
+      "texto": [
+        "Os vínculos aparecem separados, cada um com suas remunerações. Uma análise mês a mês junta as competências e evita contar duas vezes o tempo sobreposto, como faz a ferramenta deste site."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Paulo é professor em duas escolas desde 2012, recebendo R$ 3.500,00 em cada uma. Para o tempo, são 14 anos até 2026, uma vez só. Para o cálculo, o salário de contribuição de cada mês é R$ 7.000,00, abaixo do teto."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Ter dois empregos aumenta a aposentadoria?",
+      "resposta": "Pode aumentar, porque os salários se somam na média, até o teto. Mas não aumenta o tempo de contribuição."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29 e 32"
+    },
+    {
+      "fonte": "lei9876"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 32"
+    }
+  ],
+  "relacionados": [
+    "tempo-de-contribuicao",
+    "salario-de-contribuicao",
+    "teto-do-inss",
+    "salario-de-beneficio"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": []
+}

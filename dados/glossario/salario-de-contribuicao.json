@@ -1,0 +1,71 @@
+{
+  "termo": "Salário de contribuição",
+  "titulo": "Salário de contribuição: o que é, limites e como entra no cálculo",
+  "resumo": "O que é salário de contribuição no INSS, o piso e o teto, o que integra a base do empregado e do autônomo e como ele forma o valor do benefício.",
+  "categoria": "contribuicao",
+  "definicao": "Salário de contribuição é a **base sobre a qual a contribuição ao INSS é calculada** em cada mês. É esse valor, e não o salário líquido, que aparece no CNIS e que entra na média do benefício.",
+  "secoes": [
+    {
+      "titulo": "O que compõe",
+      "texto": [
+        "Pelo art. 28 da [[fonte:lei8212|Lei 8.212/1991]]:",
+        [
+          "**Empregado e avulso:** a remuneração total do mês (salário, horas extras, comissões, adicionais), exceto as parcelas excluídas por lei, como férias indenizadas e vale-transporte.",
+          "**Empregado doméstico:** a remuneração registrada na carteira e no eSocial.",
+          "**Contribuinte individual:** a remuneração auferida no mês pela atividade.",
+          "**Facultativo:** o valor que ele declara, dentro dos limites."
+        ]
+      ]
+    },
+    {
+      "titulo": "Limites",
+      "texto": [
+        "O piso é o **salário mínimo** mensal (ou proporcional aos dias, no caso do empregado) e o teto é o [[teto-do-inss|limite máximo do salário de contribuição]], reajustado todo ano. O que passa do teto não gera contribuição nem entra no cálculo.",
+        "Desde a EC 103/2019, a competência com salário de contribuição total abaixo do mínimo só conta depois de complementada, de usar o excedente de outra competência ou de agrupar competências ([[contribuicao-abaixo-do-minimo]])."
+      ]
+    },
+    {
+      "titulo": "No cálculo do benefício",
+      "texto": [
+        "Os salários de contribuição desde 07/1994 são corrigidos mês a mês e formam a média do [[salario-de-beneficio]]. Por isso, uma remuneração errada ou faltante no CNIS muda o valor da aposentadoria."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Em 2026, Fernanda ganha R$ 12.000,00 como empregada. O salário de contribuição dela no CNIS fica limitado ao teto de 2026, R$ 8.475,55, e é esse valor que entra na média do benefício."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O 13º salário entra no cálculo da aposentadoria?",
+      "resposta": "O 13º tem contribuição própria, mas não entra na média do salário de benefício (Lei 8.212/1991, art. 28, § 7º)."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 28"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29 e 34"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 29"
+    }
+  ],
+  "relacionados": [
+    "teto-do-inss",
+    "salario-de-beneficio",
+    "periodo-basico-de-calculo",
+    "contribuicao-abaixo-do-minimo"
+  ],
+  "artigos": [
+    "como-comprovar-remuneracoes-no-cnis",
+    "salarios-faltantes-no-cnis"
+  ],
+  "indicadores": [
+    "PSC-MEN-SM-EC103",
+    "IREM-INDPEND"
+  ]
+}

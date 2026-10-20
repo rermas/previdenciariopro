@@ -1,0 +1,55 @@
+{
+  "termo": "DII (data de início da incapacidade)",
+  "titulo": "DII: data de início da incapacidade e por que ela decide o direito",
+  "resumo": "O que é a DII fixada pela perícia do INSS, a diferença para a DID, e por que ela define a carência, a qualidade de segurado e o início do benefício.",
+  "categoria": "processo",
+  "definicao": "A DII é a **data em que a incapacidade para o trabalho começou**, fixada pela perícia médica com base em exames, atestados e no histórico do segurado. Ela é diferente da **DID** (data de início da doença): uma pessoa pode ter a doença há anos e só ficar incapaz depois.",
+  "secoes": [
+    {
+      "titulo": "Por que a DII é decisiva",
+      "texto": [
+        [
+          "A [[qualidade-de-segurado]] é verificada na DII.",
+          "A [[carencia]] de 12 contribuições precisa estar cumprida até a DII.",
+          "Contribuições pagas depois da DII não contam para o direito ao benefício.",
+          "Se a DII for anterior à filiação, não há direito, salvo agravamento posterior."
+        ]
+      ]
+    },
+    {
+      "titulo": "Como contestar",
+      "texto": [
+        "Se a perícia fixar a DII em data desfavorável, o segurado pode apresentar novos documentos médicos em recurso administrativo ou na Justiça. Exames com data, prontuários e atestados com o CID e a descrição da limitação ajudam a provar o início real."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Fernando contribuiu até 01/2025 e ficou incapaz por uma doença cardíaca. Se a perícia fixar a DII em 06/2025, ele ainda tem qualidade de segurado (período de graça de 12 meses). Se fixar em 04/2026, ele já a terá perdido, e o pedido pode ser negado."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "A DII aparece no CNIS?",
+      "resposta": "Não. Ela consta no laudo pericial e na decisão do benefício."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 42, § 2º, e 59, § 1º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 71"
+    }
+  ],
+  "relacionados": [
+    "auxilio-por-incapacidade-temporaria",
+    "qualidade-de-segurado",
+    "carencia",
+    "dib"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": []
+}

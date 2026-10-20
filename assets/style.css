@@ -213,6 +213,8 @@ p { margin: 0 0 1rem; }
   .mapa th { font-size: 0.6rem; }
   .mapa th.ano { width: 2.4rem; font-size: 0.72rem; }
   .painel { padding: 1rem; }
+  .menu { gap: 1.1rem; }
+  .menu-extra { display: none; } /* Privacidade continua no rodapé */
 }
 
 /* Cabeçalho que só aparece nos relatórios impressos */
@@ -345,3 +347,21 @@ p { margin: 0 0 1rem; }
 .efeito-tc { background: var(--azul-suave); color: var(--azul-texto); }
 .esclarecimento { background: var(--branco); border: 1px solid var(--linha); border-radius: 8px; padding: 0.4rem 1rem; }
 .esclarecimento p { overflow-wrap: anywhere; }
+
+/* Glossário */
+.lista-gl { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
+.artigo .lista-gl { padding-left: 0; }
+.lista-gl li { padding: 0.7rem 0; border-bottom: 1px solid var(--linha); }
+.lista-gl a { font-weight: 700; text-decoration: none; }
+.lista-gl a:hover { text-decoration: underline; }
+.lista-gl span { display: block; color: var(--grafite); font-size: 0.95rem; margin-top: 0.15rem; }
+.definicao { font-size: 1.08rem; line-height: 1.65; }
+.exemplo { margin: 2rem 0 0; padding: 0.3rem 1.1rem 0.2rem; background: var(--branco); border: 1px solid var(--linha); border-left: 4px solid var(--verde, #3aa57a); border-radius: 0 8px 8px 0; }
+.exemplo h2 { margin-top: 0.8rem; }
+.artigo h3.pergunta { font-size: 1.05rem; margin: 1.3rem 0 0.3rem; }
+.fontes-gl { padding-left: 1.2rem; }
+.fontes-gl a { overflow-wrap: anywhere; }
+.termos-gl { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.termos-gl a { padding: 0.25rem 0.7rem; border: 1px solid var(--linha); border-radius: 999px; text-decoration: none; font-size: 0.93rem; background: var(--branco); }
+.termos-gl a:hover { border-color: var(--azul); }
+.exemplo .dica { background: none; padding: 0; border: 0; margin-top: -0.3rem; }

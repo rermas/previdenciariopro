@@ -1,0 +1,57 @@
+{
+  "termo": "NIT (Número de Identificação do Trabalhador)",
+  "titulo": "NIT, PIS, Pasep e NIS: o que é o número do trabalhador no INSS",
+  "resumo": "O que é o NIT, a relação com PIS, Pasep e NIS, como consultar e o que fazer quando o CNIS tem mais de um número ou NIT com pendência.",
+  "categoria": "segurados",
+  "definicao": "O NIT é o número que identifica o segurado no [[cnis]] e organiza suas contribuições. Para quem tem carteira assinada, normalmente é o mesmo número do **PIS** (ou do **Pasep**, para servidores); para quem se cadastrou pelo INSS ou pelo CadÚnico, pode ser chamado de **NIS**. Hoje o **CPF** é a chave principal de consulta, mas o NIT continua ligando os registros antigos.",
+  "secoes": [
+    {
+      "titulo": "Mais de um número",
+      "texto": [
+        "É comum uma pessoa ter mais de um NIT: um do primeiro emprego, outro gerado ao se inscrever como autônomo, outro do CadÚnico. O INSS deve agrupar todos no mesmo CPF. Quando isso não acontece, períodos podem \"sumir\" do extrato.",
+        "O Anexo V lista pendências de NIT, como [[ind:PNIT-IND]] e [[ind:PNIT-CRIT]], que indicam problemas no cadastro do número. Elas pedem atualização cadastral e podem atrasar a análise do benefício."
+      ]
+    },
+    {
+      "titulo": "Onde encontrar",
+      "texto": [
+        "Na carteira de trabalho, no extrato do FGTS, no [[fonte:meuinss|Meu INSS]] (Extrato CNIS) e em guias de recolhimento antigas."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Roberto tem o PIS do primeiro emprego e um NIT que gerou anos depois, ao se inscrever como contribuinte individual. Ao emitir o extrato, os recolhimentos como autônomo não apareciam. Ele pediu ao INSS o acerto do cadastro informando os dois números, e os períodos foram unificados no CPF."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "NIT e PIS são a mesma coisa?",
+      "resposta": "Para o INSS, servem ao mesmo fim: identificar o trabalhador. O número do PIS é aceito como NIT."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 18"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "pendências PNIT"
+    },
+    {
+      "fonte": "inss-extrato"
+    }
+  ],
+  "relacionados": [
+    "cnis",
+    "filiacao-e-inscricao",
+    "atualizacao-do-cnis"
+  ],
+  "artigos": [
+    "como-emitir-o-extrato-do-cnis"
+  ],
+  "indicadores": [
+    "PNIT-IND",
+    "PNIT-CRIT",
+    "PNIT-SC"
+  ]
+}

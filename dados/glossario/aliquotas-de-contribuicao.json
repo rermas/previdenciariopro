@@ -1,0 +1,68 @@
+{
+  "termo": "Alíquotas de contribuição",
+  "titulo": "Alíquotas do INSS: empregado, autônomo, facultativo e MEI",
+  "resumo": "As alíquotas de contribuição ao INSS por categoria: progressivas do empregado, 20% e 11% do autônomo, 5% do MEI e da baixa renda, e o que cada uma garante.",
+  "categoria": "contribuicao",
+  "definicao": "A alíquota é o **percentual aplicado sobre o salário de contribuição** para chegar ao valor devido ao INSS. Ela varia conforme a categoria do segurado e, em alguns casos, limita os benefícios a que o período dá direito.",
+  "secoes": [
+    {
+      "titulo": "Empregado, doméstico e avulso",
+      "texto": [
+        "Desde 03/2020, com a EC 103/2019, as alíquotas são **progressivas** por faixa de salário: **7,5%, 9%, 12% e 14%**, aplicadas como no imposto de renda, cada uma sobre a parte do salário dentro da faixa. Os limites das faixas são atualizados todo ano. O desconto é feito pelo empregador."
+      ]
+    },
+    {
+      "titulo": "Contribuinte individual e facultativo",
+      "texto": [
+        [
+          "**20%** sobre a remuneração ou o valor escolhido: plano completo, conta para todos os benefícios.",
+          "**11%** sobre o salário mínimo: [[plano-simplificado]], sem aposentadoria por tempo de contribuição e sem CTC.",
+          "**11%** retidos pela empresa quando o contribuinte individual presta serviço a pessoa jurídica.",
+          "**5%** sobre o salário mínimo: [[mei]] e facultativo de baixa renda."
+        ]
+      ]
+    },
+    {
+      "titulo": "Complementação",
+      "texto": [
+        "Quem contribuiu com 5% ou 11% pode pagar a diferença para 20%, com juros, se quiser usar esses meses na aposentadoria por tempo de contribuição ou em uma [[ctc-contagem-reciproca|CTC]] (Lei 8.212/1991, art. 21, § 3º)."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Um autônomo que paga 11% sobre o salário mínimo de 2026 recolhe R$ 178,31 por mês. Se pagasse 20% sobre o mesmo valor, recolheria R$ 324,20, e a diferença de R$ 145,89 por mês é o que precisaria complementar, com juros, para contar esses meses como tempo de contribuição."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O CNIS mostra a alíquota usada?",
+      "resposta": "Nem sempre de forma direta. O plano simplificado e o MEI são identificados pelos indicadores [[ind:IREC-LC123]] e [[ind:IREC-MEI]], e o código de pagamento da guia também revela a alíquota."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 28"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "arts. 20 e 21"
+    },
+    {
+      "fonte": "lc123",
+      "dispositivo": "art. 18-A"
+    }
+  ],
+  "relacionados": [
+    "plano-simplificado",
+    "mei",
+    "segurado-facultativo",
+    "contribuinte-individual"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "IREC-LC123",
+    "IREC-MEI"
+  ]
+}

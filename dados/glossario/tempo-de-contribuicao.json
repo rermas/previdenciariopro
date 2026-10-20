@@ -1,0 +1,77 @@
+{
+  "termo": "Tempo de contribuição",
+  "titulo": "Tempo de contribuição: como é contado e o que entra na soma",
+  "resumo": "Como o INSS conta o tempo de contribuição em anos, meses e dias, quais períodos entram na soma e a diferença entre tempo de contribuição e carência.",
+  "categoria": "tempo",
+  "definicao": "Tempo de contribuição é a **soma dos períodos de atividade e contribuição** reconhecidos pelo INSS, contada em anos, meses e dias. É o requisito das aposentadorias por tempo de contribuição e das regras de transição, e também influencia o valor do benefício.",
+  "secoes": [
+    {
+      "titulo": "O que conta",
+      "texto": [
+        [
+          "Períodos de empregado, doméstico e avulso, do primeiro ao último dia do vínculo.",
+          "Contribuições de contribuinte individual e facultativo, inclusive as pagas em atraso com os requisitos legais, e as indenizadas.",
+          "Benefício por incapacidade intercalado com períodos de contribuição.",
+          "Serviço militar obrigatório e tempo de aluno-aprendiz remunerado.",
+          "Tempo especial convertido em comum até 13/11/2019.",
+          "Atividade rural anterior a 11/1991, sem indenização (mas não como carência)."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que não conta",
+      "texto": [
+        [
+          "Períodos concomitantes contados duas vezes: o tempo simultâneo entra uma única vez.",
+          "Plano simplificado e MEI, para a aposentadoria por tempo de contribuição, sem complementação.",
+          "Tempo fictício, vedado desde a EC 103/2019 (art. 201, § 14, da Constituição).",
+          "Período de graça sem contribuição."
+        ]
+      ]
+    },
+    {
+      "titulo": "Tempo de contribuição e carência",
+      "texto": [
+        "O tempo conta **dias**; a [[carencia]] conta **meses**. Um vínculo de 10 a 25 de março gera 16 dias de tempo e uma competência de carência. Por isso os dois números do extrato quase nunca coincidem."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Vera trabalhou de 01/02/2000 a 15/08/2010 em uma empresa e de 01/08/2010 a 31/12/2025 em outra. O período de 01/08 a 15/08/2010 é concomitante e entra uma vez só. O tempo total é de 25 anos e 11 meses."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O tempo de contribuição depois da reforma ainda importa?",
+      "resposta": "Sim. Ele é requisito das regras de transição e da regra permanente (15 anos mulher, 20 anos homem) e define o coeficiente do valor: 2% a mais por ano acima de 15 ou 20 anos."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 55"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 19-C e 60"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15 a 20 e 25"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 14"
+    }
+  ],
+  "relacionados": [
+    "carencia",
+    "atividades-concomitantes",
+    "atividade-especial",
+    "regras-de-transicao"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis",
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": []
+}

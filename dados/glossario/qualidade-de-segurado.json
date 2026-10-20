@@ -1,0 +1,75 @@
+{
+  "termo": "Qualidade de segurado",
+  "titulo": "Qualidade de segurado: o que é, quando perde e como recuperar",
+  "resumo": "O que é qualidade de segurado do INSS, como ela é mantida, quando é perdida e para quais benefícios ela é exigida na data do fato gerador.",
+  "categoria": "protecao",
+  "definicao": "Qualidade de segurado é a condição de quem está **protegido pela Previdência** em determinado momento. Ela existe enquanto a pessoa contribui ou exerce atividade e continua por um tempo depois que as contribuições param, no chamado [[periodo-de-graca]].",
+  "secoes": [
+    {
+      "titulo": "Para que serve",
+      "texto": [
+        "A maioria dos benefícios exige qualidade de segurado na data do fato gerador: o início da incapacidade, o parto, a prisão ou o óbito. Quem perdeu a qualidade antes desse evento, em regra, não tem direito, mesmo tendo contribuído por muitos anos.",
+        "A exceção mais importante são as **aposentadorias por idade, por tempo de contribuição e especial**: pelo art. 3º da [[fonte:lei10666|Lei 10.666/2003]], a perda da qualidade não impede a concessão se a pessoa já tiver os requisitos de carência e tempo."
+      ]
+    },
+    {
+      "titulo": "Quando a qualidade é perdida",
+      "texto": [
+        "A perda acontece no dia seguinte ao fim do prazo para pagar a contribuição do mês seguinte ao término do período de graça. Na prática, o [[fonte:dec3048|Decreto 3.048/1999]] (art. 14) fixa esse dia como o **dia 16 do segundo mês** após o fim do período de graça."
+      ]
+    },
+    {
+      "titulo": "Como recuperar",
+      "texto": [
+        "Basta voltar a contribuir ou a trabalhar. Para auxílio por incapacidade, aposentadoria por incapacidade, salário-maternidade e auxílio-reclusão, quem perdeu a qualidade precisa cumprir **metade da carência** com novas contribuições para aproveitar as anteriores (art. 27-A da [[fonte:lei8213|Lei 8.213/1991]])."
+      ]
+    },
+    {
+      "titulo": "No CNIS",
+      "texto": [
+        "O extrato não mostra a qualidade de segurado diretamente. Ela é calculada a partir da última contribuição, do último vínculo e dos benefícios recebidos, e por isso salários faltantes ou vínculos sem data de fim mudam o resultado."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Paula foi demitida em 03/2025 e não voltou a contribuir. Com menos de 120 contribuições e sem registro de desemprego, o período de graça dela vai até 03/2026. A qualidade é perdida em 16/05/2026. Se ela ficar incapaz em abril de 2026, ainda está protegida; em junho, não."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem recebe benefício perde a qualidade de segurado?",
+      "resposta": "Não. Quem está em gozo de benefício mantém a qualidade sem limite de prazo, exceto no auxílio-acidente."
+    },
+    {
+      "pergunta": "Pensão por morte exige qualidade de segurado do falecido?",
+      "resposta": "Sim, na data do óbito, salvo se ele já tivesse direito a alguma aposentadoria."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 15, 24 e 27-A"
+    },
+    {
+      "fonte": "lei10666",
+      "dispositivo": "art. 3º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 13 e 14"
+    },
+    {
+      "fonte": "inss-qualidade"
+    }
+  ],
+  "relacionados": [
+    "periodo-de-graca",
+    "carencia",
+    "dii",
+    "pensao-por-morte",
+    "salario-maternidade"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": []
+}

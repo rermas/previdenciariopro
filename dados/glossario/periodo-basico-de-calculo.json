@@ -1,0 +1,65 @@
+{
+  "termo": "Período básico de cálculo (PBC)",
+  "titulo": "Período básico de cálculo (PBC): quais salários entram na média",
+  "resumo": "O que é o período básico de cálculo do INSS, por que ele começa em 07/1994, até quando vai e como salários faltantes no CNIS afetam a média.",
+  "categoria": "calculo",
+  "definicao": "O período básico de cálculo (PBC) é o **intervalo de meses cujos salários de contribuição entram na média** do [[salario-de-beneficio]]. Em regra, vai de **07/1994** até o mês anterior à data de início do benefício ou do requerimento.",
+  "secoes": [
+    {
+      "titulo": "Por que começa em 07/1994",
+      "texto": [
+        "Julho de 1994 marca o início do Plano Real. A Lei 9.876/1999 fixou essa competência como início do PBC para quem já era filiado, evitando a correção de salários em moedas anteriores. Para quem começou a contribuir depois, o PBC começa na primeira contribuição."
+      ]
+    },
+    {
+      "titulo": "Até quando vai",
+      "texto": [
+        "O PBC termina na competência anterior à [[dib]] ou à data em que o segurado completou os requisitos, quando ele escolhe essa data por ser mais vantajosa. Para quem tem [[direito-adquirido]] até a reforma, o PBC termina em 11/2019."
+      ]
+    },
+    {
+      "titulo": "Meses sem salário",
+      "texto": [
+        "Meses sem contribuição dentro do PBC não entram na média e não puxam o valor para baixo, salvo regras específicas. Mas um mês com vínculo ativo e remuneração faltante no CNIS pode ser lançado com o salário mínimo, conforme a IN 212/2026. Por isso vale corrigir [[post:salarios-faltantes-no-cnis|salários faltantes]] antes do pedido."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Kátia se aposenta em 03/2026. O PBC dela vai de 07/1994 a 02/2026. Se ela tiver contribuições de 1990 a 1993, elas contam como tempo de contribuição, mas não entram na média."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Posso escolher o início do PBC?",
+      "resposta": "Não. O início é fixado por lei em 07/1994. O que pode ser escolhido, em alguns casos, é a data dos requisitos e o [[descarte-de-contribuicoes]] desfavoráveis."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei9876",
+      "dispositivo": "art. 3º"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "cálculo do salário de benefício"
+    }
+  ],
+  "relacionados": [
+    "salario-de-beneficio",
+    "descarte-de-contribuicoes",
+    "competencia",
+    "rmi"
+  ],
+  "artigos": [
+    "salarios-faltantes-no-cnis",
+    "como-comprovar-remuneracoes-no-cnis"
+  ],
+  "indicadores": []
+}

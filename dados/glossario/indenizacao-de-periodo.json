@@ -1,0 +1,64 @@
+{
+  "termo": "Indenização de período",
+  "titulo": "Indenização de período no INSS: quando é necessária e como se calcula",
+  "resumo": "Quando um período sem contribuição só conta mediante indenização ao INSS, como o cálculo é feito pelo art. 45-A da Lei 8.212/91 e os documentos exigidos.",
+  "categoria": "contribuicao",
+  "definicao": "Indenização é o pagamento que torna contável um **período de atividade sem contribuição** que já não pode ser cobrado como dívida comum, normalmente porque passou o prazo de cinco anos (decadência) ou porque a lei exige o pagamento para aquele uso, como na contagem recíproca.",
+  "secoes": [
+    {
+      "titulo": "Quando é necessária",
+      "texto": [
+        [
+          "Período antigo de [[contribuinte-individual]] sem recolhimento, com mais de cinco anos.",
+          "Período rural de [[segurado-especial]] a partir de 11/1991, para aposentadoria por tempo de contribuição ou CTC.",
+          "Tempo de atividade que o segurado queira usar em [[ctc-contagem-reciproca|contagem recíproca]] com regime próprio."
+        ]
+      ]
+    },
+    {
+      "titulo": "Como se calcula",
+      "texto": [
+        "O art. 45-A da [[fonte:lei8212|Lei 8.212/1991]] manda aplicar 20% sobre a média dos maiores salários de contribuição, corrigidos, correspondentes a 80% do período contributivo desde 07/1994, ou sobre a remuneração atual, conforme o caso, com **juros de 0,5% ao mês** (limitados a 50%) e **multa de 10%**. O cálculo é feito pelo INSS a pedido do segurado."
+      ]
+    },
+    {
+      "titulo": "Prova da atividade",
+      "texto": [
+        "O INSS só calcula a indenização se o segurado comprovar que exerceu a atividade no período, com documentos da época: registro na prefeitura, notas fiscais, contratos, recibos, inscrição em conselho profissional. Sem prova, não há indenização."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Eduardo foi corretor autônomo de 2010 a 2014 e nunca recolheu. Para contar esses quatro anos, ele pediu ao INSS o cálculo da indenização, juntando as notas fiscais e o registro no conselho. O valor foi calculado sobre a média dos salários dele desde 1994, com juros e multa."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Indenização conta como carência?",
+      "resposta": "Em regra, não. O período indenizado conta como tempo de contribuição, mas não como carência, porque as contribuições não foram pagas em dia."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 45-A"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 55, § 2º, e 96, IV"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 122 e 216"
+    }
+  ],
+  "relacionados": [
+    "contribuicao-em-atraso",
+    "tempo-de-contribuicao",
+    "ctc-contagem-reciproca",
+    "segurado-especial"
+  ],
+  "artigos": [
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "indicadores": []
+}

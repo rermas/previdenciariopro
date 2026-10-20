@@ -1,0 +1,54 @@
+{
+  "termo": "Descarte de contribuições",
+  "titulo": "Descarte de contribuições: tirar salários baixos da média do INSS",
+  "resumo": "Como funciona o descarte de contribuições da EC 103/2019, que retira salários baixos da média, o efeito no tempo de contribuição e quando vale a pena.",
+  "categoria": "calculo",
+  "definicao": "O descarte permite **excluir da média** as contribuições que reduzem o valor do benefício, desde que o segurado continue cumprindo o tempo mínimo de contribuição exigido pela regra (art. 26, § 6º, da [[fonte:ec103|EC 103/2019]]).",
+  "secoes": [
+    {
+      "titulo": "Como funciona",
+      "texto": [
+        "Como a média passou a usar 100% dos salários, contribuições muito baixas, como as do início da carreira, puxam o valor para baixo. O descarte retira essas competências da conta. O período descartado, porém, **deixa de contar** para o tempo de contribuição e para o acréscimo de 2% por ano, e não pode ser usado para nenhum outro fim."
+      ]
+    },
+    {
+      "titulo": "Quando vale a pena",
+      "texto": [
+        "Vale quando o ganho na média é maior que a perda no coeficiente. Em regras com coeficiente fixo, como o pedágio de 100% (100% da média), o descarte tende a ser mais vantajoso, porque não há perda de percentual. Nas demais, é preciso simular."
+      ]
+    },
+    {
+      "titulo": "Quem faz",
+      "texto": [
+        "O INSS deve aplicar o descarte quando ele for vantajoso, mas vale conferir a carta de concessão. Uma simulação com os salários do CNIS mostra o efeito de cada exclusão."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Tânia se aposenta pelo pedágio de 100%, que paga 100% da média. Pelo cálculo do pedágio, ela precisa de 32 anos de contribuição e tem 34. Ela pode descartar até 2 anos de salários mais baixos, do início da carreira, mantendo os 32 anos exigidos e aumentando a média, sem perder percentual."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O descarte vale para a regra antiga?",
+      "resposta": "Não. Na regra antiga, a média já descartava os 20% menores salários. O descarte do art. 26, § 6º, é da regra nova."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26, § 6º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 32"
+    }
+  ],
+  "relacionados": [
+    "salario-de-beneficio",
+    "rmi",
+    "pedagio",
+    "tempo-de-contribuicao"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

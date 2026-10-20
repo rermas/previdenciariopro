@@ -1,0 +1,60 @@
+{
+  "termo": "DER (data de entrada do requerimento)",
+  "titulo": "DER: o que é a data de entrada do requerimento no INSS",
+  "resumo": "O que é a DER, por que a data do pedido define o início do pagamento e os atrasados, e o que é a reafirmação da DER no processo do INSS.",
+  "categoria": "processo",
+  "definicao": "A DER é a **data em que o segurado protocola o pedido** do benefício no INSS, pelo Meu INSS, pela central 135 ou em uma agência. Ela é registrada no protocolo e, em muitos benefícios, é a data a partir da qual o pagamento é devido.",
+  "secoes": [
+    {
+      "titulo": "Por que a DER importa",
+      "texto": [
+        "Na maioria das aposentadorias, o benefício começa na DER (salvo o empregado que pede em até 90 dias do desligamento). Se o pedido demora a ser analisado, os valores desde a DER são pagos como atrasados. Por isso, pedir assim que os requisitos são cumpridos evita perder meses de benefício."
+      ]
+    },
+    {
+      "titulo": "Reafirmação da DER",
+      "texto": [
+        "Se o segurado completa os requisitos **depois** do pedido, durante o processo, o INSS pode reafirmar a DER para a data em que eles foram cumpridos, em vez de negar o benefício. O STJ admitiu a reafirmação também no processo judicial (Tema 995)."
+      ]
+    },
+    {
+      "titulo": "Comprovante",
+      "texto": [
+        "Guarde o número do protocolo e o comprovante do pedido. Eles provam a DER em caso de exigência, recurso ou ação judicial."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Odete completou os requisitos em 05/2026 e pediu a aposentadoria em 06/2026. O INSS só concluiu a análise em 10/2026. O benefício começa na DER, em 06/2026, e os meses de junho a setembro são pagos como atrasados."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Se eu perder o prazo de uma exigência, perco a DER?",
+      "resposta": "O pedido pode ser encerrado e, num novo pedido, a DER passa a ser a nova data. Por isso é importante responder às [[exigencia|exigências]] no prazo."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 49, 54 e 74"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 176"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "seção do requerimento"
+    }
+  ],
+  "relacionados": [
+    "dib",
+    "exigencia",
+    "decadencia-e-prescricao"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento",
+    "exigencia-do-inss-prazo-e-como-responder"
+  ],
+  "indicadores": []
+}

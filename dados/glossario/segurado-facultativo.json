@@ -1,0 +1,80 @@
+{
+  "termo": "Segurado facultativo",
+  "titulo": "Segurado facultativo: quem pode contribuir, alíquotas e cuidados",
+  "resumo": "Quem pode contribuir ao INSS como facultativo, as alíquotas de 20%, 11% e 5%, a idade mínima e o que muda no período de graça.",
+  "categoria": "segurados",
+  "definicao": "Segurado facultativo é quem **não exerce atividade remunerada** que o torne [[segurado-obrigatorio|segurado obrigatório]] e decide, por vontade própria, contribuir para o INSS para ter proteção previdenciária.",
+  "secoes": [
+    {
+      "titulo": "Quem pode ser facultativo",
+      "texto": [
+        "O art. 13 da [[fonte:lei8213|Lei 8.213/1991]] e o art. 11 do [[fonte:dec3048|Decreto 3.048/1999]] listam exemplos: dona ou dono de casa, estudante, síndico não remunerado, quem está desempregado, bolsista e estagiário que não tenham outra filiação. A idade mínima é de **16 anos**.",
+        "Quem é servidor público com regime próprio de previdência não pode se filiar ao INSS como facultativo, salvo nas situações previstas em lei."
+      ]
+    },
+    {
+      "titulo": "Alíquotas",
+      "texto": [
+        [
+          "**20%** sobre um valor entre o salário mínimo e o [[teto-do-inss]]: dá direito a todos os benefícios, inclusive a aposentadoria por tempo de contribuição e a CTC.",
+          "**11%** sobre o salário mínimo ([[plano-simplificado]]): não conta para aposentadoria por tempo de contribuição nem para CTC sem complementação.",
+          "**5%** sobre o salário mínimo (facultativo de baixa renda): exige renda familiar de até dois salários mínimos, inscrição atualizada no CadÚnico e dedicação exclusiva ao trabalho doméstico na própria residência."
+        ]
+      ]
+    },
+    {
+      "titulo": "Pontos de atenção",
+      "texto": [
+        "O [[periodo-de-graca]] do facultativo é de apenas **6 meses** depois de parar de contribuir (art. 15, VI), menor que o dos segurados obrigatórios.",
+        "A primeira contribuição precisa ser paga em dia para que as seguintes contem como [[carencia]]. Pagar meses atrasados de um período anterior à inscrição não é permitido ao facultativo.",
+        "Se o facultativo de baixa renda não cumpre os requisitos (por exemplo, a família tem renda maior ou o CadÚnico está desatualizado), as contribuições de 5% podem não ser validadas, e o CNIS mostra pendência. A solução é complementar a diferença."
+      ]
+    }
+  ],
+  "exemplo": [
+    "João saiu do emprego e decidiu contribuir como facultativo para não perder a proteção. Ele escolheu 20% sobre R$ 2.000,00, pagando R$ 400,00 por mês. Se tivesse escolhido 11% sobre o salário mínimo, pagaria menos, mas esses meses não contariam para aposentadoria por tempo de contribuição sem complementar a diferença para 20%."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem trabalha informalmente pode contribuir como facultativo?",
+      "resposta": "Não. Quem tem atividade remunerada, mesmo informal, é contribuinte individual. Contribuir na categoria errada pode levar o INSS a não validar o período."
+    },
+    {
+      "pergunta": "Facultativo tem direito a auxílio por incapacidade?",
+      "resposta": "Sim, desde que cumpra a carência de 12 contribuições e tenha qualidade de segurado quando a incapacidade começa."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 13 e 15, VI"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 21, §§ 2º a 4º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 11"
+    },
+    {
+      "fonte": "inss-qualidade"
+    }
+  ],
+  "relacionados": [
+    "aliquotas-de-contribuicao",
+    "plano-simplificado",
+    "periodo-de-graca",
+    "contribuicao-em-atraso",
+    "bpc-loas"
+  ],
+  "artigos": [
+    "contribuicoes-em-atraso-contribuinte-individual-e-facultativo",
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "PREC-FACULTCONC",
+    "PREC-FBR",
+    "IREC-FBR"
+  ]
+}

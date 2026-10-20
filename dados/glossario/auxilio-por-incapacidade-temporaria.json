@@ -1,0 +1,69 @@
+{
+  "termo": "Auxílio por incapacidade temporária",
+  "titulo": "Auxílio por incapacidade temporária (auxílio-doença): requisitos e valor",
+  "resumo": "Requisitos do auxílio por incapacidade temporária, antigo auxílio-doença: carência, qualidade de segurado, data de início, valor de 91% e perícia do INSS.",
+  "categoria": "beneficios",
+  "definicao": "O auxílio por incapacidade temporária, chamado de **auxílio-doença** até a EC 103/2019, é pago ao segurado que fica **incapaz para o trabalho ou para a atividade habitual** por mais de 15 dias consecutivos, de forma temporária.",
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        [
+          "**Incapacidade** comprovada por perícia médica ou análise documental do INSS.",
+          "**[[qualidade-de-segurado|Qualidade de segurado]]** na [[dii|data de início da incapacidade]].",
+          "**[[carencia|Carência]] de 12 contribuições**, dispensada em acidente de qualquer natureza e nas doenças graves listadas em lei e portaria."
+        ]
+      ]
+    },
+    {
+      "titulo": "Quando começa",
+      "texto": [
+        "Para o empregado, a empresa paga os primeiros 15 dias e o INSS paga a partir do **16º dia** de afastamento. Para os demais segurados, a partir da data de início da incapacidade. Se o pedido for feito mais de 30 dias depois do afastamento, o benefício começa na [[der]] (art. 60 da [[fonte:lei8213|Lei 8.213/1991]])."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "É de **91% do [[salario-de-beneficio]]**, limitado à média dos últimos 12 salários de contribuição, e nunca menor que o salário mínimo."
+      ]
+    },
+    {
+      "titulo": "Doença anterior à filiação",
+      "texto": [
+        "Não há direito quando a doença ou lesão já existia antes da filiação, salvo se a incapacidade decorrer de agravamento posterior (art. 59, § 1º)."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Alessandra, empregada, fraturou o braço em um acidente doméstico em 10/03/2026 e ficou 60 dias afastada. A empresa pagou até 24/03, e o INSS paga a partir de 25/03. Como foi acidente, não precisa de carência."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O auxílio conta para a aposentadoria?",
+      "resposta": "Conta como tempo e como carência quando é intercalado com períodos de contribuição, isto é, quando o segurado volta a contribuir depois."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 59 a 63 e 151"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 71 a 80"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "relacionados": [
+    "dii",
+    "carencia",
+    "qualidade-de-segurado",
+    "aposentadoria-por-incapacidade-permanente"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": []
+}

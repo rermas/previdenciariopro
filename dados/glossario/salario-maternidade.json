@@ -1,0 +1,62 @@
+{
+  "termo": "Salário-maternidade",
+  "titulo": "Salário-maternidade: quem tem direito, carência e valor",
+  "resumo": "Quem tem direito ao salário-maternidade do INSS, a duração de 120 dias, a dispensa de carência desde 05/04/2024, como o valor é calculado e quem paga.",
+  "categoria": "beneficios",
+  "definicao": "O salário-maternidade é pago à segurada (ou ao segurado) em razão de **parto, adoção ou guarda judicial para adoção**, e também em caso de aborto não criminoso. Ele substitui a renda durante o afastamento.",
+  "secoes": [
+    {
+      "titulo": "Duração",
+      "texto": [
+        "São **120 dias**, que podem começar até 28 dias antes do parto (art. 71 da [[fonte:lei8213|Lei 8.213/1991]]). No aborto não criminoso, são duas semanas. Empresas do Programa Empresa Cidadã podem prorrogar por mais 60 dias, pagos pela própria empresa."
+      ]
+    },
+    {
+      "titulo": "Carência",
+      "texto": [
+        "A empregada, a doméstica e a avulsa nunca tiveram carência. Para a contribuinte individual, a facultativa e a segurada especial, a carência de 10 contribuições valia para fatos geradores **anteriores a 05/04/2024**. Depois dessa data, o STF (ADIs 2.110 e 2.111) afastou a exigência para todas as categorias. A qualidade de segurada continua sendo exigida."
+      ]
+    },
+    {
+      "titulo": "Valor e quem paga",
+      "texto": [
+        [
+          "**Empregada:** remuneração integral, paga pela empresa, que compensa com o INSS.",
+          "**Doméstica:** último salário de contribuição, pago pelo INSS.",
+          "**Contribuinte individual e facultativa:** média dos 12 últimos salários de contribuição, apurados em até 15 meses.",
+          "**Segurada especial:** um salário mínimo."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Juliana é contribuinte individual e teve o filho em 06/2026. Ela não precisa cumprir carência, mas precisa ter qualidade de segurada na data do parto. O valor será a média dos últimos 12 salários de contribuição dela."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Desempregada tem direito ao salário-maternidade?",
+      "resposta": "Sim, se estiver no [[periodo-de-graca]] na data do parto. Nesse caso, o pagamento é feito diretamente pelo INSS."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 71 a 73"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 93 a 103"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "arts. 357 a 361"
+    }
+  ],
+  "relacionados": [
+    "carencia",
+    "qualidade-de-segurado",
+    "periodo-de-graca"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

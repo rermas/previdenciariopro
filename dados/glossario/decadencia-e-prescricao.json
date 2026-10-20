@@ -1,0 +1,50 @@
+{
+  "termo": "Decadência e prescrição",
+  "titulo": "Decadência e prescrição no INSS: prazos de 10 e 5 anos",
+  "resumo": "A diferença entre decadência de 10 anos para revisar um benefício e prescrição de 5 anos das parcelas atrasadas, com o que diz o STF.",
+  "categoria": "processo",
+  "definicao": "**Decadência** é o prazo para pedir a **revisão** do ato de concessão de um benefício. **Prescrição** é o limite de tempo para cobrar **parcelas atrasadas**. Os dois estão no art. 103 da [[fonte:lei8213|Lei 8.213/1991]].",
+  "secoes": [
+    {
+      "titulo": "Decadência: 10 anos",
+      "texto": [
+        "O segurado tem **10 anos** para pedir a revisão do cálculo ou dos dados de um benefício concedido, contados do dia primeiro do mês seguinte ao recebimento da primeira prestação. Depois disso, o benefício não pode mais ser revisto a pedido do segurado, salvo exceções.",
+        "O STF decidiu (ADI 6.096) que a decadência **não se aplica ao indeferimento** de um benefício: quem teve o pedido negado pode pedir de novo a qualquer tempo, porque o direito ao benefício em si não se perde."
+      ]
+    },
+    {
+      "titulo": "Prescrição: 5 anos",
+      "texto": [
+        "As parcelas vencidas há mais de **5 anos** antes do pedido de revisão ou da ação judicial não podem mais ser cobradas (parágrafo único do art. 103). O direito continua, mas os atrasados ficam limitados aos últimos cinco anos. A prescrição não corre contra menores de 16 anos e incapazes."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Vânia se aposentou em 03/2018 e recebeu o primeiro pagamento em 04/2018. O prazo de decadência começa em 01/05/2018, e ela pode pedir revisão até 30/04/2028. Se pedir em 2026 porque faltou um vínculo no cálculo, recebe as diferenças dos cinco anos anteriores ao pedido; as de 2018 a 2020 já prescreveram."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O INSS também tem prazo para rever um benefício?",
+      "resposta": "Sim. Em regra, o INSS tem 10 anos para anular atos que beneficiem o segurado, salvo má-fé (art. 103-A)."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 103 e 103-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 347"
+    }
+  ],
+  "relacionados": [
+    "der",
+    "dib",
+    "rmi"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": []
+}

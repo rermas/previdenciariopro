@@ -1,0 +1,57 @@
+{
+  "termo": "Direito adquirido",
+  "titulo": "Direito adquirido na Previdência: aposentar pelas regras antigas",
+  "resumo": "O que é direito adquirido na Previdência, quem completou os requisitos até 13/11/2019 e pode usar as regras anteriores à reforma, e como o cálculo é feito.",
+  "categoria": "tempo",
+  "definicao": "Direito adquirido é a garantia de quem **completou todos os requisitos** de um benefício antes de uma mudança na lei: ele pode se aposentar a qualquer tempo pelas regras da época em que os completou. Na Previdência, a data de corte mais importante é **13/11/2019**, véspera da vigência da EC 103/2019.",
+  "secoes": [
+    {
+      "titulo": "O que a EC 103/2019 garantiu",
+      "texto": [
+        "O art. 3º da [[fonte:ec103|EC 103/2019]] assegura a concessão da aposentadoria e da pensão a quem cumpriu os requisitos até a data da sua entrada em vigor, com os critérios da legislação então vigente. Isso inclui, por exemplo, a aposentadoria por tempo de contribuição sem idade mínima (30 anos mulher, 35 anos homem) e o cálculo com a média dos 80% maiores salários e o [[fator-previdenciario]] ou a regra 86/96."
+      ]
+    },
+    {
+      "titulo": "Melhor benefício",
+      "texto": [
+        "O STF reconheceu (Tema 334) o direito ao **melhor benefício**: se o segurado preencheu os requisitos em uma data anterior e o cálculo naquela data for mais vantajoso, ele pode pedir que a renda seja calculada como se tivesse se aposentado então. Por isso uma análise completa compara as datas possíveis."
+      ]
+    },
+    {
+      "titulo": "Requisitos incompletos",
+      "texto": [
+        "Quem não tinha todos os requisitos em 13/11/2019 não tem direito adquirido: entra nas [[regras-de-transicao]], se já era filiado, ou na regra permanente."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Márcia completou 30 anos de contribuição em 10/2019 e não pediu a aposentadoria. Em 2026 ela pode se aposentar pelas regras antigas, sem idade mínima, com o cálculo feito com os salários até 11/2019, ou escolher uma regra de transição se for mais vantajosa."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem tem direito adquirido perde se continuar trabalhando?",
+      "resposta": "Não. O direito não expira. Continuar trabalhando apenas permite comparar se uma regra posterior fica melhor."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 3º"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 5º, XXXVI"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "relacionados": [
+    "regras-de-transicao",
+    "fator-previdenciario",
+    "tempo-de-contribuicao",
+    "salario-de-beneficio"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

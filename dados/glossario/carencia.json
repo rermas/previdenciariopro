@@ -1,0 +1,89 @@
+{
+  "termo": "Carência",
+  "titulo": "Carência do INSS: o que é, quantas contribuições e o que conta",
+  "resumo": "O que é carência no INSS, quantas contribuições cada benefício exige, quais benefícios dispensam carência e o que conta ou não no CNIS.",
+  "categoria": "protecao",
+  "definicao": "Carência é o **número mínimo de contribuições mensais** que o segurado precisa ter para ter direito a um benefício (art. 24 da [[fonte:lei8213|Lei 8.213/1991]]). Ela é contada em meses, e não em dias: cada [[competencia]] válida vale uma contribuição.",
+  "secoes": [
+    {
+      "titulo": "Quantas contribuições",
+      "texto": [
+        [
+          "**12:** [[auxilio-por-incapacidade-temporaria|auxílio por incapacidade temporária]] e [[aposentadoria-por-incapacidade-permanente|aposentadoria por incapacidade permanente]].",
+          "**180:** aposentadorias por idade, por tempo de contribuição e especial.",
+          "**10:** [[salario-maternidade|salário-maternidade]] da contribuinte individual, facultativa e segurada especial, para fatos geradores anteriores a 05/04/2024. Depois dessa data, o STF (ADIs 2.110 e 2.111) afastou a exigência para todas as categorias.",
+          "**24:** auxílio-reclusão."
+        ]
+      ]
+    },
+    {
+      "titulo": "Benefícios sem carência",
+      "texto": [
+        "O art. 26 dispensa a carência na [[pensao-por-morte|pensão por morte]], no salário-família, no auxílio-acidente, nos benefícios por incapacidade decorrentes de acidente de qualquer natureza ou das doenças graves da lista oficial, e no salário-maternidade da empregada, doméstica e avulsa."
+      ]
+    },
+    {
+      "titulo": "O que conta como carência",
+      "texto": [
+        [
+          "Todo mês de vínculo de empregado, doméstico (a partir de 06/2015) e avulso, porque o recolhimento é presumido.",
+          "Contribuição de contribuinte individual e facultativo **paga em dia** a partir da primeira em dia, com valor igual ou maior que o salário mínimo.",
+          "Período de benefício por incapacidade intercalado com contribuições."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que não conta",
+      "texto": [
+        [
+          "Contribuição paga em atraso de período anterior à primeira contribuição em dia.",
+          "Competência abaixo do salário mínimo sem [[contribuicao-abaixo-do-minimo|complementação]] (desde a EC 103/2019).",
+          "Período de [[periodo-de-graca]] sem contribuição.",
+          "Tempo especial convertido, tempo de aluno-aprendiz e outros períodos que contam só como tempo.",
+          "Competência com pendência do CNIS que impede o cômputo, enquanto não tratada."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Sandra trabalhou com carteira por 8 anos (96 meses) e depois contribuiu como autônoma por 7 anos, mas 10 desses meses foram pagos com atraso, de uma vez, antes da primeira contribuição em dia. Para a carência, contam 96 + 74 = **170 meses**. Ela ainda precisa de 10 contribuições para chegar às 180 da aposentadoria por idade."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Carência e tempo de contribuição são a mesma coisa?",
+      "resposta": "Não. Carência conta meses com contribuição válida; [[tempo-de-contribuicao]] conta dias e pode incluir períodos que não valem como carência. Um mês com um único dia de trabalho conta uma carência inteira, mas só um dia de tempo."
+    },
+    {
+      "pergunta": "Quem se inscreveu antes de 1991 precisa de 180 contribuições?",
+      "resposta": "Para quem se inscreveu até 24/07/1991, vale a tabela progressiva do art. 142, conforme o ano em que completou os requisitos. Para quem completou a partir de 2011, a tabela já chega a 180."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 24 a 27-A e 142"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 26 a 30"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 29"
+    }
+  ],
+  "relacionados": [
+    "tempo-de-contribuicao",
+    "competencia",
+    "qualidade-de-segurado",
+    "contribuicao-em-atraso"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia",
+    "salarios-faltantes-no-cnis"
+  ],
+  "indicadores": [
+    "PSC-MEN-SM-EC103",
+    "PREM-EXT"
+  ]
+}

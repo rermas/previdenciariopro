@@ -1,0 +1,58 @@
+{
+  "termo": "Indicadores e pendências do CNIS",
+  "titulo": "Indicadores e pendências do CNIS: o que são as siglas do extrato",
+  "resumo": "O que são os indicadores, pendências e acertos do extrato do CNIS, como ler as siglas do Anexo V e quais impedem o reconhecimento do período.",
+  "categoria": "cnis",
+  "definicao": "Indicadores são **siglas que o INSS coloca ao lado de vínculos, remunerações e contribuições** no extrato do [[cnis]] para sinalizar uma situação especial. A lista oficial está no [[fonte:anexov|Anexo V da Portaria DIRBEN/INSS 990/2022]].",
+  "secoes": [
+    {
+      "titulo": "Três tipos",
+      "texto": [
+        [
+          "**Pendências (começam com P):** a informação precisa ser confirmada antes de valer para benefício. Exemplo: [[ind:PEXT]].",
+          "**Indicadores (começam com I):** alertam para uma característica do dado, como o plano simplificado em [[ind:IREC-LC123]].",
+          "**Acertos (começam com A):** registram que o INSS já tratou a informação. Exemplo: [[ind:AEXT-VT]]."
+        ]
+      ]
+    },
+    {
+      "titulo": "Quais impedem o cômputo",
+      "texto": [
+        "Algumas pendências tiram o **vínculo inteiro** da contagem até o tratamento, outras só a **competência** marcada, e outras apenas avisam. A página de indicadores deste site separa os 205 códigos do Anexo V pelo efeito no reconhecimento de direitos."
+      ]
+    }
+  ],
+  "exemplo": [
+    "O extrato de Rita mostra [[ind:PREM-FVIN]] em uma remuneração de 2015: a remuneração está fora do período do vínculo. Até o acerto da data de saída ou da remuneração, essa competência não conta."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Todo indicador é um problema?",
+      "resposta": "Não. Muitos são só informativos. O importante é identificar as pendências que impedem o cômputo e tratá-las antes do pedido."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "anexov"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    }
+  ],
+  "relacionados": [
+    "cnis",
+    "extemporaneidade",
+    "atualizacao-do-cnis",
+    "plano-simplificado"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": [
+    "PEXT",
+    "IREC-LC123",
+    "AEXT-VT",
+    "PREM-FVIN"
+  ]
+}

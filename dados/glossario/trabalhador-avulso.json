@@ -1,0 +1,55 @@
+{
+  "termo": "Trabalhador avulso",
+  "titulo": "Trabalhador avulso: o que é e como aparece no CNIS",
+  "resumo": "Quem é trabalhador avulso para a Previdência, como o portuário e o movimentador de carga, quem recolhe a contribuição e como o período aparece no CNIS.",
+  "categoria": "segurados",
+  "definicao": "Trabalhador avulso é quem presta serviço de natureza urbana ou rural **a diversas empresas, sem vínculo de emprego**, com intermediação obrigatória do órgão gestor de mão de obra (OGMO), no caso dos portuários, ou do sindicato da categoria.",
+  "secoes": [
+    {
+      "titulo": "Exemplos",
+      "texto": [
+        "O portuário (estivador, conferente, vigia de embarcação), o amarrador, o ensacador de café e o movimentador de mercadorias em geral, quando a contratação passa pelo sindicato ou pelo OGMO."
+      ]
+    },
+    {
+      "titulo": "Contribuição e direitos",
+      "texto": [
+        "O avulso tem tratamento parecido com o do empregado: o OGMO ou o sindicato desconta e recolhe a contribuição, e o mês trabalhado conta mesmo sem o repasse (art. 34 da [[fonte:lei8213|Lei 8.213/1991]]). Ele tem direito a todos os benefícios do empregado, inclusive salário-família e auxílio-acidente."
+      ]
+    },
+    {
+      "titulo": "No CNIS",
+      "texto": [
+        "O período aparece vinculado ao OGMO ou ao sindicato, muitas vezes com várias remunerações curtas no mesmo mês, uma por tomador. A soma no mês respeita o [[teto-do-inss]]."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Pedro é estivador no porto de Santos e é escalado pelo OGMO para trabalhar em navios de várias empresas. No CNIS dele, o vínculo aparece com o OGMO e as remunerações de cada escala, somadas por mês."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Avulso precisa recolher por conta própria?",
+      "resposta": "Não. O recolhimento é responsabilidade do OGMO ou do sindicato que intermedeia o serviço."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 11, VI"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 9º, VI"
+    }
+  ],
+  "relacionados": [
+    "segurado-obrigatorio",
+    "salario-de-contribuicao",
+    "atividades-concomitantes"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": []
+}

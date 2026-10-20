@@ -1,0 +1,62 @@
+{
+  "termo": "Aposentadoria por incapacidade permanente",
+  "titulo": "Aposentadoria por incapacidade permanente (invalidez): requisitos e valor",
+  "resumo": "Requisitos da aposentadoria por incapacidade permanente, antiga aposentadoria por invalidez: carência, valor de 60% ou 100%, acréscimo de 25% e revisão.",
+  "categoria": "beneficios",
+  "definicao": "A aposentadoria por incapacidade permanente, chamada de **aposentadoria por invalidez** até a EC 103/2019, é devida ao segurado **incapaz para qualquer trabalho** e sem possibilidade de reabilitação para outra atividade que garanta o sustento.",
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        "São os mesmos do [[auxilio-por-incapacidade-temporaria|auxílio por incapacidade temporária]]: qualidade de segurado na data de início da incapacidade e carência de 12 contribuições, dispensada em acidentes e doenças graves. A diferença está no caráter permanente e total da incapacidade, avaliado pela perícia."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        [
+          "**Regra geral:** 60% da média + 2% por ano de contribuição acima de 20 anos (homem) ou 15 anos (mulher).",
+          "**Acidente de trabalho, doença profissional ou do trabalho:** 100% da média.",
+          "**Acréscimo de 25%:** para quem precisa da assistência permanente de outra pessoa, mesmo que ultrapasse o teto (art. 45 da Lei 8.213/1991)."
+        ]
+      ]
+    },
+    {
+      "titulo": "Revisão e retorno ao trabalho",
+      "texto": [
+        "O benefício pode ser revisto pelo INSS em perícias periódicas, com exceções por idade e tempo de benefício previstas em lei. Quem volta a trabalhar voluntariamente tem a aposentadoria cancelada."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Wagner, 50 anos, com 25 anos de contribuição, teve incapacidade permanente reconhecida por doença não relacionada ao trabalho. Com média de R$ 3.000,00, o valor é 60% + 2% × 5 = 70%, ou R$ 2.100,00."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem recebe aposentadoria por incapacidade pode ter outra renda?",
+      "resposta": "Pode ter rendas que não sejam de trabalho, como aluguel. O exercício de atividade remunerada leva ao cancelamento."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 42 a 47 e 101"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26, §§ 2º e 3º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 43 a 50"
+    }
+  ],
+  "relacionados": [
+    "auxilio-por-incapacidade-temporaria",
+    "dii",
+    "rmi",
+    "carencia"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

@@ -1,0 +1,64 @@
+{
+  "termo": "Aposentadoria programada",
+  "titulo": "Aposentadoria programada: a regra permanente do INSS",
+  "resumo": "O que é a aposentadoria programada da EC 103/2019, quem precisa dela, idade, tempo de contribuição e carência exigidos e como é calculado o valor.",
+  "categoria": "beneficios",
+  "definicao": "Aposentadoria programada é o nome da **regra permanente** de aposentadoria do INSS criada pela [[fonte:ec103|EC 103/2019]]. Ela vale para quem se filiou depois de 13/11/2019 e é uma opção para quem já era filiado, ao lado das [[regras-de-transicao]].",
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        [
+          "**Idade:** 62 anos (mulher) e 65 anos (homem).",
+          "**Tempo de contribuição:** 15 anos (mulher) e 20 anos (homem).",
+          "**Carência:** 180 contribuições."
+        ]
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "A renda é de 60% da média de todos os salários desde 07/1994 + 2% por ano de contribuição acima de 15 anos (mulher) ou 20 anos (homem), limitada ao teto (art. 26)."
+      ]
+    },
+    {
+      "titulo": "Diferença para a aposentadoria por idade da transição",
+      "texto": [
+        "Para o homem que já era filiado até 13/11/2019, a regra de transição da aposentadoria por idade (art. 18) exige apenas **15 anos** de contribuição. A programada exige 20. Por isso, quem já era filiado deve comparar as duas."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Igor começou a trabalhar em 2020. Ele poderá se aposentar aos 65 anos com pelo menos 20 anos de contribuição. Se tiver 30 anos, receberá 60% + 2% × 10 = 80% da média."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O plano simplificado conta para a aposentadoria programada?",
+      "resposta": "Sim. Contribuições de 11% e de MEI contam para a programada, que não é uma aposentadoria por tempo de contribuição."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 19 e 26"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 7º"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "relacionados": [
+    "regras-de-transicao",
+    "carencia",
+    "rmi",
+    "plano-simplificado",
+    "bpc-loas"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": []
+}

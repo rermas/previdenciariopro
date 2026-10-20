@@ -1,0 +1,79 @@
+{
+  "termo": "Segurado obrigatório",
+  "titulo": "Segurado obrigatório do INSS: quem é e quais são as categorias",
+  "resumo": "Quem é segurado obrigatório do INSS, as cinco categorias da Lei 8.213/91 e como cada uma aparece no extrato do CNIS.",
+  "categoria": "segurados",
+  "definicao": "Segurado obrigatório é a pessoa que, por exercer uma atividade remunerada, fica vinculada à Previdência Social **por força da lei**, independentemente da sua vontade. Basta trabalhar para estar filiado e para a contribuição ser devida.",
+  "secoes": [
+    {
+      "titulo": "As cinco categorias",
+      "texto": [
+        "O art. 11 da [[fonte:lei8213|Lei 8.213/1991]] divide os segurados obrigatórios em cinco grupos:",
+        [
+          "**Empregado:** quem trabalha com carteira assinada para empresa, inclusive o empregado rural e o temporário.",
+          "**[[empregado-domestico|Empregado doméstico]]:** quem presta serviço contínuo a pessoa ou família, no âmbito residencial, por mais de dois dias por semana.",
+          "**[[contribuinte-individual|Contribuinte individual]]:** autônomo, empresário, sócio com pró-labore, MEI e quem presta serviço a empresa sem vínculo.",
+          "**[[trabalhador-avulso|Trabalhador avulso]]:** quem presta serviço a várias empresas por meio de sindicato ou órgão gestor de mão de obra, como o portuário.",
+          "**[[segurado-especial|Segurado especial]]:** o pequeno produtor rural, o pescador artesanal e o indígena que trabalham em regime de economia familiar."
+        ]
+      ]
+    },
+    {
+      "titulo": "Quem recolhe a contribuição",
+      "texto": [
+        "No empregado, no doméstico e no avulso, quem desconta e recolhe é o empregador, a empresa ou o órgão gestor. Por isso o mês trabalhado conta mesmo que o patrão não tenha pago a guia: o art. 34 da Lei 8.213/1991 manda considerar os salários devidos. Já o contribuinte individual que trabalha por conta própria recolhe ele mesmo, e só conta o mês efetivamente pago.",
+        "Quem exerce mais de uma atividade é segurado obrigatório em relação a cada uma delas, e as remunerações se somam até o [[teto-do-inss]]."
+      ]
+    },
+    {
+      "titulo": "Obrigatório não é o mesmo que facultativo",
+      "texto": [
+        "O [[segurado-facultativo]] é quem **não** exerce atividade remunerada e escolhe contribuir, como a dona de casa e o estudante. Quem trabalha e tem renda não pode se inscrever como facultativo para pagar menos: a categoria correta é a da atividade exercida."
+      ]
+    },
+    {
+      "titulo": "Como aparece no CNIS",
+      "texto": [
+        "No [[cnis]], o empregado, o doméstico e o avulso aparecem com o nome do empregador e a data de início e fim do vínculo. O contribuinte individual e o facultativo aparecem como \"recolhimentos\", com as competências pagas. O segurado especial aparece em um cadastro próprio, com os períodos declarados de atividade rural."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Maria é enfermeira com carteira assinada em um hospital e, aos sábados, atende pacientes em casa como autônoma. Ela é segurada obrigatória duas vezes: como **empregada** no hospital e como **contribuinte individual** nos atendimentos. Os dois períodos aparecem no CNIS e as remunerações somadas respeitam o teto."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem é segurado obrigatório precisa se inscrever no INSS?",
+      "resposta": "O empregado é inscrito pelo empregador. O contribuinte individual e o segurado especial precisam se cadastrar, normalmente pelo Meu INSS ou pela central 135, e passam a ter um [[nit]]."
+    },
+    {
+      "pergunta": "Aposentado que volta a trabalhar é segurado obrigatório?",
+      "resposta": "Sim. O aposentado que exerce atividade remunerada volta a contribuir sobre ela (Lei 8.213/1991, art. 11, § 3º), mas essas contribuições não geram nova aposentadoria."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11, 12 e 34"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 12"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 9º"
+    }
+  ],
+  "relacionados": [
+    "segurado-facultativo",
+    "filiacao-e-inscricao",
+    "qualidade-de-segurado",
+    "contribuinte-individual"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis",
+    "documentos-para-comprovar-vinculo-de-emprego"
+  ],
+  "indicadores": []
+}

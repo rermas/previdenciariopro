@@ -1,0 +1,63 @@
+{
+  "termo": "Contribuição em atraso",
+  "titulo": "Contribuição em atraso no INSS: o que conta e o que não conta",
+  "resumo": "O que acontece com a contribuição paga em atraso por autônomo e facultativo: efeito na carência, no tempo e na qualidade de segurado, juros e multa.",
+  "categoria": "contribuicao",
+  "definicao": "Contribuição em atraso é a que o [[contribuinte-individual]] ou o [[segurado-facultativo]] paga **depois do dia 15 do mês seguinte** à competência. Ela pode valer como tempo de contribuição, mas tem limites para a [[carencia]] e para a [[qualidade-de-segurado]].",
+  "secoes": [
+    {
+      "titulo": "Efeitos na carência",
+      "texto": [
+        "Pelo art. 27, II, da [[fonte:lei8213|Lei 8.213/1991]], a carência do contribuinte individual e do facultativo conta a partir da **primeira contribuição paga sem atraso**. As pagas em atraso, referentes a competências anteriores a essa primeira em dia, não valem como carência.",
+        "Depois que existe uma contribuição em dia, atrasos posteriores contam como carência desde que não tenha havido perda da qualidade de segurado entre elas."
+      ]
+    },
+    {
+      "titulo": "Efeitos na qualidade de segurado",
+      "texto": [
+        "Pagar em atraso não recupera a qualidade de segurado retroativamente para um evento que já aconteceu. Contribuições pagas depois do fato gerador, como depois do início da incapacidade, não servem para dar direito ao benefício.",
+        "O facultativo só pode pagar em atraso se não tiver perdido a qualidade de segurado (Decreto 3.048/1999, art. 11, § 4º)."
+      ]
+    },
+    {
+      "titulo": "Juros, multa e prova",
+      "texto": [
+        "O valor atrasado tem juros pela Selic e multa de 0,33% ao dia, limitada a 20%. Se o atraso é de mais de cinco anos, a dívida é cobrada como [[indenizacao-de-periodo|indenização]]. Quando houve perda da qualidade, o INSS pode exigir prova do exercício da atividade no período pago."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Renato começou a trabalhar como autônomo em 01/2024, mas só pagou a primeira guia em dia em 07/2024. Em 2025 ele pagou de uma vez as competências de 01/2024 a 06/2024. Esses seis meses contam como tempo de contribuição, mas não como carência."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Posso pagar atrasado para conseguir um auxílio por incapacidade?",
+      "resposta": "Não para um evento já ocorrido. Contribuições pagas depois do início da incapacidade não geram direito ao benefício."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 27, II"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "arts. 30, II, 35 e 45-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 11, §§ 3º e 4º"
+    }
+  ],
+  "relacionados": [
+    "carencia",
+    "indenizacao-de-periodo",
+    "qualidade-de-segurado",
+    "competencia"
+  ],
+  "artigos": [
+    "contribuicoes-em-atraso-contribuinte-individual-e-facultativo",
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "indicadores": []
+}

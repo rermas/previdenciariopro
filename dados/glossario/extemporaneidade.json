@@ -1,0 +1,69 @@
+{
+  "termo": "Extemporaneidade",
+  "titulo": "Informação extemporânea no CNIS: o que é e como resolver",
+  "resumo": "O que é informação extemporânea no CNIS, quando um vínculo ou remuneração é considerado extemporâneo, os indicadores PEXT e PREM-EXT e como provar.",
+  "categoria": "cnis",
+  "definicao": "Extemporânea é a informação de vínculo ou remuneração **enviada ou alterada pelo empregador fora do prazo** legal, muito tempo depois do período a que se refere. O INSS não usa automaticamente esse dado para conceder benefícios: exige que o segurado comprove o período.",
+  "secoes": [
+    {
+      "titulo": "Como aparece",
+      "texto": [
+        "No extrato, o vínculo recebe o indicador [[ind:PEXT]] e a remuneração de prestador de serviço recebe [[ind:PREM-EXT]]. Enquanto não houver tratamento, o período fica fora da contagem do tempo e da carência na análise do benefício."
+      ]
+    },
+    {
+      "titulo": "Por que o INSS exige prova",
+      "texto": [
+        "O cuidado é evitar vínculos criados só para obter benefício. O Decreto 3.048/1999 (art. 19) prevê que a informação extemporânea seja confirmada por documentos da época."
+      ]
+    },
+    {
+      "titulo": "Como resolver",
+      "texto": [
+        [
+          "Reunir documentos contemporâneos: carteira de trabalho, contrato, ficha de registro, holerites, extrato do FGTS, termo de rescisão.",
+          "Pedir a [[atualizacao-do-cnis]] ou apresentar as provas no pedido do benefício.",
+          "Depois do acerto, o CNIS mostra um indicador de acerto, como [[ind:AEXT-VT]]."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Uma empresa informou em 2023 um vínculo de 2001 a 2004 que nunca tinha enviado. O CNIS de Célio mostra o vínculo com PEXT. Ele apresentou a carteira de trabalho com o registro e o extrato do FGTS da época, e o INSS acertou o vínculo."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Vínculo com PEXT conta para a aposentadoria?",
+      "resposta": "Só depois de comprovado. Enquanto a pendência não for tratada, o INSS deixa o vínculo fora da contagem; vale simular a aposentadoria com e sem ele."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "PEXT e PREM-EXT"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A"
+    }
+  ],
+  "relacionados": [
+    "indicadores-do-cnis",
+    "atualizacao-do-cnis",
+    "cnis",
+    "exigencia"
+  ],
+  "artigos": [
+    "vinculo-extemporaneo-no-cnis",
+    "documentos-para-comprovar-vinculo-de-emprego"
+  ],
+  "indicadores": [
+    "PEXT",
+    "PREM-EXT",
+    "AEXT-VT"
+  ]
+}

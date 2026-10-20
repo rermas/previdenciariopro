@@ -1,0 +1,55 @@
+{
+  "termo": "Dependentes",
+  "titulo": "Dependentes do segurado no INSS: classes e prova de dependência",
+  "resumo": "Quem são os dependentes do segurado para pensão por morte e auxílio-reclusão, as três classes do art. 16 da Lei 8.213/91 e o que precisa provar.",
+  "categoria": "segurados",
+  "definicao": "Dependentes são as pessoas que podem receber benefícios em razão do segurado, principalmente a [[pensao-por-morte]] e o auxílio-reclusão. A lei os divide em **três classes**, e a existência de dependente em uma classe exclui as seguintes.",
+  "secoes": [
+    {
+      "titulo": "As três classes",
+      "texto": [
+        "Pelo art. 16 da [[fonte:lei8213|Lei 8.213/1991]]:",
+        [
+          "**Classe 1:** cônjuge, companheiro ou companheira e filho menor de 21 anos, inválido ou com deficiência intelectual, mental ou grave. A dependência econômica é **presumida**.",
+          "**Classe 2:** pais. Precisam provar dependência econômica.",
+          "**Classe 3:** irmão menor de 21 anos, inválido ou com deficiência intelectual, mental ou grave. Também precisa provar dependência."
+        ]
+      ]
+    },
+    {
+      "titulo": "Equiparados e prova",
+      "texto": [
+        "O enteado e o menor tutelado equiparam-se a filho, desde que provada a dependência econômica. Para a união estável e a dependência econômica, a lei exige início de prova material contemporânea, produzida em período não superior a 24 meses antes do óbito ou da prisão (art. 16, § 5º).",
+        "O ex-cônjuge que recebia pensão alimentícia concorre em igualdade com os dependentes da classe 1."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Quando José faleceu, deixou a companheira e uma filha de 15 anos. As duas estão na classe 1 e dividem a pensão. A mãe de José, que dependia dele, não recebe, porque a existência de dependentes da classe 1 exclui a classe 2."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Filho universitário maior de 21 anos recebe pensão?",
+      "resposta": "Não. Para o INSS, a pensão do filho termina aos 21 anos, salvo invalidez ou deficiência."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 16 e 77"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 16 e 22"
+    },
+    {
+      "fonte": "inss-pensao"
+    }
+  ],
+  "relacionados": [
+    "pensao-por-morte",
+    "qualidade-de-segurado"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

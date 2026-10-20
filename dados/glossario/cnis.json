@@ -1,0 +1,71 @@
+{
+  "termo": "CNIS",
+  "titulo": "CNIS: o que é o Cadastro Nacional de Informações Sociais",
+  "resumo": "O que é o CNIS, quais dados ele reúne, o valor de prova das informações para o INSS, como emitir o extrato e o que fazer quando há erro.",
+  "categoria": "cnis",
+  "definicao": "O Cadastro Nacional de Informações Sociais (CNIS) é a **base de dados do governo que reúne vínculos de trabalho, remunerações, contribuições e benefícios** de cada segurado. É a partir dele que o INSS reconhece o tempo, a carência e calcula o valor dos benefícios.",
+  "secoes": [
+    {
+      "titulo": "O que o CNIS reúne",
+      "texto": [
+        [
+          "Vínculos de emprego informados pelas empresas (RAIS, GFIP, eSocial).",
+          "Remunerações mês a mês.",
+          "Recolhimentos de contribuinte individual, facultativo e MEI.",
+          "Cadastro do segurado especial.",
+          "Benefícios recebidos.",
+          "[[indicadores-do-cnis|Indicadores e pendências]] que apontam informações a confirmar."
+        ]
+      ]
+    },
+    {
+      "titulo": "Valor de prova",
+      "texto": [
+        "Pelo art. 29-A da [[fonte:lei8213|Lei 8.213/1991]] e pelo art. 19 do [[fonte:dec3048|Decreto 3.048/1999]], os dados do CNIS valem como prova de filiação, tempo de contribuição e salários de contribuição. Informações com pendência ou [[extemporaneidade|extemporâneas]] podem exigir documentos."
+      ]
+    },
+    {
+      "titulo": "Como emitir e corrigir",
+      "texto": [
+        "O extrato é gratuito pelo [[fonte:meuinss|Meu INSS]], na opção \"Extrato de Contribuição (CNIS)\". Quando há vínculo faltando, data errada ou remuneração ausente, o segurado pode pedir a [[atualizacao-do-cnis]] com documentos, a qualquer momento, sem esperar o pedido de aposentadoria."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Ao emitir o extrato, Natália percebeu que o vínculo de 2003 a 2006 aparecia sem data de saída e sem remunerações em 2005. Ela juntou a carteira de trabalho e os holerites e pediu a atualização do CNIS antes de pedir a aposentadoria."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O CNIS é o mesmo que o extrato previdenciário?",
+      "resposta": "O extrato é a forma de consultar o CNIS. Para conferir salários, escolha a versão com vínculos, contribuições e remunerações."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    },
+    {
+      "fonte": "inss-extrato"
+    },
+    {
+      "fonte": "anexov"
+    }
+  ],
+  "relacionados": [
+    "indicadores-do-cnis",
+    "atualizacao-do-cnis",
+    "extemporaneidade",
+    "competencia"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis",
+    "como-baixar-o-cnis-em-pdf-com-remuneracoes",
+    "como-emitir-o-extrato-do-cnis"
+  ],
+  "indicadores": []
+}

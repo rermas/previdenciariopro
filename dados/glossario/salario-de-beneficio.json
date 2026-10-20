@@ -1,0 +1,65 @@
+{
+  "termo": "Salário de benefício",
+  "titulo": "Salário de benefício: a média que define o valor do INSS",
+  "resumo": "O que é o salário de benefício, como a média de 100% dos salários desde 07/1994 é calculada depois da EC 103/2019 e o que mudou em relação à regra antiga.",
+  "categoria": "calculo",
+  "definicao": "Salário de benefício é a **média dos salários de contribuição** do segurado, corrigidos monetariamente, que serve de base para calcular a renda dos benefícios. Ele não é o valor que a pessoa recebe: sobre ele se aplica um coeficiente para chegar à [[rmi]].",
+  "secoes": [
+    {
+      "titulo": "Regra atual",
+      "texto": [
+        "Desde 13/11/2019, o art. 26 da [[fonte:ec103|EC 103/2019]] manda usar a **média aritmética simples de 100% dos salários de contribuição** desde **07/1994**, ou desde o início das contribuições, se posterior, corrigidos mês a mês. O resultado fica limitado ao [[teto-do-inss]]."
+      ]
+    },
+    {
+      "titulo": "Regra anterior",
+      "texto": [
+        "Até a reforma, a Lei 9.876/1999 mandava usar a média dos **80% maiores** salários de contribuição, descartando os 20% menores. Essa regra ainda vale para quem tem [[direito-adquirido]] até 13/11/2019."
+      ]
+    },
+    {
+      "titulo": "Casos específicos",
+      "texto": [
+        [
+          "No auxílio por incapacidade temporária, a renda é de 91% do salário de benefício, limitada à média dos últimos 12 salários de contribuição (art. 29, § 10, da Lei 8.213/1991).",
+          "O salário de benefício do segurado especial que não contribui facultativamente é o salário mínimo.",
+          "Salários faltantes ou errados no CNIS entram com o valor que estiver no extrato, por isso a conferência mês a mês é importante."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Daniel tem 300 salários de contribuição desde 07/1994. O INSS corrige cada um até a data do pedido e calcula a média simples dos 300, por exemplo, R$ 4.200,00. Esse é o salário de benefício; o valor da aposentadoria será um percentual dele."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Salários anteriores a julho de 1994 entram na média?",
+      "resposta": "Não. Em 2024 o STF, ao julgar as ADIs 2.110 e 2.111, considerou válida a regra de transição da Lei 9.876/1999, o que afastou a chamada revisão da vida toda. Os salários anteriores a 07/1994 contam como tempo, mas não entram na média."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29"
+    },
+    {
+      "fonte": "lei9876",
+      "dispositivo": "art. 3º"
+    }
+  ],
+  "relacionados": [
+    "periodo-basico-de-calculo",
+    "rmi",
+    "descarte-de-contribuicoes",
+    "salario-de-contribuicao"
+  ],
+  "artigos": [
+    "como-comprovar-remuneracoes-no-cnis",
+    "salarios-faltantes-no-cnis"
+  ],
+  "indicadores": []
+}

@@ -1,0 +1,55 @@
+{
+  "termo": "Filiação e inscrição",
+  "titulo": "Filiação e inscrição no INSS: qual a diferença",
+  "resumo": "A diferença entre filiação e inscrição na Previdência, quando cada uma acontece e por que a data da filiação define a regra de aposentadoria.",
+  "categoria": "segurados",
+  "definicao": "**Filiação** é o vínculo jurídico entre a pessoa e a Previdência, que nasce do exercício de atividade remunerada (ou, para o facultativo, da primeira contribuição). **Inscrição** é o ato de cadastro desse segurado no INSS, com seus dados pessoais e um número de identificação.",
+  "secoes": [
+    {
+      "titulo": "Por que a diferença importa",
+      "texto": [
+        "Para o [[segurado-obrigatorio|segurado obrigatório]], a filiação acontece automaticamente no primeiro dia de trabalho, mesmo sem cadastro. Já o [[segurado-facultativo]] só se filia com a inscrição e o pagamento da primeira contribuição, e não pode recolher meses anteriores a ela.",
+        "A data da primeira filiação define, por exemplo, se a pessoa entra nas [[regras-de-transicao]] da EC 103/2019 (filiados até 13/11/2019) ou só na regra permanente, e se pode usar a tabela de carência do art. 142 da Lei 8.213/1991 (inscritos até 24/07/1991)."
+      ]
+    },
+    {
+      "titulo": "Como se faz a inscrição",
+      "texto": [
+        "O empregado é inscrito pelo empregador, pelo eSocial. O contribuinte individual, o facultativo e o segurado especial se inscrevem pelo [[fonte:meuinss|Meu INSS]] ou pela central 135. A inscrição gera ou aproveita um [[nit]]."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Ana trabalhou como vendedora autônoma de 2015 a 2017 sem se inscrever. A filiação existiu desde 2015, porque ela exercia atividade remunerada, mas o período só conta se for [[indenizacao-de-periodo|indenizado]] com prova da atividade. Se ela fosse facultativa, não haveria como pagar esses meses."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem começou a trabalhar depois da reforma entra nas regras de transição?",
+      "resposta": "Não. As regras de transição valem para quem se filiou até 13/11/2019. Quem se filiou depois segue a regra permanente."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 17 e 142"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 18 e 20"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15 a 20"
+    }
+  ],
+  "relacionados": [
+    "nit",
+    "segurado-obrigatorio",
+    "segurado-facultativo",
+    "regras-de-transicao"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": []
+}

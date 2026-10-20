@@ -1,0 +1,59 @@
+{
+  "termo": "Idade mínima progressiva",
+  "titulo": "Idade mínima progressiva: tabela da regra de transição do INSS",
+  "resumo": "Como funciona a regra de idade mínima progressiva da EC 103/2019, a idade exigida ano a ano para mulheres e homens e o tempo de contribuição necessário.",
+  "categoria": "beneficios",
+  "definicao": "A regra de idade mínima progressiva (art. 16 da [[fonte:ec103|EC 103/2019]]) exige **tempo de contribuição de 30 anos (mulher) ou 35 (homem)** e uma **idade mínima que sobe 6 meses por ano**, até chegar a 62 anos para mulheres e 65 para homens.",
+  "secoes": [
+    {
+      "titulo": "Idade exigida",
+      "texto": [
+        "Em 2019 a idade era de 56 anos (mulher) e 61 (homem). Desde 2020 ela sobe seis meses a cada 1º de janeiro:",
+        [
+          "**2025:** 59 anos (mulher) e 64 (homem).",
+          "**2026:** 59 anos e 6 meses e 64 anos e 6 meses.",
+          "**2027:** 60 anos e 65 anos (limite dos homens).",
+          "**2028 a 2031:** a idade das mulheres sobe de 60,5 para 62 anos."
+        ]
+      ]
+    },
+    {
+      "titulo": "Professor",
+      "texto": [
+        "O professor da educação básica tem idade 5 anos menor (51 e 56 anos em 2019, até 57 e 60) e tempo de 25 anos (mulher) e 30 (homem)."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "A renda é de 60% da média + 2% por ano acima de 15 anos (mulher) ou 20 anos (homem), sem fator previdenciário."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Luciana completa 59 anos e 6 meses em agosto de 2026 e já tem 31 anos de contribuição. Nessa data, ela cumpre a regra de idade progressiva e pode se aposentar com 60% + 2% × 16 = 92% da média."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Vale a idade do ano em que completo o requisito ou a do ano do pedido?",
+      "resposta": "Vale a exigência do ano em que todos os requisitos são completados. Depois disso, o direito fica garantido mesmo que a exigência suba."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 16"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "relacionados": [
+    "regras-de-transicao",
+    "regra-de-pontos",
+    "pedagio",
+    "aposentadoria-programada"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

@@ -1,0 +1,59 @@
+{
+  "termo": "DIB (data de início do benefício)",
+  "titulo": "DIB: o que é a data de início do benefício e como ela é fixada",
+  "resumo": "O que é a DIB do INSS, a diferença para DER e DIP, como ela é fixada em cada benefício e por que ela define o cálculo e os atrasados.",
+  "categoria": "processo",
+  "definicao": "A DIB é a **data a partir da qual o benefício é devido**. Ela pode coincidir com a [[der]] ou ser anterior a ela, conforme o tipo de benefício e o prazo em que o pedido foi feito.",
+  "secoes": [
+    {
+      "titulo": "DIB em cada benefício",
+      "texto": [
+        [
+          "**Aposentadorias:** para o empregado, a data do desligamento se o pedido for feito em até 90 dias; nos demais casos, a DER.",
+          "**Auxílio por incapacidade:** o 16º dia de afastamento (empregado) ou a [[dii]] (demais), se pedido em até 30 dias.",
+          "**Pensão por morte:** a data do óbito, se pedida em até 90 dias (ou 180 dias, para filhos menores de 16 anos); depois disso, a DER."
+        ]
+      ]
+    },
+    {
+      "titulo": "DIB, DIP e DCB",
+      "texto": [
+        "A **DIP** (data de início do pagamento) é quando o INSS começa a pagar na folha mensal; entre a DIB e a DIP ficam os atrasados. A **DCB** (data de cessação do benefício) é quando ele termina, comum nos benefícios por incapacidade."
+      ]
+    },
+    {
+      "titulo": "Por que a DIB importa no cálculo",
+      "texto": [
+        "Os salários de contribuição são corrigidos até a DIB, e o [[periodo-basico-de-calculo]] termina na competência anterior a ela. A DIB também é a data de referência para a idade, o tempo de contribuição e o teto usados."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Gustavo foi demitido em 10/02/2026 e pediu a aposentadoria em 20/04/2026, dentro de 90 dias. A DIB é a data do desligamento, 10/02/2026, e ele recebe desde então."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Onde vejo a DIB?",
+      "resposta": "Na carta de concessão e no extrato do benefício no Meu INSS. No CNIS, os benefícios aparecem com a data de início e de fim."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 43, 49, 54, 60 e 74"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 52 e 58"
+    }
+  ],
+  "relacionados": [
+    "der",
+    "dii",
+    "periodo-basico-de-calculo"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": []
+}

@@ -1,0 +1,61 @@
+{
+  "termo": "BPC/LOAS",
+  "titulo": "BPC/LOAS: quem tem direito ao benefício assistencial",
+  "resumo": "O que é o BPC/LOAS, os requisitos para idoso de 65 anos e pessoa com deficiência, o critério de renda, o CadÚnico e as diferenças para a aposentadoria.",
+  "categoria": "beneficios",
+  "definicao": "O Benefício de Prestação Continuada (BPC), previsto na Lei Orgânica da Assistência Social ([[fonte:lei8742|LOAS]]), garante **um salário mínimo mensal** ao idoso de 65 anos ou mais e à pessoa com deficiência que não tenham meios de se sustentar nem de ser sustentados pela família. É um benefício **assistencial**, e não previdenciário: **não exige contribuição**.",
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        [
+          "**Idoso:** 65 anos ou mais.",
+          "**Pessoa com deficiência:** impedimento de longo prazo (mínimo de 2 anos) de natureza física, mental, intelectual ou sensorial, avaliado por perícia médica e avaliação social.",
+          "**Renda:** renda familiar por pessoa igual ou inferior a 1/4 do salário mínimo, com possibilidade de ampliação até 1/2 em situações previstas em regulamento.",
+          "**CadÚnico:** inscrição atualizada da família no Cadastro Único."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que o BPC não tem",
+      "texto": [
+        "Não paga 13º salário, não gera pensão por morte para a família e não conta como tempo de contribuição. É revisto periodicamente para conferir se as condições continuam."
+      ]
+    },
+    {
+      "titulo": "BPC ou aposentadoria?",
+      "texto": [
+        "Quem tem contribuições ao INSS deve verificar antes se tem direito a alguma aposentadoria, que tem 13º e gera pensão. O extrato do [[cnis]] mostra se há tempo e [[carencia]] suficientes."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Dona Aparecida tem 66 anos, nunca contribuiu e mora com o marido, que recebe um salário mínimo de aposentadoria. O benefício de até um salário mínimo recebido por idoso ou pessoa com deficiência da família não entra no cálculo da renda do BPC (Lei 8.742/1993, art. 20, § 14), então ela pode ter direito."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem recebe BPC pode trabalhar?",
+      "resposta": "A pessoa com deficiência pode, em certas condições, receber o auxílio-inclusão ao começar a trabalhar, em vez do BPC. O idoso que passa a ter renda acima do limite perde o benefício."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8742",
+      "dispositivo": "arts. 20 a 21-A"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 203, V"
+    },
+    {
+      "fonte": "inss-bpc"
+    }
+  ],
+  "relacionados": [
+    "carencia",
+    "cnis",
+    "aposentadoria-programada"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

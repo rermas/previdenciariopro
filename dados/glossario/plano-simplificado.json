@@ -1,0 +1,77 @@
+{
+  "termo": "Plano simplificado",
+  "titulo": "Plano simplificado de previdência (11%): o que dá direito",
+  "resumo": "Como funciona o plano simplificado do INSS de 11% sobre o salário mínimo, o que conta, o que fica de fora e como complementar para 20%.",
+  "categoria": "contribuicao",
+  "definicao": "O plano simplificado de previdência permite ao [[contribuinte-individual]] que trabalha por conta própria e ao [[segurado-facultativo]] contribuir com **11% sobre o salário mínimo**, em vez de 20%. Em troca, o período **não conta para a aposentadoria por tempo de contribuição** nem para a contagem recíproca.",
+  "secoes": [
+    {
+      "titulo": "O que conta e o que não conta",
+      "texto": [
+        [
+          "**Conta:** carência, qualidade de segurado, aposentadoria por idade e aposentadoria programada da EC 103/2019, auxílio por incapacidade, salário-maternidade, pensão e auxílio-reclusão.",
+          "**Não conta:** aposentadoria por tempo de contribuição e regras de transição que exigem tempo de contribuição, e CTC para regime próprio, salvo com complementação.",
+          "O valor do benefício fica limitado ao salário mínimo, porque a contribuição é sobre o mínimo."
+        ]
+      ]
+    },
+    {
+      "titulo": "Quem não pode usar",
+      "texto": [
+        "O contribuinte individual que presta serviço a empresa não pode optar pelo plano simplificado em relação a essa remuneração: a retenção de 11% feita pela empresa é sobre o valor do serviço."
+      ]
+    },
+    {
+      "titulo": "No CNIS e na análise",
+      "texto": [
+        "Os recolhimentos de 11% aparecem com o indicador [[ind:IREC-LC123]]. A [[fonte:in128|IN 128/2022]], alterada pela IN 212/2026, reafirma que esses períodos só entram no tempo de contribuição depois de complementados para 20%."
+      ]
+    },
+    {
+      "titulo": "Como complementar",
+      "texto": [
+        "Basta pagar a diferença de 9% sobre o salário mínimo de cada competência, com juros de mora, pelo código próprio de complementação. Depois de paga, a competência passa a contar como tempo de contribuição."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Cláudia contribuiu 10 anos pelo plano simplificado e 20 anos com carteira. Para a aposentadoria por idade, ela tem 30 anos de carência. Para uma regra de transição da aposentadoria por tempo de contribuição, ela só tem 20 anos, a menos que complemente os 10 anos de 11%."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Vale a pena complementar?",
+      "resposta": "Depende. Se a pessoa vai se aposentar por idade, a complementação não muda o direito. Se vai usar uma regra de transição por tempo de contribuição, pode ser essencial. Compare o custo com o ganho em tempo e valor."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 21, §§ 2º e 3º"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 18, § 3º"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "arts. 216 e 514"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "IREC-LC123"
+    }
+  ],
+  "relacionados": [
+    "aliquotas-de-contribuicao",
+    "mei",
+    "tempo-de-contribuicao",
+    "ctc-contagem-reciproca"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "IREC-LC123",
+    "ILEI123"
+  ]
+}

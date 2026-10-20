@@ -1,0 +1,61 @@
+{
+  "termo": "RMI (renda mensal inicial)",
+  "titulo": "RMI: como o INSS calcula a renda mensal inicial do benefício",
+  "resumo": "O que é a renda mensal inicial (RMI), os coeficientes de cada benefício depois da EC 103/2019, o piso, o teto e um exemplo de cálculo passo a passo.",
+  "categoria": "calculo",
+  "definicao": "A RMI é o **valor do primeiro pagamento** do benefício, antes dos reajustes anuais. Ela resulta da aplicação de um coeficiente sobre o [[salario-de-beneficio]] e nunca é menor que o salário mínimo nem maior que o [[teto-do-inss]].",
+  "secoes": [
+    {
+      "titulo": "Coeficientes depois da EC 103/2019",
+      "texto": [
+        [
+          "**Aposentadoria programada, por idade e regras de pontos e idade progressiva:** 60% da média + 2% por ano de contribuição acima de 20 anos (homem) ou 15 anos (mulher).",
+          "**Pedágio de 100%:** 100% da média.",
+          "**Pedágio de 50%:** média multiplicada pelo [[fator-previdenciario]].",
+          "**Aposentadoria por incapacidade permanente:** 60% + 2% por ano acima de 20/15 anos; 100% se decorrer de acidente de trabalho ou doença profissional.",
+          "**Auxílio por incapacidade temporária:** 91% da média, limitado à média dos últimos 12 salários.",
+          "**Pensão por morte:** 50% da aposentadoria do falecido + 10% por dependente, até 100%."
+        ]
+      ]
+    },
+    {
+      "titulo": "Passo a passo",
+      "texto": [
+        [
+          "Levantar os salários de contribuição do [[periodo-basico-de-calculo]].",
+          "Corrigir cada um pelo índice oficial até a data do benefício.",
+          "Calcular a média (o salário de benefício), avaliando o [[descarte-de-contribuicoes]].",
+          "Aplicar o coeficiente da regra.",
+          "Respeitar o piso (salário mínimo) e o teto."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Sérgio se aposenta pela regra de pontos com 35 anos de contribuição e média de R$ 5.000,00. O coeficiente é 60% + 2% × (35 − 20) = **90%**. A RMI é R$ 4.500,00. Se ele tivesse 40 anos de contribuição, receberia 100% da média."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "A RMI pode ser revista?",
+      "resposta": "Sim, dentro do prazo de [[decadencia-e-prescricao|decadência]] de dez anos, por exemplo para incluir salários ou períodos que não estavam no CNIS."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 23 e 26"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29, 33, 44 e 61"
+    }
+  ],
+  "relacionados": [
+    "salario-de-beneficio",
+    "fator-previdenciario",
+    "regras-de-transicao",
+    "teto-do-inss"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

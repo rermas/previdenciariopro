@@ -1,0 +1,60 @@
+{
+  "termo": "Fator previdenciário",
+  "titulo": "Fator previdenciário: fórmula, quando se aplica e exemplo",
+  "resumo": "O que é o fator previdenciário, a fórmula com idade, tempo de contribuição e expectativa de sobrevida do IBGE, quando ele ainda se aplica e um exemplo.",
+  "categoria": "calculo",
+  "definicao": "O fator previdenciário é um **multiplicador aplicado sobre a média** dos salários que leva em conta a idade, o tempo de contribuição e a expectativa de sobrevida na data da aposentadoria. Quem se aposenta mais jovem tende a ter fator menor que 1, que reduz o valor.",
+  "secoes": [
+    {
+      "titulo": "Fórmula",
+      "texto": [
+        "Pelo Anexo da [[fonte:lei9876|Lei 9.876/1999]]: **f = (Tc × a ÷ Es) × [1 + (Id + Tc × a) ÷ 100]**, em que Tc é o tempo de contribuição, a é a alíquota de 0,31, Es é a expectativa de sobrevida e Id é a idade na aposentadoria. A mulher tem 5 anos somados ao tempo de contribuição, e o professor, 5 ou 10 anos.",
+        "A expectativa de sobrevida vem da [[fonte:ibge-tabua|tábua completa de mortalidade do IBGE]], publicada todo ano."
+      ]
+    },
+    {
+      "titulo": "Quando se aplica hoje",
+      "texto": [
+        [
+          "Obrigatoriamente na regra de transição do [[pedagio|pedágio de 50%]] (art. 17 da EC 103/2019).",
+          "Na aposentadoria por tempo de contribuição de quem tem [[direito-adquirido]] até 13/11/2019, salvo se tinha os pontos da regra 86/96, quando podia ser afastado.",
+          "Não se aplica às demais regras de transição nem à aposentadoria programada."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Um homem de 57 anos com 36 anos de contribuição e expectativa de sobrevida hipotética de 23 anos teria fator de (36 × 0,31 ÷ 23) × [1 + (57 + 36 × 0,31) ÷ 100] ≈ **0,816**. Com média de R$ 4.000,00, o benefício pelo pedágio de 50% seria de cerca de R$ 3.264,00."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O fator previdenciário pode aumentar o benefício?",
+      "resposta": "Sim. Para quem se aposenta com idade e tempo de contribuição altos, o fator pode ser maior que 1."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei9876",
+      "dispositivo": "art. 2º e Anexo"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29, § 7º, e 29-C"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 17"
+    },
+    {
+      "fonte": "ibge-tabua"
+    }
+  ],
+  "relacionados": [
+    "pedagio",
+    "rmi",
+    "direito-adquirido",
+    "regras-de-transicao"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

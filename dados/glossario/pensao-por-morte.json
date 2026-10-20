@@ -1,0 +1,70 @@
+{
+  "termo": "Pensão por morte",
+  "titulo": "Pensão por morte do INSS: requisitos, valor e duração",
+  "resumo": "Requisitos da pensão por morte, o cálculo por cotas da EC 103/2019, a tabela de duração para cônjuge e companheiro e os prazos para pedir com atrasados.",
+  "categoria": "beneficios",
+  "definicao": "A pensão por morte é paga aos [[dependentes]] do segurado que falece. **Não exige carência**, mas exige que o falecido tivesse [[qualidade-de-segurado]] na data do óbito ou já tivesse direito a alguma aposentadoria.",
+  "secoes": [
+    {
+      "titulo": "Valor",
+      "texto": [
+        "Pelo art. 23 da [[fonte:ec103|EC 103/2019]], a pensão é uma **cota familiar de 50%** do valor da aposentadoria que o segurado recebia ou receberia por incapacidade permanente, **mais 10% por dependente**, até 100%. As cotas não revertem aos demais quando um dependente perde o direito. Se houver dependente inválido ou com deficiência grave, a pensão é de 100% até o teto."
+      ]
+    },
+    {
+      "titulo": "Duração para cônjuge e companheiro",
+      "texto": [
+        "Se o óbito ocorrer com menos de 18 contribuições ou menos de 2 anos de casamento ou união estável, a pensão dura **4 meses**, salvo acidente ou doença profissional. Fora disso, a duração depende da idade do dependente na data do óbito, pela tabela atualizada por portaria:",
+        [
+          "Menos de 22 anos: 3 anos.",
+          "De 22 a 27 anos: 6 anos.",
+          "De 28 a 30 anos: 10 anos.",
+          "De 31 a 41 anos: 15 anos.",
+          "De 42 a 44 anos: 20 anos.",
+          "45 anos ou mais: vitalícia."
+        ]
+      ]
+    },
+    {
+      "titulo": "Prazo para pedir",
+      "texto": [
+        "A pensão começa na data do óbito se for pedida em até **180 dias** pelos filhos menores de 16 anos ou em até **90 dias** pelos demais dependentes. Depois disso, começa na [[der]] (art. 74 da Lei 8.213/1991)."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Roberto faleceu aposentado, recebendo R$ 3.000,00, e deixou a esposa de 50 anos e um filho de 12. A pensão é de 50% + 10% × 2 = 70%, ou R$ 2.100,00. Para a esposa, é vitalícia; para o filho, vai até os 21 anos. Quando o filho completar 21, a cota dele não passa para a mãe, e a pensão cai para 60%."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O falecido que tinha perdido a qualidade de segurado deixa pensão?",
+      "resposta": "Só se, antes de perder a qualidade, já tivesse cumprido os requisitos de alguma aposentadoria."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 23"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 74 a 79"
+    },
+    {
+      "fonte": "lei13135"
+    },
+    {
+      "fonte": "inss-pensao"
+    }
+  ],
+  "relacionados": [
+    "dependentes",
+    "qualidade-de-segurado",
+    "der",
+    "rmi"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": []
+}

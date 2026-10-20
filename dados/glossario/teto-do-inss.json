@@ -1,0 +1,61 @@
+{
+  "termo": "Teto do INSS",
+  "titulo": "Teto do INSS: limite do salário de contribuição e dos benefícios",
+  "resumo": "O que é o teto do INSS, o valor em 2026, como ele limita contribuições e benefícios e quando um valor acima do teto é permitido.",
+  "categoria": "contribuicao",
+  "definicao": "O teto do INSS é o **limite máximo do salário de contribuição** e, ao mesmo tempo, o valor máximo pago pela maioria dos benefícios do Regime Geral. Ele é reajustado todo ano por portaria interministerial, no mesmo índice dos benefícios acima do mínimo.",
+  "secoes": [
+    {
+      "titulo": "Valor em 2026",
+      "texto": [
+        "Em 2026 o teto é de **R$ 8.475,55**. O salário mínimo, que é o piso, é de **R$ 1.621,00**. Os valores de anos anteriores ficam na tabela usada pelo INSS para corrigir os salários de contribuição."
+      ]
+    },
+    {
+      "titulo": "Como o teto funciona",
+      "texto": [
+        [
+          "Quem ganha acima do teto contribui só até ele, e o valor acima não entra no cálculo do benefício.",
+          "Quem tem dois ou mais empregos soma as remunerações; a contribuição total respeita o teto.",
+          "A média do [[salario-de-beneficio]] e a [[rmi]] também ficam limitadas ao teto vigente na data do início do benefício."
+        ]
+      ]
+    },
+    {
+      "titulo": "Exceções",
+      "texto": [
+        "O acréscimo de 25% da aposentadoria por incapacidade permanente para quem precisa de ajuda permanente de outra pessoa pode superar o teto (art. 45 da Lei 8.213/1991). O salário-maternidade da empregada corresponde à remuneração integral, sujeito ao limite do subsídio dos ministros do STF."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Ricardo tem dois empregos em 2026: R$ 6.000,00 em um e R$ 4.000,00 no outro. A soma, R$ 10.000,00, passa do teto. A contribuição dele é calculada sobre R$ 8.475,55, e cada empregador recolhe proporcionalmente."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Contribuir sempre pelo teto garante aposentadoria no teto?",
+      "resposta": "Não necessariamente. Depois da EC 103/2019, o valor é 60% da média mais 2% por ano acima de 20 anos (homens) ou 15 anos (mulheres), salvo em algumas regras de transição. Para receber 100% da média, são necessários 40 anos de contribuição (homem) ou 35 (mulher)."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 28, § 5º"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29, § 2º, e 33"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26"
+    }
+  ],
+  "relacionados": [
+    "salario-de-contribuicao",
+    "aliquotas-de-contribuicao",
+    "rmi"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

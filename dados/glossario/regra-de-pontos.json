@@ -1,0 +1,61 @@
+{
+  "termo": "Regra de pontos",
+  "titulo": "Regra de pontos da aposentadoria: tabela ano a ano e como somar",
+  "resumo": "Como funciona a regra de pontos da EC 103/2019, a tabela de pontos exigidos de 2019 a 2033 para mulher e homem, como somar idade e tempo e o valor.",
+  "categoria": "beneficios",
+  "definicao": "A regra de pontos (art. 15 da [[fonte:ec103|EC 103/2019]]) permite a aposentadoria quando a **soma da idade com o tempo de contribuição** atinge a pontuação do ano, com tempo mínimo de **30 anos (mulher)** e **35 anos (homem)**.",
+  "secoes": [
+    {
+      "titulo": "Pontos exigidos",
+      "texto": [
+        "Em 2019 eram 86 pontos (mulher) e 96 (homem). A exigência sobe **1 ponto por ano** a partir de 2020, até 100 para mulheres (em 2033) e 105 para homens (em 2028):",
+        [
+          "**2025:** 92 (mulher) e 102 (homem).",
+          "**2026:** 93 e 103.",
+          "**2027:** 94 e 104.",
+          "**2028:** 95 e 105 (limite dos homens).",
+          "**2029 a 2033:** a exigência das mulheres sobe de 96 para 100."
+        ]
+      ]
+    },
+    {
+      "titulo": "Como somar",
+      "texto": [
+        "Idade e tempo de contribuição são somados com as frações em dias, e não em anos completos. Quem tem 58 anos e 6 meses e 34 anos e 6 meses de contribuição soma 93 pontos.",
+        "O professor da educação básica tem exigência 5 pontos menor e tempo mínimo de 25 anos (mulher) e 30 (homem)."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "A renda é de 60% da média + 2% por ano de contribuição acima de 15 anos (mulher) ou 20 anos (homem). Não há fator previdenciário."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Carlos tem 63 anos e 40 anos de contribuição em 2026: soma 103 pontos, exatamente o exigido. A renda dele é de 60% + 2% × 20 = 100% da média."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Os pontos levam em conta o tempo especial convertido?",
+      "resposta": "Sim, o tempo especial convertido até 13/11/2019 entra no tempo de contribuição e, portanto, nos pontos."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 15"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "relacionados": [
+    "regras-de-transicao",
+    "idade-minima-progressiva",
+    "tempo-de-contribuicao",
+    "rmi"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

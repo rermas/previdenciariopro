@@ -1,0 +1,67 @@
+{
+  "termo": "CTC e contagem recíproca",
+  "titulo": "CTC e contagem recíproca: levar o tempo do INSS para o regime próprio",
+  "resumo": "O que é a Certidão de Tempo de Contribuição (CTC), como funciona a contagem recíproca entre INSS e regime próprio e quais períodos não entram.",
+  "categoria": "tempo",
+  "definicao": "A contagem recíproca permite somar o tempo de contribuição do **INSS (Regime Geral)** com o de um **regime próprio de servidores**, ou vice-versa, para fins de aposentadoria (art. 201, § 9º, da Constituição). O documento que leva o tempo de um regime para o outro é a **Certidão de Tempo de Contribuição (CTC)**.",
+  "secoes": [
+    {
+      "titulo": "Regras principais",
+      "texto": [
+        "Pelos arts. 94 a 96 da [[fonte:lei8213|Lei 8.213/1991]]:",
+        [
+          "O mesmo período não pode ser usado nos dois regimes, nem contar em dobro.",
+          "O tempo usado para uma aposentadoria em um regime não pode ser certificado para outro.",
+          "O tempo concomitante é certificado uma vez só.",
+          "Períodos de contribuinte individual e facultativo com 5% ou 11% só entram com complementação para 20%.",
+          "Período de atividade sem contribuição, como o rural a partir de 11/1991, precisa ser indenizado."
+        ]
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        "A CTC é solicitada pelo [[fonte:meuinss|Meu INSS]], informando o órgão de destino. O INSS analisa o CNIS e emite a certidão com os períodos e as remunerações. Vale conferir o extrato antes, porque vínculos com pendência não são certificados até o tratamento."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Helena trabalhou 8 anos com carteira antes de passar em um concurso estadual. Ela pediu a CTC ao INSS e averbou esses 8 anos no regime próprio do estado, somando-os ao tempo de servidora para a aposentadoria."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Depois de levar o tempo para o regime próprio, posso usar no INSS?",
+      "resposta": "Não. Uma vez certificado e usado em outro regime, o período não volta a contar no INSS, salvo cancelamento da CTC antes do uso."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 9º"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 94 a 96"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 125 a 135"
+    },
+    {
+      "fonte": "inss-ctc"
+    }
+  ],
+  "relacionados": [
+    "tempo-de-contribuicao",
+    "plano-simplificado",
+    "indenizacao-de-periodo",
+    "atividades-concomitantes"
+  ],
+  "artigos": [
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "indicadores": [
+    "PCTC-NTR",
+    "PRPPS"
+  ]
+}

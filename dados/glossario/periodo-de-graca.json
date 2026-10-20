@@ -1,0 +1,70 @@
+{
+  "termo": "Período de graça",
+  "titulo": "Período de graça do INSS: prazos de 3 a 36 meses e como contar",
+  "resumo": "Quanto tempo dura o período de graça do INSS, as prorrogações por 120 contribuições e desemprego, e como contar o prazo até a perda da qualidade.",
+  "categoria": "protecao",
+  "definicao": "Período de graça é o tempo em que a pessoa **continua segurada sem contribuir**. Ele começa quando as contribuições ou a atividade param e garante os benefícios previdenciários como se ela ainda estivesse contribuindo.",
+  "secoes": [
+    {
+      "titulo": "Prazos do art. 15 da Lei 8.213/1991",
+      "texto": [
+        [
+          "**Sem limite:** enquanto recebe benefício, exceto auxílio-acidente.",
+          "**12 meses:** após parar de contribuir ou deixar a atividade (segurado obrigatório).",
+          "**12 meses:** após cessar a segregação por doença de segregação compulsória.",
+          "**12 meses:** após o livramento, para o segurado preso.",
+          "**3 meses:** após o licenciamento, para quem prestou serviço militar.",
+          "**6 meses:** após a última contribuição, para o [[segurado-facultativo]]."
+        ]
+      ]
+    },
+    {
+      "titulo": "Prorrogações",
+      "texto": [
+        "O prazo de 12 meses é acrescido de **mais 12 meses** se o segurado tiver pago mais de **120 contribuições** sem perder a qualidade (§ 1º) e de **mais 12 meses** se comprovar **desemprego involuntário** (§ 2º), por registro no Ministério do Trabalho, seguro-desemprego ou outra prova aceita. Somadas, as prorrogações podem chegar a 36 meses.",
+        "Depois do período de graça ainda há um intervalo até a perda da qualidade: ela só ocorre no dia 16 do segundo mês seguinte (Decreto 3.048/1999, art. 14)."
+      ]
+    },
+    {
+      "titulo": "O que conta durante o período de graça",
+      "texto": [
+        "O período de graça mantém a proteção, mas **não conta como tempo de contribuição nem como carência**. Quem quer que o período conte precisa contribuir, como facultativo, se não estiver trabalhando."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Marcos tem 150 contribuições sem interrupção que tenha feito perder a qualidade e foi demitido sem justa causa em 01/2025, recebendo seguro-desemprego. O período de graça dele é 12 + 12 (mais de 120 contribuições) + 12 (desemprego) = **36 meses**, até 01/2028. A qualidade é perdida em 16/03/2028."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O período de graça conta para aposentadoria?",
+      "resposta": "Não conta como tempo nem como carência. Ele só mantém a proteção para benefícios como auxílio por incapacidade e pensão por morte."
+    },
+    {
+      "pergunta": "A prorrogação de 120 contribuições vale para sempre?",
+      "resposta": "O INSS exige que as 120 contribuições sejam sem perda da qualidade entre elas. Depois de adquirida, a jurisprudência tende a reconhecer o direito à prorrogação em períodos posteriores, mas vale conferir o caso concreto."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 15"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 13 e 14"
+    },
+    {
+      "fonte": "inss-qualidade"
+    }
+  ],
+  "relacionados": [
+    "qualidade-de-segurado",
+    "carencia",
+    "segurado-facultativo"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": []
+}

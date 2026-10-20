@@ -1,0 +1,63 @@
+{
+  "termo": "PPP (Perfil Profissiográfico Previdenciário)",
+  "titulo": "PPP: o que é o Perfil Profissiográfico Previdenciário e como conferir",
+  "resumo": "O que é o PPP, quem emite, o que deve constar, como conferir se ele prova atividade especial e o que fazer se a empresa fechou ou se recusa a entregar.",
+  "categoria": "tempo",
+  "definicao": "O PPP é o **documento histórico-laboral** que descreve as atividades do trabalhador, os agentes nocivos a que esteve exposto, a intensidade da exposição e os responsáveis pelos registros ambientais. É a principal prova de [[atividade-especial]] a partir de 2004.",
+  "secoes": [
+    {
+      "titulo": "Quem emite e quando",
+      "texto": [
+        "A empresa é obrigada a elaborar e manter o PPP atualizado e a entregar uma cópia ao trabalhador na rescisão (art. 58, § 4º, da [[fonte:lei8213|Lei 8.213/1991]]). Desde 2023, o PPP passou a ser emitido em formato eletrônico a partir das informações do eSocial; os períodos anteriores continuam no formulário em papel."
+      ]
+    },
+    {
+      "titulo": "O que conferir",
+      "texto": [
+        [
+          "Datas e cargos batem com a carteira de trabalho e o CNIS.",
+          "Os agentes nocivos estão descritos com a intensidade ou concentração e a técnica de medição.",
+          "Há responsável técnico pelos registros ambientais (engenheiro ou médico do trabalho) para cada período.",
+          "O campo de EPI eficaz está preenchido; para o ruído, o EPI não afasta o direito.",
+          "Assinatura do representante da empresa e carimbo ou identificação."
+        ]
+      ]
+    },
+    {
+      "titulo": "Empresa fechada ou recusa",
+      "texto": [
+        "Se a empresa encerrou as atividades, é possível usar laudos de empresa similar, laudos de processos trabalhistas ou perícia judicial. Se ela se recusa a entregar, cabe reclamação trabalhista para obrigar a emissão."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Cristina trabalhou como auxiliar de enfermagem em um hospital de 2005 a 2020. O PPP registra exposição a agentes biológicos (vírus e bactérias) em contato com pacientes, com responsável técnico em todo o período. Isso permite pedir o reconhecimento do tempo especial até 13/11/2019."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O PPP precisa ser acompanhado do laudo?",
+      "resposta": "Em regra, não: o PPP regular substitui o laudo. O INSS pode pedir o LTCAT se houver dúvida ou inconsistência."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 58, §§ 1º a 4º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 68"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "seção da aposentadoria especial"
+    }
+  ],
+  "relacionados": [
+    "atividade-especial",
+    "tempo-de-contribuicao",
+    "exigencia"
+  ],
+  "artigos": [],
+  "indicadores": []
+}

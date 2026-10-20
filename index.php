@@ -1,7 +1,7 @@
 <?php
 /*
  * Análise CNIS: PHP puro, sem banco de dados, com um único roteador.
- * Rotas: /  /blog/  /blog/{slug}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /privacidade/  /analise-cnis/  /sitemap.xml
+ * Rotas: /  /blog/  /blog/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /privacidade/  /analise-cnis/  /sitemap.xml
  */
 
 // ---------- Configuração ----------
@@ -256,6 +256,77 @@ function grupo_ind(string $g): string {
 }
 function curto_ind(array $i): string { return $i['curto'] ?? explode(' / ', $i['descricao'])[0] . '.'; }
 
+// Glossário: um arquivo por termo em dados/glossario/{slug}.json e as fontes oficiais em dados/glossario/_fontes.json.
+// Nos textos: **negrito**, [[slug]] ou [[slug|texto]] (outro termo), [[post:slug|texto]] (artigo, vira texto se ainda não publicado),
+// [[ind:CÓDIGO]] (indicador) e [[fonte:chave|texto]] (link oficial). Teste: node tests/glossario.test.js
+const GLOSSARIO_REVISADO = '2026-10-19';
+const CAT_GLOSSARIO = [
+    'segurados' => 'Segurados e filiação', 'protecao' => 'Qualidade de segurado e carência', 'contribuicao' => 'Contribuições',
+    'tempo' => 'Tempo de contribuição', 'calculo' => 'Cálculo do benefício', 'beneficios' => 'Aposentadorias e benefícios',
+    'processo' => 'Datas e processo no INSS', 'cnis' => 'CNIS e extrato',
+];
+function glossario(): array {
+    static $l = null;
+    if ($l !== null) return $l;
+    $l = [];
+    foreach (glob(__DIR__ . '/dados/glossario/*.json') ?: [] as $f) {
+        $slug = basename($f, '.json');
+        if ($slug[0] === '_' || !preg_match('/^[a-z0-9-]+$/', $slug)) continue;
+        $t = json_decode((string) file_get_contents($f), true);
+        if (is_array($t)) $l[$slug] = $t + ['slug' => $slug];
+    }
+    uasort($l, fn($a, $b) => strcmp(sem_acento($a['termo']), sem_acento($b['termo'])));
+    return $l;
+}
+function fontes_glossario(): array {
+    static $f = null;
+    return $f ??= json_decode((string) @file_get_contents(__DIR__ . '/dados/glossario/_fontes.json'), true) ?: [];
+}
+function sem_acento(string $s): string {
+    return strtolower(strtr($s, ['á' => 'a', 'à' => 'a', 'â' => 'a', 'ã' => 'a', 'é' => 'e', 'ê' => 'e', 'í' => 'i', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ú' => 'u', 'ç' => 'c', 'Á' => 'a', 'É' => 'e', 'Í' => 'i', 'Ó' => 'o', 'Ú' => 'u']));
+}
+function post_publicado(string $slug): ?array { foreach (publicados() as $p) if ($p['slug'] === $slug) return $p; return null; }
+function link_externo(string $url, string $html): string { return '<a href="' . e($url) . '" target="_blank" rel="noopener noreferrer">' . $html . '</a>'; }
+function nome_termo(array $t): string {
+    $n = preg_replace('/ \(.*\)$/', '', $t['termo']);
+    return preg_match('/^\p{Lu}\p{Ll}/u', $n) ? mb_strtolower(mb_substr($n, 0, 1)) . mb_substr($n, 1) : $n;
+}
+// Converte a marcação dos textos do glossário em HTML. O texto é escapado antes; só a marcação vira tag.
+function gl_html(string $s): string {
+    $h = preg_replace('/\*\*(.+?)\*\*/u', '<strong>$1</strong>', e($s));
+    return preg_replace_callback('/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/u', function ($m) {
+        [$tipo, $alvo] = strpos($m[1], ':') !== false ? explode(':', $m[1], 2) : ['termo', $m[1]];
+        $txt = $m[2] ?? null;
+        if ($tipo === 'termo') {
+            $G = glossario();
+            if (!isset($G[$alvo])) return $txt ?? $alvo;
+            return '<a href="' . e(u('/glossario/' . $alvo . '/')) . '">' . ($txt ?? e(nome_termo($G[$alvo]))) . '</a>';
+        }
+        if ($tipo === 'post') return post_publicado($alvo) ? '<a href="' . e(u('/blog/' . $alvo . '/')) . '">' . ($txt ?? $alvo) . '</a>' : ($txt ?? '');
+        if ($tipo === 'ind') return '<a href="' . e(u('/indicadores/' . slug_ind(html_entity_decode($alvo)) . '/')) . '"><code class="cod">' . $alvo . '</code></a>';
+        if ($tipo === 'fonte') { $F = fontes_glossario()[$alvo] ?? null; return $F ? link_externo($F[1], $txt ?? e($F[0])) : ($txt ?? ''); }
+        return $txt ?? '';
+    }, $h);
+}
+function gl_blocos(array $blocos): string {
+    $o = '';
+    foreach ($blocos as $b) {
+        $o .= is_array($b) ? '<ul>' . implode('', array_map(fn($i) => '<li>' . gl_html($i) . '</li>', $b)) . '</ul>' : '<p>' . gl_html($b) . '</p>';
+    }
+    return $o;
+}
+// Termos do glossário que citam um artigo ou um indicador, para o link de volta.
+function termos_que_citam(string $campo, string $valor): array {
+    return array_filter(glossario(), fn($t) => in_array($valor, $t[$campo] ?? [], true));
+}
+function lista_termos(array $termos): void {
+    echo '<ul class="lista-gl">';
+    foreach ($termos as $slug => $t) {
+        echo '<li><a href="' . e(u('/glossario/' . $slug . '/')) . '">' . e($t['termo']) . '</a> <span>' . e($t['resumo']) . '</span></li>';
+    }
+    echo '</ul>';
+}
+
 // ---------- Funções ----------
 function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 function data_br(string $iso): string { return implode('/', array_reverse(explode('-', $iso))); }
@@ -324,9 +395,10 @@ function topo(string $titulo, string $desc, string $caminho, array $o = []): voi
     <nav class="menu" aria-label="Principal">
       <?php if (FERRAMENTA_PUBLICA): ?><a href="<?= e(u('/analise-cnis/')) ?>">Analisar CNIS</a><?php endif; ?>
       <a href="<?= e(u('/blog/')) ?>">Blog</a>
+      <a href="<?= e(u('/glossario/')) ?>">Glossário</a>
       <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a>
       <a href="<?= e(u('/legislacao/')) ?>">Legislação</a>
-      <a href="<?= e(u('/privacidade/')) ?>">Privacidade</a>
+      <a class="menu-extra" href="<?= e(u('/privacidade/')) ?>">Privacidade</a>
     </nav>
   </div>
 </header>
@@ -451,6 +523,14 @@ if ($rota === '/') {
   </section>
 
   <section class="faixa">
+    <h2>Glossário previdenciário</h2>
+    <div class="texto">
+      <p>Carência, qualidade de segurado, período de graça, DER, RMI, fator previdenciário, regras de transição e outros <?= count(glossario()) ?> termos explicados com a base legal e exemplos.</p>
+      <a class="mais" href="<?= e(u('/glossario/')) ?>">Ver o glossário</a>
+    </div>
+  </section>
+
+  <section class="faixa">
     <h2>Indicadores do CNIS</h2>
     <div class="texto">
       <p>PSC-MEN-SM-EC103, IREM-INDPEND, PEXT e outros códigos que aparecem no extrato, com o que cada um significa e o que conferir.</p>
@@ -512,6 +592,10 @@ if ($rota === '/') {
     <h1><?= e($post['titulo']) ?></h1>
     <p class="meta">Publicado em <?= e(data_br($post['data'])) ?><?php if (!empty($post['revisado']) && $post['revisado'] !== $post['data']): ?>. Revisado em <?= e(data_br($post['revisado'])) ?>.<?php endif; ?></p>
     <?php readfile($arquivo); ?>
+    <?php $citam = termos_que_citam('artigos', $post['slug']); if ($citam): ?>
+      <h2>Termos do glossário neste assunto</h2>
+      <p class="termos-gl"><?php foreach ($citam as $s => $t): ?><a href="<?= e(u('/glossario/' . $s . '/')) ?>"><?= e($t['termo']) ?></a><?php endforeach; ?></p>
+    <?php endif; ?>
     <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
     <?php anuncio(); ?>
     <a class="voltar" href="<?= e(u('/blog/')) ?>">Todos os artigos</a>
@@ -607,6 +691,10 @@ if ($rota === '/') {
     <?php endif; ?>
     <h2>Base normativa</h2>
     <p><?= !empty($i['base']) ? e($i['base']) . ' ' : '' ?>Portaria DIRBEN/INSS 990/2022, <a href="https://portalin.inss.gov.br/assets/anexos/pt990/AnexoV.pdf" target="_blank" rel="noopener noreferrer">Anexo V</a> (relação dos indicadores do CNIS). Veja os links oficiais em <a href="<?= e(u('/legislacao/')) ?>">Legislação</a>; os textos mudam, então confira a versão vigente.</p>
+    <?php $citam = termos_que_citam('indicadores', $cod); if ($citam): ?>
+      <h2>No glossário</h2>
+      <p class="termos-gl"><?php foreach ($citam as $s => $t): ?><a href="<?= e(u('/glossario/' . $s . '/')) ?>"><?= e($t['termo']) ?></a><?php endforeach; ?></p>
+    <?php endif; ?>
     <?php if ($parecidos): ?>
       <h2>Com o mesmo efeito</h2>
       <ul class="lista-indic">
@@ -618,6 +706,109 @@ if ($rota === '/') {
     <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
     <?php anuncio(); ?>
     <a class="voltar" href="<?= e(u('/indicadores/')) ?>">Todos os indicadores</a>
+  </article>
+</main>
+<?php
+    rodape();
+
+} elseif ($rota === '/glossario') {
+    $G = glossario();
+    $porCat = [];
+    foreach ($G as $slug => $t) $porCat[$t['categoria']][$slug] = $t;
+    $desc = 'Glossário previdenciário com ' . count($G) . ' termos do INSS explicados: carência, qualidade de segurado, período de graça, DER, RMI, fator previdenciário, regras de transição e mais.';
+    topo('Glossário previdenciário: termos do INSS explicados | ' . SITE_NOME, $desc, '/glossario/', [
+        'jsonld' => [
+            '@context' => 'https://schema.org', '@type' => 'DefinedTermSet', '@id' => SITE_URL . '/glossario/',
+            'name' => 'Glossário previdenciário', 'description' => $desc, 'url' => SITE_URL . '/glossario/',
+            'hasDefinedTerm' => array_values(array_map(fn($s, $t) => ['@type' => 'DefinedTerm', 'name' => $t['termo'], 'url' => SITE_URL . '/glossario/' . $s . '/'], array_keys($G), $G)),
+        ],
+    ]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <h1>Glossário previdenciário</h1>
+  <p class="lead texto">Os termos que aparecem no extrato do CNIS, nas cartas do INSS e nas regras de aposentadoria, explicados com a base legal, um exemplo e o que conferir.</p>
+  <p class="texto">Cada termo traz a definição em poucas linhas, os detalhes que mudam o direito, um exemplo numérico e os links para a lei no Planalto e para as páginas do INSS no gov.br. Os termos se ligam entre si, aos <a href="<?= e(u('/indicadores/')) ?>">indicadores do CNIS</a> e aos <a href="<?= e(u('/blog/')) ?>">guias do blog</a>.</p>
+  <nav class="sumario-indic" aria-label="Temas do glossário">
+    <?php foreach (CAT_GLOSSARIO as $c => $rot): if (empty($porCat[$c])) continue; ?>
+      <a href="#t-<?= e($c) ?>"><?= e($rot) ?> (<?= count($porCat[$c]) ?>)</a>
+    <?php endforeach; ?>
+  </nav>
+  <?php foreach (CAT_GLOSSARIO as $c => $rot): if (empty($porCat[$c])) continue; ?>
+    <h2 class="grupo-indic" id="t-<?= e($c) ?>"><?= e($rot) ?></h2>
+    <?php lista_termos($porCat[$c]); ?>
+  <?php endforeach; ?>
+  <p class="meta texto">Textos revisados em <?= e(data_br(GLOSSARIO_REVISADO)) ?> com base na Constituição, na EC 103/2019, nas Leis 8.212/91 e 8.213/91, no Decreto 3.048/99 e nas normas do INSS. Valores de 2026: salário mínimo de R$ 1.621,00 e teto de R$ 8.475,55.</p>
+</main>
+<?php
+    rodape();
+
+} elseif (preg_match('#^/glossario/([a-z0-9-]+)$#', $rota, $m) && isset(glossario()[$m[1]])) {
+    $G = glossario();
+    $slug = $m[1];
+    $t = $G[$slug];
+    $caminho = '/glossario/' . $slug . '/';
+    $rev = $t['revisado'] ?? GLOSSARIO_REVISADO;
+    $artigos = array_filter(array_map('post_publicado', $t['artigos'] ?? []));
+    $faq = $t['perguntas'] ?? [];
+    topo($t['titulo'] . ' | ' . SITE_NOME, $t['resumo'], $caminho, [
+        'artigo' => true,
+        'jsonld' => ['@context' => 'https://schema.org', '@graph' => [
+            ['@type' => 'Article', 'headline' => $t['titulo'], 'description' => $t['resumo'],
+             'datePublished' => $t['publicado'] ?? GLOSSARIO_REVISADO, 'dateModified' => $rev,
+             'author' => ['@type' => 'Organization', 'name' => SITE_NOME], 'mainEntityOfPage' => SITE_URL . $caminho,
+             'about' => ['@id' => SITE_URL . $caminho . '#termo']],
+            ['@type' => 'DefinedTerm', '@id' => SITE_URL . $caminho . '#termo', 'name' => $t['termo'],
+             'description' => strip_tags(gl_html($t['definicao'])), 'url' => SITE_URL . $caminho,
+             'inDefinedTermSet' => SITE_URL . '/glossario/'],
+            ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Glossário', 'item' => SITE_URL . '/glossario/'],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => $t['termo'], 'item' => SITE_URL . $caminho]]],
+        ]],
+    ]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <article class="artigo">
+    <p class="migalha"><a href="<?= e(u('/glossario/')) ?>">Glossário</a> › <a href="<?= e(u('/glossario/#t-' . $t['categoria'])) ?>"><?= e(CAT_GLOSSARIO[$t['categoria']] ?? '') ?></a></p>
+    <h1><?= e($t['titulo']) ?></h1>
+    <p class="meta">Revisado em <?= e(data_br($rev)) ?>.</p>
+    <p class="oficial definicao"><?= gl_html($t['definicao']) ?></p>
+    <?php foreach ($t['secoes'] as $s): ?>
+      <h2><?= e($s['titulo']) ?></h2>
+      <?= gl_blocos($s['texto']) ?>
+    <?php endforeach; ?>
+    <?php if (!empty($t['exemplo'])): ?>
+      <div class="exemplo"><h2>Exemplo</h2><?= gl_blocos($t['exemplo']) ?><p class="dica">Exemplo fictício, só para ilustrar a regra.</p></div>
+    <?php endif; ?>
+    <?php if ($faq): ?>
+      <h2>Perguntas frequentes</h2>
+      <?php foreach ($faq as $q): ?><h3 class="pergunta"><?= e($q['pergunta']) ?></h3><p><?= gl_html($q['resposta']) ?></p><?php endforeach; ?>
+    <?php endif; ?>
+    <h2>Fundamento legal e fontes oficiais</h2>
+    <ul class="fontes-gl">
+      <?php foreach ($t['fontes'] as $f): $F = fontes_glossario()[$f['fonte']] ?? null; if (!$F) continue; ?>
+        <li><?= link_externo($F[1], e($F[0])) ?><?= !empty($f['dispositivo']) ? ', ' . e($f['dispositivo']) : '' ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <p class="dica">Os links levam aos textos oficiais no Planalto e no gov.br. As normas mudam: confira sempre a versão vigente.</p>
+    <?php if ($artigos): ?>
+      <h2>Leia também no blog</h2>
+      <ul><?php foreach ($artigos as $p): ?><li><a href="<?= e(u('/blog/' . $p['slug'] . '/')) ?>"><?= e($p['titulo']) ?></a></li><?php endforeach; ?></ul>
+    <?php endif; ?>
+    <?php if (!empty($t['indicadores'])): $IND = indicadores(); ?>
+      <h2>Indicadores do CNIS relacionados</h2>
+      <ul class="lista-indic">
+        <?php foreach ($t['indicadores'] as $k): if (!isset($IND[$k])) continue; ?>
+          <li><a href="<?= e(u('/indicadores/' . slug_ind($k) . '/')) ?>"><code class="cod"><?= e($k) ?></code></a> <span><?= e(curto_ind($IND[$k])) ?></span></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
+    <?php $rel = array_intersect_key($G, array_flip($t['relacionados'] ?? [])); if ($rel): ?>
+      <h2>Termos relacionados</h2>
+      <?php lista_termos($rel); ?>
+    <?php endif; ?>
+    <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
+    <?php anuncio(); ?>
+    <a class="voltar" href="<?= e(u('/glossario/')) ?>">Todos os termos do glossário</a>
   </article>
 </main>
 <?php
@@ -733,7 +924,8 @@ if ($rota === '/') {
 
 } elseif ($rota === '/sitemap.xml') {
     header('Content-Type: application/xml; charset=utf-8');
-    $urls = [['/', null], ['/blog/', null], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', null], ['/privacidade/', null]];
+    $urls = [['/', null], ['/blog/', null], ['/glossario/', GLOSSARIO_REVISADO], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', null], ['/privacidade/', null]];
+    foreach (glossario() as $s => $t) $urls[] = ['/glossario/' . $s . '/', $t['revisado'] ?? GLOSSARIO_REVISADO];
     foreach (array_keys(indicadores()) as $k) $urls[] = ['/indicadores/' . slug_ind($k) . '/', INDICADORES_REVISADOS];
     if (FERRAMENTA_PUBLICA) $urls[] = ['/analise-cnis/', null];
     foreach (publicados() as $p) $urls[] = ['/blog/' . $p['slug'] . '/', $p['revisado'] ?? $p['data']];

@@ -1,0 +1,74 @@
+{
+  "termo": "Atualização do CNIS",
+  "titulo": "Atualização do CNIS: como incluir ou corrigir vínculos e salários",
+  "resumo": "Como pedir a atualização do CNIS para incluir vínculo, corrigir datas e remunerações ou tratar pendências, quais documentos usar e onde fazer o pedido.",
+  "categoria": "cnis",
+  "definicao": "A atualização do CNIS é o pedido para **incluir, alterar ou excluir** vínculos, remunerações e contribuições do cadastro do segurado. O art. 29-A, § 2º, da [[fonte:lei8213|Lei 8.213/1991]] permite que o segurado peça a correção **a qualquer momento**, com documentos.",
+  "secoes": [
+    {
+      "titulo": "Quando pedir",
+      "texto": [
+        [
+          "Vínculo de emprego que não aparece no extrato.",
+          "Data de admissão ou de saída errada ou ausente.",
+          "Remunerações faltantes ou com valor diferente do recebido.",
+          "Pendências como [[ind:PEXT]], [[ind:PREM-EXT]] ou [[ind:PDIV-DADOS-GFIP]].",
+          "Recolhimentos com código ou NIT errado."
+        ]
+      ]
+    },
+    {
+      "titulo": "Onde e como",
+      "texto": [
+        "O pedido é feito pelo [[fonte:meuinss|Meu INSS]], no serviço de atualização de vínculos e remunerações, ou pela central 135. Para alguns casos, o INSS usa o [[fonte:inss-rac|formulário RAC]] (Requerimento de Atualização do CNIS)."
+      ]
+    },
+    {
+      "titulo": "Documentos que costumam ser aceitos",
+      "texto": [
+        "Carteira de trabalho, contrato de trabalho, ficha de registro de empregados, holerites, termo de rescisão, extrato do FGTS, declaração da empresa com base em documentos, sentença trabalhista com prova material e guias de recolhimento."
+      ]
+    }
+  ],
+  "exemplo": [
+    "O CNIS de Augusto não mostrava as remunerações de 2008 de um emprego. Ele pediu a atualização pelo Meu INSS com os holerites e a declaração da empresa. Depois do acerto, a média do benefício subiu."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Preciso esperar a aposentadoria para corrigir o CNIS?",
+      "resposta": "Não. Corrigir antes evita exigências e atrasos no pedido do benefício."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    },
+    {
+      "fonte": "inss-rac"
+    },
+    {
+      "fonte": "meuinss"
+    }
+  ],
+  "relacionados": [
+    "cnis",
+    "extemporaneidade",
+    "indicadores-do-cnis",
+    "exigencia"
+  ],
+  "artigos": [
+    "como-comprovar-remuneracoes-no-cnis",
+    "documentos-para-comprovar-vinculo-de-emprego",
+    "salarios-faltantes-no-cnis"
+  ],
+  "indicadores": [
+    "PEXT",
+    "PREM-EXT",
+    "PDIV-DADOS-GFIP"
+  ]
+}

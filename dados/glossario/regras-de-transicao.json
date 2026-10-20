@@ -1,0 +1,65 @@
+{
+  "termo": "Regras de transição",
+  "titulo": "Regras de transição da aposentadoria (EC 103/2019): todas em um lugar",
+  "resumo": "Resumo das regras de transição da Reforma da Previdência para quem era filiado até 13/11/2019: pontos, idade progressiva, pedágios de 50% e 100% e idade.",
+  "categoria": "beneficios",
+  "definicao": "As regras de transição da [[fonte:ec103|EC 103/2019]] valem para quem **já era filiado ao INSS até 13/11/2019** e ainda não tinha todos os requisitos para se aposentar. Elas suavizam a passagem para a regra permanente, com requisitos que mudam ano a ano.",
+  "secoes": [
+    {
+      "titulo": "As regras para o INSS",
+      "texto": [
+        [
+          "**[[regra-de-pontos|Pontos]] (art. 15):** idade + tempo de contribuição, que sobe um ponto por ano; 30 anos de contribuição (mulher) e 35 (homem).",
+          "**[[idade-minima-progressiva|Idade mínima progressiva]] (art. 16):** idade que sobe 6 meses por ano, com 30/35 anos de contribuição.",
+          "**[[pedagio|Pedágio de 50%]] (art. 17):** para quem estava a até 2 anos do tempo mínimo em 13/11/2019, sem idade mínima, com fator previdenciário.",
+          "**[[pedagio|Pedágio de 100%]] (art. 20):** 57 anos (mulher) e 60 (homem), 30/35 anos de contribuição e o dobro do tempo que faltava; 100% da média.",
+          "**Aposentadoria por idade (art. 18):** 62 anos (mulher, desde 2023) e 65 (homem), com 15 anos de contribuição.",
+          "**Aposentadoria especial (art. 21):** pontos de 66, 76 ou 86, conforme a atividade."
+        ]
+      ]
+    },
+    {
+      "titulo": "Professor e pessoa com deficiência",
+      "texto": [
+        "O professor da educação básica tem requisitos reduzidos em cinco anos nas regras de pontos, idade progressiva e pedágio de 100%. A aposentadoria da pessoa com deficiência continua regida pela [[fonte:lc142|LC 142/2013]], que a reforma não alterou."
+      ]
+    },
+    {
+      "titulo": "Qual escolher",
+      "texto": [
+        "O segurado pode usar a regra que preencher primeiro ou a que der o maior valor. É comum que uma pessoa cumpra duas ou mais regras em datas diferentes, com valores diferentes. Uma simulação com o CNIS completo é a forma segura de comparar."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Rosa, nascida em 1968, tinha 27 anos de contribuição em 13/11/2019 e continuou trabalhando. Em 2026 ela tem 58 anos e cerca de 34 anos de contribuição: soma 92 pontos (a exigência de 2026 é 93) e não tem a idade progressiva de 59,5 anos. Ela cumpre os pontos em 2027, quando terá 94 pontos e a exigência será de 94."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Quem começou a contribuir depois de 13/11/2019 pode usar as regras de transição?",
+      "resposta": "Não. Para quem se filiou depois, vale a [[aposentadoria-programada]] da regra permanente."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15 a 21"
+    },
+    {
+      "fonte": "lc142"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "relacionados": [
+    "regra-de-pontos",
+    "idade-minima-progressiva",
+    "pedagio",
+    "aposentadoria-programada"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": []
+}

@@ -1,0 +1,76 @@
+{
+  "termo": "Segurado especial",
+  "titulo": "Segurado especial: quem é, como comprova e quais benefícios tem",
+  "resumo": "Quem é segurado especial do INSS (pequeno produtor rural, pescador artesanal), como funciona o cadastro no CNIS e o que conta para a aposentadoria.",
+  "categoria": "segurados",
+  "definicao": "Segurado especial é o trabalhador rural que produz **em regime de economia familiar**, sem empregados permanentes, em área de até quatro módulos fiscais, além do pescador artesanal e do indígena reconhecido pela Funai. Ele contribui sobre a venda da produção, e não sobre um salário.",
+  "secoes": [
+    {
+      "titulo": "Quem se enquadra",
+      "texto": [
+        "O art. 11, VII, da [[fonte:lei8213|Lei 8.213/1991]] inclui o produtor (proprietário, parceiro, meeiro, arrendatário ou comodatário), o pescador artesanal e o cônjuge, companheiro e filhos maiores de 16 anos que trabalham com o grupo familiar. A atividade precisa ser indispensável à subsistência da família.",
+        "Algumas rendas não descaracterizam a condição, como benefício de pensão de até um salário mínimo, atividade artesanal com matéria-prima própria e exercício de mandato sindical, entre outras listadas na lei."
+      ]
+    },
+    {
+      "titulo": "Como comprova a atividade",
+      "texto": [
+        "O segurado especial **não precisa recolher mensalmente** para ter o período reconhecido: ele comprova o exercício da atividade rural. Desde a Lei 13.846/2019, a comprovação é feita pelo cadastro no CNIS (arts. 38-A e 38-B), atualizado anualmente, e pela autodeclaração ratificada por informações de bases do governo.",
+        "Enquanto o cadastro não estiver completo, documentos como notas de produtor, contratos de arrendamento, ITR, declaração de aptidão ao Pronaf e registros escolares ou de saúde servem de início de prova."
+      ]
+    },
+    {
+      "titulo": "O que conta e para quê",
+      "texto": [
+        [
+          "Conta para a **aposentadoria por idade rural**, com redução de cinco anos na idade (55 mulher, 60 homem).",
+          "Conta para a aposentadoria por idade **híbrida**, somado a períodos urbanos.",
+          "Garante auxílio por incapacidade, salário-maternidade e pensão aos dependentes, no valor de um salário mínimo.",
+          "Não conta para a aposentadoria por tempo de contribuição a partir de 11/1991 sem [[indenizacao-de-periodo|indenização]]."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Antônio planta milho e feijão com a esposa e os filhos em um sítio de 10 hectares, sem empregados. A família está cadastrada no CNIS como segurada especial desde 2010. Aos 60 anos, com 15 anos de atividade rural comprovada, ele pode pedir a aposentadoria por idade rural no valor de um salário mínimo, sem ter pago guias mensais."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "O segurado especial pode contribuir como facultativo?",
+      "resposta": "Pode contribuir facultativamente para ter benefícios acima do mínimo e acesso à aposentadoria por tempo de contribuição, sem perder a condição de segurado especial."
+    },
+    {
+      "pergunta": "O que significa pendência PSE-NEG ou PSE-PEN no CNIS?",
+      "resposta": "São marcas do Anexo V indicando que o período de segurado especial foi negado ou está pendente de comprovação. Enquanto não houver tratamento, o período não conta para benefício."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11, VII, 38-A, 38-B, 39 e 48"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 25"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 9º, VII"
+    }
+  ],
+  "relacionados": [
+    "segurado-obrigatorio",
+    "carencia",
+    "indenizacao-de-periodo",
+    "cnis"
+  ],
+  "artigos": [
+    "segurado-especial-cadastro-autodeclaracao-e-prova-rural",
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": [
+    "PSE-NEG",
+    "PSE-PEN",
+    "PSE-POS"
+  ]
+}

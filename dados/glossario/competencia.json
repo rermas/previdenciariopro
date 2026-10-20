@@ -1,0 +1,59 @@
+{
+  "termo": "Competência",
+  "titulo": "Competência no CNIS: o que significa o mês de referência",
+  "resumo": "O que é competência no extrato do CNIS e nas guias do INSS, a diferença para a data de pagamento e por que ela importa para carência e cálculo.",
+  "categoria": "protecao",
+  "definicao": "Competência é o **mês de referência** da remuneração ou da contribuição, escrito no formato MM/AAAA. A competência 03/2025 é o salário de março de 2025, ainda que tenha sido pago ou recolhido em abril.",
+  "secoes": [
+    {
+      "titulo": "Competência e data de pagamento",
+      "texto": [
+        "No extrato do [[cnis]], as remunerações e os recolhimentos aparecem por competência. Nos recolhimentos de contribuinte individual e facultativo, o extrato também mostra a data de pagamento, que define se a contribuição foi paga em dia (até o dia 15 do mês seguinte) ou em atraso.",
+        "Um mês sem remuneração lançada dentro de um vínculo ativo é chamado de [[post:salarios-faltantes-no-cnis|salário faltante]] e pode reduzir o valor do benefício."
+      ]
+    },
+    {
+      "titulo": "Por que importa",
+      "texto": [
+        [
+          "A [[carencia]] é contada por competência: cada mês válido vale uma contribuição.",
+          "O [[periodo-basico-de-calculo]] usa os salários de contribuição de cada competência desde 07/1994.",
+          "Competências com indicador de pendência podem ficar fora da contagem até o tratamento."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Luiz pagou a guia da competência 05/2024 no dia 10/06/2024, dentro do prazo. No CNIS aparece \"05/2024\" com data de pagamento 10/06/2024. Se tivesse pago em 20/06/2024, a competência seria considerada em atraso."
+  ],
+  "perguntas": [
+    {
+      "pergunta": "Um mês com poucos dias de trabalho conta como uma competência inteira?",
+      "resposta": "Para a carência, sim, desde que a contribuição atinja o salário mínimo mensal ou seja complementada. Para o tempo de contribuição, contam só os dias trabalhados."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 30"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 216"
+    },
+    {
+      "fonte": "inss-extrato"
+    }
+  ],
+  "relacionados": [
+    "carencia",
+    "salario-de-contribuicao",
+    "cnis",
+    "contribuicao-em-atraso"
+  ],
+  "artigos": [
+    "salarios-faltantes-no-cnis",
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": []
+}
