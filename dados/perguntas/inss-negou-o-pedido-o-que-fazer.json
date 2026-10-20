@@ -1,0 +1,70 @@
+{
+  "pergunta": "O INSS negou meu pedido: o que fazer?",
+  "titulo": "O INSS negou meu benefício: recurso, novo pedido ou Justiça?",
+  "resumo": "O que fazer quando o INSS nega um benefício: entender o motivo, recorrer em 30 dias ao CRPS, fazer novo pedido ou ir ao Juizado Especial Federal.",
+  "categoria": "processo",
+  "resposta": "Leia o **motivo do indeferimento** na carta de decisão e escolha o caminho: **recurso** ao Conselho de Recursos da Previdência Social em **30 dias**, **novo pedido** com os documentos que faltaram, ou **ação na Justiça Federal**. O recurso e o novo pedido são feitos pelo Meu INSS.",
+  "secoes": [
+    {
+      "titulo": "1. Entenda o motivo",
+      "texto": [
+        "A carta de indeferimento informa por que o pedido foi negado: falta de carência, de qualidade de segurado, de tempo, de prova, incapacidade não constatada. O processo completo pode ser baixado no [[fonte:meuinss|Meu INSS]] e mostra quais períodos foram aceitos."
+      ]
+    },
+    {
+      "titulo": "2. Recurso administrativo",
+      "texto": [
+        "O prazo é de **30 dias** da ciência da decisão (Decreto 3.048/1999, art. 305). O recurso é gratuito, feito pelo Meu INSS, e julgado pelo [[fonte:crps|Conselho de Recursos da Previdência Social]]. Junte os documentos e explique por que a decisão está errada."
+      ]
+    },
+    {
+      "titulo": "3. Novo pedido",
+      "texto": [
+        "Se faltou documento, um novo requerimento com a prova pode ser mais rápido que o recurso. Atenção: a [[der]] passa a ser a data do novo pedido, o que pode reduzir os atrasados."
+      ]
+    },
+    {
+      "titulo": "4. Justiça Federal",
+      "texto": [
+        "Causas de até 60 salários mínimos vão ao Juizado Especial Federal, onde é possível entrar sem advogado na primeira instância ([[fonte:lei10259|Lei 10.259/2001]]). O STF exige pedido prévio ao INSS antes da ação (Tema 350), salvo exceções."
+      ]
+    }
+  ],
+  "exemplo": [
+    "O INSS negou a aposentadoria de Wilson por falta de 8 meses de carência, porque um vínculo de 2001 tinha PEXT. Ele recorreu em 20 dias, juntando a CTPS e o extrato do FGTS. O CRPS reconheceu o vínculo e mandou conceder o benefício desde a DER original."
+  ],
+  "fontes": [
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 303 a 305"
+    },
+    {
+      "fonte": "crps"
+    },
+    {
+      "fonte": "inss-recurso"
+    },
+    {
+      "fonte": "inss-nao-aprovado"
+    },
+    {
+      "fonte": "lei10259",
+      "dispositivo": "arts. 3º e 10"
+    }
+  ],
+  "termos": [
+    "der",
+    "exigencia",
+    "decadencia-e-prescricao"
+  ],
+  "artigos": [
+    "exigencia-do-inss-prazo-e-como-responder",
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "inss-demorando-para-analisar",
+    "revisao-da-aposentadoria-prazo",
+    "pext-no-cnis-perco-o-tempo"
+  ]
+}

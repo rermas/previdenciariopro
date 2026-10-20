@@ -1,0 +1,56 @@
+{
+  "pergunta": "Trabalhei na roça quando era jovem: conta para a aposentadoria?",
+  "titulo": "Trabalho na roça antes de 1991 conta para a aposentadoria?",
+  "resumo": "Como o tempo rural sem contribuição conta para a aposentadoria: períodos antes de 11/1991, idade mínima de 12 anos, provas aceitas e aposentadoria híbrida.",
+  "categoria": "aposentadoria",
+  "resposta": "Conta, com limites. O trabalho rural em regime de economia familiar **antes de 11/1991** conta como **tempo de contribuição sem pagar nada**, mas **não como carência** nas aposentadorias urbanas. A partir de 11/1991, só entra na aposentadoria por tempo de contribuição se for indenizado. É preciso **início de prova material**.",
+  "secoes": [
+    {
+      "titulo": "A partir de que idade",
+      "texto": [
+        "A Turma Nacional de Uniformização (Súmula 5) admite o reconhecimento do trabalho rural a partir dos **12 anos** de idade, para períodos anteriores à Lei 8.213/1991."
+      ]
+    },
+    {
+      "titulo": "Provas aceitas",
+      "texto": [
+        "Documentos em nome próprio ou dos pais: certidões de nascimento e casamento com a profissão \"lavrador\", notas de produtor, ITR, escritura ou contrato da terra, ficha de sindicato rural, histórico escolar de escola rural. Testemunhas completam, mas sozinhas não bastam (Súmula 149 do STJ e art. 55, § 3º, da [[fonte:lei8213|Lei 8.213/1991]])."
+      ]
+    },
+    {
+      "titulo": "Aposentadoria híbrida",
+      "texto": [
+        "Na aposentadoria por idade **híbrida**, o tempo rural, mesmo antigo e sem contribuição, soma-se ao urbano para a carência, com a idade urbana (62/65). O STJ firmou esse entendimento no Tema 1.007."
+      ]
+    }
+  ],
+  "exemplo": [
+    "João trabalhou com os pais na lavoura dos 12 aos 20 anos, de 1975 a 1983, e depois 25 anos na cidade. Com a certidão de casamento dos pais como lavradores e o histórico escolar rural, ele pode somar 8 anos ao tempo de contribuição e chegar mais cedo a uma regra de transição."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 48, § 3º, e 55, §§ 2º e 3º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 127"
+    }
+  ],
+  "termos": [
+    "segurado-especial",
+    "tempo-de-contribuicao",
+    "carencia",
+    "indenizacao-de-periodo"
+  ],
+  "artigos": [
+    "segurado-especial-cadastro-autodeclaracao-e-prova-rural",
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "tempo-de-servico-militar-conta",
+    "quanto-tempo-falta-para-me-aposentar",
+    "perdi-a-qualidade-posso-aposentar-por-idade"
+  ]
+}

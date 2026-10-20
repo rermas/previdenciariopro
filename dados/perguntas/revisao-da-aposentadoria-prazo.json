@@ -1,0 +1,61 @@
+{
+  "pergunta": "Posso pedir revisão da aposentadoria? Até quando?",
+  "titulo": "Revisão da aposentadoria: quando pedir e qual o prazo",
+  "resumo": "O prazo para pedir revisão da aposentadoria é de 10 anos e os atrasados se limitam a 5 anos. Veja os motivos comuns de revisão e como pedir no Meu INSS.",
+  "categoria": "processo",
+  "resposta": "Pode, em até **10 anos** contados do mês seguinte ao primeiro pagamento (decadência). Se a revisão for favorável, os valores atrasados ficam limitados aos **5 anos** anteriores ao pedido (prescrição). O pedido é feito pelo Meu INSS, com os documentos que comprovam o erro.",
+  "secoes": [
+    {
+      "titulo": "Motivos comuns",
+      "texto": [
+        [
+          "Vínculo ou período que não foi contado.",
+          "Salários de contribuição faltantes ou menores que os reais.",
+          "Tempo especial não reconhecido.",
+          "Regra de cálculo menos vantajosa que outra possível na mesma data (direito ao melhor benefício).",
+          "Erro na data de início ou no tempo considerado."
+        ]
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        "No [[fonte:meuinss|Meu INSS]], o serviço de revisão permite anexar os documentos. Antes, baixe o processo de concessão para ver o que foi considerado e compare com o seu CNIS."
+      ]
+    },
+    {
+      "titulo": "Prazos",
+      "texto": [
+        "A [[decadencia-e-prescricao|decadência]] de 10 anos está no art. 103 da [[fonte:lei8213|Lei 8.213/1991]]. Ela não se aplica a um benefício negado: nesse caso, um novo pedido pode ser feito a qualquer tempo (STF, ADI 6.096)."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Olga se aposentou em 2020 e percebeu em 2026 que o INSS não contou 3 anos de um vínculo com CTPS. Ela pede a revisão com a carteira. Se for aceita, o valor é recalculado e ela recebe as diferenças desde 2021."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 103 e 103-A"
+    },
+    {
+      "fonte": "meuinss"
+    }
+  ],
+  "termos": [
+    "decadencia-e-prescricao",
+    "rmi",
+    "salario-de-beneficio",
+    "direito-adquirido"
+  ],
+  "artigos": [
+    "como-comprovar-remuneracoes-no-cnis",
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "salario-faltando-no-cnis-reduz-aposentadoria",
+    "inss-negou-o-pedido-o-que-fazer",
+    "vinculo-nao-aparece-no-cnis"
+  ]
+}

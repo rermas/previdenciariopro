@@ -1,0 +1,65 @@
+{
+  "pergunta": "Virei servidor público: como uso o tempo que contribuí ao INSS?",
+  "titulo": "Virei servidor público: como levar o tempo do INSS para o RPPS",
+  "resumo": "Como o servidor público usa o tempo de contribuição do INSS no regime próprio: a Certidão de Tempo de Contribuição, o que entra e o que fica de fora.",
+  "categoria": "aposentadoria",
+  "resposta": "Pela **contagem recíproca**: peça ao INSS a **Certidão de Tempo de Contribuição (CTC)** pelo Meu INSS e apresente-a ao órgão de pessoal para averbar o tempo no regime próprio. O período certificado deixa de poder ser usado no INSS.",
+  "secoes": [
+    {
+      "titulo": "O que entra na CTC",
+      "texto": [
+        [
+          "Vínculos de emprego e contribuições de 20% de autônomo e facultativo.",
+          "Períodos de 11% (plano simplificado) e 5% (MEI ou baixa renda) só depois de complementados.",
+          "Tempo rural a partir de 11/1991 só se indenizado."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que fica de fora",
+      "texto": [
+        "Períodos concomitantes com o serviço público, que já contam no regime próprio, e tempo usado em outra aposentadoria. A conversão de tempo especial em comum na CTC tem regras próprias e costuma ser discutida; confira a situação antes de pedir."
+      ]
+    },
+    {
+      "titulo": "Antes de pedir",
+      "texto": [
+        "Confira o CNIS e resolva pendências: vínculos com indicadores que impedem o cômputo não são certificados. Depois de emitida, a CTC pode ser revista ou cancelada enquanto não tiver sido usada."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Paulo trabalhou 10 anos em empresa privada antes de passar em concurso municipal. Ele pediu a CTC, averbou os 10 anos no instituto de previdência do município e passou a somá-los ao tempo de servidor."
+  ],
+  "fontes": [
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 9º"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 94 a 96"
+    },
+    {
+      "fonte": "inss-ctc"
+    }
+  ],
+  "termos": [
+    "ctc-contagem-reciproca",
+    "plano-simplificado",
+    "indenizacao-de-periodo",
+    "atividades-concomitantes"
+  ],
+  "artigos": [
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "indicadores": [
+    "PCTC-NTR",
+    "PRPPS"
+  ],
+  "relacionadas": [
+    "tempo-de-servico-militar-conta",
+    "contribui-com-11-posso-aposentar-por-tempo",
+    "quanto-tempo-falta-para-me-aposentar"
+  ]
+}

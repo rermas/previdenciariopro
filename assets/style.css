@@ -365,3 +365,10 @@ p { margin: 0 0 1rem; }
 .termos-gl a { padding: 0.25rem 0.7rem; border: 1px solid var(--linha); border-radius: 999px; text-decoration: none; font-size: 0.93rem; background: var(--branco); }
 .termos-gl a:hover { border-color: var(--azul); }
 .exemplo .dica { background: none; padding: 0; border: 0; margin-top: -0.3rem; }
+
+/* Perguntas frequentes */
+.resposta { padding: 0.8rem 1.1rem; }
+.resposta p { margin: 0; font-size: 1.06rem; line-height: 1.65; }
+.resposta .resposta-rot { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--azul-texto, var(--azul)); margin-bottom: 0.35rem; }
+.faixa .lista-gl { margin-bottom: 1rem; }
+.rodape-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; }

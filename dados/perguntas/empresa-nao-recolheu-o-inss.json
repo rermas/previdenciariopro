@@ -1,0 +1,62 @@
+{
+  "pergunta": "A empresa não recolheu o INSS: perco o tempo?",
+  "titulo": "A empresa não recolheu o INSS: o empregado perde o tempo?",
+  "resumo": "O empregado não perde o tempo quando a empresa desconta e não recolhe o INSS. Veja o que diz a lei, como provar o vínculo e quando há problema.",
+  "categoria": "cnis",
+  "resposta": "Não. Para o **empregado**, o **doméstico** (desde 06/2015), o **avulso** e o **contribuinte individual que presta serviço a empresa** (desde 04/2003), a responsabilidade pelo recolhimento é do empregador ou da empresa. O período conta mesmo sem o pagamento, desde que o vínculo esteja no CNIS ou seja comprovado.",
+  "secoes": [
+    {
+      "titulo": "O que diz a lei",
+      "texto": [
+        "O art. 34, I, da [[fonte:lei8213|Lei 8.213/1991]] manda considerar os salários de contribuição **devidos**, ainda que não recolhidos. O art. 33, § 5º, da [[fonte:lei8212|Lei 8.212/1991]] presume que o desconto foi feito. A dívida é cobrada da empresa, não do trabalhador."
+      ]
+    },
+    {
+      "titulo": "Quando há problema",
+      "texto": [
+        [
+          "O vínculo não foi informado ao governo e não aparece no CNIS: é preciso provar o vínculo.",
+          "O trabalho era informal, sem carteira: é preciso reconhecer o vínculo, em regra na Justiça do Trabalho, com prova material.",
+          "O segurado é contribuinte individual por conta própria: aí a obrigação de pagar é dele."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "A empresa onde Valéria trabalhou em 2019 descontava o INSS do salário, mas não repassava. O vínculo e as remunerações aparecem no CNIS pela GFIP. Os meses contam normalmente para a aposentadoria de Valéria."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 34"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 33, § 5º"
+    },
+    {
+      "fonte": "lei10666",
+      "dispositivo": "art. 4º"
+    },
+    {
+      "fonte": "lc150",
+      "dispositivo": "art. 34"
+    }
+  ],
+  "termos": [
+    "segurado-obrigatorio",
+    "contribuinte-individual",
+    "empregado-domestico",
+    "salario-de-contribuicao"
+  ],
+  "artigos": [
+    "como-comprovar-remuneracoes-no-cnis",
+    "empregado-domestico-como-comprovar-vinculo-e-contribuicao"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "vinculo-nao-aparece-no-cnis",
+    "salario-faltando-no-cnis-reduz-aposentadoria",
+    "carteira-assinada-sem-cnis-vale"
+  ]
+}

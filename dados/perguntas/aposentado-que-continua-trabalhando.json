@@ -1,0 +1,57 @@
+{
+  "pergunta": "Aposentado que continua trabalhando precisa contribuir? Ganha algo com isso?",
+  "titulo": "Aposentado que continua trabalhando: contribui e ganha o quê?",
+  "resumo": "O aposentado que trabalha continua contribuindo, mas só tem direito a alguns benefícios. Veja o que diz a lei e o que o STF decidiu sobre desaposentação.",
+  "categoria": "aposentadoria",
+  "resposta": "Precisa contribuir: o aposentado que volta a trabalhar é **segurado obrigatório** sobre a nova atividade. Em troca, tem direito apenas ao **salário-família**, à **reabilitação profissional** e, para a segurada, ao **salário-maternidade**. Essas contribuições **não aumentam** a aposentadoria nem geram uma nova.",
+  "secoes": [
+    {
+      "titulo": "O que diz a lei",
+      "texto": [
+        "O art. 11, § 3º, e o art. 18, § 2º, da [[fonte:lei8213|Lei 8.213/1991]] mantêm a filiação e limitam os benefícios. O salário-maternidade da aposentada que volta a trabalhar está no art. 103 do [[fonte:dec3048|Decreto 3.048/1999]]."
+      ]
+    },
+    {
+      "titulo": "Desaposentação",
+      "texto": [
+        "O STF decidiu (Tema 503) que não há direito à desaposentação nem à reaposentação: o aposentado não pode renunciar ao benefício para pedir outro com as contribuições novas."
+      ]
+    },
+    {
+      "titulo": "Exceção: aposentadoria especial e por incapacidade",
+      "texto": [
+        "Quem recebe aposentadoria especial não pode continuar em atividade especial (STF, Tema 709). Quem recebe aposentadoria por incapacidade permanente tem o benefício cancelado se voltar a trabalhar."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Celso se aposentou por idade e continua como empregado. A empresa desconta o INSS do salário dele normalmente. Se ele sofrer um acidente e ficar afastado, não recebe auxílio por incapacidade, mas tem direito à reabilitação profissional."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11, § 3º, e 18, § 2º"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 12, § 4º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 103"
+    }
+  ],
+  "termos": [
+    "segurado-obrigatorio",
+    "salario-maternidade",
+    "aposentadoria-por-incapacidade-permanente",
+    "atividade-especial"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "posso-receber-aposentadoria-e-pensao",
+    "revisao-da-aposentadoria-prazo",
+    "trabalho-insalubre-aposentadoria-especial"
+  ]
+}

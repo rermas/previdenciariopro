@@ -1,0 +1,62 @@
+{
+  "pergunta": "Contribuí com 11% (plano simplificado): posso me aposentar por tempo de contribuição?",
+  "titulo": "Contribuí com 11%: posso me aposentar por tempo de contribuição?",
+  "resumo": "O que o plano simplificado de 11% garante, por que ele não conta nas regras por tempo de contribuição e quanto custa complementar para 20%.",
+  "categoria": "contribuicoes",
+  "resposta": "Só se **complementar** a contribuição para 20%. Os meses pagos com 11% sobre o salário mínimo valem para **aposentadoria por idade**, carência e outros benefícios, mas **não contam** nas regras de aposentadoria por tempo de contribuição nem na CTC sem a complementação de 9%, com juros.",
+  "secoes": [
+    {
+      "titulo": "O que o 11% garante",
+      "texto": [
+        "O [[plano-simplificado]] dá acesso à aposentadoria por idade, à [[aposentadoria-programada]], ao auxílio por incapacidade, ao salário-maternidade e à pensão para os dependentes, sempre no valor de um salário mínimo. O CNIS identifica esses meses com [[ind:IREC-LC123]]."
+      ]
+    },
+    {
+      "titulo": "Como complementar",
+      "texto": [
+        "A diferença é de 9% sobre o salário mínimo de cada competência, com juros de mora, paga com o código de complementação (art. 21, § 3º, da [[fonte:lei8212|Lei 8.212/1991]]). Em 2026, 9% do mínimo dá R$ 145,89 por mês, antes dos juros."
+      ]
+    },
+    {
+      "titulo": "Vale a pena?",
+      "texto": [
+        "Depende da regra que você vai usar. Se a aposentadoria for por idade, a complementação não muda o direito. Se for uma regra de transição por tempo, ela pode antecipar a aposentadoria em anos. Simule as duas situações antes de pagar."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Joana tem 25 anos de carteira e 6 anos pelo plano simplificado. Para a regra de pontos, que exige 30 anos de contribuição, ela só tem 25. Complementando os 6 anos, chega a 31 anos e pode usar a regra."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 21, §§ 2º e 3º"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 18, § 3º"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "arts. 216 e 514"
+    }
+  ],
+  "termos": [
+    "plano-simplificado",
+    "aliquotas-de-contribuicao",
+    "regras-de-transicao",
+    "ctc-contagem-reciproca"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "IREC-LC123",
+    "IREC-MEI"
+  ],
+  "relacionadas": [
+    "mei-conta-para-aposentadoria",
+    "dona-de-casa-pode-contribuir",
+    "qual-regra-de-transicao-e-melhor"
+  ]
+}

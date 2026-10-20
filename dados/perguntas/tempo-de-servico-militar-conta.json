@@ -1,0 +1,51 @@
+{
+  "pergunta": "Tempo de serviço militar conta para a aposentadoria do INSS?",
+  "titulo": "Serviço militar conta para a aposentadoria do INSS?",
+  "resumo": "O serviço militar obrigatório conta como tempo de contribuição no INSS. Veja o documento a apresentar, a carência e o caso do militar de carreira.",
+  "categoria": "aposentadoria",
+  "resposta": "Conta. O **serviço militar obrigatório** e o voluntário são computados como **tempo de contribuição** no INSS (art. 55, I, da Lei 8.213/1991), mesmo sem contribuição. É preciso apresentar a **certidão de tempo de serviço** emitida pela Força em que serviu. O período não conta como carência.",
+  "secoes": [
+    {
+      "titulo": "Que documento apresentar",
+      "texto": [
+        "A certidão de tempo de serviço militar, emitida pelo Exército, Marinha ou Aeronáutica, com as datas de incorporação e de baixa. O certificado de reservista ajuda, mas nem sempre traz as datas completas."
+      ]
+    },
+    {
+      "titulo": "Militar de carreira",
+      "texto": [
+        "Quem foi militar de carreira e saiu precisa da certidão do sistema de proteção dos militares para levar o tempo ao INSS, como na [[ctc-contagem-reciproca|contagem recíproca]]. O mesmo período não pode ser usado nos dois sistemas."
+      ]
+    },
+    {
+      "titulo": "Carência",
+      "texto": [
+        "O tempo militar conta como tempo, mas o INSS não o considera como carência, porque não houve contribuição ao Regime Geral."
+      ]
+    }
+  ],
+  "exemplo": [
+    "André serviu o Exército de 02/1990 a 01/1991. Com a certidão, ele soma 1 ano ao tempo de contribuição, o que pode ser decisivo para atingir os pontos ou os 35 anos de uma regra de transição."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 55, I, e 96"
+    },
+    {
+      "fonte": "inss-ctc"
+    }
+  ],
+  "termos": [
+    "tempo-de-contribuicao",
+    "ctc-contagem-reciproca",
+    "carencia"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "trabalhei-na-roca-conta-para-aposentadoria",
+    "quanto-tempo-falta-para-me-aposentar",
+    "virei-servidor-publico-tempo-do-inss"
+  ]
+}

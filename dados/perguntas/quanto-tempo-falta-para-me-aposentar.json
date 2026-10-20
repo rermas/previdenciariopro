@@ -1,0 +1,57 @@
+{
+  "pergunta": "Como saber quanto tempo falta para me aposentar?",
+  "titulo": "Como saber quanto tempo falta para me aposentar pelo INSS",
+  "resumo": "Como calcular quanto falta para a aposentadoria: conferir o CNIS, usar o simulador do Meu INSS e comparar as regras de transição da EC 103/2019.",
+  "categoria": "aposentadoria",
+  "resposta": "Comece pelo **extrato do CNIS**, corrija o que estiver faltando e use o **simulador de aposentadoria do Meu INSS**, que aplica as regras atuais sobre os dados do cadastro. Se houver tempo especial, rural, militar ou vínculos fora do CNIS, o simulador não os considera: some-os à parte.",
+  "secoes": [
+    {
+      "titulo": "Passo a passo",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações.",
+          "Confira vínculos, datas, salários e indicadores de pendência.",
+          "Use o simulador no [[fonte:meuinss|Meu INSS]] (\"Simular aposentadoria\").",
+          "Some períodos que o CNIS não mostra e que você pode provar.",
+          "Compare a data e o valor em cada [[regras-de-transicao|regra de transição]]."
+        ]
+      ]
+    },
+    {
+      "titulo": "Limites do simulador",
+      "texto": [
+        "O [[fonte:inss-simulador|simulador do INSS]] usa só o que está no cadastro. Ele não converte tempo especial, não inclui tempo rural sem registro e conta vínculos com pendência como se estivessem regulares ou os deixa de fora, conforme o caso. O resultado é uma estimativa, não uma decisão."
+      ]
+    }
+  ],
+  "exemplo": [
+    "O simulador indicou que Paula se aposentaria em 2029. Ao conferir o CNIS, ela achou um vínculo de 3 anos que faltava e tinha a CTPS. Depois de incluir o vínculo, a data prevista caiu para 2027 pela regra de pontos."
+  ],
+  "fontes": [
+    {
+      "fonte": "inss-simulador"
+    },
+    {
+      "fonte": "inss-extrato"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "cnis",
+    "tempo-de-contribuicao",
+    "regras-de-transicao",
+    "carencia"
+  ],
+  "artigos": [
+    "como-baixar-o-cnis-em-pdf-com-remuneracoes",
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "qual-regra-de-transicao-e-melhor",
+    "vinculo-nao-aparece-no-cnis",
+    "15-anos-de-contribuicao-aposenta"
+  ]
+}

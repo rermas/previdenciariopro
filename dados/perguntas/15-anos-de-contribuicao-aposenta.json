@@ -1,0 +1,63 @@
+{
+  "pergunta": "Com 15 anos de contribuição consigo me aposentar?",
+  "titulo": "Com 15 anos de contribuição consigo me aposentar pelo INSS?",
+  "resumo": "Quem tem 15 anos de contribuição pode se aposentar por idade: mulher aos 62 e homem aos 65, se filiado até 2019. Veja a carência e o valor do benefício.",
+  "categoria": "aposentadoria",
+  "resposta": "Sim, pela **aposentadoria por idade**: mulher aos **62 anos** e homem aos **65 anos**, com **15 anos de contribuição** e **180 contribuições de carência**. O homem que começou a contribuir depois de 13/11/2019 precisa de 20 anos. O valor é de **60% da média**, nunca menor que um salário mínimo.",
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        [
+          "**Mulher:** 62 anos, 15 anos de contribuição e 180 meses de carência.",
+          "**Homem filiado até 13/11/2019:** 65 anos, 15 anos de contribuição e 180 meses de carência (regra de transição do art. 18 da [[fonte:ec103|EC 103/2019]]).",
+          "**Homem filiado depois:** 65 anos e 20 anos de contribuição ([[aposentadoria-programada]]).",
+          "**Trabalhador rural:** 55 anos (mulher) e 60 (homem), com 15 anos de atividade rural."
+        ]
+      ]
+    },
+    {
+      "titulo": "Tempo e carência não são a mesma coisa",
+      "texto": [
+        "Quinze anos de tempo nem sempre são 180 meses de [[carencia]]. Contribuições pagas em atraso antes da primeira em dia, competências abaixo do mínimo sem ajuste e o tempo rural sem contribuição podem contar como tempo, mas não como carência."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "É de 60% da média de todos os salários desde 07/1994, com 2% a mais por ano acima de 15 anos (mulher) ou 20 anos (homem). Com 15 anos, quase sempre fica em 60%, respeitado o piso do salário mínimo."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Rosana tem 62 anos e 15 anos de carteira assinada, todos com salário. Ela pode se aposentar por idade com 60% da média. Se a média for de R$ 2.000,00, o benefício será de R$ 1.621,00, porque 60% (R$ 1.200,00) fica abaixo do salário mínimo de 2026."
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 18, 19 e 26"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 25, II, e 48"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "carencia",
+    "aposentadoria-programada",
+    "regras-de-transicao",
+    "rmi"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "perdi-a-qualidade-posso-aposentar-por-idade",
+    "mei-conta-para-aposentadoria",
+    "trabalhei-na-roca-conta-para-aposentadoria"
+  ]
+}

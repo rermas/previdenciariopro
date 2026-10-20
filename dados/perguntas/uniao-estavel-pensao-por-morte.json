@@ -1,0 +1,63 @@
+{
+  "pergunta": "Vivia em união estável: tenho direito a pensão por morte?",
+  "titulo": "União estável dá direito a pensão por morte? Como provar",
+  "resumo": "O companheiro em união estável tem direito à pensão por morte como o cônjuge. Veja as provas aceitas, o prazo de 24 meses e a regra dos 2 anos de união.",
+  "categoria": "beneficios",
+  "resposta": "Tem, nas mesmas condições do cônjuge. A dependência econômica é presumida, mas é preciso **provar a união estável** com **início de prova material** produzido nos **24 meses anteriores ao óbito**. Se a união tinha menos de 2 anos ou o falecido menos de 18 contribuições, a pensão dura só 4 meses, salvo acidente.",
+  "secoes": [
+    {
+      "titulo": "Documentos que provam a união",
+      "texto": [
+        [
+          "Declaração de imposto de renda com o companheiro como dependente.",
+          "Comprovantes de residência no mesmo endereço.",
+          "Conta bancária conjunta, plano de saúde ou seguro com o companheiro como dependente.",
+          "Certidão de nascimento de filho em comum.",
+          "Escritura pública de união estável ou sentença."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que a lei exige",
+      "texto": [
+        "O art. 16, § 5º, da [[fonte:lei8213|Lei 8.213/1991]] exige início de prova material contemporânea, produzida em período não superior a 24 meses antes do óbito. Só testemunhas não bastam, salvo força maior ou caso fortuito."
+      ]
+    },
+    {
+      "titulo": "Duração",
+      "texto": [
+        "A duração segue a [[pensao-por-morte]]: 4 meses nos casos de união curta ou poucas contribuições; nos demais, de 3 anos a vitalícia, conforme a idade do companheiro na data do óbito."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Cláudio viveu 8 anos em união estável com Rosa, sem casamento. Ela tinha a declaração de imposto de renda de 2025 em que constava como dependente e contas no mesmo endereço. Aos 47 anos, Rosa tem direito à pensão vitalícia."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 16, 74 e 77"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 23"
+    },
+    {
+      "fonte": "inss-pensao"
+    }
+  ],
+  "termos": [
+    "pensao-por-morte",
+    "dependentes",
+    "qualidade-de-segurado"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "posso-receber-aposentadoria-e-pensao",
+    "inss-negou-o-pedido-o-que-fazer",
+    "parei-de-contribuir-ainda-tenho-direito"
+  ]
+}

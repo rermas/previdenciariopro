@@ -1,0 +1,51 @@
+{
+  "pergunta": "Desempregado tem direito a auxílio-doença?",
+  "titulo": "Desempregado tem direito a auxílio-doença? Prazos e requisitos",
+  "resumo": "O desempregado tem direito ao auxílio por incapacidade se a doença começar dentro do período de graça. Veja os prazos e como provar o desemprego.",
+  "categoria": "protecao",
+  "resposta": "Tem, se a incapacidade começar **dentro do período de graça**: em regra até 12 meses depois do último emprego, mais 12 meses se comprovar desemprego involuntário e mais 12 se tiver mais de 120 contribuições. Também precisa ter as 12 contribuições de carência, salvo acidente ou doença grave.",
+  "secoes": [
+    {
+      "titulo": "Como provar o desemprego",
+      "texto": [
+        "A lei fala em registro no órgão do Ministério do Trabalho. O recebimento de seguro-desemprego é a prova mais comum, e a jurisprudência aceita outros meios, como a falta de vínculos no CNIS somada a outras provas."
+      ]
+    },
+    {
+      "titulo": "Início do benefício",
+      "texto": [
+        "Para quem está desempregado, o benefício começa na data de início da incapacidade, se pedido em até 30 dias, porque não há empresa para pagar os primeiros 15 dias."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Carlos foi demitido em 01/2026, recebeu seguro-desemprego e tem 80 contribuições. O período de graça dele é de 24 meses, até 01/2028. Se a incapacidade começar em 2027, ele tem direito ao auxílio."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 15, §§ 1º e 2º, 59 e 60"
+    },
+    {
+      "fonte": "inss-auxilio"
+    },
+    {
+      "fonte": "inss-qualidade"
+    }
+  ],
+  "termos": [
+    "periodo-de-graca",
+    "auxilio-por-incapacidade-temporaria",
+    "dii",
+    "qualidade-de-segurado"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "parei-de-contribuir-ainda-tenho-direito",
+    "auxilio-doenca-conta-para-aposentadoria"
+  ]
+}

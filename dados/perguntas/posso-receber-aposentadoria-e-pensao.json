@@ -1,0 +1,65 @@
+{
+  "pergunta": "Posso receber aposentadoria e pensão por morte ao mesmo tempo?",
+  "titulo": "Posso receber aposentadoria e pensão por morte juntas?",
+  "resumo": "Aposentadoria e pensão por morte podem ser acumuladas, mas com redutor desde a EC 103/2019. Veja as faixas de cálculo e um exemplo com valores de 2026.",
+  "categoria": "beneficios",
+  "resposta": "Pode. Mas, desde a EC 103/2019, recebe-se **o valor integral do benefício maior** e **uma parte do menor**, calculada por faixas de salário mínimo. Se os dois benefícios foram adquiridos antes de 13/11/2019, não há redutor.",
+  "secoes": [
+    {
+      "titulo": "Como o menor benefício é calculado",
+      "texto": [
+        "Pelo art. 24, § 2º, da [[fonte:ec103|EC 103/2019]], somam-se as faixas do benefício menor:",
+        [
+          "100% do valor até 1 salário mínimo;",
+          "60% do que passar de 1 até 2 salários mínimos;",
+          "40% do que passar de 2 até 3 salários mínimos;",
+          "20% do que passar de 3 até 4 salários mínimos;",
+          "10% do que passar de 4 salários mínimos."
+        ]
+      ]
+    },
+    {
+      "titulo": "Escolha e revisão",
+      "texto": [
+        "O segurado pode escolher qual benefício recebe integralmente; em regra, compensa manter o maior. Se um dos benefícios acabar, o outro volta a ser pago por inteiro."
+      ]
+    },
+    {
+      "titulo": "O que não pode acumular",
+      "texto": [
+        "Duas aposentadorias no INSS, ou duas pensões deixadas por cônjuges ou companheiros no Regime Geral, não podem ser acumuladas (art. 124 da [[fonte:lei8213|Lei 8.213/1991]]); nesse caso, escolhe-se a mais vantajosa."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Em 2026, Dalva recebe aposentadoria de R$ 3.000,00 e passa a ter direito a pensão de R$ 2.000,00. Ela recebe a aposentadoria inteira e da pensão: 100% de R$ 1.621,00 + 60% de R$ 379,00 = R$ 1.848,40. O total é de R$ 4.848,40."
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 24"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 124"
+    },
+    {
+      "fonte": "inss-casal-pensao"
+    },
+    {
+      "fonte": "inss-valor-pensao"
+    }
+  ],
+  "termos": [
+    "pensao-por-morte",
+    "direito-adquirido",
+    "rmi"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "uniao-estavel-pensao-por-morte",
+    "aposentado-que-continua-trabalhando",
+    "revisao-da-aposentadoria-prazo"
+  ]
+}

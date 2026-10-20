@@ -1,0 +1,66 @@
+{
+  "pergunta": "Contribuição abaixo do salário mínimo conta para a aposentadoria?",
+  "titulo": "Contribuição abaixo do salário mínimo conta para aposentadoria?",
+  "resumo": "Desde a EC 103/2019, a competência abaixo do salário mínimo só conta depois de complementada, utilizada ou agrupada. Veja como fazer e quando a regra vale.",
+  "categoria": "contribuicoes",
+  "resposta": "Desde **13/11/2019**, não conta enquanto não for ajustada. A competência com salário de contribuição abaixo do mínimo fica fora do tempo, da carência e da manutenção da qualidade de segurado até ser **complementada**, receber o **excedente** de outro mês ou ser **agrupada**.",
+  "secoes": [
+    {
+      "titulo": "Quem é afetado",
+      "texto": [
+        "Principalmente o trabalhador intermitente, o de jornada parcial com poucas horas e o contribuinte individual que presta poucos serviços no mês. No CNIS, a competência recebe o indicador [[ind:PSC-MEN-SM-EC103]]."
+      ]
+    },
+    {
+      "titulo": "As três saídas",
+      "texto": [
+        [
+          "**Complementar:** pagar a diferença até o mínimo, com a alíquota da categoria.",
+          "**Utilizar o excedente:** usar o valor que passou do mínimo em outro mês do mesmo ano.",
+          "**Agrupar:** juntar meses do mesmo ano para formar competências com o valor mínimo."
+        ]
+      ]
+    },
+    {
+      "titulo": "Antes de 11/2019",
+      "texto": [
+        "Para o empregado, as competências anteriores à reforma contam normalmente, mesmo abaixo do mínimo. Já o contribuinte individual e o facultativo sempre tiveram de recolher sobre pelo menos o salário mínimo."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Henrique é intermitente e, em 2025, recebeu R$ 600,00 em fevereiro e R$ 2.800,00 em março. Fevereiro ficou abaixo do mínimo de R$ 1.518,00. Usando R$ 918,00 do excedente de março, os dois meses passam a contar."
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 29"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19-E"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "PSC-MEN-SM-EC103"
+    }
+  ],
+  "termos": [
+    "contribuicao-abaixo-do-minimo",
+    "salario-de-contribuicao",
+    "carencia"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "PSC-MEN-SM-EC103",
+    "IAGRUP-SM-EC103",
+    "ICOMPL-VR-SM-EC103"
+  ],
+  "relacionadas": [
+    "contribui-com-11-posso-aposentar-por-tempo",
+    "posso-pagar-inss-atrasado",
+    "mei-conta-para-aposentadoria"
+  ]
+}

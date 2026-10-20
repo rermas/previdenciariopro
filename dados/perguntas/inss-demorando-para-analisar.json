@@ -1,0 +1,65 @@
+{
+  "pergunta": "O INSS está demorando para analisar meu pedido. O que posso fazer?",
+  "titulo": "INSS demorando para analisar o pedido: prazos e o que fazer",
+  "resumo": "Os prazos máximos de análise do INSS fixados no acordo homologado pelo STF, o que fazer quando o prazo passa e como acompanhar o pedido no Meu INSS.",
+  "categoria": "processo",
+  "resposta": "Primeiro, confira se há **exigência pendente** no Meu INSS. Se não houver e o prazo do acordo homologado pelo STF já tiver passado, registre reclamação na Ouvidoria e, se continuar parado, é possível pedir na **Justiça Federal** que o INSS decida. Os atrasados são pagos desde a DER.",
+  "secoes": [
+    {
+      "titulo": "Prazos máximos de análise",
+      "texto": [
+        "O acordo homologado pelo STF no RE 1.171.152, em vigor desde 2021, fixou:",
+        [
+          "**30 dias:** salário-maternidade.",
+          "**45 dias:** auxílio por incapacidade temporária e aposentadoria por incapacidade permanente.",
+          "**60 dias:** pensão por morte, auxílio-reclusão e auxílio-acidente.",
+          "**90 dias:** aposentadorias e BPC.",
+          "**Perícia médica e avaliação social:** até 45 dias, ou 90 dias em locais de difícil atendimento."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que fazer",
+      "texto": [
+        [
+          "Acompanhe o pedido em \"Consultar pedidos\" no [[fonte:meuinss|Meu INSS]] e responda às exigências.",
+          "Ligue para a central 135 e registre reclamação na Ouvidoria.",
+          "Depois do prazo, cabe mandado de segurança ou ação na Justiça Federal para obrigar o INSS a decidir."
+        ]
+      ]
+    },
+    {
+      "titulo": "A demora não tira direito",
+      "texto": [
+        "O benefício concedido é pago desde a [[der]] ou a [[dib]], com correção. A [[fonte:lei9784|Lei 9.784/1999]] (art. 49) também prevê que a administração decida em até 30 dias após concluir a instrução."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Neusa pediu a aposentadoria em 03/2026 e, em 08/2026, o pedido continuava \"em análise\", sem exigência. Passados os 90 dias, ela registrou reclamação na Ouvidoria. O benefício foi concedido em 09/2026 com pagamento desde 03/2026."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei9784",
+      "dispositivo": "arts. 48 e 49"
+    },
+    {
+      "fonte": "meuinss"
+    }
+  ],
+  "termos": [
+    "der",
+    "dib",
+    "exigencia"
+  ],
+  "artigos": [
+    "exigencia-do-inss-prazo-e-como-responder",
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "inss-negou-o-pedido-o-que-fazer",
+    "revisao-da-aposentadoria-prazo",
+    "quanto-tempo-falta-para-me-aposentar"
+  ]
+}

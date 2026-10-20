@@ -1,0 +1,58 @@
+{
+  "pergunta": "Perdi a qualidade de segurado: posso me aposentar por idade?",
+  "titulo": "Perdi a qualidade de segurado: posso me aposentar por idade?",
+  "resumo": "Quem perdeu a qualidade de segurado pode se aposentar por idade se tiver a carência. Veja o que a Lei 10.666/2003 garante e como somar as contribuições.",
+  "categoria": "protecao",
+  "resposta": "Pode. Na aposentadoria por idade, a perda da qualidade de segurado **não impede** o direito, desde que a pessoa tenha a **idade** e a **carência** exigidas (art. 3º, § 1º, da Lei 10.666/2003). As contribuições antigas continuam valendo, mesmo após anos sem contribuir.",
+  "secoes": [
+    {
+      "titulo": "O que é exigido",
+      "texto": [
+        [
+          "**Idade:** 62 anos (mulher) e 65 anos (homem).",
+          "**Carência:** 180 contribuições mensais, ou a tabela do art. 142 para quem se inscreveu até 24/07/1991.",
+          "**Tempo de contribuição:** 15 anos (mulher) e 15 anos para o homem filiado até 13/11/2019; 20 anos para o homem filiado depois."
+        ]
+      ]
+    },
+    {
+      "titulo": "Requisitos em datas diferentes",
+      "texto": [
+        "A idade e a carência não precisam ser completadas ao mesmo tempo. Quem completou 180 contribuições aos 40 anos e parou de contribuir pode se aposentar ao atingir a idade."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Maria trabalhou com carteira de 1985 a 2002, totalizando 17 anos, e nunca mais contribuiu. Em 2026, aos 62 anos, ela tem idade e carência e pode se aposentar por idade, mesmo tendo perdido a qualidade de segurada há mais de 20 anos."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei10666",
+      "dispositivo": "art. 3º, § 1º"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 25, II, 48 e 142"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 18 e 19"
+    }
+  ],
+  "termos": [
+    "qualidade-de-segurado",
+    "carencia",
+    "aposentadoria-programada",
+    "regras-de-transicao"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia",
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "15-anos-de-contribuicao-aposenta",
+    "parei-de-contribuir-ainda-tenho-direito",
+    "trabalhei-na-roca-conta-para-aposentadoria"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "pergunta": "Meu vínculo de emprego não aparece no CNIS. Como incluir?",
+  "titulo": "Vínculo de emprego que não aparece no CNIS: como incluir",
+  "resumo": "O que fazer quando um emprego não aparece no extrato do CNIS: documentos aceitos, onde pedir a inclusão e quando a prova testemunhal ajuda.",
+  "categoria": "cnis",
+  "resposta": "Peça a **inclusão do vínculo** pelo Meu INSS com documentos da época, como a carteira de trabalho, a ficha de registro, o termo de rescisão ou o extrato do FGTS. Testemunhas ajudam, mas a lei exige **início de prova material**: só testemunhas não bastam.",
+  "secoes": [
+    {
+      "titulo": "Por que um vínculo some",
+      "texto": [
+        [
+          "A empresa não informou o vínculo (RAIS, GFIP ou eSocial).",
+          "O vínculo foi registrado em outro número de PIS ou [[nit]].",
+          "O período é antigo, anterior à informatização dos cadastros."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que a lei exige",
+      "texto": [
+        "Pelo art. 55, § 3º, da [[fonte:lei8213|Lei 8.213/1991]], o tempo só é reconhecido com **início de prova material contemporânea** dos fatos; a prova exclusivamente testemunhal não é aceita, salvo força maior. A sentença trabalhista vale como prova se estiver baseada em documentos da época."
+      ]
+    },
+    {
+      "titulo": "Passo a passo",
+      "texto": [
+        [
+          "Emita o extrato do CNIS e anote o período que falta.",
+          "Reúna os documentos: CTPS, ficha de registro, contrato, holerites, TRCT, extrato do FGTS, declaração da empresa.",
+          "Peça a atualização do CNIS no [[fonte:meuinss|Meu INSS]] ou junte tudo no pedido do benefício.",
+          "Se o INSS negar, cabe recurso ou ação judicial, com testemunhas para complementar os documentos."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Ronaldo trabalhou de 1995 a 1998 em uma loja que já fechou, e o vínculo não aparece no CNIS. Ele tem a CTPS assinada e o extrato do FGTS do período. Com esses documentos, pediu a inclusão no Meu INSS e o período foi reconhecido."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29-A e 55, § 3º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 19 e 62"
+    },
+    {
+      "fonte": "inss-rac"
+    }
+  ],
+  "termos": [
+    "atualizacao-do-cnis",
+    "cnis",
+    "nit",
+    "tempo-de-contribuicao"
+  ],
+  "artigos": [
+    "documentos-para-comprovar-vinculo-de-emprego",
+    "como-emitir-o-extrato-do-cnis"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "carteira-assinada-sem-cnis-vale",
+    "empresa-nao-recolheu-o-inss",
+    "pext-no-cnis-perco-o-tempo"
+  ]
+}

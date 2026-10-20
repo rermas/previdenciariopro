@@ -1,0 +1,61 @@
+{
+  "pergunta": "Tempo de MEI conta para a aposentadoria?",
+  "titulo": "Tempo de MEI conta para a aposentadoria? O que vale e o que não",
+  "resumo": "O tempo de MEI conta para a aposentadoria por idade e para a carência, mas não para a aposentadoria por tempo de contribuição sem complementação.",
+  "categoria": "contribuicoes",
+  "resposta": "Conta para a **aposentadoria por idade**, a [[aposentadoria-programada|aposentadoria programada]] e a carência, desde que o DAS seja pago em dia. **Não conta** para as regras de aposentadoria por tempo de contribuição nem para a CTC, salvo se o MEI complementar a contribuição de 5% para 20%.",
+  "secoes": [
+    {
+      "titulo": "Por que o limite",
+      "texto": [
+        "A contribuição previdenciária do [[mei]] é de 5% sobre o salário mínimo, embutida no DAS (art. 18-A da [[fonte:lc123|LC 123/2006]]). Como é uma alíquota reduzida, a lei exclui o período da aposentadoria por tempo de contribuição, como no plano simplificado."
+      ]
+    },
+    {
+      "titulo": "Como complementar",
+      "texto": [
+        "A complementação é de 15% sobre o salário mínimo de cada mês, com juros. Depois de paga, a competência entra no tempo de contribuição. O CNIS mostra os meses de MEI com [[ind:IREC-MEI]]."
+      ]
+    },
+    {
+      "titulo": "DAS atrasado",
+      "texto": [
+        "DAS pagos em atraso antes do primeiro pagamento em dia contam como tempo, mas não como [[carencia]]. Quem quer usar o período para a aposentadoria por idade deve manter o pagamento em dia."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Leandro foi MEI de 2015 a 2025 e pagou em dia. Ele tem 10 anos de carência para a aposentadoria por idade. Se quiser usar esse tempo na regra de pedágio de 100%, precisa complementar os 120 meses."
+  ],
+  "fontes": [
+    {
+      "fonte": "lc123",
+      "dispositivo": "art. 18-A"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 21, §§ 2º e 3º"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "IREC-MEI"
+    }
+  ],
+  "termos": [
+    "mei",
+    "plano-simplificado",
+    "carencia"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "IREC-MEI",
+    "IMEI"
+  ],
+  "relacionadas": [
+    "contribui-com-11-posso-aposentar-por-tempo",
+    "15-anos-de-contribuicao-aposenta",
+    "posso-pagar-inss-atrasado"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "pergunta": "Salário faltando no CNIS reduz a aposentadoria?",
+  "titulo": "Salário faltando no CNIS reduz o valor da aposentadoria?",
+  "resumo": "Como remunerações faltantes no CNIS afetam o valor do benefício, o que a IN 212/2026 mudou e como provar os salários antes de pedir a aposentadoria.",
+  "categoria": "cnis",
+  "resposta": "Pode reduzir. Quando o vínculo existe mas a remuneração não aparece, o INSS usa o **salário mínimo** naquela competência do cálculo. Se o salário real era maior, a média cai. Provar os valores com holerites ou declaração da empresa corrige a perda.",
+  "secoes": [
+    {
+      "titulo": "Como entra no cálculo",
+      "texto": [
+        "O valor do benefício parte da média dos [[salario-de-contribuicao|salários de contribuição]] desde 07/1994. Pela IN PRES/INSS 212/2026, que alterou a [[fonte:in128|IN 128/2022]], para empregado, doméstico e avulso o INSS usa o salário mínimo na competência com vínculo e sem remuneração, e recalcula a renda se o segurado provar o valor real. A regra não vale para jornada parcial e intermitente."
+      ]
+    },
+    {
+      "titulo": "O tempo não se perde",
+      "texto": [
+        "O mês com vínculo continua contando como tempo de contribuição para o empregado, porque o recolhimento é responsabilidade do empregador (art. 34 da [[fonte:lei8213|Lei 8.213/1991]]). O problema é o valor, não o tempo."
+      ]
+    },
+    {
+      "titulo": "Como provar o salário",
+      "texto": [
+        [
+          "Holerites ou recibos de pagamento.",
+          "Declaração da empresa com base na folha de pagamento.",
+          "Extrato do FGTS: o depósito de 8% permite deduzir o salário.",
+          "Ficha financeira, RAIS ou sentença trabalhista com os valores."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Em 2010 Gilberto ganhava R$ 3.000,00, mas 12 meses aparecem sem remuneração no CNIS. Sem prova, esses meses entram com o salário mínimo da época, R$ 510,00. Com o extrato do FGTS, ele comprova os salários e a média sobe."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29-A e 34"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "com as alterações da IN 212/2026"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26"
+    }
+  ],
+  "termos": [
+    "salario-de-contribuicao",
+    "periodo-basico-de-calculo",
+    "salario-de-beneficio",
+    "atualizacao-do-cnis"
+  ],
+  "artigos": [
+    "salarios-faltantes-no-cnis",
+    "como-comprovar-remuneracoes-no-cnis"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "empresa-nao-recolheu-o-inss",
+    "vinculo-sem-data-de-saida-no-cnis",
+    "revisao-da-aposentadoria-prazo"
+  ]
+}

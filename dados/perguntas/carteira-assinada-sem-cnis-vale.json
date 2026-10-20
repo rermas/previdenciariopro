@@ -1,0 +1,58 @@
+{
+  "pergunta": "Carteira de trabalho assinada vale se o vínculo não estiver no CNIS?",
+  "titulo": "Carteira de trabalho vale se o vínculo não está no CNIS?",
+  "resumo": "A anotação na carteira de trabalho prova o vínculo mesmo fora do CNIS? Veja o valor da CTPS como prova, o que pode derrubá-la e o que juntar.",
+  "categoria": "cnis",
+  "resposta": "Vale. A anotação na carteira de trabalho, **sem rasuras e em ordem cronológica**, é prova do vínculo e tem presunção de veracidade. O INSS pode pedir documentos complementares quando há indício de irregularidade, mas a falta do vínculo no CNIS, sozinha, não anula a CTPS.",
+  "secoes": [
+    {
+      "titulo": "Valor de prova da CTPS",
+      "texto": [
+        "O [[fonte:dec3048|Decreto 3.048/1999]] lista a carteira de trabalho entre os documentos que comprovam o tempo de contribuição. A Turma Nacional de Uniformização (Súmula 75) firmou que a CTPS sem defeito formal goza de presunção relativa de veracidade, mesmo que o vínculo não conste no CNIS."
+      ]
+    },
+    {
+      "titulo": "O que pode enfraquecer a prova",
+      "texto": [
+        [
+          "Rasuras, datas sobrepostas ou anotações fora da ordem.",
+          "Carteira emitida depois do período anotado.",
+          "Vínculo com familiar sem outros documentos."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que juntar para reforçar",
+      "texto": [
+        "Ficha de registro, TRCT, extrato do FGTS, contracheques, contrato de trabalho e, quando houver, a anotação de férias, alterações salariais e contribuição sindical na própria carteira."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Nilza tem na CTPS um vínculo de 1987 a 1991 em uma fazenda, com anotações de férias e reajustes. O vínculo não aparece no CNIS. A carteira em ordem é suficiente para pedir a inclusão do período."
+  ],
+  "fontes": [
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 19 e 62"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 55, § 3º"
+    }
+  ],
+  "termos": [
+    "atualizacao-do-cnis",
+    "cnis",
+    "tempo-de-contribuicao"
+  ],
+  "artigos": [
+    "documentos-para-comprovar-vinculo-de-emprego"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "vinculo-nao-aparece-no-cnis",
+    "pext-no-cnis-perco-o-tempo",
+    "vinculo-sem-data-de-saida-no-cnis"
+  ]
+}

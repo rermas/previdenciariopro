@@ -1,0 +1,68 @@
+{
+  "pergunta": "Tenho PEXT no CNIS: perco o tempo de contribuição?",
+  "titulo": "PEXT no CNIS: perco o tempo de contribuição? Veja como resolver",
+  "resumo": "O vínculo com PEXT não é perdido, mas só conta depois de comprovado. Veja por que o INSS marca o vínculo como extemporâneo e quais documentos resolvem.",
+  "categoria": "cnis",
+  "resposta": "Não perde, mas o vínculo marcado com **PEXT** só entra na contagem do INSS **depois de comprovado** com documentos da época. Enquanto a pendência existir, o período fica fora do tempo de contribuição e da carência na análise do benefício.",
+  "secoes": [
+    {
+      "titulo": "Por que o INSS marca PEXT",
+      "texto": [
+        "O indicador [[ind:PEXT]] aparece quando o empregador informou o vínculo **fora do prazo**, às vezes anos depois do período trabalhado. O [[fonte:dec3048|Decreto 3.048/1999]] (art. 19) permite que o INSS exija prova da informação [[extemporaneidade|extemporânea]], para evitar vínculos criados só para obter benefício."
+      ]
+    },
+    {
+      "titulo": "Documentos que resolvem",
+      "texto": [
+        [
+          "Carteira de trabalho com a anotação do contrato, sem rasuras.",
+          "Ficha ou livro de registro de empregados.",
+          "Termo de rescisão (TRCT) e extrato analítico do FGTS.",
+          "Holerites, contrato de trabalho, crachá ou declarações da empresa baseadas em documentos."
+        ]
+      ]
+    },
+    {
+      "titulo": "Como pedir o acerto",
+      "texto": [
+        "O pedido pode ser feito antes da aposentadoria, pela [[atualizacao-do-cnis|atualização do CNIS]] no [[fonte:meuinss|Meu INSS]], ou no próprio requerimento do benefício. Depois do acerto, o extrato passa a mostrar um indicador como [[ind:AEXT-VT]], e o PEXT deixa de impedir o cômputo."
+      ]
+    }
+  ],
+  "exemplo": [
+    "O CNIS de Sílvio mostra um vínculo de 1999 a 2003 com PEXT, informado pela empresa só em 2015. Ele juntou a CTPS com o registro e o extrato do FGTS da época. O INSS acertou o vínculo e os 4 anos passaram a contar."
+  ],
+  "fontes": [
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    },
+    {
+      "fonte": "anexov",
+      "dispositivo": "PEXT e AEXT"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A"
+    }
+  ],
+  "termos": [
+    "extemporaneidade",
+    "atualizacao-do-cnis",
+    "indicadores-do-cnis"
+  ],
+  "artigos": [
+    "vinculo-extemporaneo-no-cnis",
+    "documentos-para-comprovar-vinculo-de-emprego"
+  ],
+  "indicadores": [
+    "PEXT",
+    "AEXT-VT",
+    "PREM-EXT"
+  ],
+  "relacionadas": [
+    "vinculo-nao-aparece-no-cnis",
+    "carteira-assinada-sem-cnis-vale",
+    "vinculo-sem-data-de-saida-no-cnis"
+  ]
+}

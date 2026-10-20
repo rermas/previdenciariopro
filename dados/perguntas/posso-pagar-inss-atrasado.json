@@ -1,0 +1,60 @@
+{
+  "pergunta": "Posso pagar INSS atrasado para me aposentar?",
+  "titulo": "Posso pagar INSS atrasado para me aposentar? Regras e limites",
+  "resumo": "Quando o INSS em atraso pode ser pago, o que conta como tempo e como carência, a diferença para indenização e os limites do segurado facultativo.",
+  "categoria": "contribuicoes",
+  "resposta": "Em alguns casos, sim. O **contribuinte individual** pode pagar meses em que trabalhou e não recolheu, mas esses pagamentos **contam como tempo** e, em regra, **não como carência** se forem anteriores à primeira contribuição em dia. O **facultativo** só pode pagar atrasado se não perdeu a qualidade de segurado.",
+  "secoes": [
+    {
+      "titulo": "Contribuinte individual",
+      "texto": [
+        "Quem trabalhou por conta própria pode quitar os meses em aberto com juros e multa. Se o atraso passa de cinco anos, o pagamento vira [[indenizacao-de-periodo|indenização]], calculada pelo INSS, com prova da atividade. Pelo art. 27, II, da [[fonte:lei8213|Lei 8.213/1991]], a carência só conta a partir da primeira contribuição paga em dia."
+      ]
+    },
+    {
+      "titulo": "Facultativo",
+      "texto": [
+        "O [[segurado-facultativo]] não pode pagar competências anteriores à inscrição e só paga atrasado dentro do período em que manteve a qualidade de segurado (Decreto 3.048/1999, art. 11, §§ 3º e 4º)."
+      ]
+    },
+    {
+      "titulo": "O que não funciona",
+      "texto": [
+        "Pagar atrasado depois de um fato gerador, como o início de uma incapacidade, não cria direito a benefício por aquele evento."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Rita é cabeleireira autônoma desde 2020, mas só começou a pagar em dia em 2023. Ela pode quitar 2020 a 2022 com juros e multa para somar 3 anos de tempo de contribuição, mas esses meses não contam para a carência de 180 da aposentadoria por idade."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 27, II"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "arts. 35 e 45-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 11, §§ 3º e 4º"
+    }
+  ],
+  "termos": [
+    "contribuicao-em-atraso",
+    "indenizacao-de-periodo",
+    "carencia",
+    "contribuinte-individual"
+  ],
+  "artigos": [
+    "contribuicoes-em-atraso-contribuinte-individual-e-facultativo",
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "dona-de-casa-pode-contribuir",
+    "parei-de-contribuir-ainda-tenho-direito",
+    "contribuicao-abaixo-do-minimo-conta"
+  ]
+}

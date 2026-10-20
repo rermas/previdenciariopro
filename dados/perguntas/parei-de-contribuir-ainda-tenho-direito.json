@@ -1,0 +1,61 @@
+{
+  "pergunta": "Parei de contribuir: ainda tenho direito a benefício do INSS?",
+  "titulo": "Parei de contribuir: ainda tenho direito a benefício do INSS?",
+  "resumo": "Por quanto tempo a proteção do INSS continua depois de parar de contribuir, os prazos do período de graça e o que vale para aposentadoria e pensão.",
+  "categoria": "protecao",
+  "resposta": "Por um tempo, sim. Depois da última contribuição, a pessoa continua segurada no **período de graça**: em regra **12 meses**, que podem chegar a **24 ou 36** com mais de 120 contribuições ou desemprego comprovado. Para o facultativo, são **6 meses**. A aposentadoria por idade, porém, não depende disso se a carência já estiver cumprida.",
+  "secoes": [
+    {
+      "titulo": "Benefícios protegidos no período de graça",
+      "texto": [
+        "Durante o [[periodo-de-graca]], o segurado mantém direito ao auxílio por incapacidade, à aposentadoria por incapacidade, ao salário-maternidade e, para os dependentes, à pensão por morte e ao auxílio-reclusão."
+      ]
+    },
+    {
+      "titulo": "Aposentadorias",
+      "texto": [
+        "Pelo art. 3º da [[fonte:lei10666|Lei 10.666/2003]], a perda da [[qualidade-de-segurado]] não impede as aposentadorias por idade, tempo de contribuição e especial, se os requisitos forem cumpridos. As contribuições antigas continuam valendo."
+      ]
+    },
+    {
+      "titulo": "Quando a proteção acaba",
+      "texto": [
+        "A qualidade se perde no dia 16 do segundo mês depois do fim do período de graça (Decreto 3.048/1999, art. 14). Para voltar a ter proteção, basta voltar a contribuir; para alguns benefícios, é preciso cumprir metade da carência antes."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Denise trabalhou 15 anos com carteira e saiu do emprego em 06/2025, sem seguro-desemprego. Como tem mais de 120 contribuições sem perda da qualidade, o período de graça vai até 06/2027. Se ficar incapaz nesse intervalo, tem direito ao auxílio."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 15 e 27-A"
+    },
+    {
+      "fonte": "lei10666",
+      "dispositivo": "art. 3º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 13 e 14"
+    },
+    {
+      "fonte": "inss-qualidade"
+    }
+  ],
+  "termos": [
+    "periodo-de-graca",
+    "qualidade-de-segurado",
+    "carencia"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "desempregado-tem-direito-a-auxilio-doenca",
+    "perdi-a-qualidade-posso-aposentar-por-idade",
+    "posso-pagar-inss-atrasado"
+  ]
+}

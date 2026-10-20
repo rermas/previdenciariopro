@@ -1,0 +1,46 @@
+{
+  "pergunta": "Período de auxílio-doença conta para a aposentadoria?",
+  "titulo": "Período de auxílio-doença conta para a aposentadoria?",
+  "resumo": "O tempo em auxílio por incapacidade conta para a aposentadoria quando é intercalado com contribuições. Veja o que o STF decidiu e como aparece no CNIS.",
+  "categoria": "aposentadoria",
+  "resposta": "Conta, se for **intercalado**: o período em auxílio por incapacidade vale como **tempo de contribuição e carência** quando, depois dele, o segurado volta a trabalhar ou a contribuir. Se o benefício termina e não há nova contribuição, o período não conta.",
+  "secoes": [
+    {
+      "titulo": "Fundamento",
+      "texto": [
+        "O art. 55, II, da [[fonte:lei8213|Lei 8.213/1991]] prevê o cômputo do tempo em benefício por incapacidade intercalado com atividade. O STF confirmou que esse período também conta como carência (Tema 1.125)."
+      ]
+    },
+    {
+      "titulo": "No CNIS e na análise",
+      "texto": [
+        "Os benefícios recebidos aparecem no extrato do [[cnis]] com a data de início e de fim. Na análise do tempo, verifique se há contribuição depois do fim do benefício: é ela que torna o período intercalado."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Lúcia recebeu auxílio de 03/2020 a 08/2021 e voltou ao trabalho em 09/2021. Esses 18 meses contam como tempo e carência. Se ela não tivesse voltado a contribuir, não contariam."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29, § 5º, e 55, II"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "termos": [
+    "auxilio-por-incapacidade-temporaria",
+    "carencia",
+    "tempo-de-contribuicao",
+    "cnis"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "quanto-tempo-falta-para-me-aposentar",
+    "desempregado-tem-direito-a-auxilio-doenca"
+  ]
+}

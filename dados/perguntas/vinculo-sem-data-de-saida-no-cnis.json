@@ -1,0 +1,63 @@
+{
+  "pergunta": "Vínculo sem data de saída no CNIS: o que fazer?",
+  "titulo": "Vínculo sem data de saída no CNIS: o que fazer e o que muda",
+  "resumo": "Por que um vínculo aparece sem data de saída no CNIS, como isso afeta o tempo e o período de graça e quais documentos corrigem a informação.",
+  "categoria": "cnis",
+  "resposta": "Peça a **inclusão da data de saída** com a carteira de trabalho, o termo de rescisão ou o extrato do FGTS. Sem a data, o INSS tende a considerar o vínculo só até a última remuneração registrada, o que pode reduzir o tempo e mudar o cálculo do período de graça.",
+  "secoes": [
+    {
+      "titulo": "Por que acontece",
+      "texto": [
+        "Vínculos antigos, anteriores à GFIP e ao eSocial, muitas vezes foram informados só com a data de admissão. Também acontece quando a empresa fechou sem informar a rescisão. O extrato do [[cnis]] mostra o vínculo \"em aberto\"."
+      ]
+    },
+    {
+      "titulo": "O que muda",
+      "texto": [
+        [
+          "**Tempo de contribuição:** sem prova da saída, o período depois da última remuneração não costuma ser contado.",
+          "**Qualidade de segurado:** a data de saída marca o início do [[periodo-de-graca]]. Uma data errada pode fazer parecer que a pessoa perdeu ou manteve a qualidade.",
+          "**Benefícios recebidos depois:** um vínculo \"aberto\" pode gerar dúvida sobre atividade concomitante com o benefício."
+        ]
+      ]
+    },
+    {
+      "titulo": "Como corrigir",
+      "texto": [
+        "Reúna a CTPS com a anotação de saída, o TRCT, o extrato do FGTS e, se houver, a guia do seguro-desemprego. Peça a [[atualizacao-do-cnis|atualização do CNIS]] pelo [[fonte:meuinss|Meu INSS]] ou junte os documentos no pedido do benefício."
+      ]
+    }
+  ],
+  "exemplo": [
+    "O CNIS de Teresa mostra um vínculo iniciado em 03/1990, sem data de saída, com remunerações só até 1992. A CTPS registra a saída em 08/1994. Com a carteira, ela pode pedir que o período de 1992 a 1994 seja reconhecido."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A, § 2º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    },
+    {
+      "fonte": "inss-rac"
+    }
+  ],
+  "termos": [
+    "atualizacao-do-cnis",
+    "periodo-de-graca",
+    "cnis",
+    "tempo-de-contribuicao"
+  ],
+  "artigos": [
+    "documentos-para-comprovar-vinculo-de-emprego",
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "vinculo-nao-aparece-no-cnis",
+    "carteira-assinada-sem-cnis-vale",
+    "salario-faltando-no-cnis-reduz-aposentadoria"
+  ]
+}

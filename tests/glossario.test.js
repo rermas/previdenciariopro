@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const dir = path.join(__dirname, '..', 'dados', 'glossario');
-const fontes = JSON.parse(fs.readFileSync(path.join(dir, '_fontes.json'), 'utf8'));
+const fontes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'dados', 'fontes.json'), 'utf8'));
 const termos = {};
 for (const f of fs.readdirSync(dir)) {
   if (!f.endsWith('.json') || f.startsWith('_')) continue;
@@ -49,6 +49,7 @@ for (const [slug, t] of Object.entries(termos)) {
     for (const m of s.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)) {
       const [tipo, alvo] = m[1].includes(':') ? m[1].split(':') : ['termo', m[1]];
       if (tipo === 'termo') assert.ok(termos[alvo] && alvo !== slug, ctx + 'link ' + alvo);
+      else if (tipo === 'q') assert.ok(fs.existsSync(path.join(__dirname, '..', 'dados', 'perguntas', alvo + '.json')), ctx + 'pergunta ' + alvo);
       else if (tipo === 'post') assert.ok(posts.has(alvo), ctx + 'post ' + alvo);
       else if (tipo === 'ind') assert.ok(indicadores.has(alvo), ctx + 'indicador ' + alvo);
       else if (tipo === 'fonte') assert.ok(fontes[alvo], ctx + 'fonte ' + alvo);

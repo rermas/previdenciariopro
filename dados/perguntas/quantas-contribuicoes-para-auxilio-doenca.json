@@ -1,0 +1,56 @@
+{
+  "pergunta": "Quantas contribuições preciso para o auxílio-doença?",
+  "titulo": "Quantas contribuições preciso para ter auxílio-doença?",
+  "resumo": "A carência do auxílio por incapacidade temporária é de 12 contribuições, com exceções para acidentes e doenças graves. Veja o que conta e o que não conta.",
+  "categoria": "protecao",
+  "resposta": "Em regra, **12 contribuições mensais** antes do início da incapacidade. A carência é **dispensada** em acidente de qualquer natureza, doença profissional ou do trabalho e nas doenças graves da lista oficial. Também é preciso ter qualidade de segurado na data em que a incapacidade começou.",
+  "secoes": [
+    {
+      "titulo": "O que conta nas 12",
+      "texto": [
+        [
+          "Meses de emprego com carteira, mesmo que a empresa não tenha recolhido.",
+          "Contribuições de autônomo e facultativo pagas em dia e com valor de pelo menos um salário mínimo.",
+          "Meses de benefício por incapacidade intercalados com contribuições."
+        ]
+      ]
+    },
+    {
+      "titulo": "Quando a carência é dispensada",
+      "texto": [
+        "O art. 26, II, e o art. 151 da [[fonte:lei8213|Lei 8.213/1991]] dispensam a carência no acidente de qualquer natureza e em doenças graves como tuberculose ativa, hanseníase, neoplasia maligna, cegueira, cardiopatia grave, doença de Parkinson e outras da lista oficial, desde que a doença tenha surgido depois da filiação."
+      ]
+    },
+    {
+      "titulo": "Quem perdeu a qualidade e voltou a contribuir",
+      "texto": [
+        "Precisa de **6 contribuições** (metade da carência) depois do retorno para somar as anteriores (art. 27-A)."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Igor começou a trabalhar com carteira em 02/2026 e quebrou a perna jogando futebol em 05/2026. Ele tem só 4 contribuições, mas, como foi acidente, a carência é dispensada e ele pode receber o auxílio a partir do 16º dia de afastamento."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 25, I, 26, II, 27-A e 151"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "termos": [
+    "carencia",
+    "auxilio-por-incapacidade-temporaria",
+    "dii",
+    "qualidade-de-segurado"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "desempregado-tem-direito-a-auxilio-doenca",
+    "auxilio-doenca-conta-para-aposentadoria",
+    "parei-de-contribuir-ainda-tenho-direito"
+  ]
+}

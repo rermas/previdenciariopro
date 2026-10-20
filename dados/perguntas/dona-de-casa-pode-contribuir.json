@@ -1,0 +1,64 @@
+{
+  "pergunta": "Dona de casa pode contribuir para o INSS? Quanto paga?",
+  "titulo": "Dona de casa pode contribuir para o INSS? Valores em 2026",
+  "resumo": "Como a dona ou dono de casa contribui ao INSS como facultativo, os valores de 20%, 11% e 5% em 2026, os requisitos da baixa renda e o que cada plano garante.",
+  "categoria": "contribuicoes",
+  "resposta": "Pode, como **segurada facultativa**. Em 2026 as opções são: **R$ 324,20** (20% do mínimo, ou mais, até o teto), **R$ 178,31** (11%, plano simplificado) ou **R$ 81,05** (5%, só para família de baixa renda inscrita no CadÚnico). Quanto menor a alíquota, menos benefícios o período garante.",
+  "secoes": [
+    {
+      "titulo": "As três opções",
+      "texto": [
+        [
+          "**20%:** conta para todos os benefícios, inclusive aposentadoria por tempo de contribuição, e permite contribuir acima do mínimo.",
+          "**11%:** conta para aposentadoria por idade e demais benefícios no valor de um salário mínimo, mas não para aposentadoria por tempo de contribuição.",
+          "**5%:** mesmas limitações do 11%, com requisitos extras de renda."
+        ]
+      ]
+    },
+    {
+      "titulo": "Requisitos da alíquota de 5%",
+      "texto": [
+        "Pelo art. 21, § 2º, II, b, e § 4º da [[fonte:lei8212|Lei 8.212/1991]]: não ter renda própria, dedicar-se só ao trabalho doméstico na própria casa, ter a família inscrita e atualizada no CadÚnico e renda familiar mensal de até dois salários mínimos (R$ 3.242,00 em 2026). Se algum requisito falhar, o INSS pode não validar as contribuições, e o CNIS mostra pendência como [[ind:PREC-FBR]]."
+      ]
+    },
+    {
+      "titulo": "Como começar",
+      "texto": [
+        "A inscrição como facultativa é feita no [[fonte:meuinss|Meu INSS]] ou pela central 135. A primeira contribuição deve ser paga em dia, até o dia 15 do mês seguinte, para que as próximas contem como carência. Não é possível pagar meses anteriores à inscrição."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Sueli, 50 anos, nunca contribuiu e quer se aposentar por idade aos 62. Se pagar 11% em dia a partir de agora, terá 12 anos de contribuição aos 62 e ainda faltarão 3 para os 15 anos exigidos; pode se aposentar aos 65, com um salário mínimo."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 21, §§ 2º a 4º"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 13"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 11"
+    }
+  ],
+  "termos": [
+    "segurado-facultativo",
+    "aliquotas-de-contribuicao",
+    "plano-simplificado",
+    "carencia"
+  ],
+  "artigos": [],
+  "indicadores": [
+    "PREC-FBR",
+    "IREC-FBR"
+  ],
+  "relacionadas": [
+    "contribui-com-11-posso-aposentar-por-tempo",
+    "15-anos-de-contribuicao-aposenta",
+    "posso-pagar-inss-atrasado"
+  ]
+}

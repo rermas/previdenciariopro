@@ -1,0 +1,58 @@
+{
+  "pergunta": "Vale a pena contribuir pelo teto do INSS?",
+  "titulo": "Vale a pena contribuir pelo teto do INSS? Como fazer a conta",
+  "resumo": "O que muda ao contribuir pelo teto do INSS: custo mensal em 2026, efeito na média de 100% dos salários, coeficiente de 60% e pontos para comparar.",
+  "categoria": "contribuicoes",
+  "resposta": "Depende da idade, do histórico e da regra de aposentadoria. Contribuir pelo teto aumenta a média, mas desde a EC 103/2019 a média usa **todos os salários desde 07/1994** e o valor começa em **60%** dela. Quem tem anos com salários baixos raramente chega ao teto, mesmo pagando o máximo no fim da carreira.",
+  "secoes": [
+    {
+      "titulo": "Quanto custa",
+      "texto": [
+        "Em 2026, o [[teto-do-inss]] é de R$ 8.475,55. O contribuinte individual que recolhe 20% sobre o teto paga R$ 1.695,11 por mês."
+      ]
+    },
+    {
+      "titulo": "Como a média reage",
+      "texto": [
+        "Como a média usa 100% dos salários, cada mês a mais pesa pouco quando já há muitos anos de contribuição. Por isso, pagar o teto só no fim da carreira eleva a média, mas não a leva até o teto."
+      ]
+    },
+    {
+      "titulo": "O que comparar",
+      "texto": [
+        [
+          "Quantos anos faltam para aposentar e por qual regra.",
+          "O coeficiente: 60% + 2% por ano acima de 15 (mulher) ou 20 anos (homem).",
+          "O efeito do [[descarte-de-contribuicoes]] dos salários baixos.",
+          "O custo total das contribuições em comparação com o aumento da renda mensal."
+        ]
+      ]
+    }
+  ],
+  "exemplo": [
+    "Marta tem 300 meses de contribuição com média de R$ 3.000,00 e faltam 5 anos para se aposentar. Pagando pelo teto nesse período, a média sobe para cerca de R$ 3.913,00 (cerca de 30% a mais), a um custo de 60 × R$ 1.695,11 = R$ 101.706,60 em valores de 2026. Ela deve comparar esse custo com o aumento da renda mensal ao longo dos anos de benefício."
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "arts. 21 e 28, § 5º"
+    }
+  ],
+  "termos": [
+    "teto-do-inss",
+    "salario-de-beneficio",
+    "rmi",
+    "descarte-de-contribuicoes"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "qual-regra-de-transicao-e-melhor",
+    "quanto-tempo-falta-para-me-aposentar",
+    "dona-de-casa-pode-contribuir"
+  ]
+}

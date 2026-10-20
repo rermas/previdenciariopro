@@ -1,0 +1,62 @@
+{
+  "pergunta": "Recebi adicional de insalubridade: tenho direito a aposentadoria especial?",
+  "titulo": "Adicional de insalubridade dá direito a aposentadoria especial?",
+  "resumo": "Receber adicional de insalubridade não garante tempo especial no INSS. Veja a diferença, o papel do PPP e o que mudou depois da EC 103/2019.",
+  "categoria": "aposentadoria",
+  "resposta": "Não automaticamente. O **adicional de insalubridade** é uma regra trabalhista; o **tempo especial** do INSS exige prova de exposição a agentes nocivos acima dos limites, de forma permanente, normalmente pelo **PPP**. O adicional é um bom indício, mas o INSS analisa o PPP e o laudo.",
+  "secoes": [
+    {
+      "titulo": "Por que são coisas diferentes",
+      "texto": [
+        "A insalubridade da CLT segue as normas regulamentadoras do Ministério do Trabalho. A [[atividade-especial]] segue a [[fonte:lei8213|Lei 8.213/1991]] (arts. 57 e 58) e o Anexo IV do [[fonte:dec3048|Decreto 3.048/1999]], com seus próprios agentes e limites. Pode haver adicional sem tempo especial, e o contrário."
+      ]
+    },
+    {
+      "titulo": "O que provar",
+      "texto": [
+        [
+          "Até 28/04/1995: a categoria profissional ou a exposição ao agente.",
+          "Depois disso: a exposição efetiva, por formulário e laudo.",
+          "Desde 2004: o [[ppp]], com responsável técnico pelos registros ambientais.",
+          "No ruído, o EPI não afasta o direito (STF, Tema 555)."
+        ]
+      ]
+    },
+    {
+      "titulo": "Depois da reforma",
+      "texto": [
+        "A aposentadoria especial passou a ter idade mínima ou pontos, e o tempo especial **depois de 13/11/2019 não pode mais ser convertido** em comum. O período anterior continua podendo ser convertido, com fator 1,4 (homem) ou 1,2 (mulher) na atividade de 25 anos."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Fábio trabalhou 12 anos em uma metalúrgica recebendo adicional de insalubridade. O PPP registra ruído de 91 dB em todo o período, até 2018. Ele pode pedir o reconhecimento dos 12 anos como especiais e convertê-los em cerca de 16 anos e 9 meses de tempo comum (fator 1,4)."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 57 e 58"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 64 a 70 e Anexo IV"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 19, § 1º, 21 e 25, § 2º"
+    }
+  ],
+  "termos": [
+    "atividade-especial",
+    "ppp",
+    "tempo-de-contribuicao",
+    "direito-adquirido"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "qual-regra-de-transicao-e-melhor",
+    "quanto-tempo-falta-para-me-aposentar",
+    "aposentado-que-continua-trabalhando"
+  ]
+}

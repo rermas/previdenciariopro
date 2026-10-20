@@ -16,6 +16,8 @@ assets/fonts/        Atkinson Hyperlegible
 posts/*.html         texto de cada artigo do blog
 tests/cnis.test.js   testes da análise (node tests/cnis.test.js)
 dados/glossario/     um JSON por termo do glossário (teste: node tests/glossario.test.js)
+dados/perguntas/     um JSON por pergunta frequente (teste: node tests/perguntas.test.js)
+dados/fontes.json    links oficiais citados no glossário e nas perguntas
 .htaccess            HTTPS, URLs limpas, bloqueio de posts/ e tests/
 ```
 
@@ -200,7 +202,11 @@ Sem o PDF, o botão "Lançar tempo manualmente" (em `/analise-cnis/`) abre uma l
 
 ## Glossário
 
-`/glossario/` lista os termos por tema e `/glossario/{termo}/` mostra cada um: definição, seções, exemplo, perguntas frequentes, fundamento legal com links oficiais (Planalto e gov.br), artigos, indicadores e termos relacionados, com JSON-LD `DefinedTerm`. Cada termo é um arquivo `dados/glossario/{slug}.json`; as fontes ficam em `dados/glossario/_fontes.json`. Nos textos vale `**negrito**`, `[[slug|texto]]` (outro termo), `[[post:slug|texto]]` (artigo, só vira link depois de publicado), `[[ind:CÓDIGO]]` e `[[fonte:chave|texto]]`. Para incluir um termo, crie o JSON e rode `node tests/glossario.test.js`, que confere campos, tamanho do resumo, links quebrados e termos sem link de entrada. Atualize `GLOSSARIO_REVISADO` no `index.php` (ou use `"revisado"` no próprio termo) quando revisar os textos. Os valores de 2026 (salário mínimo e teto) aparecem em `teto-do-inss`, `aliquotas-de-contribuicao` e em exemplos: revise todo ano.
+`/glossario/` lista os termos por tema e `/glossario/{termo}/` mostra cada um: definição, seções, exemplo, perguntas frequentes, fundamento legal com links oficiais (Planalto e gov.br), artigos, indicadores e termos relacionados, com JSON-LD `DefinedTerm`. Cada termo é um arquivo `dados/glossario/{slug}.json`; as fontes oficiais ficam em `dados/fontes.json` (compartilhado com as perguntas). Nos textos vale `**negrito**`, `[[slug|texto]]` (outro termo), `[[post:slug|texto]]` (artigo, só vira link depois de publicado), `[[ind:CÓDIGO]]` e `[[fonte:chave|texto]]`. Para incluir um termo, crie o JSON e rode `node tests/glossario.test.js`, que confere campos, tamanho do resumo, links quebrados e termos sem link de entrada. Atualize `GLOSSARIO_REVISADO` no `index.php` (ou use `"revisado"` no próprio termo) quando revisar os textos. Os valores de 2026 (salário mínimo e teto) aparecem em `teto-do-inss`, `aliquotas-de-contribuicao` e em exemplos: revise todo ano.
+
+## Perguntas frequentes
+
+`/perguntas/` reúne as perguntas por situação (CNIS, contribuições, qualidade de segurado, aposentadoria, benefícios e processo) e `/perguntas/{slug}/` mostra cada uma: resposta curta no topo (25 a 75 palavras, usada também no JSON-LD `FAQPage`), seções, exemplo, fundamento legal, termos do glossário, artigos, indicadores e outras perguntas. Cada pergunta é um arquivo `dados/perguntas/{slug}.json` com a mesma marcação do glossário, mais `[[q:slug|texto]]` para outra pergunta. As fontes oficiais vêm de `dados/fontes.json`. Rode `node tests/perguntas.test.js` depois de criar ou editar: ele confere títulos, resumos, tamanho da resposta curta, links e perguntas sem link de entrada. As páginas de termos, artigos e indicadores listam automaticamente as perguntas que os citam.
 
 Na análise, por padrão:
 - `vinculo` no cabeçalho do vínculo (PEXT, PDIV-DADOS-GFIP, PEMP-CAD, PVIN-IRREG, PVIN-REC-PROC-TRAB, PRPSE, AEXT-IND...): o vínculo fica fora do tempo e da carência. PEXT com AEXT-VT/VTJ/VTR e PDIV com ADIV não excluem;

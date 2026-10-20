@@ -1,0 +1,51 @@
+{
+  "pergunta": "Qual regra de transição da aposentadoria é melhor para mim?",
+  "titulo": "Qual regra de transição da aposentadoria é a melhor para mim?",
+  "resumo": "Como comparar as regras de transição da EC 103/2019: pontos, idade progressiva, pedágio de 50% e de 100% e idade, pela data e pelo valor do benefício.",
+  "categoria": "aposentadoria",
+  "resposta": "Não existe uma regra melhor para todos. A melhor é a que dá a **combinação mais vantajosa de data e valor** no seu caso. O pedágio de 100% costuma pagar mais (100% da média), o de 50% pode antecipar com fator previdenciário, e pontos e idade progressiva pagam 60% mais 2% por ano extra.",
+  "secoes": [
+    {
+      "titulo": "Como cada regra paga",
+      "texto": [
+        [
+          "**[[regra-de-pontos|Pontos]] e [[idade-minima-progressiva|idade progressiva]]:** 60% da média + 2% por ano acima de 15 (mulher) ou 20 anos (homem).",
+          "**[[pedagio|Pedágio de 100%]]:** 100% da média, mas exige 57/60 anos e tempo adicional.",
+          "**Pedágio de 50%:** média × [[fator-previdenciario|fator previdenciário]], sem idade mínima, só para quem estava perto do tempo em 11/2019.",
+          "**Idade:** 60% + 2% por ano acima de 15 (mulher) ou 20 anos (homem)."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que comparar",
+      "texto": [
+        "Para cada regra, anote a data em que os requisitos são cumpridos e o valor estimado. Às vezes vale esperar alguns meses por uma regra que paga muito mais; outras vezes, aposentar antes compensa. O [[descarte-de-contribuicoes]] também muda o resultado."
+      ]
+    }
+  ],
+  "exemplo": [
+    "Rogério nasceu em 1966 e tinha 31 anos de contribuição em 13/11/2019. Continuando a trabalhar, ele cumpre o pedágio de 100% no início de 2027, com 60 anos e 39 anos de contribuição, e recebe 100% da média. Pela regra de pontos, só chegaria lá em 2030; pela idade progressiva, em 2031. No caso dele, o pedágio de 100% vem antes e paga mais."
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15 a 20 e 26"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "regras-de-transicao",
+    "regra-de-pontos",
+    "pedagio",
+    "fator-previdenciario"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "quanto-tempo-falta-para-me-aposentar",
+    "vale-a-pena-contribuir-pelo-teto",
+    "15-anos-de-contribuicao-aposenta"
+  ]
+}
