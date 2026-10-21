@@ -1,7 +1,7 @@
 <?php
 /*
  * Análise CNIS: PHP puro, sem banco de dados, com um único roteador.
- * Rotas: /  /beneficios/  /beneficios/{slug}/  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /legislacao/{tema}/  /privacidade/  /analise-cnis/  /sitemap.xml
+ * Rotas: /  /beneficios/  /beneficios/{slug}/  /regras-de-transicao/  /regras-de-transicao/{regra}/  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /legislacao/{tema}/  /privacidade/  /analise-cnis/  /sitemap.xml
  */
 
 // ---------- Configuração ----------
@@ -303,6 +303,54 @@ const CAT_PERGUNTAS = [
     'cnis' => 'CNIS, vínculos e pendências', 'contribuicoes' => 'Contribuições', 'protecao' => 'Qualidade de segurado e carência',
     'aposentadoria' => 'Aposentadoria e tempo de contribuição', 'beneficios' => 'Pensão e acumulação de benefícios', 'processo' => 'Pedido, recurso e revisão',
 ];
+// Regras de transição da EC 103/2019: uma página por regra em dados/transicao/{slug}.json. As tabelas ano a ano são
+// calculadas por tabela_transicao() a partir de [base, passo por ano, limite]. Teste: node tests/transicao.test.js
+const TRANSICAO_REVISADA = '2026-10-21';
+function transicao(): array {
+    static $l = null;
+    if ($l !== null) return $l;
+    $l = ler_pasta('transicao');
+    uasort($l, fn($a, $b) => ($a['ordem'] ?? 999) <=> ($b['ordem'] ?? 999));
+    return $l;
+}
+function lista_transicao(array $rs): void {
+    echo '<ul class="lista-gl">';
+    foreach ($rs as $slug => $r) echo '<li><a href="' . e(u('/regras-de-transicao/' . $slug . '/')) . '">' . e($r['nome']) . '</a> <span>' . e($r['artigo']) . '. ' . e($r['comparativo']['requisitos']) . '.</span></li>';
+    echo '</ul>';
+}
+function transicao_que_cita(string $campo, string $valor): array {
+    return array_filter(transicao(), fn($r) => in_array($valor, $r[$campo] ?? [], true));
+}
+function fmt_anos(float $x): string {
+    $a = (int) floor($x + 1e-9); $m = (int) round(($x - $a) * 12);
+    if ($m === 12) { $a++; $m = 0; }
+    $ms = $m ? $m . ($m === 1 ? ' mês' : ' meses') : '';
+    if ($a === 0) return $ms ?: '0';
+    return $a . ($a === 1 ? ' ano' : ' anos') . ($ms ? ' e ' . $ms : '');
+}
+function tabela_transicao(array $t): string {
+    $o = '<div class="tabela-box"><table class="tabela tabela-transicao"><caption>' . e($t['titulo']) . '</caption>';
+    if (($t['tipo'] ?? '') === 'pedagio') {
+        $o .= '<thead><tr><th scope="col">Segurado</th><th scope="col">Tempo em 13/11/2019</th><th scope="col">Faltava</th><th scope="col">Pedágio (' . (int) $t['percentual'] . '%)</th><th scope="col">Tempo exigido</th></tr></thead><tbody>';
+        foreach (['mulher' => 'Mulher', 'homem' => 'Homem'] as $sx => $rot) {
+            foreach ($t[$sx] as $tc) {
+                $falta = $t['minimo'][$sx] - $tc; $ped = $falta * $t['percentual'] / 100;
+                $o .= '<tr><td>' . $rot . '</td><td>' . fmt_anos($tc) . '</td><td>' . fmt_anos($falta) . '</td><td>' . fmt_anos($ped) . '</td><td><strong>' . fmt_anos($t['minimo'][$sx] + $ped) . '</strong></td></tr>';
+            }
+        }
+        return $o . '</tbody></table></div>';
+    }
+    $ano = (int) date('Y');
+    $fmt = fn($v) => $t['unidade'] === 'idade' ? fmt_anos($v) : (string) (int) $v;
+    $o .= '<thead><tr><th scope="col">Ano</th><th scope="col">Mulher</th><th scope="col">Homem</th></tr></thead><tbody>';
+    for ($y = $t['inicio']; $y <= $t['fim']; $y++) {
+        $mu = min($t['mulher'][0] + $t['mulher'][1] * ($y - $t['inicio']), $t['mulher'][2]);
+        $ho = min($t['homem'][0] + $t['homem'][1] * ($y - $t['inicio']), $t['homem'][2]);
+        $o .= '<tr' . ($y === $ano ? ' class="atual"' : '') . '><th scope="row">' . $y . ($y === $ano ? ' <span>(este ano)</span>' : '') . ($y === $t['fim'] ? ' <span>em diante</span>' : '') . '</th><td>' . $fmt($mu) . '</td><td>' . $fmt($ho) . '</td></tr>';
+    }
+    return $o . '</tbody></table></div>';
+}
+
 // Guias por benefício: um arquivo por benefício em dados/beneficios/{slug}.json, com a marcação do glossário e [[ben:slug|texto]].
 // Teste: node tests/beneficios-guias.test.js
 const GUIAS_REVISADOS = '2026-10-20';
@@ -386,6 +434,7 @@ function gl_html(string $s): string {
             if (!isset($G[$alvo])) return $txt ?? $alvo;
             return '<a href="' . e(u('/glossario/' . $alvo . '/')) . '">' . ($txt ?? e(nome_termo($G[$alvo]))) . '</a>';
         }
+        if ($tipo === 'tr') { $T = transicao(); return isset($T[$alvo]) ? '<a href="' . e(u('/regras-de-transicao/' . $alvo . '/')) . '">' . ($txt ?? e($T[$alvo]['nome'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'ben') { $B = guias(); return isset($B[$alvo]) ? '<a href="' . e(u('/beneficios/' . $alvo . '/')) . '">' . ($txt ?? e($B[$alvo]['nome'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'leg') { $L = legislacao(); return isset($L[$alvo]) ? '<a href="' . e(u('/legislacao/' . $alvo . '/')) . '">' . ($txt ?? e($L[$alvo]['titulo'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'q') { $Q = perguntas(); return isset($Q[$alvo]) ? '<a href="' . e(u('/perguntas/' . $alvo . '/')) . '">' . ($txt ?? e($Q[$alvo]['pergunta'])) . '</a>' : ($txt ?? ''); }
@@ -499,7 +548,7 @@ function rodape(): void {
 <footer class="rodape">
   <div class="wrap">
     <p>Conteúdo informativo. Não substitui a orientação de um advogado previdenciário nem as informações oficiais do INSS.</p>
-    <p class="rodape-links"><a href="<?= e(u('/beneficios/')) ?>">Guias por benefício</a> <a href="<?= e(u('/blog/')) ?>">Blog</a> <a href="<?= e(u('/perguntas/')) ?>">Perguntas frequentes</a> <a href="<?= e(u('/glossario/')) ?>">Glossário</a> <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a> <a href="<?= e(u('/legislacao/')) ?>">Legislação</a></p>
+    <p class="rodape-links"><a href="<?= e(u('/beneficios/')) ?>">Guias por benefício</a> <a href="<?= e(u('/regras-de-transicao/')) ?>">Regras de transição</a> <a href="<?= e(u('/blog/')) ?>">Blog</a> <a href="<?= e(u('/perguntas/')) ?>">Perguntas frequentes</a> <a href="<?= e(u('/glossario/')) ?>">Glossário</a> <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a> <a href="<?= e(u('/legislacao/')) ?>">Legislação</a></p>
     <p><a href="<?= e(u('/privacidade/')) ?>">Política de privacidade</a> &copy; <?= date('Y') ?> <?= e(SITE_NOME) ?></p>
   </div>
 </footer>
@@ -616,6 +665,12 @@ if ($rota === '/') {
     <h2>Guias por benefício</h2>
     <p class="texto">Requisitos, valor, documentos, como pedir e o que conferir no CNIS para cada benefício do INSS.</p>
     <p class="termos-gl"><?php foreach (guias() as $s => $g): ?><a href="<?= e(u('/beneficios/' . $s . '/')) ?>"><?= e($g['nome']) ?></a><?php endforeach; ?></p>
+  </section>
+
+  <section class="faixa">
+    <h2>Regras de transição da reforma</h2>
+    <p class="texto">Pontos, idade mínima progressiva, pedágios de 50% e 100%, aposentadoria por idade, especial e do professor, com as tabelas de cada ano.</p>
+    <a class="mais" href="<?= e(u('/regras-de-transicao/')) ?>">Ver as regras de transição</a>
   </section>
 
   <section class="faixa">
@@ -890,6 +945,9 @@ if ($rota === '/') {
     <h1><?= e($t['titulo']) ?></h1>
     <p class="meta">Revisado em <?= e(data_br($rev)) ?>.</p>
     <p class="oficial definicao"><?= gl_html($t['definicao']) ?></p>
+    <?php $trs = transicao_que_cita('termos', $slug); if ($trs): ?>
+      <p class="guia-link">Regra completa, com tabela: <?php $i = 0; foreach ($trs as $tsl => $r): ?><?= $i++ ? ', ' : '' ?><a href="<?= e(u('/regras-de-transicao/' . $tsl . '/')) ?>"><?= e($r['nome']) ?></a><?php endforeach; ?>.</p>
+    <?php endif; ?>
     <?php $gs = guias_que_citam('termos', $slug); if ($gs): ?>
       <p class="guia-link">Guia completo: <?php $i = 0; foreach ($gs as $gsl => $g): ?><?= $i++ ? ', ' : '' ?><a href="<?= e(u('/beneficios/' . $gsl . '/')) ?>"><?= e($g['nome']) ?></a><?php endforeach; ?>.</p>
     <?php endif; ?>
@@ -943,6 +1001,114 @@ if ($rota === '/') {
 <?php
     rodape();
 
+} elseif ($rota === '/regras-de-transicao') {
+    $T = transicao();
+    $desc = 'Regras de transição da aposentadoria (EC 103/2019) explicadas uma a uma: pontos, idade progressiva, pedágios de 50% e 100%, idade, especial e professor, com tabelas.';
+    topo('Regras de transição da aposentadoria (EC 103/2019) em 2026 | ' . SITE_NOME, $desc, '/regras-de-transicao/', [
+        'jsonld' => ['@context' => 'https://schema.org', '@type' => 'CollectionPage', 'name' => 'Regras de transição da EC 103/2019', 'description' => $desc, 'url' => SITE_URL . '/regras-de-transicao/',
+            'hasPart' => array_values(array_map(fn($s, $r) => ['@type' => 'Article', 'headline' => $r['titulo'], 'url' => SITE_URL . '/regras-de-transicao/' . $s . '/'], array_keys($T), $T))],
+    ]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <h1>Regras de transição da aposentadoria (EC 103/2019)</h1>
+  <p class="lead texto">A Reforma da Previdência criou regras de transição para quem já contribuía para o INSS em 13/11/2019. Cada uma tem requisitos e cálculo próprios, e a mesma pessoa pode cumprir mais de uma em datas diferentes.</p>
+  <p class="texto">Abaixo, o resumo de todas as regras em <?= date('Y') ?>. Cada página traz a tabela de cada ano, como calcular, exemplos, o que conferir no CNIS e os links para o <a href="https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm" target="_blank" rel="noopener noreferrer">texto oficial da EC 103/2019</a>.</p>
+  <div class="tabela-box"><table class="tabela tabela-comparativa">
+    <thead><tr><th scope="col">Regra</th><th scope="col">Para quem</th><th scope="col">Requisitos (mulher/homem)</th><th scope="col">Valor</th></tr></thead>
+    <tbody>
+      <?php foreach ($T as $s => $r): ?>
+        <tr><th scope="row"><a href="<?= e(u('/regras-de-transicao/' . $s . '/')) ?>"><?= e($r['nome']) ?></a><span><?= e($r['artigo']) ?></span></th><td data-rot="Para quem"><?= e($r['comparativo']['para_quem']) ?></td><td data-rot="Requisitos"><?= e($r['comparativo']['requisitos']) ?></td><td data-rot="Valor"><?= e($r['comparativo']['valor']) ?></td></tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table></div>
+  <h2>Como escolher a melhor regra</h2>
+  <div class="texto">
+    <p>Para cada regra, anote a data em que você cumpre os requisitos e o valor estimado. O pedágio de 100% costuma pagar mais (100% da média), mas exige idade; o pedágio de 50% pode antecipar a aposentadoria, mas aplica o fator previdenciário; pontos e idade progressiva pagam 60% da média mais 2% por ano extra. Quem tinha os requisitos antes da reforma pode ter direito adquirido às regras antigas.</p>
+    <p>O passo mais importante é ter o CNIS completo: um vínculo faltando ou um período especial não reconhecido pode atrasar a aposentadoria em anos. Veja a <a href="<?= e(u('/perguntas/qual-regra-de-transicao-e-melhor/')) ?>">pergunta sobre a melhor regra</a> e o <a href="<?= e(u('/beneficios/aposentadoria-por-tempo-de-contribuicao/')) ?>">guia da aposentadoria por tempo de contribuição</a>.</p>
+  </div>
+  <h2>Todas as regras</h2>
+  <?php lista_transicao($T); ?>
+  <p class="meta texto">Revisado em <?= e(data_br(TRANSICAO_REVISADA)) ?>. Números conferidos no texto da EC 103/2019 publicado no Planalto.</p>
+</main>
+<?php
+    rodape();
+
+} elseif (preg_match('#^/regras-de-transicao/([a-z0-9-]+)$#', $rota, $m) && isset(transicao()[$m[1]])) {
+    $T = transicao();
+    $slug = $m[1];
+    $r = $T[$slug];
+    $caminho = '/regras-de-transicao/' . $slug . '/';
+    $rev = $r['revisado'] ?? TRANSICAO_REVISADA;
+    $faq = $r['perguntas_frequentes'] ?? [];
+    topo($r['titulo'] . ' | ' . SITE_NOME, $r['resumo'], $caminho, [
+        'artigo' => true,
+        'jsonld' => ['@context' => 'https://schema.org', '@graph' => [
+            ['@type' => 'Article', 'headline' => $r['titulo'], 'description' => $r['resumo'],
+             'datePublished' => $r['publicado'] ?? TRANSICAO_REVISADA, 'dateModified' => $rev,
+             'author' => ['@type' => 'Organization', 'name' => SITE_NOME], 'mainEntityOfPage' => SITE_URL . $caminho,
+             'about' => ['@type' => 'Legislation', 'name' => 'Emenda Constitucional nº 103/2019', 'legislationIdentifier' => $r['artigo'], 'url' => 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm']],
+            ['@type' => 'FAQPage', 'url' => SITE_URL . $caminho, 'mainEntity' => array_map(fn($q) => ['@type' => 'Question', 'name' => $q['pergunta'],
+                'acceptedAnswer' => ['@type' => 'Answer', 'text' => texto_puro($q['resposta'])]], $faq)],
+            ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Regras de transição', 'item' => SITE_URL . '/regras-de-transicao/'],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => $r['nome'], 'item' => SITE_URL . $caminho]]],
+        ]],
+    ]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <article class="artigo">
+    <p class="migalha"><a href="<?= e(u('/regras-de-transicao/')) ?>">Regras de transição</a> › <?= e($r['artigo']) ?></p>
+    <h1><?= e($r['titulo']) ?></h1>
+    <p class="meta"><?= e($r['artigo']) ?>. Revisado em <?= e(data_br($rev)) ?>.</p>
+    <p class="lead-artigo"><?= gl_html($r['introducao']) ?></p>
+    <h2>Requisitos</h2>
+    <div class="tabela-box"><table class="tabela resumo-rapido"><tbody>
+      <?php foreach ($r['requisitos'] as $x): ?><tr><th scope="row"><?= e($x['item']) ?></th><td><?= gl_html($x['valor']) ?></td></tr><?php endforeach; ?>
+    </tbody></table></div>
+    <?php if (!empty($r['tabelas'])): ?>
+      <h2>Tabela</h2>
+      <?php foreach ($r['tabelas'] as $tb) echo tabela_transicao($tb); ?>
+      <p class="dica">Valores calculados a partir do texto da EC 103/2019. Vale a exigência do ano em que todos os requisitos são cumpridos.</p>
+    <?php endif; ?>
+    <?php foreach ($r['secoes'] as $sec): ?>
+      <h2><?= e($sec['titulo']) ?></h2>
+      <?= gl_blocos($sec['texto']) ?>
+    <?php endforeach; ?>
+    <div class="exemplo"><h2>Exemplos</h2><?= gl_blocos($r['exemplos']) ?><p class="dica">Exemplos fictícios, só para ilustrar a regra.</p></div>
+    <h2>Perguntas frequentes</h2>
+    <?php foreach ($faq as $q): ?><h3 class="pergunta"><?= e($q['pergunta']) ?></h3><p><?= gl_html($q['resposta']) ?></p><?php endforeach; ?>
+    <?php $Q = perguntas(); $qs = array_intersect_key($Q, array_flip($r['perguntas'] ?? [])); if ($qs): ?>
+      <h3 class="pergunta">Mais perguntas sobre o tema</h3>
+      <?php lista_perguntas($qs, false); ?>
+    <?php endif; ?>
+    <h2>Texto oficial e fontes</h2>
+    <ul class="fontes-gl">
+      <?php foreach ($r['fontes'] as $f): $F = fontes_glossario()[$f['fonte']] ?? null; if (!$F) continue; ?>
+        <li><?= link_externo($F[1], e($F[0])) ?><?= !empty($f['dispositivo']) ? ', ' . e($f['dispositivo']) : '' ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <?php $B = guias(); $gs = array_intersect_key($B, array_flip($r['beneficios'] ?? [])); if ($gs): ?>
+      <h2>Guia do benefício</h2>
+      <?php lista_guias($gs); ?>
+    <?php endif; ?>
+    <?php $L = legislacao(); $ls = array_intersect_key($L, array_flip($r['legislacao'] ?? [])); if ($ls): ?>
+      <h2>Legislação comentada</h2>
+      <?php lista_legislacao($ls); ?>
+    <?php endif; ?>
+    <?php $G = glossario(); $ts = array_intersect_key($G, array_flip($r['termos'] ?? [])); if ($ts): ?>
+      <h2>Termos do glossário</h2>
+      <p class="termos-gl"><?php foreach ($ts as $s => $t): ?><a href="<?= e(u('/glossario/' . $s . '/')) ?>"><?= e($t['termo']) ?></a><?php endforeach; ?></p>
+    <?php endif; ?>
+    <h2>Outras regras de transição</h2>
+    <?php lista_transicao(array_intersect_key($T, array_flip($r['relacionadas'] ?? []))); ?>
+    <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
+    <?php anuncio(); ?>
+    <a class="voltar" href="<?= e(u('/regras-de-transicao/')) ?>">Todas as regras de transição</a>
+  </article>
+</main>
+<?php
+    rodape();
+
 } elseif ($rota === '/beneficios') {
     $B = guias();
     $porGrupo = [];
@@ -961,6 +1127,7 @@ if ($rota === '/') {
     <h2 class="grupo-indic" id="g-<?= e($gr) ?>"><?= e($rot) ?></h2>
     <?php lista_guias($porGrupo[$gr]); ?>
   <?php endforeach; ?>
+  <p class="texto">Para aposentadoria por tempo de contribuição, veja também as <a href="<?= e(u('/regras-de-transicao/')) ?>">regras de transição da EC 103/2019</a>, uma por página, com as tabelas de cada ano.</p>
   <p class="meta texto">Guias revisados em <?= e(data_br(GUIAS_REVISADOS)) ?>. Valores de 2026: salário mínimo de R$ 1.621,00, teto de R$ 8.475,55 e limite de baixa renda do auxílio-reclusão de R$ 1.980,38.</p>
 </main>
 <?php
@@ -1030,6 +1197,10 @@ if ($rota === '/') {
       <?php endforeach; ?>
     </ul>
     <p class="dica">Os links levam aos textos oficiais no Planalto e às páginas do INSS no gov.br. As regras mudam: confira sempre a versão vigente.</p>
+    <?php $trs = transicao_que_cita('beneficios', $slug); if ($trs): ?>
+      <h2>Regras de transição deste benefício</h2>
+      <?php lista_transicao($trs); ?>
+    <?php endif; ?>
     <?php $L = legislacao(); $ls = array_intersect_key($L, array_flip($g['legislacao'] ?? [])); if ($ls): ?>
       <h2>Legislação comentada</h2>
       <?php lista_legislacao($ls); ?>
@@ -1147,6 +1318,10 @@ if ($rota === '/') {
           <li><a href="<?= e(u('/indicadores/' . slug_ind($k) . '/')) ?>"><code class="cod"><?= e($k) ?></code></a> <span><?= e(curto_ind($IND[$k])) ?></span></li>
         <?php endforeach; ?>
       </ul>
+    <?php endif; ?>
+    <?php $trs = transicao_que_cita('perguntas', $slug); if ($trs): ?>
+      <h2>Regras de transição</h2>
+      <?php lista_transicao($trs); ?>
     <?php endif; ?>
     <?php $gs = guias_que_citam('perguntas', $slug); if ($gs): ?>
       <h2>Guias por benefício</h2>
@@ -1278,6 +1453,10 @@ if ($rota === '/') {
         <?php endforeach; ?>
       </ul>
     <?php endif; ?>
+    <?php $trs = transicao_que_cita('legislacao', $slug); if ($trs): ?>
+      <h2>Regras de transição em detalhe</h2>
+      <?php lista_transicao($trs); ?>
+    <?php endif; ?>
     <?php $gs = guias_que_citam('legislacao', $slug); if ($gs): ?>
       <h2>Guias por benefício</h2>
       <?php lista_guias($gs, false); ?>
@@ -1387,6 +1566,8 @@ if ($rota === '/') {
     $urls = [['/', null], ['/blog/', null], ['/glossario/', GLOSSARIO_REVISADO], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', LEGISLACAO_REVISADA], ['/privacidade/', null]];
     foreach (glossario() as $s => $t) $urls[] = ['/glossario/' . $s . '/', $t['revisado'] ?? GLOSSARIO_REVISADO];
     foreach (legislacao() as $s => $l) $urls[] = ['/legislacao/' . $s . '/', $l['revisado'] ?? LEGISLACAO_REVISADA];
+    $urls[] = ['/regras-de-transicao/', TRANSICAO_REVISADA];
+    foreach (transicao() as $s => $r) $urls[] = ['/regras-de-transicao/' . $s . '/', $r['revisado'] ?? TRANSICAO_REVISADA];
     $urls[] = ['/beneficios/', GUIAS_REVISADOS];
     foreach (guias() as $s => $g) $urls[] = ['/beneficios/' . $s . '/', $g['revisado'] ?? GUIAS_REVISADOS];
     $urls[] = ['/perguntas/', PERGUNTAS_REVISADAS];

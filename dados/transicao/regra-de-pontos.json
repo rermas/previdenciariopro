@@ -1,0 +1,143 @@
+{
+  "ordem": 1,
+  "nome": "Regra de pontos",
+  "artigo": "EC 103/2019, art. 15",
+  "titulo": "Regra de pontos da aposentadoria: tabela 2019 a 2033 e exemplos",
+  "resumo": "Regra de pontos da EC 103/2019 (art. 15): tabela de pontos por ano para mulher e homem, como somar idade e tempo em dias, valor do benefício e exemplos.",
+  "introducao": "A regra de pontos é a transição da antiga aposentadoria por tempo de contribuição para quem **já era filiado ao INSS em 13/11/2019**. Ela exige um tempo mínimo de contribuição e que a **soma da idade com o tempo de contribuição** alcance a pontuação do ano. A pontuação sobe todo dia 1º de janeiro, até um limite.",
+  "requisitos": [
+    {
+      "item": "Para quem",
+      "valor": "Filiados ao INSS até 13/11/2019."
+    },
+    {
+      "item": "Tempo de contribuição",
+      "valor": "30 anos (mulher) e 35 anos (homem)."
+    },
+    {
+      "item": "Pontos em 2026",
+      "valor": "93 (mulher) e 103 (homem)."
+    },
+    {
+      "item": "Aumento",
+      "valor": "1 ponto por ano desde 2020, até 100 (mulher, em 2033) e 105 (homem, em 2028)."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média + 2% por ano acima de 15 (mulher) ou 20 anos (homem)."
+    },
+    {
+      "item": "Fator previdenciário",
+      "valor": "Não se aplica."
+    }
+  ],
+  "tabelas": [
+    {
+      "titulo": "Pontos exigidos por ano",
+      "unidade": "pontos",
+      "inicio": 2019,
+      "fim": 2033,
+      "mulher": [
+        86,
+        1,
+        100
+      ],
+      "homem": [
+        96,
+        1,
+        105
+      ]
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Como os pontos são somados",
+      "texto": [
+        "O art. 15, § 2º, da [[fonte:ec103|EC 103/2019]] manda considerar a idade e o tempo de contribuição **em dias**. Não se arredonda para anos completos: 58 anos e 6 meses de idade valem 58,5 pontos, e 34 anos e 6 meses de contribuição valem 34,5 pontos, somando 93.",
+        "Entram no tempo de contribuição todos os períodos aceitos pelo INSS: vínculos, contribuições de 20%, tempo especial convertido até 13/11/2019, serviço militar, benefício por incapacidade intercalado e tempo rural anterior a 11/1991. Contribuições de 11% e de MEI só entram se [[plano-simplificado|complementadas]]."
+      ]
+    },
+    {
+      "titulo": "Qual pontuação vale",
+      "texto": [
+        "Vale a pontuação do ano em que **todos os requisitos** são cumpridos: os pontos e o tempo mínimo. Quem completa os pontos em 2026 tem o direito garantido, mesmo que peça a aposentadoria depois, quando a exigência já for maior.",
+        "Como a idade e o tempo crescem juntos, quem continua contribuindo ganha **2 pontos por ano**, enquanto a exigência sobe 1. Por isso a diferença entre o que se tem e o que se exige cai pela metade a cada ano."
+      ]
+    },
+    {
+      "titulo": "Valor do benefício",
+      "texto": [
+        "A renda é de 60% da média de 100% dos salários de contribuição desde 07/1994, com 2% a mais por ano que passar de 15 anos (mulher) ou 20 anos (homem) de contribuição (art. 26 da EC 103/2019). Com 35 anos de contribuição, a mulher recebe 100% da média; o homem chega a 100% com 40 anos.",
+        "O [[descarte-de-contribuicoes]] pode tirar salários baixos da média, mas reduz o tempo usado no acréscimo de 2% e não pode deixar o tempo abaixo do mínimo exigido."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Ana nasceu em 03/1968 e tinha 27 anos de contribuição em 13/11/2019. Continuando a contribuir, em 03/2026 terá 58 anos de idade e cerca de 33 anos e 4 meses de contribuição: 91,3 pontos, abaixo dos 93. Como ganha 2 pontos por ano, chega a 93 só em 01/2027, quando a exigência já subiu para 94. Ela alcança 94 pontos por volta de 07/2027, com 59 anos e 4 meses de idade e 34 anos e 8 meses de contribuição, e cumpre a regra nesse mês.",
+    "Bruno tem 63 anos e 40 anos de contribuição em 2026: soma exatamente 103 pontos. Ele cumpre a regra e recebe 60% + 2% × 20 = **100% da média**."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "A regra de pontos é a mesma que a antiga 86/96?",
+      "resposta": "Parecida, mas não igual. A antiga 86/96 servia para afastar o fator previdenciário; a regra de pontos da EC 103 é uma condição para se aposentar e usa o cálculo novo, de 60% mais 2% por ano."
+    },
+    {
+      "pergunta": "Quem começou a contribuir depois de 13/11/2019 pode usar?",
+      "resposta": "Não. Só quem já era filiado ao INSS nessa data. Os demais seguem a [[tr:regra-permanente|regra permanente]]."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15 e 26"
+    },
+    {
+      "fonte": "inss-regras"
+    },
+    {
+      "fonte": "inss-simulador"
+    }
+  ],
+  "termos": [
+    "regra-de-pontos",
+    "tempo-de-contribuicao",
+    "rmi",
+    "descarte-de-contribuicoes"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor",
+    "quanto-tempo-falta-para-me-aposentar"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "relacionadas": [
+    "idade-minima-progressiva",
+    "pedagio-de-100-por-cento",
+    "professor-nas-regras-de-transicao"
+  ],
+  "comparativo": {
+    "para_quem": "Filiados até 13/11/2019",
+    "requisitos": "30/35 anos de contribuição e 93/103 pontos em 2026",
+    "valor": "60% + 2% por ano extra"
+  }
+}

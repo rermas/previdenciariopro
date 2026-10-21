@@ -1,0 +1,145 @@
+{
+  "ordem": 5,
+  "nome": "Aposentadoria por idade na transição",
+  "artigo": "EC 103/2019, art. 18",
+  "titulo": "Aposentadoria por idade na transição (art. 18): idade e tempo",
+  "resumo": "Regra de transição da aposentadoria por idade (art. 18 da EC 103/2019): idade da mulher de 60 a 62 anos, 65 para o homem, 15 anos de contribuição e valor.",
+  "introducao": "O art. 18 da [[fonte:ec103|EC 103/2019]] manteve a aposentadoria por idade para quem **já era filiado ao INSS em 13/11/2019**, com duas diferenças em relação à regra permanente: a idade da mulher subiu aos poucos até 62 anos, e o **homem continua precisando de só 15 anos de contribuição**, e não 20.",
+  "requisitos": [
+    {
+      "item": "Para quem",
+      "valor": "Filiados ao INSS até 13/11/2019."
+    },
+    {
+      "item": "Idade",
+      "valor": "62 anos (mulher, desde 2023) e 65 anos (homem)."
+    },
+    {
+      "item": "Tempo de contribuição",
+      "valor": "15 anos para mulher e homem."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média + 2% por ano acima de 15 (mulher) ou 20 anos (homem)."
+    },
+    {
+      "item": "Qualidade de segurado",
+      "valor": "Não é exigida se a carência estiver cumprida."
+    }
+  ],
+  "tabelas": [
+    {
+      "titulo": "Idade exigida por ano",
+      "unidade": "idade",
+      "inicio": 2019,
+      "fim": 2023,
+      "mulher": [
+        60,
+        0.5,
+        62
+      ],
+      "homem": [
+        65,
+        0,
+        65
+      ]
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "A idade da mulher",
+      "texto": [
+        "A mulher precisava de 60 anos em 2019; a partir de 2020, a idade subiu 6 meses por ano até chegar a **62 anos em 2023**. Desde então, a exigência é fixa. Quem completou a idade da época, por exemplo 61 anos em 2021, tem o direito garantido mesmo que peça depois."
+      ]
+    },
+    {
+      "titulo": "15 anos para o homem",
+      "texto": [
+        "É a principal vantagem da transição para o homem: a [[tr:regra-permanente|regra permanente]] exige 20 anos de contribuição, mas o art. 18 exige só 15. O coeficiente, porém, continua contando acima de 20 anos: o homem com 15 anos recebe 60% da média."
+      ]
+    },
+    {
+      "titulo": "Tempo e carência",
+      "texto": [
+        "Os 15 anos de [[tempo-de-contribuicao]] e as 180 contribuições de [[carencia]] costumam coincidir, mas não sempre. Contribuições pagas em atraso antes da primeira em dia, competências abaixo do mínimo sem ajuste e tempo rural sem contribuição contam como tempo, mas não como carência. Veja o [[ben:aposentadoria-por-idade|guia da aposentadoria por idade]]."
+      ]
+    },
+    {
+      "titulo": "O que conferir no CNIS",
+      "texto": [
+        "Na aposentadoria por idade, o problema mais comum não é o tempo, mas a **carência**: contribuições de autônomo pagas em atraso, competências abaixo do mínimo e vínculos com pendências como [[ind:PEXT]] podem deixar a pessoa com menos de 180 meses válidos, mesmo com 15 anos de tempo.",
+        "Confira também a data de filiação: se o primeiro vínculo ou recolhimento é anterior a 13/11/2019, o homem precisa de 15 anos; se é posterior, de 20. Um vínculo antigo esquecido, mesmo curto, muda a regra aplicável."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Lúcia completou 61 anos em 2021, quando a exigência era de 61 anos, e tinha 16 anos de contribuição. Ela cumpriu a regra em 2021 e pode se aposentar a qualquer tempo, com 60% + 2% × 1 = 62% da média.",
+    "Jorge, filiado desde 1990, completa 65 anos em 2026 com 16 anos de contribuição. Pela transição, cumpre a regra. Se tivesse começado a contribuir só em 2020, precisaria de 20 anos."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Perdi a qualidade de segurado. Posso usar essa regra?",
+      "resposta": "Pode. Na aposentadoria por idade, basta ter a idade e a carência (Lei 10.666/2003, art. 3º, § 1º)."
+    },
+    {
+      "pergunta": "O trabalhador rural segue essa regra?",
+      "resposta": "Não. A aposentadoria rural mantém 55 anos (mulher) e 60 (homem). Veja o [[ben:aposentadoria-por-idade-rural|guia da aposentadoria rural]]."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 18 e 26"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 48"
+    },
+    {
+      "fonte": "inss-idade-urbana"
+    }
+  ],
+  "termos": [
+    "carencia",
+    "tempo-de-contribuicao",
+    "aposentadoria-programada",
+    "qualidade-de-segurado"
+  ],
+  "perguntas": [
+    "15-anos-de-contribuicao-aposenta",
+    "perdi-a-qualidade-posso-aposentar-por-idade"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103",
+    "carencia-arts-24-a-27-lei-8213"
+  ],
+  "beneficios": [
+    "aposentadoria-por-idade",
+    "aposentadoria-hibrida"
+  ],
+  "relacionadas": [
+    "regra-permanente",
+    "idade-minima-progressiva"
+  ],
+  "comparativo": {
+    "para_quem": "Filiados até 13/11/2019",
+    "requisitos": "62/65 anos e 15 anos de contribuição",
+    "valor": "60% + 2% por ano extra"
+  }
+}

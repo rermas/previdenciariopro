@@ -1,0 +1,149 @@
+{
+  "ordem": 3,
+  "nome": "Pedágio de 50%",
+  "artigo": "EC 103/2019, art. 17",
+  "titulo": "Pedágio de 50% na aposentadoria: quem pode usar e como calcular",
+  "resumo": "Regra do pedágio de 50% da EC 103/2019 (art. 17): quem tinha mais de 28 ou 33 anos em 2019, tempo exigido, fator previdenciário, tabela e exemplos.",
+  "introducao": "O pedágio de 50% é a regra de transição para quem estava **muito perto de se aposentar** quando a reforma entrou em vigor. É a única regra de transição **sem idade mínima**, mas o valor é calculado com o **fator previdenciário**, que pode reduzir bastante o benefício de quem se aposenta jovem.",
+  "requisitos": [
+    {
+      "item": "Para quem",
+      "valor": "Quem tinha, em 13/11/2019, mais de 28 anos (mulher) ou mais de 33 anos (homem) de contribuição."
+    },
+    {
+      "item": "Tempo de contribuição",
+      "valor": "30 anos (mulher) ou 35 anos (homem) + 50% do tempo que faltava em 13/11/2019."
+    },
+    {
+      "item": "Idade mínima",
+      "valor": "Não há."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Valor",
+      "valor": "Média dos salários multiplicada pelo fator previdenciário."
+    }
+  ],
+  "tabelas": [
+    {
+      "titulo": "Tempo exigido conforme o tempo em 13/11/2019",
+      "tipo": "pedagio",
+      "percentual": 50,
+      "mulher": [
+        28.5,
+        29,
+        29.5
+      ],
+      "homem": [
+        33.5,
+        34,
+        34.5
+      ],
+      "minimo": {
+        "mulher": 30,
+        "homem": 35
+      }
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Como calcular o pedágio",
+      "texto": [
+        [
+          "Veja quanto tempo de contribuição você tinha em 13/11/2019.",
+          "Calcule quanto faltava para 30 anos (mulher) ou 35 (homem).",
+          "Some ao tempo mínimo metade do que faltava."
+        ],
+        "Exemplo: o homem com 34 anos em 13/11/2019 precisava de mais 1 ano; o pedágio é de 6 meses, e ele precisa de 35 anos e 6 meses no total."
+      ]
+    },
+    {
+      "titulo": "O fator previdenciário",
+      "texto": [
+        "O valor é a média de 100% dos salários desde 07/1994 multiplicada pelo [[fator-previdenciario]], que considera a idade, o tempo de contribuição e a expectativa de sobrevida da [[fonte:ibge-tabua|tábua do IBGE]]. Para quem se aposenta com 50 e poucos anos, o fator costuma ficar entre 0,6 e 0,75, reduzindo o benefício em 25% a 40%."
+      ]
+    },
+    {
+      "titulo": "Quando vale a pena",
+      "texto": [
+        "Vale para quem precisa se aposentar logo e não alcança outra regra em pouco tempo. Para quem pode esperar alguns anos, o [[tr:pedagio-de-100-por-cento|pedágio de 100%]] (100% da média, a partir de 57/60 anos) ou a [[tr:regra-de-pontos|regra de pontos]] costumam pagar mais. Simule as opções antes de pedir."
+      ]
+    },
+    {
+      "titulo": "O que conferir no CNIS",
+      "texto": [
+        "O ponto decisivo é o **tempo em 13/11/2019**: se faltar um vínculo ou um período especial convertido naquela data, você pode ficar abaixo de 28 ou 33 anos e perder o acesso à regra. Antes de concluir que não tem direito, reconheça todos os períodos anteriores à reforma: vínculos sem registro no CNIS, tempo rural antes de 1991, serviço militar e tempo especial convertido.",
+        "O mesmo vale para o cálculo do pedágio: cada mês a mais em 13/11/2019 reduz em meio mês o tempo exigido. Uma diferença pequena no extrato muda a data da aposentadoria."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Sandra tinha 29 anos de contribuição em 13/11/2019. Faltava 1 ano; o pedágio é de 6 meses. Com 30 anos e 6 meses de contribuição, ela pôde se aposentar em 05/2021, aos 51 anos, com a média multiplicada pelo fator previdenciário.",
+    "Marcos tinha 32 anos de contribuição em 13/11/2019. Como tinha menos de 33 anos, **não pode** usar o pedágio de 50%; precisa de outra regra."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "O pedágio de 50% exige idade?",
+      "resposta": "Não. É a única regra de transição sem idade mínima."
+    },
+    {
+      "pergunta": "Posso fugir do fator previdenciário nessa regra?",
+      "resposta": "Não. Ele é obrigatório no pedágio de 50%, mesmo que reduza o valor."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 17"
+    },
+    {
+      "fonte": "lei9876",
+      "dispositivo": "Anexo (fórmula do fator)"
+    },
+    {
+      "fonte": "ibge-tabua"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "pedagio",
+    "fator-previdenciario",
+    "tempo-de-contribuicao"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "relacionadas": [
+    "pedagio-de-100-por-cento",
+    "regra-de-pontos",
+    "direito-adquirido-antes-da-reforma"
+  ],
+  "comparativo": {
+    "para_quem": "Quem tinha mais de 28/33 anos em 13/11/2019",
+    "requisitos": "30/35 anos + 50% do que faltava, sem idade",
+    "valor": "Média × fator previdenciário"
+  }
+}

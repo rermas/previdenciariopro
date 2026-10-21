@@ -1,0 +1,139 @@
+{
+  "ordem": 2,
+  "nome": "Idade mínima progressiva",
+  "artigo": "EC 103/2019, art. 16",
+  "titulo": "Idade mínima progressiva: tabela de idades por ano e exemplos",
+  "resumo": "Regra de idade mínima progressiva da EC 103/2019 (art. 16): tabela de idades exigidas por ano para mulher e homem, tempo de contribuição, valor e exemplos.",
+  "introducao": "A regra de idade mínima progressiva combina o **tempo de contribuição** da antiga aposentadoria por tempo com uma **idade mínima que sobe 6 meses por ano**. Vale para quem já era filiado ao INSS em 13/11/2019 e costuma ser a melhor opção para quem começou a trabalhar cedo.",
+  "requisitos": [
+    {
+      "item": "Para quem",
+      "valor": "Filiados ao INSS até 13/11/2019."
+    },
+    {
+      "item": "Tempo de contribuição",
+      "valor": "30 anos (mulher) e 35 anos (homem)."
+    },
+    {
+      "item": "Idade em 2026",
+      "valor": "59 anos e 6 meses (mulher) e 64 anos e 6 meses (homem)."
+    },
+    {
+      "item": "Aumento",
+      "valor": "6 meses por ano desde 2020, até 62 anos (mulher, em 2031) e 65 anos (homem, em 2027)."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média + 2% por ano acima de 15 (mulher) ou 20 anos (homem)."
+    }
+  ],
+  "tabelas": [
+    {
+      "titulo": "Idade mínima por ano",
+      "unidade": "idade",
+      "inicio": 2019,
+      "fim": 2031,
+      "mulher": [
+        56,
+        0.5,
+        62
+      ],
+      "homem": [
+        61,
+        0.5,
+        65
+      ]
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Como funciona",
+      "texto": [
+        "O art. 16 da [[fonte:ec103|EC 103/2019]] fixou a idade em 56 anos (mulher) e 61 (homem) em 2019, com acréscimo de 6 meses a cada 1º de janeiro a partir de 2020. A partir de 2027 o homem já está no limite de 65 anos; a mulher chega a 62 em 2031.",
+        "Diferente da regra de pontos, aqui idade e tempo são requisitos separados: não adianta ter muito tempo de contribuição se a idade do ano não foi atingida, nem o contrário."
+      ]
+    },
+    {
+      "titulo": "Qual idade vale",
+      "texto": [
+        "Vale a idade exigida no ano em que a pessoa reúne a idade e o tempo mínimo. Atenção: como a exigência sobe a cada 1º de janeiro, quem faz aniversário no fim do ano pode \"perseguir\" a idade por algum tempo. Quem tem 59 anos em 2025 (exigência 59) cumpre; quem só completa 59 em 2026 precisa de 59 anos e 6 meses."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "A renda segue a regra geral da EC 103/2019: 60% da média de todos os salários desde 07/1994 + 2% por ano acima de 15 (mulher) ou 20 anos (homem). Não há fator previdenciário."
+      ]
+    },
+    {
+      "titulo": "Comparando com a regra de pontos",
+      "texto": [
+        "Quem começou a trabalhar muito cedo costuma cumprir antes a idade progressiva; quem começou tarde costuma cumprir antes os pontos ou depender do [[tr:pedagio-de-100-por-cento|pedágio de 100%]]. Como o valor das duas é calculado do mesmo modo, a escolha costuma ser pela data."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Rosa nasceu em 06/1966 e tem 32 anos de contribuição em 2026. Ela completa 59 anos e 6 meses em 12/2025, mas em 2025 a exigência era de 59 anos, que ela já tinha desde 06/2025: cumpriu a regra em 2025, com 31 anos de contribuição e 60% + 2% × 16 = **92% da média**.",
+    "Paulo nasceu em 1962 e tem 38 anos de contribuição. Fez 64 anos em 2026, mas a exigência de 2026 é de 64 anos e 6 meses. Se nasceu até junho, cumpre a regra em 2026, ao completar 64 anos e 6 meses. Se nasceu depois de junho, os 64 anos e 6 meses só chegam em 2027, quando a exigência já é de 65 anos: ele cumpre no aniversário de 65, em 2027."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "A idade progressiva vale para a aposentadoria por idade?",
+      "resposta": "Não. A aposentadoria por idade tem regra própria (art. 18), com 62 anos para a mulher e 65 para o homem e só 15 anos de contribuição. Veja a [[tr:aposentadoria-por-idade-na-transicao|página da aposentadoria por idade na transição]]."
+    },
+    {
+      "pergunta": "O professor tem idade menor?",
+      "resposta": "Sim, 5 anos a menos e tempo de 25 (mulher) ou 30 anos (homem). Veja [[tr:professor-nas-regras-de-transicao|as regras do professor]]."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 16 e 26"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "idade-minima-progressiva",
+    "tempo-de-contribuicao",
+    "rmi"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor",
+    "quanto-tempo-falta-para-me-aposentar"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "relacionadas": [
+    "regra-de-pontos",
+    "pedagio-de-50-por-cento",
+    "aposentadoria-por-idade-na-transicao"
+  ],
+  "comparativo": {
+    "para_quem": "Filiados até 13/11/2019",
+    "requisitos": "30/35 anos de contribuição e 59,5/64,5 anos em 2026",
+    "valor": "60% + 2% por ano extra"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "ordem": 6,
+  "nome": "Aposentadoria especial na transição",
+  "artigo": "EC 103/2019, art. 21",
+  "titulo": "Aposentadoria especial na transição: pontos 66, 76 e 86",
+  "resumo": "Regra de transição da aposentadoria especial (art. 21 da EC 103/2019): pontos de 66, 76 e 86 com 15, 20 ou 25 anos de exposição, valor e exemplos.",
+  "introducao": "Para quem trabalha exposto a agentes nocivos e já era filiado em 13/11/2019, o art. 21 da [[fonte:ec103|EC 103/2019]] criou uma regra de **pontos fixos**: a soma da idade com o tempo de contribuição precisa chegar a 66, 76 ou 86, conforme a atividade, além do tempo mínimo de **efetiva exposição**.",
+  "requisitos": [
+    {
+      "item": "Para quem",
+      "valor": "Filiados até 13/11/2019 com atividade especial."
+    },
+    {
+      "item": "Atividade de 15 anos",
+      "valor": "66 pontos e 15 anos de efetiva exposição."
+    },
+    {
+      "item": "Atividade de 20 anos",
+      "valor": "76 pontos e 20 anos de efetiva exposição."
+    },
+    {
+      "item": "Atividade de 25 anos",
+      "valor": "86 pontos e 25 anos de efetiva exposição."
+    },
+    {
+      "item": "Aumento",
+      "valor": "Os pontos não sobem com o tempo."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média + 2% por ano acima de 20 anos (15 anos na atividade de 15 anos e para mulheres)."
+    }
+  ],
+  "tabelas": [],
+  "secoes": [
+    {
+      "titulo": "Como somar",
+      "texto": [
+        "Os pontos são a soma da idade e do tempo de contribuição, contados em dias (art. 21, § 1º). O tempo de contribuição inclui períodos comuns, mas os 15, 20 ou 25 anos de **exposição** precisam ser de atividade especial comprovada, normalmente pelo [[ppp]].",
+        "A maioria das atividades especiais (ruído, agentes químicos, biológicos) é de 25 anos. As de 15 e 20 anos são raras, como o trabalho em minas subterrâneas."
+      ]
+    },
+    {
+      "titulo": "Direito adquirido",
+      "texto": [
+        "Quem completou os 15, 20 ou 25 anos de atividade especial até 13/11/2019 não precisa de pontos: tem direito à regra antiga, sem idade e com **100% da média** dos 80% maiores salários (art. 3º). Veja [[tr:direito-adquirido-antes-da-reforma|direito adquirido]]."
+      ]
+    },
+    {
+      "titulo": "Quem se filiou depois",
+      "texto": [
+        "Para os novos filiados, a regra permanente exige idade mínima de 55, 58 ou 60 anos (art. 19, § 1º, I), conforme a atividade de 15, 20 ou 25 anos."
+      ]
+    },
+    {
+      "titulo": "Conversão de tempo",
+      "texto": [
+        "Quem não chega à aposentadoria especial pode converter o tempo especial anterior a 13/11/2019 em comum, com fator 1,4 (homem) ou 1,2 (mulher) na atividade de 25 anos, e usar outra regra. Depois dessa data a conversão é proibida (art. 25, § 2º)."
+      ]
+    },
+    {
+      "titulo": "O que conferir antes de pedir",
+      "texto": [
+        "O CNIS mostra os vínculos e, às vezes, o código de exposição informado na GFIP, mas não prova a atividade especial. Peça o [[ppp]] de cada empresa e confira os agentes nocivos, a intensidade, o responsável técnico pelos registros ambientais e as datas.",
+        "Se o PPP tiver falhas ou a empresa tiver fechado, laudos de empresa similar, laudos de processos trabalhistas e a perícia judicial são alternativas. Sem a prova, o período conta como tempo comum."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Rafael nasceu em 1975 e é soldador exposto a ruído desde 03/1999. Completou 25 anos de exposição em 03/2024, aos 49 anos: 49 + 25 = 74 pontos. Ganhando 2 pontos por ano, chega aos 86 por volta de 2030, aos 55 anos.",
+    "Nádia é técnica de enfermagem com exposição a agentes biológicos desde 1998 e completou 25 anos em 2023, aos 52 anos: soma 77 pontos. Ela atinge 86 por volta de 2027."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Posso continuar na atividade especial depois de aposentado?",
+      "resposta": "Não. O aposentado especial que continua exposto tem o benefício cancelado (STF, Tema 709)."
+    },
+    {
+      "pergunta": "O tempo de atividade comum entra nos pontos?",
+      "resposta": "Entra no tempo de contribuição dos pontos, mas não substitui os anos mínimos de exposição."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 3º, 19, § 1º, 21 e 25"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 57 e 58"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "atividade-especial",
+    "ppp",
+    "direito-adquirido"
+  ],
+  "perguntas": [
+    "trabalho-insalubre-aposentadoria-especial"
+  ],
+  "legislacao": [
+    "aposentadoria-especial-arts-57-e-58-lei-8213",
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-especial"
+  ],
+  "relacionadas": [
+    "direito-adquirido-antes-da-reforma",
+    "regra-de-pontos"
+  ],
+  "comparativo": {
+    "para_quem": "Filiados até 13/11/2019 com atividade especial",
+    "requisitos": "66, 76 ou 86 pontos e 15, 20 ou 25 anos de exposição",
+    "valor": "60% + 2% por ano extra"
+  }
+}

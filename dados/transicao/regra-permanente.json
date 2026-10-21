@@ -1,0 +1,126 @@
+{
+  "ordem": 9,
+  "nome": "Regra permanente",
+  "artigo": "EC 103/2019, art. 19",
+  "titulo": "Regra permanente da aposentadoria: quem começou depois de 2019",
+  "resumo": "Regra permanente da aposentadoria do INSS (art. 19 da EC 103/2019) para quem se filiou depois de 13/11/2019: idade, tempo, valor e diferenças da transição.",
+  "introducao": "Quem começou a contribuir para o INSS **depois de 13/11/2019** não tem regras de transição: segue a **regra permanente** do art. 19 da [[fonte:ec103|EC 103/2019]], chamada de [[aposentadoria-programada]]. Quem já era filiado pode usá-la também, se for mais vantajosa.",
+  "requisitos": [
+    {
+      "item": "Comum",
+      "valor": "62 anos (mulher) e 65 anos (homem), com 15 anos (mulher) ou 20 anos (homem) de contribuição."
+    },
+    {
+      "item": "Especial",
+      "valor": "55, 58 ou 60 anos, com 15, 20 ou 25 anos de exposição."
+    },
+    {
+      "item": "Professor",
+      "valor": "57 anos (mulher) e 60 (homem), com 25 anos de magistério."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média + 2% por ano acima de 15 (mulher) ou 20 anos (homem)."
+    },
+    {
+      "item": "Pessoa com deficiência",
+      "valor": "Segue a LC 142/2013."
+    }
+  ],
+  "tabelas": [],
+  "secoes": [
+    {
+      "titulo": "Transição ou permanente?",
+      "texto": [
+        "Para quem já era filiado, a regra permanente raramente é a melhor, porque as transições exigem menos. A diferença mais visível é a do homem: na [[tr:aposentadoria-por-idade-na-transicao|aposentadoria por idade da transição]], bastam 15 anos de contribuição; na permanente, 20."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "A média usa 100% dos salários desde 07/1994 (ou desde o início das contribuições). Para chegar a 100% da média, a mulher precisa de 35 anos de contribuição e o homem de 40."
+      ]
+    },
+    {
+      "titulo": "O que conta",
+      "texto": [
+        "Contribuições de 11% e de MEI contam normalmente, porque a aposentadoria programada não é por tempo de contribuição. Competências abaixo do salário mínimo precisam ser [[contribuicao-abaixo-do-minimo|ajustadas]]."
+      ]
+    },
+    {
+      "titulo": "O que conferir no CNIS",
+      "texto": [
+        "Para quem começou depois de 2019, o ponto mais sensível é o salário mínimo: competências abaixo dele desde 11/2019 não contam sem ajuste ([[ind:PSC-MEN-SM-EC103]]), o que é comum em trabalho intermitente e em jornada parcial. Para o MEI e o contribuinte individual, confira se as guias foram pagas em dia, porque só assim contam como carência.",
+        "Confira também se não há um vínculo esquecido anterior a 13/11/2019: um único período de filiação antes da reforma, mesmo curto, dá acesso às regras de transição, que costumam ser melhores para o homem."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Igor começou a trabalhar em 2020. Ele poderá se aposentar aos 65 anos com pelo menos 20 anos de contribuição. Com 30 anos, receberá 60% + 2% × 10 = 80% da média.",
+    "Bia começou em 2021 como MEI. Aos 62 anos, com 15 anos de DAS pagos em dia, terá direito à aposentadoria de um salário mínimo."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "A regra permanente pode mudar?",
+      "resposta": "O tempo de contribuição do art. 19 vale \"até que lei disponha\" sobre o tema. Uma lei futura pode alterá-lo."
+    },
+    {
+      "pergunta": "Quem tem tempo antes e depois de 2019 segue qual regra?",
+      "resposta": "Quem tinha qualquer filiação até 13/11/2019 pode usar as transições, mesmo com poucas contribuições antes."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 19 e 26"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 7º"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "aposentadoria-programada",
+    "carencia",
+    "mei",
+    "contribuicao-abaixo-do-minimo"
+  ],
+  "perguntas": [
+    "15-anos-de-contribuicao-aposenta",
+    "mei-conta-para-aposentadoria"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-por-idade"
+  ],
+  "relacionadas": [
+    "aposentadoria-por-idade-na-transicao",
+    "regra-de-pontos"
+  ],
+  "comparativo": {
+    "para_quem": "Filiados depois de 13/11/2019",
+    "requisitos": "62/65 anos e 15/20 anos de contribuição",
+    "valor": "60% + 2% por ano extra"
+  }
+}

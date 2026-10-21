@@ -1,0 +1,164 @@
+{
+  "ordem": 7,
+  "nome": "Professor nas regras de transição",
+  "artigo": "EC 103/2019, arts. 15, § 3º, 16, § 2º, e 20, § 1º",
+  "titulo": "Professor nas regras de transição: tabelas de pontos e idade",
+  "resumo": "Regras de transição do professor da educação básica: pontos de 81/91 a 92/100, idade de 51/56 a 57/60, pedágio de 100% e regra permanente, com tabelas.",
+  "introducao": "O professor que comprova **tempo exclusivo de magistério na educação infantil, no ensino fundamental ou médio** tem, em todas as regras de transição, requisitos **5 anos menores** de idade e de tempo de contribuição. As tabelas abaixo mostram os números de cada ano.",
+  "requisitos": [
+    {
+      "item": "Tempo de magistério",
+      "valor": "25 anos (mulher) e 30 anos (homem)."
+    },
+    {
+      "item": "Pontos em 2026",
+      "valor": "88 (mulher) e 98 (homem)."
+    },
+    {
+      "item": "Idade progressiva em 2026",
+      "valor": "54 anos e 6 meses (mulher) e 59 anos e 6 meses (homem)."
+    },
+    {
+      "item": "Pedágio de 100%",
+      "valor": "52 anos (mulher) e 55 (homem) + tempo igual ao que faltava em 13/11/2019."
+    },
+    {
+      "item": "Regra permanente",
+      "valor": "57 anos (mulher) e 60 (homem), com 25 anos de magistério."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% + 2% por ano acima de 15/20 anos; 100% da média no pedágio de 100%."
+    }
+  ],
+  "tabelas": [
+    {
+      "titulo": "Pontos exigidos do professor",
+      "unidade": "pontos",
+      "inicio": 2019,
+      "fim": 2030,
+      "mulher": [
+        81,
+        1,
+        92
+      ],
+      "homem": [
+        91,
+        1,
+        100
+      ]
+    },
+    {
+      "titulo": "Idade mínima progressiva do professor",
+      "unidade": "idade",
+      "inicio": 2019,
+      "fim": 2031,
+      "mulher": [
+        51,
+        0.5,
+        57
+      ],
+      "homem": [
+        56,
+        0.5,
+        60
+      ]
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "O que conta como magistério",
+      "texto": [
+        "A docência em sala de aula e, pelo entendimento do STF, as funções de direção de unidade escolar, coordenação e assessoramento pedagógico, exercidas por professor em escola de educação básica. O magistério no ensino superior não dá direito às regras reduzidas."
+      ]
+    },
+    {
+      "titulo": "As regras, uma a uma",
+      "texto": [
+        [
+          "**Pontos (art. 15, § 3º):** 81 (mulher) e 91 (homem) em 2019, mais 1 ponto por ano, até 92 (em 2030) e 100 (em 2028).",
+          "**Idade progressiva (art. 16, § 2º):** 51 (mulher) e 56 (homem) em 2019, mais 6 meses por ano, até 57 (em 2031) e 60 (em 2027).",
+          "**Pedágio de 100% (art. 20, § 1º):** 52 (mulher) e 55 anos (homem), 25/30 anos e o tempo que faltava em 13/11/2019.",
+          "**Regra permanente (art. 19, § 1º, II):** 57 (mulher) e 60 anos (homem), com 25 anos de magistério."
+        ]
+      ]
+    },
+    {
+      "titulo": "Tempo misto",
+      "texto": [
+        "Quem tem tempo de magistério e tempo em outra atividade não usa as regras reduzidas com o tempo misto: só o tempo de magistério conta para elas. O tempo total pode ser usado nas regras gerais, como a [[tr:regra-de-pontos|regra de pontos comum]]."
+      ]
+    },
+    {
+      "titulo": "O que conferir no CNIS",
+      "texto": [
+        "O CNIS mostra os vínculos com as escolas, mas não diz se o cargo era de magistério na educação básica. Por isso, além de conferir datas e salários, reúna declarações das escolas com o cargo, a função e o nível de ensino de cada período.",
+        "Se houve períodos em duas escolas ao mesmo tempo, o tempo de magistério conta uma vez, mas os salários se somam na média. Se houve período em rede com regime próprio, ele só entra no INSS por certidão de tempo de contribuição."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Patrícia nasceu em 1971 e é professora do fundamental desde 1997. Em 2026 tem 55 anos e 29 anos de magistério: 84 pontos, abaixo dos 88. Pela idade progressiva, precisa de 54 anos e 6 meses com 25 anos de magistério: já cumpre em 2026, com 88% da média.",
+    "Carlos, professor do ensino médio, tinha 26 anos de magistério em 13/11/2019. Pelo pedágio de 100%, precisa de 30 + 4 = 34 anos e 55 anos de idade."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Coordenadora pedagógica tem direito às regras do professor?",
+      "resposta": "Sim, se for professora e exercer a coordenação em escola de educação básica."
+    },
+    {
+      "pergunta": "Professor universitário pode usar?",
+      "resposta": "Não. As regras reduzidas são só para educação infantil, ensino fundamental e médio."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15, § 3º, 16, § 2º, 19, § 1º, II, e 20, § 1º"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 8º"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "regras-de-transicao",
+    "regra-de-pontos",
+    "idade-minima-progressiva",
+    "pedagio"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-do-professor"
+  ],
+  "relacionadas": [
+    "regra-de-pontos",
+    "idade-minima-progressiva",
+    "pedagio-de-100-por-cento"
+  ],
+  "comparativo": {
+    "para_quem": "Professores da educação básica",
+    "requisitos": "Requisitos 5 anos menores em pontos, idade e pedágio",
+    "valor": "Conforme a regra"
+  }
+}

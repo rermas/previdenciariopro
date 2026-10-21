@@ -389,3 +389,21 @@ p { margin: 0 0 1rem; }
 .passos { padding-left: 1.4rem; }
 .passos li { margin-bottom: 0.5rem; line-height: 1.65; }
 .guia-link { margin: -0.4rem 0 1.2rem; font-size: 0.95rem; }
+
+/* Regras de transição */
+.tabela-transicao { max-width: 32rem; margin: 0.6rem 0 1rem; }
+.tabela-transicao caption { text-align: left; font-weight: 700; padding-bottom: 0.4rem; color: var(--tinta); }
+.tabela-transicao td, .tabela-transicao th { font-variant-numeric: tabular-nums; }
+.tabela-transicao th span { font-weight: 400; color: var(--grafite); font-size: 0.85rem; }
+.tabela-transicao tr.atual td, .tabela-transicao tr.atual th { background: var(--azul-nota, #eef3ff); font-weight: 700; }
+.tabela-comparativa th[scope="row"] a { font-weight: 700; text-decoration: none; }
+.tabela-comparativa th[scope="row"] span { display: block; font-weight: 400; font-size: 0.85rem; color: var(--grafite); white-space: normal; }
+.tabela-comparativa th[scope="row"] { white-space: normal; min-width: 9rem; }
+.tabela-comparativa td { min-width: 8rem; }
+@media (max-width: 40rem) {
+  .tabela-comparativa thead { display: none; }
+  .tabela-comparativa, .tabela-comparativa tbody, .tabela-comparativa tr, .tabela-comparativa th, .tabela-comparativa td { display: block; width: 100%; }
+  .tabela-comparativa tr { padding: 0.8rem 0; border-bottom: 1px solid var(--linha); }
+  .tabela-comparativa th[scope="row"], .tabela-comparativa td { border: 0; padding: 0.15rem 0; }
+  .tabela-comparativa td::before { content: attr(data-rot) ": "; font-weight: 700; color: var(--tinta); }
+}

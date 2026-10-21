@@ -15,6 +15,7 @@ assets/vendor/       pdf.js (hospedado aqui, nada vem de domínio externo)
 assets/fonts/        Atkinson Hyperlegible
 posts/*.html         texto de cada artigo do blog
 tests/cnis.test.js   testes da análise (node tests/cnis.test.js)
+dados/transicao/     um JSON por regra de transição (teste: node tests/transicao.test.js)
 dados/beneficios/    um JSON por guia de benefício (teste: node tests/beneficios-guias.test.js)
 dados/glossario/     um JSON por termo do glossário (teste: node tests/glossario.test.js)
 dados/perguntas/     um JSON por pergunta frequente (teste: node tests/perguntas.test.js)
@@ -201,6 +202,10 @@ Sem o PDF, o botão "Lançar tempo manualmente" (em `/analise-cnis/`) abre uma l
 ## Indicadores do CNIS (Anexo V da Portaria DIRBEN/INSS 990/2022)
 
 `dados/indicadores.json` traz os 205 códigos do Anexo V (alterado pela Portaria DIRBEN/INSS 1.316/2025): descrição e esclarecimento oficiais e o efeito no reconhecimento de direitos (`impacto`). Ele é gerado por `python3 tools/indicadores_anexo_v.py AnexoV.pdf` (a classificação fica no script) e copiado para `assets/cnis.js` por `node tools/gerar-indicadores.js`. O site monta `/indicadores/` e uma página por código a partir dele.
+
+## Regras de transição
+
+`/regras-de-transicao/` compara todas as regras da EC 103/2019 (tabela que vira cartões no celular) e `/regras-de-transicao/{regra}/` detalha cada uma: requisitos, tabela ano a ano, seções, exemplos, perguntas frequentes (JSON-LD `FAQPage`), texto oficial e links. Cada regra é um arquivo `dados/transicao/{slug}.json`. As tabelas não são digitadas: `tabela_transicao()` calcula cada ano a partir de `[base, passo por ano, limite]` (ou, nos pedágios, do tempo em 13/11/2019) e destaca o ano corrente. `node tests/transicao.test.js` confere esses números contra a EC 103/2019 (por exemplo, 93/103 pontos e 59,5/64,5 anos em 2026). Os textos de `requisitos` e `comparativo` citam os valores de 2026: atualize-os em janeiro. Vale a marcação do glossário e `[[tr:slug|texto]]`.
 
 ## Guias por benefício
 

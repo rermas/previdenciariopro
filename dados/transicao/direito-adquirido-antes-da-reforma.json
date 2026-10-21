@@ -1,0 +1,137 @@
+{
+  "ordem": 8,
+  "nome": "Direito adquirido antes da reforma",
+  "artigo": "EC 103/2019, art. 3º",
+  "titulo": "Direito adquirido antes da reforma: aposentar pelas regras antigas",
+  "resumo": "Quem completou os requisitos até 13/11/2019 se aposenta pelas regras antigas: tempo sem idade, média dos 80% maiores salários, fator ou regra 86/96.",
+  "introducao": "Quem já tinha **todos os requisitos** de uma aposentadoria em **13/11/2019** não precisa de regra de transição: pode se aposentar a qualquer tempo pelas **regras antigas**, garantidas pelo art. 3º da [[fonte:ec103|EC 103/2019]]. Em muitos casos, o cálculo antigo é bem mais vantajoso.",
+  "requisitos": [
+    {
+      "item": "Tempo de contribuição",
+      "valor": "30 anos (mulher) ou 35 (homem) até 13/11/2019, sem idade mínima."
+    },
+    {
+      "item": "Idade",
+      "valor": "60 anos (mulher) ou 65 (homem) e a carência até 13/11/2019."
+    },
+    {
+      "item": "Especial",
+      "valor": "15, 20 ou 25 anos de atividade especial até 13/11/2019."
+    },
+    {
+      "item": "Professor",
+      "valor": "25 anos (mulher) ou 30 (homem) de magistério até 13/11/2019."
+    },
+    {
+      "item": "Cálculo",
+      "valor": "Média dos 80% maiores salários desde 07/1994, com as regras de coeficiente da época."
+    },
+    {
+      "item": "Prazo",
+      "valor": "Não há: o direito não se perde com o tempo."
+    }
+  ],
+  "tabelas": [],
+  "secoes": [
+    {
+      "titulo": "Como era o cálculo",
+      "texto": [
+        [
+          "**Média:** dos 80% maiores salários de contribuição desde 07/1994, descartando os 20% menores (Lei 9.876/1999).",
+          "**Tempo de contribuição:** média × [[fator-previdenciario]], ou 100% da média sem fator se a soma de idade e tempo chegasse a 86 (mulher) ou 96 (homem) pontos.",
+          "**Idade:** 70% da média + 1% por grupo de 12 contribuições, até 100%, com fator só se favorável.",
+          "**Especial:** 100% da média."
+        ]
+      ]
+    },
+    {
+      "titulo": "O que entra no direito adquirido",
+      "texto": [
+        "O tempo e os salários até 13/11/2019. Quem continuou trabalhando depois pode comparar: o INSS deve conceder o benefício mais vantajoso entre a regra antiga (com dados até a reforma) e as regras de transição (com os dados atuais). O STF reconheceu o direito ao melhor benefício (Tema 334)."
+      ]
+    },
+    {
+      "titulo": "Tempo especial convertido",
+      "texto": [
+        "O tempo especial até 13/11/2019 pode ser convertido em comum para completar os 30 ou 35 anos do direito adquirido. É comum alguém descobrir que já tinha direito em 2019 depois de reconhecer períodos especiais."
+      ]
+    },
+    {
+      "titulo": "Como descobrir se você tem direito adquirido",
+      "texto": [
+        "Some todo o tempo de contribuição **até 13/11/2019**: vínculos, contribuições, tempo especial convertido, serviço militar e tempo rural anterior a 1991. Se chegar a 30 anos (mulher) ou 35 (homem), há direito adquirido à aposentadoria por tempo de contribuição.",
+        "Faça a mesma conta para a idade: mulher com 60 anos e homem com 65 até 13/11/2019, com a carência, têm direito à aposentadoria por idade pela regra antiga, com 70% da média mais 1% por grupo de 12 contribuições.",
+        "O extrato do CNIS mostra os vínculos e as contribuições; o tempo especial e o rural precisam ser provados à parte. Por isso muita gente só descobre o direito adquirido depois de reconhecer esses períodos."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Márcia tinha 30 anos de contribuição em 10/2019, aos 49 anos, e continuou trabalhando. Pela regra antiga, aposenta-se a qualquer tempo, com a média dos 80% maiores salários até 11/2019 e o fator previdenciário. Ela pode comparar com o pedágio de 50%, que usaria os salários atuais.",
+    "José tinha 33 anos de tempo comum e 6 anos especiais em 2019. Convertendo os 6 anos com fator 1,4, ganha 2 anos e 5 meses: chega a 35 anos e 5 meses e tem direito adquirido."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Preciso pedir a aposentadoria até uma data?",
+      "resposta": "Não. O direito adquirido não expira."
+    },
+    {
+      "pergunta": "O INSS aplica sozinho o direito adquirido?",
+      "resposta": "Deve analisar, mas vale conferir na carta de concessão se a regra antiga foi comparada."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 3º"
+    },
+    {
+      "fonte": "lei9876"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29 e 29-C"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 5º, XXXVI"
+    }
+  ],
+  "termos": [
+    "direito-adquirido",
+    "fator-previdenciario",
+    "salario-de-beneficio",
+    "atividade-especial"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor",
+    "revisao-da-aposentadoria-prazo"
+  ],
+  "legislacao": [
+    "calculo-e-acumulacao-arts-23-a-29-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "relacionadas": [
+    "pedagio-de-50-por-cento",
+    "aposentadoria-especial-na-transicao",
+    "regra-permanente"
+  ],
+  "comparativo": {
+    "para_quem": "Quem tinha os requisitos até 13/11/2019",
+    "requisitos": "Regras antigas, sem idade na aposentadoria por tempo",
+    "valor": "Média dos 80% maiores, com fator ou 86/96"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "ordem": 4,
+  "nome": "Pedágio de 100%",
+  "artigo": "EC 103/2019, art. 20",
+  "titulo": "Pedágio de 100% na aposentadoria: requisitos, tabela e valor",
+  "resumo": "Regra do pedágio de 100% da EC 103/2019 (art. 20): idade de 57 e 60 anos, tempo extra igual ao que faltava em 2019, 100% da média, tabela e exemplos.",
+  "introducao": "O pedágio de 100% exige **idade mínima** e um **tempo adicional igual ao que faltava** em 13/11/2019 para completar 30 ou 35 anos de contribuição. Em troca, paga **100% da média** dos salários, sem fator previdenciário. É, com frequência, a regra de maior valor para quem já tem a idade.",
+  "requisitos": [
+    {
+      "item": "Para quem",
+      "valor": "Filiados ao INSS até 13/11/2019."
+    },
+    {
+      "item": "Idade",
+      "valor": "57 anos (mulher) e 60 anos (homem)."
+    },
+    {
+      "item": "Tempo de contribuição",
+      "valor": "30 anos (mulher) ou 35 (homem) + o mesmo tempo que faltava em 13/11/2019."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Valor",
+      "valor": "100% da média de todos os salários desde 07/1994."
+    },
+    {
+      "item": "Professor",
+      "valor": "52 anos (mulher) e 55 (homem), com 25/30 anos de magistério e o pedágio."
+    }
+  ],
+  "tabelas": [
+    {
+      "titulo": "Tempo exigido conforme o tempo em 13/11/2019",
+      "tipo": "pedagio",
+      "percentual": 100,
+      "mulher": [
+        20,
+        22,
+        24,
+        26,
+        28,
+        29
+      ],
+      "homem": [
+        25,
+        27,
+        29,
+        31,
+        33,
+        34
+      ],
+      "minimo": {
+        "mulher": 30,
+        "homem": 35
+      }
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Como calcular",
+      "texto": [
+        "Pelo art. 20 da [[fonte:ec103|EC 103/2019]], o tempo exigido é o mínimo (30 ou 35 anos) mais um período igual ao que faltava em 13/11/2019. Na prática, **tempo exigido = 2 × mínimo − tempo que você tinha em 13/11/2019**. O homem com 31 anos naquela data precisa de 35 + 4 = 39 anos."
+      ]
+    },
+    {
+      "titulo": "Por que costuma pagar mais",
+      "texto": [
+        "É a única regra de transição com **100% da média**. Nas regras de pontos e idade progressiva, o homem com 37 anos de contribuição recebe 94% da média; no pedágio de 100%, recebe 100%. Além disso, o [[descarte-de-contribuicoes]] é muito vantajoso aqui: como o percentual é fixo, descartar salários baixos aumenta a média sem perder percentual, desde que se mantenha o tempo exigido."
+      ]
+    },
+    {
+      "titulo": "Quando não compensa",
+      "texto": [
+        "Para quem tinha pouco tempo em 2019, o pedágio fica longo. Uma mulher com 15 anos em 13/11/2019 precisaria de 45 anos de contribuição. Nesses casos, a [[tr:regra-de-pontos|regra de pontos]] ou a [[tr:idade-minima-progressiva|idade progressiva]] chegam antes."
+      ]
+    },
+    {
+      "titulo": "O que conferir no CNIS",
+      "texto": [
+        "Como o pedágio depende do tempo em 13/11/2019, cada mês reconhecido antes da reforma vale em dobro: reduz o que faltava naquela data e, portanto, também o pedágio. Um vínculo de 1 ano incluído no CNIS antes de 2019 reduz o tempo exigido em 2 anos.",
+        "Confira ainda os salários desde 07/1994: como a regra paga 100% da média, remunerações faltantes ou menores que as reais pesam diretamente no valor."
+      ]
+    },
+    {
+      "titulo": "Como pedir",
+      "texto": [
+        [
+          "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]] e confira cada período.",
+          "Peça a [[atualizacao-do-cnis|atualização do CNIS]] para vínculos faltando, datas erradas e pendências.",
+          "Use o [[fonte:inss-simulador|simulador do INSS]] para ver as regras que já cumpre e as datas previstas.",
+          "Faça o pedido no Meu INSS; o INSS deve conceder a regra mais vantajosa entre as que você cumpre.",
+          "Responda às exigências em até 30 dias e guarde o número do protocolo."
+        ]
+      ]
+    }
+  ],
+  "exemplos": [
+    "Rogério nasceu em 1966 e tinha 31 anos de contribuição em 13/11/2019. O pedágio é de 4 anos: ele precisa de 39 anos e de 60 anos de idade. Continuando a contribuir, completa os 39 anos em 11/2027 (a idade de 60 anos já tinha em 2026) e recebe 100% da média.",
+    "Elisa tinha 27 anos em 13/11/2019 e 52 anos de idade. Precisa de 30 + 3 = 33 anos de contribuição e 57 de idade. Completou a idade em 2024 e o tempo em 11/2025: cumpriu a regra em 2025."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "O pedágio de 100% usa fator previdenciário?",
+      "resposta": "Não. O valor é 100% da média, sem fator."
+    },
+    {
+      "pergunta": "Se eu ficar sem contribuir, o pedágio aumenta?",
+      "resposta": "Não. O pedágio é fixo, calculado em 13/11/2019. Mas o tempo que falta só é cumprido contribuindo."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 20 e 26, § 6º"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "pedagio",
+    "descarte-de-contribuicoes",
+    "tempo-de-contribuicao"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor",
+    "quanto-tempo-falta-para-me-aposentar"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103",
+    "calculo-e-acumulacao-arts-23-a-29-ec-103"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "relacionadas": [
+    "pedagio-de-50-por-cento",
+    "regra-de-pontos",
+    "idade-minima-progressiva"
+  ],
+  "comparativo": {
+    "para_quem": "Filiados até 13/11/2019",
+    "requisitos": "57/60 anos e 30/35 anos + 100% do que faltava",
+    "valor": "100% da média"
+  }
+}
