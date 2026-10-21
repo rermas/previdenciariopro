@@ -15,6 +15,7 @@ assets/vendor/       pdf.js (hospedado aqui, nada vem de domínio externo)
 assets/fonts/        Atkinson Hyperlegible
 posts/*.html         texto de cada artigo do blog
 tests/cnis.test.js   testes da análise (node tests/cnis.test.js)
+dados/beneficios/    um JSON por guia de benefício (teste: node tests/beneficios-guias.test.js)
 dados/glossario/     um JSON por termo do glossário (teste: node tests/glossario.test.js)
 dados/perguntas/     um JSON por pergunta frequente (teste: node tests/perguntas.test.js)
 dados/legislacao/    um JSON por tema da legislação comentada (teste: node tests/legislacao.test.js)
@@ -200,6 +201,10 @@ Sem o PDF, o botão "Lançar tempo manualmente" (em `/analise-cnis/`) abre uma l
 ## Indicadores do CNIS (Anexo V da Portaria DIRBEN/INSS 990/2022)
 
 `dados/indicadores.json` traz os 205 códigos do Anexo V (alterado pela Portaria DIRBEN/INSS 1.316/2025): descrição e esclarecimento oficiais e o efeito no reconhecimento de direitos (`impacto`). Ele é gerado por `python3 tools/indicadores_anexo_v.py AnexoV.pdf` (a classificação fica no script) e copiado para `assets/cnis.js` por `node tools/gerar-indicadores.js`. O site monta `/indicadores/` e uma página por código a partir dele.
+
+## Guias por benefício
+
+`/beneficios/` lista os guias por grupo (aposentadorias, incapacidade, família e assistência) e `/beneficios/{slug}/` mostra cada guia: introdução, resumo rápido em tabela, índice, seções, como pedir, documentos, o que conferir no CNIS, erros comuns, exemplo, perguntas frequentes (também no JSON-LD `FAQPage`), fontes oficiais e links para legislação, glossário, perguntas, blog, indicadores e outros guias. Cada guia é um arquivo `dados/beneficios/{slug}.json` com `ordem` e `grupo`; vale a marcação do glossário e `[[ben:slug|texto]]`. Rode `node tests/beneficios-guias.test.js` depois de editar: ele exige pelo menos 600 palavras, uma fonte do INSS/gov.br e links válidos. Termos do glossário mostram "Guia completo" logo após a definição; perguntas, legislação e artigos listam os guias que os citam. Valores anuais (salário mínimo, teto, limite do auxílio-reclusão, 1/4 do mínimo do BPC) aparecem nos guias: revise todo ano.
 
 ## Glossário
 

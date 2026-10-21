@@ -142,5 +142,57 @@
   "lei13846": [
     "Lei nº 13.846/2019 (pente-fino e mudanças em prova e carência)",
     "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13846.htm"
+  ],
+  "inss-aposentadorias": [
+    "INSS: aposentadorias",
+    "https://www.gov.br/inss/pt-br/direitos-e-deveres/aposentadorias"
+  ],
+  "inss-idade-urbana": [
+    "INSS: aposentadoria por idade urbana",
+    "https://www.gov.br/inss/pt-br/direitos-e-deveres/aposentadorias/aposentadoria-por-idade-urbana"
+  ],
+  "srv-idade-urbana": [
+    "gov.br: solicitar aposentadoria por idade urbana",
+    "https://www.gov.br/pt-br/servicos/solicitar-aposentadoria-por-idade-trabalhador-urbano"
+  ],
+  "srv-tempo": [
+    "gov.br: solicitar aposentadoria por tempo de contribuição",
+    "https://www.gov.br/pt-br/servicos/solicitar-aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "srv-pcd-tempo": [
+    "gov.br: aposentadoria da pessoa com deficiência por tempo de contribuição",
+    "https://www.gov.br/pt-br/servicos/solicitar-aposentadoria-da-pessoa-com-deficiencia-por-tempo-de-contribuicao"
+  ],
+  "srv-pcd-idade": [
+    "gov.br: aposentadoria por idade da pessoa com deficiência",
+    "https://www.gov.br/pt-br/servicos/solicitar-aposentadoria-por-idade-de-pessoa-com-deficiencia"
+  ],
+  "inss-acidente": [
+    "INSS: auxílio-acidente",
+    "https://www.gov.br/inss/pt-br/direitos-e-deveres/beneficios-por-incapacidade/auxilio-acidente"
+  ],
+  "srv-acidente": [
+    "gov.br: solicitar auxílio-acidente",
+    "https://www.gov.br/pt-br/servicos/solicitar-auxilio-acidente"
+  ],
+  "inss-reclusao": [
+    "INSS: auxílio-reclusão",
+    "https://www.gov.br/inss/pt-br/direitos-e-deveres/auxilio-reclusao/auxilio-reclusao"
+  ],
+  "inss-reclusao-limite": [
+    "INSS: valor limite para o auxílio-reclusão",
+    "https://www.gov.br/inss/pt-br/direitos-e-deveres/auxilio-reclusao/valor-limite-para-direito-ao-auxilio-reclusao"
+  ],
+  "inss-maternidade-especial": [
+    "INSS: salário-maternidade da segurada especial",
+    "https://www.gov.br/inss/pt-br/direitos-e-deveres/salario-maternidade/salario-maternidade-para-segurada-o-especial"
+  ],
+  "srv-pensao-urbana": [
+    "gov.br: solicitar pensão por morte urbana",
+    "https://www.gov.br/pt-br/servicos/solicitar-pensao-por-morte-urbana"
+  ],
+  "srv-bpc-pcd": [
+    "gov.br: solicitar BPC à pessoa com deficiência",
+    "https://www.gov.br/pt-br/servicos/solicitar-beneficio-assistencial-a-pessoa-com-deficiencia"
   ]
 }

@@ -1,0 +1,139 @@
+{
+  "ordem": 7,
+  "nome": "Aposentadoria da pessoa com deficiência",
+  "titulo": "Aposentadoria da pessoa com deficiência (LC 142): regras e valor",
+  "resumo": "Guia da aposentadoria da pessoa com deficiência pela LC 142/2013: por tempo, conforme o grau, e por idade, com avaliação do INSS, valor e como pedir.",
+  "grupo": "aposentadorias",
+  "introducao": "A aposentadoria da pessoa com deficiência segue a [[fonte:lc142|Lei Complementar 142/2013]], que a reforma de 2019 manteve. Ela tem **duas modalidades**: por tempo de contribuição, com tempo reduzido conforme o **grau da deficiência**, e por idade, com idade reduzida em cinco anos.",
+  "resumo_rapido": [
+    {
+      "item": "Deficiência grave",
+      "valor": "25 anos (homem) e 20 anos (mulher) de contribuição como pessoa com deficiência."
+    },
+    {
+      "item": "Deficiência moderada",
+      "valor": "29 anos (homem) e 24 anos (mulher)."
+    },
+    {
+      "item": "Deficiência leve",
+      "valor": "33 anos (homem) e 28 anos (mulher)."
+    },
+    {
+      "item": "Por idade",
+      "valor": "60 anos (homem) e 55 (mulher), com 15 anos de contribuição na condição de deficiência."
+    },
+    {
+      "item": "Valor por tempo",
+      "valor": "100% do salário de benefício."
+    },
+    {
+      "item": "Valor por idade",
+      "valor": "70% do salário de benefício + 1% por grupo de 12 contribuições, até 100%."
+    },
+    {
+      "item": "Avaliação",
+      "valor": "Perícia médica e avaliação social do INSS, que definem o grau e a data de início."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Quem é pessoa com deficiência para a lei",
+      "texto": [
+        "É quem tem impedimento de longo prazo de natureza física, mental, intelectual ou sensorial que, em interação com barreiras, pode obstruir a participação plena na sociedade (LC 142/2013, art. 2º). O grau é definido em avaliação biopsicossocial do INSS."
+      ]
+    },
+    {
+      "titulo": "Tempo com e sem deficiência",
+      "texto": [
+        "Quem ficou com deficiência depois de começar a trabalhar, ou mudou de grau, tem os períodos **convertidos** proporcionalmente pelas tabelas do regulamento. Assim, anos sem deficiência também ajudam, mas valem menos que os anos com deficiência."
+      ]
+    },
+    {
+      "titulo": "Valor e cálculo",
+      "texto": [
+        "O salário de benefício é a média dos salários de contribuição. Na modalidade por tempo, a renda é de 100% dela; na por idade, 70% mais 1% a cada 12 contribuições. Se for mais vantajoso, aplica-se o [[fator-previdenciario]] (LC 142/2013, art. 9º)."
+      ]
+    },
+    {
+      "titulo": "Como o INSS avalia o grau",
+      "texto": [
+        "A avaliação é biopsicossocial: o perito médico e o assistente social do INSS aplicam um instrumento de avaliação funcional que pontua as limitações em atividades do dia a dia, como comunicação, mobilidade, cuidados pessoais e vida social. A pontuação define se a deficiência é leve, moderada ou grave.",
+        "Por isso, além de laudos com CID, vale levar relatórios que descrevam as limitações concretas e as adaptações usadas no trabalho e em casa. A data de início da deficiência também é fixada nessa avaliação e define quais períodos contam como tempo com deficiência."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Reúna laudos, exames e relatórios que mostrem a deficiência e desde quando ela existe.",
+    "Confira o tempo no CNIS.",
+    "No [[fonte:meuinss|Meu INSS]], escolha a aposentadoria da pessoa com deficiência por tempo ou por idade.",
+    "Compareça à perícia médica e à avaliação social marcadas pelo INSS."
+  ],
+  "documentos": [
+    "Laudos e relatórios médicos com CID, grau e início da deficiência.",
+    "Documentos que mostrem as barreiras e limitações no dia a dia.",
+    "Carteiras de trabalho e comprovantes de contribuição."
+  ],
+  "conferir_no_cnis": [
+    "Vínculos e contribuições do período com deficiência.",
+    "Pendências que tiram vínculos da contagem."
+  ],
+  "erros_comuns": [
+    "Levar só laudo atual, sem provar desde quando existe a deficiência.",
+    "Confundir com o BPC, que é assistencial e não exige contribuição.",
+    "Não pedir a modalidade por tempo quando há grau grave ou moderado."
+  ],
+  "exemplo": [
+    "Lucas tem deficiência auditiva moderada desde o nascimento e 29 anos de contribuição aos 50 anos. Pela modalidade por tempo, ele cumpre os 29 anos exigidos para o homem com deficiência moderada e recebe 100% da média, sem idade mínima."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Visão monocular conta como deficiência?",
+      "resposta": "A Lei 14.126/2021 classificou a visão monocular como deficiência sensorial, mas o grau para a aposentadoria depende da avaliação do INSS."
+    },
+    {
+      "pergunta": "Posso continuar trabalhando?",
+      "resposta": "Sim. A aposentadoria da pessoa com deficiência não impede o trabalho."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lc142",
+      "dispositivo": "arts. 2º a 9º"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 22"
+    },
+    {
+      "fonte": "srv-pcd-tempo"
+    },
+    {
+      "fonte": "srv-pcd-idade"
+    }
+  ],
+  "termos": [
+    "tempo-de-contribuicao",
+    "salario-de-beneficio",
+    "fator-previdenciario",
+    "bpc-loas"
+  ],
+  "perguntas": [
+    "quanto-tempo-falta-para-me-aposentar"
+  ],
+  "legislacao": [
+    "bpc-art-20-loas"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "aposentadoria-por-tempo-de-contribuicao",
+    "bpc-loas"
+  ]
+}

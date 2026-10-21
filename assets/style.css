@@ -382,3 +382,10 @@ p { margin: 0 0 1rem; }
 .dispositivo .oficial p { margin: 0; }
 .dispositivo .oficial .resposta-rot { margin-bottom: 0.3rem; }
 .comentario-rot { margin: 1rem 0 0.2rem; }
+
+/* Guias por benefício */
+.resumo-rapido th { white-space: normal; width: 34%; color: var(--tinta); vertical-align: top; }
+.resumo-rapido td, .resumo-rapido th { font-size: 0.97rem; line-height: 1.55; }
+.passos { padding-left: 1.4rem; }
+.passos li { margin-bottom: 0.5rem; line-height: 1.65; }
+.guia-link { margin: -0.4rem 0 1.2rem; font-size: 0.95rem; }

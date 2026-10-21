@@ -1,0 +1,145 @@
+{
+  "ordem": 11,
+  "nome": "Salário-maternidade",
+  "titulo": "Salário-maternidade: quem tem direito, valor e como pedir",
+  "resumo": "Guia do salário-maternidade do INSS: 120 dias, quem tem direito, fim da carência desde 05/04/2024, valor por categoria, adoção, desempregada e como pedir.",
+  "grupo": "familia",
+  "introducao": "O salário-maternidade é pago por **120 dias** em razão de parto, adoção ou guarda judicial para adoção, e também por duas semanas em caso de aborto não criminoso. Depois da decisão do STF nas ADIs 2.110 e 2.111, **nenhuma categoria precisa de carência** para fatos geradores desde 05/04/2024.",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Seguradas e segurados de todas as categorias, inclusive desempregadas no período de graça."
+    },
+    {
+      "item": "Duração",
+      "valor": "120 dias (parto, adoção ou guarda); 2 semanas no aborto não criminoso."
+    },
+    {
+      "item": "Carência",
+      "valor": "Dispensada para fatos geradores desde 05/04/2024; antes, 10 contribuições para CI, facultativa e segurada especial."
+    },
+    {
+      "item": "Valor",
+      "valor": "Empregada: salário integral; doméstica: último salário de contribuição; CI e facultativa: média dos 12 últimos; segurada especial: 1 salário mínimo."
+    },
+    {
+      "item": "Quem paga",
+      "valor": "A empresa, para a empregada; o INSS, nos demais casos."
+    },
+    {
+      "item": "Prazo para pedir",
+      "valor": "Até 5 anos após o parto, pela prescrição."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Quem tem direito",
+      "texto": [
+        "Pelos arts. 71 a 73 da [[fonte:lei8213|Lei 8.213/1991]], todas as categorias: empregada, doméstica, avulsa, contribuinte individual, MEI, facultativa e segurada especial. O pai ou a mãe adotante também tem direito, e o cônjuge sobrevivente recebe o restante do período se a mãe falecer.",
+        "É preciso ter [[qualidade-de-segurado]] na data do parto. A desempregada no [[periodo-de-graca]] recebe diretamente do INSS."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "Para a empregada, corresponde à remuneração integral, limitada ao subsídio dos ministros do STF. Para a contribuinte individual e a facultativa, é a média dos 12 últimos salários de contribuição, apurados em até 15 meses. Para a segurada especial, um salário mínimo."
+      ]
+    },
+    {
+      "titulo": "Segurada especial",
+      "texto": [
+        "A trabalhadora rural em regime de economia familiar comprova a atividade rural nos meses anteriores ao parto, com o cadastro no CNIS e documentos. Veja a [[fonte:inss-maternidade-especial|página do INSS para a segurada especial]]."
+      ]
+    },
+    {
+      "titulo": "Situações especiais",
+      "texto": [
+        [
+          "**Natimorto:** a segurada tem direito aos 120 dias.",
+          "**Morte da mãe:** o cônjuge ou companheiro segurado recebe o restante do período (art. 71-B).",
+          "**Adoção por casal:** só um dos adotantes recebe.",
+          "**Empregada demitida:** se estiver no período de graça, recebe diretamente do INSS.",
+          "**Aborto não criminoso:** duas semanas, com atestado médico."
+        ]
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **30 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Empregada: o pedido é feito à empresa, com o atestado ou a certidão de nascimento.",
+    "Demais seguradas: no [[fonte:meuinss|Meu INSS]], escolha \"Salário-maternidade\" e anexe a certidão de nascimento ou o termo de guarda.",
+    "Acompanhe o pedido; o prazo de análise do INSS para este benefício é de 30 dias."
+  ],
+  "documentos": [
+    "Certidão de nascimento ou atestado médico (para início antes do parto).",
+    "Termo de guarda ou sentença de adoção.",
+    "Documentos rurais, para a segurada especial.",
+    "Identificação e CPF."
+  ],
+  "conferir_no_cnis": [
+    "Qualidade de segurada na data do parto.",
+    "Últimas contribuições, que formam a média para CI e facultativa.",
+    "Cadastro de segurada especial."
+  ],
+  "erros_comuns": [
+    "Achar que a desempregada não tem direito.",
+    "Deixar de pedir por pensar que faltam contribuições: desde 04/2024 não há carência.",
+    "Perder o prazo de 5 anos."
+  ],
+  "exemplo": [
+    "Aline é MEI e teve a filha em 08/2026. Mesmo com apenas 5 contribuições, tem direito, porque a carência foi afastada. Como só contribui sobre o mínimo, recebe um salário mínimo por 4 meses."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Quem adota também recebe?",
+      "resposta": "Sim, 120 dias, qualquer que seja a idade da criança adotada, pago a um dos adotantes."
+    },
+    {
+      "pergunta": "A empresa pode prorrogar por 180 dias?",
+      "resposta": "Empresas do Programa Empresa Cidadã podem prorrogar por 60 dias, pagos pela própria empresa."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 71 a 73"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 93 a 103"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "arts. 357 a 361"
+    },
+    {
+      "fonte": "inss-maternidade-especial"
+    }
+  ],
+  "termos": [
+    "salario-maternidade",
+    "qualidade-de-segurado",
+    "periodo-de-graca",
+    "carencia"
+  ],
+  "perguntas": [
+    "parei-de-contribuir-ainda-tenho-direito",
+    "mei-conta-para-aposentadoria"
+  ],
+  "legislacao": [
+    "carencia-arts-24-a-27-lei-8213",
+    "qualidade-de-segurado-art-15-lei-8213"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "pensao-por-morte",
+    "auxilio-por-incapacidade-temporaria"
+  ]
+}

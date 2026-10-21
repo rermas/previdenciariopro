@@ -1,0 +1,139 @@
+{
+  "ordem": 10,
+  "nome": "Auxílio-acidente",
+  "titulo": "Auxílio-acidente: quem tem direito, valor e como pedir",
+  "resumo": "Guia do auxílio-acidente do INSS: indenização de 50% para quem ficou com sequela que reduz a capacidade de trabalho, quem tem direito, início, fim e como pedir.",
+  "grupo": "incapacidade",
+  "introducao": "O auxílio-acidente é uma **indenização mensal** paga a quem, depois de um acidente de qualquer natureza, ficou com **sequela permanente que reduz a capacidade para o trabalho** que exercia. Diferente dos benefícios por incapacidade, ele **não impede de continuar trabalhando**.",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Empregado urbano e rural, doméstico (acidentes desde 06/2015), avulso e segurado especial."
+    },
+    {
+      "item": "Não tem direito",
+      "valor": "Contribuinte individual e facultativo."
+    },
+    {
+      "item": "Requisito",
+      "valor": "Sequela permanente de acidente que reduza a capacidade para o trabalho habitual, avaliada pela perícia."
+    },
+    {
+      "item": "Carência",
+      "valor": "Não exige."
+    },
+    {
+      "item": "Valor",
+      "valor": "50% do salário de benefício."
+    },
+    {
+      "item": "Início",
+      "valor": "Dia seguinte ao fim do auxílio por incapacidade temporária."
+    },
+    {
+      "item": "Fim",
+      "valor": "Na aposentadoria, na emissão de CTC para regime próprio ou no óbito."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        "Pelo art. 86 da [[fonte:lei8213|Lei 8.213/1991]], o benefício é devido quando, consolidadas as lesões de um acidente de qualquer natureza, ficarem sequelas que impliquem **redução da capacidade** para o trabalho habitual. Pode ser acidente de trabalho, de trânsito, doméstico ou de lazer. É preciso ter qualidade de segurado na data do acidente."
+      ]
+    },
+    {
+      "titulo": "Valor e acumulação",
+      "texto": [
+        "O valor é de 50% do salário de benefício e pode ser **inferior ao salário mínimo**, porque não substitui renda. Pode ser recebido junto com o salário. Não pode ser acumulado com aposentadoria: ele termina quando a pessoa se aposenta, e, para benefícios concedidos a partir de 1997, entra no cálculo da aposentadoria."
+      ]
+    },
+    {
+      "titulo": "Quando costuma ser concedido",
+      "texto": [
+        "Normalmente o INSS avalia o auxílio-acidente na perícia que encerra o auxílio por incapacidade temporária. Se não foi concedido e a sequela existe, é possível pedi-lo depois, pelo Meu INSS ou pela central 135."
+      ]
+    },
+    {
+      "titulo": "Acidente de trabalho e acidente comum",
+      "texto": [
+        "Quando o afastamento decorre de **acidente de trabalho** ou doença profissional, o auxílio por incapacidade é acidentário. Isso traz dois efeitos trabalhistas: a empresa continua depositando o FGTS durante o afastamento, e o empregado tem **estabilidade de 12 meses** no emprego depois que o auxílio termina (art. 118 da [[fonte:lei8213|Lei 8.213/1991]]).",
+        "Para o auxílio-acidente, porém, a origem do acidente não muda o direito: acidente de trânsito, doméstico ou de lazer também gera o benefício, desde que deixe sequela que reduza a capacidade de trabalho."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **60 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Reúna laudos que descrevam a sequela e a limitação no trabalho.",
+    "Peça o auxílio-acidente pelo [[fonte:srv-acidente|serviço do gov.br]] ou pela central 135.",
+    "Compareça à perícia médica."
+  ],
+  "documentos": [
+    "Laudos e exames que mostrem a sequela consolidada.",
+    "CAT ou boletim de ocorrência, se houver.",
+    "Documentos do auxílio por incapacidade anterior."
+  ],
+  "conferir_no_cnis": [
+    "Categoria na data do acidente: empregado, doméstico, avulso ou especial.",
+    "Qualidade de segurado na data do acidente."
+  ],
+  "erros_comuns": [
+    "Achar que o benefício impede de trabalhar.",
+    "Não pedir quando a perícia encerra o auxílio-doença mesmo com sequela.",
+    "Contribuinte individual pedir sem ter direito."
+  ],
+  "exemplo": [
+    "Jorge, motorista empregado, perdeu parte do movimento da mão em um acidente de moto. Recebeu auxílio por 4 meses e voltou ao trabalho com limitação. A perícia reconheceu a sequela e concedeu auxílio-acidente de 50% da média, pago junto com o salário até a aposentadoria."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "O auxílio-acidente conta como tempo de contribuição?",
+      "resposta": "Não conta como tempo por si só, mas o valor é somado ao salário de contribuição no cálculo da aposentadoria, quando aplicável."
+    },
+    {
+      "pergunta": "Quem já se aposentou pode ter auxílio-acidente?",
+      "resposta": "Não. Os dois benefícios não se acumulam."
+    },
+    {
+      "pergunta": "Doença ocupacional dá direito ao auxílio-acidente?",
+      "resposta": "Sim. A doença profissional ou do trabalho é equiparada a acidente de trabalho pelos arts. 20 e 21 da [[fonte:lei8213|Lei 8.213/1991]]. Se ela deixar sequela permanente que reduza a capacidade para o trabalho habitual, como uma lesão por esforço repetitivo que limita certos movimentos, gera o benefício."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 18, § 1º, e 86"
+    },
+    {
+      "fonte": "inss-acidente"
+    },
+    {
+      "fonte": "srv-acidente"
+    }
+  ],
+  "termos": [
+    "auxilio-por-incapacidade-temporaria",
+    "qualidade-de-segurado",
+    "empregado-domestico",
+    "segurado-especial"
+  ],
+  "perguntas": [
+    "quantas-contribuicoes-para-auxilio-doenca"
+  ],
+  "legislacao": [
+    "auxilio-por-incapacidade-arts-59-a-63-lei-8213",
+    "empregado-domestico-lei-complementar-150"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "auxilio-por-incapacidade-temporaria",
+    "aposentadoria-por-incapacidade-permanente"
+  ]
+}

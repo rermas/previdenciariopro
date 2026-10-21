@@ -1,7 +1,7 @@
 <?php
 /*
  * Análise CNIS: PHP puro, sem banco de dados, com um único roteador.
- * Rotas: /  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /legislacao/{tema}/  /privacidade/  /analise-cnis/  /sitemap.xml
+ * Rotas: /  /beneficios/  /beneficios/{slug}/  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /legislacao/{tema}/  /privacidade/  /analise-cnis/  /sitemap.xml
  */
 
 // ---------- Configuração ----------
@@ -303,6 +303,30 @@ const CAT_PERGUNTAS = [
     'cnis' => 'CNIS, vínculos e pendências', 'contribuicoes' => 'Contribuições', 'protecao' => 'Qualidade de segurado e carência',
     'aposentadoria' => 'Aposentadoria e tempo de contribuição', 'beneficios' => 'Pensão e acumulação de benefícios', 'processo' => 'Pedido, recurso e revisão',
 ];
+// Guias por benefício: um arquivo por benefício em dados/beneficios/{slug}.json, com a marcação do glossário e [[ben:slug|texto]].
+// Teste: node tests/beneficios-guias.test.js
+const GUIAS_REVISADOS = '2026-10-20';
+const GRUPOS_GUIAS = [
+    'aposentadorias' => 'Aposentadorias', 'incapacidade' => 'Incapacidade e acidente',
+    'familia' => 'Família e dependentes', 'assistencial' => 'Assistência social',
+];
+function guias(): array {
+    static $l = null;
+    if ($l !== null) return $l;
+    $l = ler_pasta('beneficios');
+    uasort($l, fn($a, $b) => ($a['ordem'] ?? 999) <=> ($b['ordem'] ?? 999));
+    return $l;
+}
+function lista_guias(array $gs, bool $comResumo = true): void {
+    echo '<ul class="lista-gl">';
+    foreach ($gs as $slug => $g) {
+        echo '<li><a href="' . e(u('/beneficios/' . $slug . '/')) . '">' . e($comResumo ? $g['nome'] : $g['titulo']) . '</a>' . ($comResumo ? ' <span>' . e($g['resumo']) . '</span>' : '') . '</li>';
+    }
+    echo '</ul>';
+}
+function guias_que_citam(string $campo, string $valor): array {
+    return array_filter(guias(), fn($g) => in_array($valor, $g[$campo] ?? [], true));
+}
 function legislacao(): array {
     static $l = null;
     if ($l !== null) return $l;
@@ -362,6 +386,7 @@ function gl_html(string $s): string {
             if (!isset($G[$alvo])) return $txt ?? $alvo;
             return '<a href="' . e(u('/glossario/' . $alvo . '/')) . '">' . ($txt ?? e(nome_termo($G[$alvo]))) . '</a>';
         }
+        if ($tipo === 'ben') { $B = guias(); return isset($B[$alvo]) ? '<a href="' . e(u('/beneficios/' . $alvo . '/')) . '">' . ($txt ?? e($B[$alvo]['nome'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'leg') { $L = legislacao(); return isset($L[$alvo]) ? '<a href="' . e(u('/legislacao/' . $alvo . '/')) . '">' . ($txt ?? e($L[$alvo]['titulo'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'q') { $Q = perguntas(); return isset($Q[$alvo]) ? '<a href="' . e(u('/perguntas/' . $alvo . '/')) . '">' . ($txt ?? e($Q[$alvo]['pergunta'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'post') return post_publicado($alvo) ? '<a href="' . e(u('/blog/' . $alvo . '/')) . '">' . ($txt ?? $alvo) . '</a>' : ($txt ?? '');
@@ -456,11 +481,12 @@ function topo(string $titulo, string $desc, string $caminho, array $o = []): voi
     <a class="marca" href="<?= e(u('/')) ?>"><?= marca_svg() ?><?= e(SITE_NOME) ?></a>
     <nav class="menu" aria-label="Principal">
       <?php if (FERRAMENTA_PUBLICA): ?><a href="<?= e(u('/analise-cnis/')) ?>">Analisar CNIS</a><?php endif; ?>
-      <a href="<?= e(u('/blog/')) ?>">Blog</a>
+      <a href="<?= e(u('/beneficios/')) ?>">Benefícios</a>
       <a href="<?= e(u('/perguntas/')) ?>">Perguntas</a>
       <a href="<?= e(u('/glossario/')) ?>">Glossário</a>
       <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a>
       <a class="menu-extra" href="<?= e(u('/legislacao/')) ?>">Legislação</a>
+      <a class="menu-extra" href="<?= e(u('/blog/')) ?>">Blog</a>
       <a class="menu-extra" href="<?= e(u('/privacidade/')) ?>">Privacidade</a>
     </nav>
   </div>
@@ -473,7 +499,7 @@ function rodape(): void {
 <footer class="rodape">
   <div class="wrap">
     <p>Conteúdo informativo. Não substitui a orientação de um advogado previdenciário nem as informações oficiais do INSS.</p>
-    <p class="rodape-links"><a href="<?= e(u('/perguntas/')) ?>">Perguntas frequentes</a> <a href="<?= e(u('/glossario/')) ?>">Glossário</a> <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a> <a href="<?= e(u('/legislacao/')) ?>">Legislação</a></p>
+    <p class="rodape-links"><a href="<?= e(u('/beneficios/')) ?>">Guias por benefício</a> <a href="<?= e(u('/blog/')) ?>">Blog</a> <a href="<?= e(u('/perguntas/')) ?>">Perguntas frequentes</a> <a href="<?= e(u('/glossario/')) ?>">Glossário</a> <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a> <a href="<?= e(u('/legislacao/')) ?>">Legislação</a></p>
     <p><a href="<?= e(u('/privacidade/')) ?>">Política de privacidade</a> &copy; <?= date('Y') ?> <?= e(SITE_NOME) ?></p>
   </div>
 </footer>
@@ -587,6 +613,12 @@ if ($rota === '/') {
   </section>
 
   <section class="faixa">
+    <h2>Guias por benefício</h2>
+    <p class="texto">Requisitos, valor, documentos, como pedir e o que conferir no CNIS para cada benefício do INSS.</p>
+    <p class="termos-gl"><?php foreach (guias() as $s => $g): ?><a href="<?= e(u('/beneficios/' . $s . '/')) ?>"><?= e($g['nome']) ?></a><?php endforeach; ?></p>
+  </section>
+
+  <section class="faixa">
     <h2>Perguntas frequentes</h2>
     <?php $Q = perguntas(); lista_perguntas(array_intersect_key($Q, array_flip(['pext-no-cnis-perco-o-tempo', 'parei-de-contribuir-ainda-tenho-direito', 'quanto-tempo-falta-para-me-aposentar', 'inss-negou-o-pedido-o-que-fazer'])), false); ?>
     <a class="mais" href="<?= e(u('/perguntas/')) ?>">Ver todas as <?= count($Q) ?> perguntas</a>
@@ -662,6 +694,10 @@ if ($rota === '/') {
     <h1><?= e($post['titulo']) ?></h1>
     <p class="meta">Publicado em <?= e(data_br($post['data'])) ?><?php if (!empty($post['revisado']) && $post['revisado'] !== $post['data']): ?>. Revisado em <?= e(data_br($post['revisado'])) ?>.<?php endif; ?></p>
     <?php readfile($arquivo); ?>
+    <?php $gs = guias_que_citam('artigos', $post['slug']); if ($gs): ?>
+      <h2>Guias por benefício</h2>
+      <?php lista_guias($gs, false); ?>
+    <?php endif; ?>
     <?php $ls = legislacao_que_cita('artigos', $post['slug']); if ($ls): ?>
       <h2>Legislação comentada sobre o tema</h2>
       <?php lista_legislacao($ls); ?>
@@ -854,6 +890,9 @@ if ($rota === '/') {
     <h1><?= e($t['titulo']) ?></h1>
     <p class="meta">Revisado em <?= e(data_br($rev)) ?>.</p>
     <p class="oficial definicao"><?= gl_html($t['definicao']) ?></p>
+    <?php $gs = guias_que_citam('termos', $slug); if ($gs): ?>
+      <p class="guia-link">Guia completo: <?php $i = 0; foreach ($gs as $gsl => $g): ?><?= $i++ ? ', ' : '' ?><a href="<?= e(u('/beneficios/' . $gsl . '/')) ?>"><?= e($g['nome']) ?></a><?php endforeach; ?>.</p>
+    <?php endif; ?>
     <?php foreach ($t['secoes'] as $s): ?>
       <h2><?= e($s['titulo']) ?></h2>
       <?= gl_blocos($s['texto']) ?>
@@ -899,6 +938,125 @@ if ($rota === '/') {
     <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
     <?php anuncio(); ?>
     <a class="voltar" href="<?= e(u('/glossario/')) ?>">Todos os termos do glossário</a>
+  </article>
+</main>
+<?php
+    rodape();
+
+} elseif ($rota === '/beneficios') {
+    $B = guias();
+    $porGrupo = [];
+    foreach ($B as $slug => $g) $porGrupo[$g['grupo']][$slug] = $g;
+    $desc = 'Guias de cada benefício do INSS: aposentadorias, auxílio-doença, auxílio-acidente, salário-maternidade, pensão, auxílio-reclusão e BPC, com requisitos, valor e como pedir.';
+    topo('Benefícios do INSS: guia de cada um, requisitos e como pedir | ' . SITE_NOME, $desc, '/beneficios/', [
+        'jsonld' => ['@context' => 'https://schema.org', '@type' => 'CollectionPage', 'name' => 'Guias por benefício do INSS', 'description' => $desc, 'url' => SITE_URL . '/beneficios/',
+            'hasPart' => array_values(array_map(fn($s, $g) => ['@type' => 'Article', 'headline' => $g['titulo'], 'url' => SITE_URL . '/beneficios/' . $s . '/'], array_keys($B), $B))],
+    ]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <h1>Guias por benefício do INSS</h1>
+  <p class="lead texto">Um guia para cada benefício: quem tem direito, requisitos, valor, quando começa, documentos, como pedir e o que conferir no extrato do CNIS antes do pedido.</p>
+  <p class="texto">Os guias reúnem e ligam o <a href="<?= e(u('/glossario/')) ?>">glossário</a>, as <a href="<?= e(u('/perguntas/')) ?>">perguntas frequentes</a>, a <a href="<?= e(u('/legislacao/')) ?>">legislação comentada</a> e os <a href="<?= e(u('/indicadores/')) ?>">indicadores do CNIS</a>, com links para as páginas oficiais do INSS no gov.br.</p>
+  <?php foreach (GRUPOS_GUIAS as $gr => $rot): if (empty($porGrupo[$gr])) continue; ?>
+    <h2 class="grupo-indic" id="g-<?= e($gr) ?>"><?= e($rot) ?></h2>
+    <?php lista_guias($porGrupo[$gr]); ?>
+  <?php endforeach; ?>
+  <p class="meta texto">Guias revisados em <?= e(data_br(GUIAS_REVISADOS)) ?>. Valores de 2026: salário mínimo de R$ 1.621,00, teto de R$ 8.475,55 e limite de baixa renda do auxílio-reclusão de R$ 1.980,38.</p>
+</main>
+<?php
+    rodape();
+
+} elseif (preg_match('#^/beneficios/([a-z0-9-]+)$#', $rota, $m) && isset(guias()[$m[1]])) {
+    $B = guias();
+    $slug = $m[1];
+    $g = $B[$slug];
+    $caminho = '/beneficios/' . $slug . '/';
+    $rev = $g['revisado'] ?? GUIAS_REVISADOS;
+    $artigos = array_filter(array_map('post_publicado', $g['artigos'] ?? []));
+    $faq = $g['perguntas_frequentes'] ?? [];
+    topo($g['titulo'] . ' | ' . SITE_NOME, $g['resumo'], $caminho, [
+        'artigo' => true,
+        'jsonld' => ['@context' => 'https://schema.org', '@graph' => [
+            ['@type' => 'Article', 'headline' => $g['titulo'], 'description' => $g['resumo'],
+             'datePublished' => $g['publicado'] ?? GUIAS_REVISADOS, 'dateModified' => $rev,
+             'author' => ['@type' => 'Organization', 'name' => SITE_NOME], 'mainEntityOfPage' => SITE_URL . $caminho,
+             'about' => ['@type' => 'GovernmentService', 'name' => $g['nome'], 'provider' => ['@type' => 'GovernmentOrganization', 'name' => 'Instituto Nacional do Seguro Social (INSS)', 'url' => 'https://www.gov.br/inss/']]],
+            ['@type' => 'FAQPage', 'url' => SITE_URL . $caminho, 'mainEntity' => array_map(fn($q) => ['@type' => 'Question', 'name' => $q['pergunta'],
+                'acceptedAnswer' => ['@type' => 'Answer', 'text' => texto_puro($q['resposta'])]], $faq)],
+            ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Benefícios', 'item' => SITE_URL . '/beneficios/'],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => $g['nome'], 'item' => SITE_URL . $caminho]]],
+        ]],
+    ]);
+    $indice = array_merge(array_map(fn($x) => $x['titulo'], $g['secoes']), ['Como pedir', 'Documentos', 'O que conferir no CNIS', 'Erros comuns', 'Exemplo', 'Perguntas frequentes']);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <article class="artigo">
+    <p class="migalha"><a href="<?= e(u('/beneficios/')) ?>">Benefícios</a> › <a href="<?= e(u('/beneficios/#g-' . $g['grupo'])) ?>"><?= e(GRUPOS_GUIAS[$g['grupo']] ?? '') ?></a></p>
+    <h1><?= e($g['titulo']) ?></h1>
+    <p class="meta">Revisado em <?= e(data_br($rev)) ?>.</p>
+    <p class="lead-artigo"><?= gl_html($g['introducao']) ?></p>
+    <h2 id="resumo">Resumo rápido</h2>
+    <div class="tabela-box"><table class="tabela resumo-rapido"><tbody>
+      <?php foreach ($g['resumo_rapido'] as $r): ?><tr><th scope="row"><?= e($r['item']) ?></th><td><?= gl_html($r['valor']) ?></td></tr><?php endforeach; ?>
+    </tbody></table></div>
+    <nav class="indice-leg" aria-label="Neste guia"><p>Neste guia:</p><ul>
+      <?php foreach ($indice as $n => $tit): ?><li><a href="#s<?= $n + 1 ?>"><?= e($tit) ?></a></li><?php endforeach; ?>
+    </ul></nav>
+    <?php foreach ($g['secoes'] as $n => $sec): ?>
+      <h2 id="s<?= $n + 1 ?>"><?= e($sec['titulo']) ?></h2>
+      <?= gl_blocos($sec['texto']) ?>
+    <?php endforeach; $n = count($g['secoes']); ?>
+    <h2 id="s<?= ++$n ?>">Como pedir</h2>
+    <ol class="passos"><?php foreach ($g['como_pedir'] as $p): ?><li><?= gl_html($p) ?></li><?php endforeach; ?></ol>
+    <h2 id="s<?= ++$n ?>">Documentos</h2>
+    <?= gl_blocos([$g['documentos']]) ?>
+    <h2 id="s<?= ++$n ?>">O que conferir no CNIS</h2>
+    <?= gl_blocos([$g['conferir_no_cnis']]) ?>
+    <p class="dica">Veja <?php if (post_publicado('como-baixar-o-cnis-em-pdf-com-remuneracoes')): ?><a href="<?= e(u('/blog/como-baixar-o-cnis-em-pdf-com-remuneracoes/')) ?>">como baixar o CNIS em PDF</a> e <?php endif; ?>o que significa cada <a href="<?= e(u('/indicadores/')) ?>">indicador do extrato</a>.</p>
+    <h2 id="s<?= ++$n ?>">Erros comuns</h2>
+    <?= gl_blocos([$g['erros_comuns']]) ?>
+    <div class="exemplo" id="s<?= ++$n ?>"><h2>Exemplo</h2><?= gl_blocos($g['exemplo']) ?><p class="dica">Exemplo fictício, só para ilustrar a regra.</p></div>
+    <h2 id="s<?= ++$n ?>">Perguntas frequentes</h2>
+    <?php foreach ($faq as $q): ?><h3 class="pergunta"><?= e($q['pergunta']) ?></h3><p><?= gl_html($q['resposta']) ?></p><?php endforeach; ?>
+    <?php $Q = perguntas(); $qs = array_intersect_key($Q, array_flip($g['perguntas'] ?? [])); if ($qs): ?>
+      <h3 class="pergunta">Mais perguntas sobre o tema</h3>
+      <?php lista_perguntas($qs, false); ?>
+    <?php endif; ?>
+    <h2>Fundamento legal e fontes oficiais</h2>
+    <ul class="fontes-gl">
+      <?php foreach ($g['fontes'] as $f): $F = fontes_glossario()[$f['fonte']] ?? null; if (!$F) continue; ?>
+        <li><?= link_externo($F[1], e($F[0])) ?><?= !empty($f['dispositivo']) ? ', ' . e($f['dispositivo']) : '' ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <p class="dica">Os links levam aos textos oficiais no Planalto e às páginas do INSS no gov.br. As regras mudam: confira sempre a versão vigente.</p>
+    <?php $L = legislacao(); $ls = array_intersect_key($L, array_flip($g['legislacao'] ?? [])); if ($ls): ?>
+      <h2>Legislação comentada</h2>
+      <?php lista_legislacao($ls); ?>
+    <?php endif; ?>
+    <?php $G = glossario(); $ts = array_intersect_key($G, array_flip($g['termos'] ?? [])); if ($ts): ?>
+      <h2>Termos do glossário</h2>
+      <p class="termos-gl"><?php foreach ($ts as $s => $t): ?><a href="<?= e(u('/glossario/' . $s . '/')) ?>"><?= e($t['termo']) ?></a><?php endforeach; ?></p>
+    <?php endif; ?>
+    <?php if ($artigos): ?>
+      <h2>Leia também no blog</h2>
+      <ul><?php foreach ($artigos as $p): ?><li><a href="<?= e(u('/blog/' . $p['slug'] . '/')) ?>"><?= e($p['titulo']) ?></a></li><?php endforeach; ?></ul>
+    <?php endif; ?>
+    <?php if (!empty($g['indicadores'])): $IND = indicadores(); ?>
+      <h2>Indicadores do CNIS relacionados</h2>
+      <ul class="lista-indic">
+        <?php foreach ($g['indicadores'] as $k): if (!isset($IND[$k])) continue; ?>
+          <li><a href="<?= e(u('/indicadores/' . slug_ind($k) . '/')) ?>"><code class="cod"><?= e($k) ?></code></a> <span><?= e(curto_ind($IND[$k])) ?></span></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
+    <?php $rel = array_intersect_key($B, array_flip($g['relacionados'] ?? [])); if ($rel): ?>
+      <h2>Outros benefícios</h2>
+      <?php lista_guias($rel); ?>
+    <?php endif; ?>
+    <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
+    <?php anuncio(); ?>
+    <a class="voltar" href="<?= e(u('/beneficios/')) ?>">Todos os benefícios</a>
   </article>
 </main>
 <?php
@@ -989,6 +1147,10 @@ if ($rota === '/') {
           <li><a href="<?= e(u('/indicadores/' . slug_ind($k) . '/')) ?>"><code class="cod"><?= e($k) ?></code></a> <span><?= e(curto_ind($IND[$k])) ?></span></li>
         <?php endforeach; ?>
       </ul>
+    <?php endif; ?>
+    <?php $gs = guias_que_citam('perguntas', $slug); if ($gs): ?>
+      <h2>Guias por benefício</h2>
+      <?php lista_guias($gs, false); ?>
     <?php endif; ?>
     <?php $ls = legislacao_que_cita('perguntas', $slug); if ($ls): ?>
       <h2>Na legislação comentada</h2>
@@ -1116,6 +1278,10 @@ if ($rota === '/') {
         <?php endforeach; ?>
       </ul>
     <?php endif; ?>
+    <?php $gs = guias_que_citam('legislacao', $slug); if ($gs): ?>
+      <h2>Guias por benefício</h2>
+      <?php lista_guias($gs, false); ?>
+    <?php endif; ?>
     <?php $rel = array_intersect_key($L, array_flip($l['relacionadas'] ?? [])); if ($rel): ?>
       <h2>Outras normas comentadas</h2>
       <?php lista_legislacao($rel); ?>
@@ -1221,6 +1387,8 @@ if ($rota === '/') {
     $urls = [['/', null], ['/blog/', null], ['/glossario/', GLOSSARIO_REVISADO], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', LEGISLACAO_REVISADA], ['/privacidade/', null]];
     foreach (glossario() as $s => $t) $urls[] = ['/glossario/' . $s . '/', $t['revisado'] ?? GLOSSARIO_REVISADO];
     foreach (legislacao() as $s => $l) $urls[] = ['/legislacao/' . $s . '/', $l['revisado'] ?? LEGISLACAO_REVISADA];
+    $urls[] = ['/beneficios/', GUIAS_REVISADOS];
+    foreach (guias() as $s => $g) $urls[] = ['/beneficios/' . $s . '/', $g['revisado'] ?? GUIAS_REVISADOS];
     $urls[] = ['/perguntas/', PERGUNTAS_REVISADAS];
     foreach (perguntas() as $s => $q) $urls[] = ['/perguntas/' . $s . '/', $q['revisado'] ?? PERGUNTAS_REVISADAS];
     foreach (array_keys(indicadores()) as $k) $urls[] = ['/indicadores/' . slug_ind($k) . '/', INDICADORES_REVISADOS];

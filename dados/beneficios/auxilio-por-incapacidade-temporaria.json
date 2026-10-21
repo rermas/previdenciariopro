@@ -1,0 +1,146 @@
+{
+  "ordem": 9,
+  "nome": "Auxílio por incapacidade temporária",
+  "titulo": "Auxílio-doença (incapacidade temporária): guia completo 2026",
+  "resumo": "Guia do auxílio por incapacidade temporária, o antigo auxílio-doença: carência, qualidade de segurado, perícia, valor de 91%, prorrogação e como pedir.",
+  "grupo": "incapacidade",
+  "introducao": "O auxílio por incapacidade temporária, o antigo **auxílio-doença**, substitui a renda de quem fica **incapaz para o trabalho por mais de 15 dias**. É o benefício que mais depende de três datas: a do início da incapacidade, a da última contribuição e a do pedido.",
+  "resumo_rapido": [
+    {
+      "item": "Requisitos",
+      "valor": "Incapacidade temporária para o trabalho habitual por mais de 15 dias, qualidade de segurado e carência."
+    },
+    {
+      "item": "Carência",
+      "valor": "12 contribuições, dispensada em acidente de qualquer natureza e doenças graves."
+    },
+    {
+      "item": "Início",
+      "valor": "16º dia de afastamento (empregado) ou data da incapacidade (demais), se pedido em até 30 dias."
+    },
+    {
+      "item": "Valor",
+      "valor": "91% da média, limitado à média dos últimos 12 salários de contribuição."
+    },
+    {
+      "item": "Duração",
+      "valor": "Prazo fixado pela perícia; sem prazo, 120 dias, com pedido de prorrogação."
+    },
+    {
+      "item": "Conta para aposentadoria",
+      "valor": "Sim, se intercalado com contribuições."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "As datas que decidem o direito",
+      "texto": [
+        "A perícia fixa a [[dii|data de início da incapacidade]]. Nessa data, a pessoa precisa ter [[qualidade-de-segurado]] (ou estar no [[periodo-de-graca]]) e 12 contribuições de carência, salvo as exceções. Contribuições pagas depois da DII não servem para esse benefício."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "O art. 61 da [[fonte:lei8213|Lei 8.213/1991]] fixa 91% do salário de benefício, e o art. 29, § 10, limita o valor à média dos últimos 12 salários de contribuição. Nunca é menor que o salário mínimo."
+      ]
+    },
+    {
+      "titulo": "Prorrogação e alta",
+      "texto": [
+        "Se o prazo fixado não for suficiente, peça a prorrogação no Meu INSS nos 15 dias anteriores à data de cessação. Se a perícia der alta e a incapacidade continuar, cabe recurso ou novo pedido com documentos atualizados."
+      ]
+    },
+    {
+      "titulo": "Análise documental",
+      "texto": [
+        "Em muitos casos, o INSS concede o benefício por análise documental do atestado, sem perícia presencial, quando o afastamento é curto e o atestado cumpre os requisitos."
+      ]
+    },
+    {
+      "titulo": "Doenças que dispensam carência",
+      "texto": [
+        "O art. 151 da [[fonte:lei8213|Lei 8.213/1991]] lista doenças que dispensam as 12 contribuições, desde que surgidas depois da filiação: tuberculose ativa, hanseníase, alienação mental, esclerose múltipla, hepatopatia grave, neoplasia maligna, cegueira, paralisia irreversível e incapacitante, cardiopatia grave, doença de Parkinson, espondiloartrose anquilosante, nefropatia grave, estado avançado da doença de Paget, aids e contaminação por radiação. A lista pode ser atualizada por portaria dos Ministérios."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **45 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Peça o atestado com CID, data de início e tempo estimado de afastamento.",
+    "No [[fonte:meuinss|Meu INSS]], escolha \"Pedir benefício por incapacidade\" e envie o atestado.",
+    "Se for marcada perícia, compareça com laudos e exames.",
+    "Acompanhe o resultado e peça prorrogação, se precisar."
+  ],
+  "documentos": [
+    "Atestado médico legível, com CID, data e prazo de afastamento, assinatura e CRM.",
+    "Laudos e exames.",
+    "Documento de identificação.",
+    "CAT, em caso de acidente de trabalho."
+  ],
+  "conferir_no_cnis": [
+    "Última contribuição ou último vínculo antes da incapacidade.",
+    "Período de graça e prorrogações.",
+    "Carência de 12 meses com contribuições válidas."
+  ],
+  "erros_comuns": [
+    "Pedir depois de 30 dias e perder os primeiros meses.",
+    "Atestado sem CID ou sem prazo.",
+    "Contribuir depois de ficar doente achando que isso garante o benefício."
+  ],
+  "exemplo": [
+    "Fernanda, autônoma, contribui em dia desde 2023. Em 05/2026 teve uma cirurgia e ficou 60 dias afastada. Ela tem mais de 12 contribuições e qualidade de segurada. Como é contribuinte individual, recebe desde a data do início da incapacidade, se pedir em até 30 dias."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "O auxílio-doença paga 13º?",
+      "resposta": "Sim. O abono anual é pago a quem recebe auxílio por incapacidade durante o ano, proporcional aos meses."
+    },
+    {
+      "pergunta": "Posso trabalhar recebendo auxílio?",
+      "resposta": "Não na atividade para a qual está incapaz. Se voltar a trabalhar, o benefício deve ser encerrado."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 25, I, 26, 29, § 10, e 59 a 63"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 71 a 80"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "termos": [
+    "auxilio-por-incapacidade-temporaria",
+    "dii",
+    "qualidade-de-segurado",
+    "periodo-de-graca",
+    "carencia"
+  ],
+  "perguntas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "desempregado-tem-direito-a-auxilio-doenca",
+    "auxilio-doenca-conta-para-aposentadoria",
+    "parei-de-contribuir-ainda-tenho-direito"
+  ],
+  "legislacao": [
+    "auxilio-por-incapacidade-arts-59-a-63-lei-8213",
+    "qualidade-de-segurado-art-15-lei-8213"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": [],
+  "relacionados": [
+    "aposentadoria-por-incapacidade-permanente",
+    "auxilio-acidente"
+  ]
+}

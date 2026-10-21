@@ -1,0 +1,176 @@
+{
+  "ordem": 1,
+  "nome": "Aposentadoria por idade",
+  "titulo": "Aposentadoria por idade: requisitos, valor e como pedir em 2026",
+  "resumo": "Guia completo da aposentadoria por idade urbana do INSS: idade de 62 e 65 anos, 15 anos de contribuição, carência, cálculo do valor, documentos e como pedir.",
+  "grupo": "aposentadorias",
+  "introducao": "A aposentadoria por idade é um dos benefícios mais pedidos ao INSS. Depois da [[fonte:ec103|Reforma da Previdência]], ela passou a ter duas versões: a **regra de transição** (art. 18 da EC 103/2019), para quem já era filiado em 13/11/2019, e a **[[aposentadoria-programada|aposentadoria programada]]**, regra permanente para quem se filiou depois. Este guia explica os requisitos, o valor, o que conferir no CNIS e como pedir.",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Trabalhador urbano de qualquer categoria: empregado, doméstico, avulso, contribuinte individual, MEI e facultativo."
+    },
+    {
+      "item": "Idade",
+      "valor": "62 anos (mulher) e 65 anos (homem)."
+    },
+    {
+      "item": "Tempo de contribuição",
+      "valor": "15 anos (mulher); 15 anos para o homem filiado até 13/11/2019 e 20 anos para o filiado depois."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições mensais."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média de todos os salários desde 07/1994, mais 2% por ano acima de 15 (mulher) ou 20 anos (homem). Nunca menos que o salário mínimo."
+    },
+    {
+      "item": "Qualidade de segurado",
+      "valor": "Não é exigida se a carência estiver cumprida."
+    },
+    {
+      "item": "Início",
+      "valor": "Desligamento do emprego, se pedida em até 90 dias; nos demais casos, a data do pedido."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Requisitos em detalhe",
+      "texto": [
+        "Pelo art. 18 da [[fonte:ec103|EC 103/2019]], a mulher filiada até a reforma precisava de 60 anos em 2019, com acréscimo de 6 meses por ano até chegar a **62 anos em 2023**. O homem continua com **65 anos**. Os dois precisam de **15 anos de tempo de contribuição** e **180 meses de [[carencia]]**.",
+        "Para quem se filiou depois de 13/11/2019, vale a aposentadoria programada (art. 19): mesmas idades, mas o homem precisa de **20 anos** de contribuição.",
+        "Quem se inscreveu no INSS até 24/07/1991 pode usar a tabela de carência do art. 142 da [[fonte:lei8213|Lei 8.213/1991]], que hoje já exige 180 meses para quem completou a idade a partir de 2011."
+      ]
+    },
+    {
+      "titulo": "Tempo de contribuição e carência não são a mesma coisa",
+      "texto": [
+        "O [[tempo-de-contribuicao]] conta dias; a carência conta meses com contribuição válida. Algumas situações contam como tempo, mas não como carência:",
+        [
+          "contribuições de autônomo pagas em atraso antes da primeira paga em dia;",
+          "competências abaixo do salário mínimo desde 11/2019 sem [[contribuicao-abaixo-do-minimo|ajuste]];",
+          "serviço militar e tempo rural sem contribuição;",
+          "período de graça sem contribuição."
+        ],
+        "O benefício por incapacidade intercalado com contribuições conta como carência (STF, Tema 1.125)."
+      ]
+    },
+    {
+      "titulo": "Como o valor é calculado",
+      "texto": [
+        "O INSS calcula a média de **100% dos salários de contribuição** desde 07/1994, corrigidos (o [[salario-de-beneficio]]). A renda é de **60%** dessa média, com **2% a mais** por ano que passar de 15 anos (mulher) ou 20 anos (homem). O resultado respeita o piso do salário mínimo e o [[teto-do-inss]].",
+        "O [[descarte-de-contribuicoes]] pode retirar salários baixos da média, desde que se mantenham os 15 ou 20 anos exigidos; o tempo descartado deixa de contar no acréscimo de 2%."
+      ]
+    },
+    {
+      "titulo": "Perda da qualidade de segurado",
+      "texto": [
+        "Na aposentadoria por idade, perder a qualidade de segurado não impede o direito: basta ter a idade e a carência, ainda que em datas diferentes (art. 3º, § 1º, da [[fonte:lei10666|Lei 10.666/2003]]). Contribuições antigas nunca se perdem."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Emita o extrato do CNIS com vínculos, contribuições e remunerações pelo [[fonte:meuinss|Meu INSS]].",
+    "Confira vínculos, datas, salários e indicadores de pendência; peça a atualização do que estiver errado.",
+    "Use o simulador do Meu INSS para ver a data e as regras disponíveis.",
+    "No Meu INSS, escolha \"Pedir aposentadoria\" e depois \"Aposentadoria por idade urbana\".",
+    "Anexe os documentos de períodos que não estão no CNIS ou que têm pendência.",
+    "Acompanhe o pedido e responda às exigências em até 30 dias."
+  ],
+  "documentos": [
+    "Documento de identificação com foto e CPF.",
+    "Carteiras de trabalho, inclusive as antigas.",
+    "Carnês e guias de recolhimento de contribuinte individual ou facultativo.",
+    "Documentos de vínculos fora do CNIS: ficha de registro, TRCT, extrato do FGTS, holerites.",
+    "Certidão de tempo de serviço militar, se houver."
+  ],
+  "conferir_no_cnis": [
+    "Vínculos com [[ind:PEXT]] ou outras pendências que impedem o cômputo.",
+    "Competências abaixo do mínimo desde 11/2019 ([[ind:PSC-MEN-SM-EC103]]).",
+    "Contribuições de autônomo pagas em atraso: veja a data de pagamento.",
+    "Salários faltantes, que reduzem a média.",
+    "Vínculos sem data de saída."
+  ],
+  "erros_comuns": [
+    "Confundir 15 anos de tempo com 180 meses de carência.",
+    "Pedir sem corrigir o CNIS e receber exigência ou indeferimento.",
+    "Esperar meses depois de completar os requisitos: a data do pedido define o início do pagamento.",
+    "Ignorar outras regras que pagam mais, como a regra de pontos ou o pedágio de 100%."
+  ],
+  "exemplo": [
+    "Célia completou 62 anos em março de 2026 e tem 22 anos de contribuição, todos como empregada, com média de R$ 2.800,00. O valor é 60% + 2% × (22 − 15) = **74% da média**, ou R$ 2.072,00. Ela pediu no mês do aniversário e recebe desde a data do pedido."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Quem nunca contribuiu pode se aposentar por idade?",
+      "resposta": "Não. É preciso ter 180 contribuições de carência. Quem não tem e é de baixa renda pode verificar o direito ao [[ben:bpc-loas|BPC]] aos 65 anos."
+    },
+    {
+      "pergunta": "Contribuição como MEI conta?",
+      "resposta": "Conta para a aposentadoria por idade e para a carência, se o DAS foi pago em dia. O benefício fica no valor de um salário mínimo, se só houver MEI."
+    },
+    {
+      "pergunta": "Posso continuar trabalhando depois de aposentado?",
+      "resposta": "Pode. O aposentado por idade continua contribuindo sobre o novo trabalho, mas essas contribuições não aumentam a aposentadoria."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 18, 19 e 26"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 25, 48 a 51 e 142"
+    },
+    {
+      "fonte": "lei10666",
+      "dispositivo": "art. 3º"
+    },
+    {
+      "fonte": "inss-idade-urbana"
+    },
+    {
+      "fonte": "srv-idade-urbana"
+    }
+  ],
+  "termos": [
+    "carencia",
+    "tempo-de-contribuicao",
+    "aposentadoria-programada",
+    "salario-de-beneficio",
+    "rmi"
+  ],
+  "perguntas": [
+    "15-anos-de-contribuicao-aposenta",
+    "perdi-a-qualidade-posso-aposentar-por-idade",
+    "quanto-tempo-falta-para-me-aposentar"
+  ],
+  "legislacao": [
+    "carencia-arts-24-a-27-lei-8213",
+    "regras-de-transicao-arts-15-a-21-ec-103",
+    "calculo-e-acumulacao-arts-23-a-29-ec-103"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia",
+    "como-baixar-o-cnis-em-pdf-com-remuneracoes"
+  ],
+  "indicadores": [
+    "PEXT",
+    "PSC-MEN-SM-EC103"
+  ],
+  "relacionados": [
+    "aposentadoria-por-idade-rural",
+    "aposentadoria-hibrida",
+    "aposentadoria-por-tempo-de-contribuicao"
+  ]
+}

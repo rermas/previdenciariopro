@@ -1,0 +1,137 @@
+{
+  "ordem": 6,
+  "nome": "Aposentadoria do professor",
+  "titulo": "Aposentadoria do professor no INSS: regras e transição",
+  "resumo": "Guia da aposentadoria do professor da educação básica pelo INSS: tempo de magistério, idade de 57 e 60 anos, regras de transição em 2026, valor e como pedir.",
+  "grupo": "aposentadorias",
+  "introducao": "O professor que comprova **tempo de efetivo exercício de magistério na educação infantil, no ensino fundamental ou no médio** tem requisitos cinco anos menores que os dos demais segurados. A regra está no art. 201, § 8º, da [[fonte:cf|Constituição]] e foi ajustada pela [[fonte:ec103|EC 103/2019]].",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Professor da educação infantil, do ensino fundamental ou médio, em sala de aula ou em funções de direção, coordenação e assessoramento pedagógico na escola."
+    },
+    {
+      "item": "Regra permanente",
+      "valor": "57 anos (mulher) e 60 (homem), com 25 anos de magistério."
+    },
+    {
+      "item": "Pontos em 2026",
+      "valor": "88 (mulher) e 98 (homem), com 25/30 anos de magistério."
+    },
+    {
+      "item": "Idade progressiva em 2026",
+      "valor": "54 anos e 6 meses (mulher) e 59 anos e 6 meses (homem), com 25/30 anos."
+    },
+    {
+      "item": "Pedágio de 100%",
+      "valor": "52 anos (mulher) e 55 (homem), 25/30 anos e o dobro do tempo que faltava."
+    },
+    {
+      "item": "Não vale",
+      "valor": "Professor universitário, que segue as regras gerais."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "O que é tempo de magistério",
+      "texto": [
+        "Conta o exercício da docência e, pelo entendimento do STF, as funções de direção de unidade escolar, coordenação e assessoramento pedagógico, desde que exercidas por professor em escola de educação básica. Atividades administrativas fora da escola não contam."
+      ]
+    },
+    {
+      "titulo": "Regras de transição",
+      "texto": [
+        [
+          "**Pontos (art. 15, § 3º):** 81 (mulher) e 91 (homem) em 2019, mais 1 por ano, até 92 e 100.",
+          "**Idade progressiva (art. 16, § 2º):** 51 (mulher) e 56 (homem) em 2019, mais 6 meses por ano, até 57 e 60.",
+          "**Pedágio de 100% (art. 20, § 1º):** 52 (mulher) e 55 anos (homem), 25/30 anos de magistério e o período adicional."
+        ],
+        "Quem tinha 25 (mulher) ou 30 anos (homem) de magistério em 13/11/2019 tem [[direito-adquirido]] à regra antiga, sem idade mínima, com fator previdenciário."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "Nas regras de pontos, idade progressiva e na regra permanente: 60% da média + 2% por ano acima de 15 (mulher) ou 20 anos (homem). No pedágio de 100%: 100% da média."
+      ]
+    },
+    {
+      "titulo": "Professor com duas escolas",
+      "texto": [
+        "O tempo em duas escolas no mesmo período conta uma vez só no tempo de magistério, mas os salários das duas se somam no cálculo da média, respeitado o teto. Se uma das redes tem regime próprio, aquele vínculo segue o regime próprio e não entra no INSS, salvo por CTC de períodos anteriores."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Reúna declarações das escolas com o cargo, a função e o período de magistério.",
+    "Confira no CNIS os vínculos com as escolas.",
+    "No [[fonte:meuinss|Meu INSS]], peça a aposentadoria por tempo de contribuição do professor e anexe as declarações."
+  ],
+  "documentos": [
+    "Carteiras de trabalho com o cargo de professor.",
+    "Declaração da escola com as funções exercidas e o nível de ensino.",
+    "Diploma ou habilitação, se pedidos."
+  ],
+  "conferir_no_cnis": [
+    "Vínculos com as escolas e datas.",
+    "Concomitância entre duas escolas: o tempo conta uma vez.",
+    "Pendências nos vínculos."
+  ],
+  "erros_comuns": [
+    "Somar tempo de professor universitário como magistério.",
+    "Não comprovar as funções de coordenação ou direção.",
+    "Esquecer que só o tempo de magistério reduz o requisito."
+  ],
+  "exemplo": [
+    "Patrícia, professora do ensino fundamental desde 1997, nasceu em 1971. Em 2026 tem 29 anos de magistério e 55 anos de idade: soma 84 pontos, abaixo dos 88. Pela idade progressiva, precisa de 54 anos e 6 meses com 25 anos: já cumpre em 2026, com 60% + 2% × 14 = 88% da média."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Professora que virou coordenadora mantém o direito?",
+      "resposta": "Sim, se a coordenação pedagógica for na escola de educação básica e exercida por professora."
+    },
+    {
+      "pergunta": "Tempo de professor na rede pública conta no INSS?",
+      "resposta": "Se havia regime próprio, o tempo precisa vir por [[ctc-contagem-reciproca|CTC]]; se o vínculo era celetista ou sem regime próprio, conta direto no INSS."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 8º"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15, § 3º, 16, § 2º, 19, § 1º, e 20, § 1º"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "regras-de-transicao",
+    "regra-de-pontos",
+    "idade-minima-progressiva",
+    "direito-adquirido"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor",
+    "virei-servidor-publico-tempo-do-inss"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "aposentadoria-por-tempo-de-contribuicao",
+    "aposentadoria-especial"
+  ]
+}

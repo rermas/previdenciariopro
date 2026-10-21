@@ -1,0 +1,149 @@
+{
+  "ordem": 5,
+  "nome": "Aposentadoria especial",
+  "titulo": "Aposentadoria especial: requisitos, PPP e regras depois de 2019",
+  "resumo": "Guia da aposentadoria especial do INSS: atividades de 15, 20 e 25 anos, prova por PPP, regra de pontos e idade mínima da EC 103/2019, valor e como pedir.",
+  "grupo": "aposentadorias",
+  "introducao": "A aposentadoria especial é devida a quem trabalhou **exposto a agentes nocivos à saúde**, como ruído, calor, agentes químicos e biológicos, por 15, 20 ou 25 anos. A [[fonte:ec103|EC 103/2019]] manteve o benefício, mas criou **idade mínima** para os novos filiados e uma **regra de pontos** para quem já contribuía.",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Empregado, avulso e contribuinte individual cooperado com exposição comprovada a agentes nocivos."
+    },
+    {
+      "item": "Tempo especial",
+      "valor": "15, 20 ou 25 anos, conforme o agente (a maioria das atividades é de 25 anos)."
+    },
+    {
+      "item": "Filiado até 13/11/2019",
+      "valor": "Pontos (idade + tempo): 66, 76 ou 86."
+    },
+    {
+      "item": "Filiado depois",
+      "valor": "Idade mínima de 55, 58 ou 60 anos."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Prova",
+      "valor": "PPP e laudo técnico (LTCAT); até 28/04/1995, a categoria profissional."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média + 2% por ano acima de 20 anos (15 anos nas atividades de 15 anos e para mulheres)."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Quem tem direito adquirido",
+      "texto": [
+        "Quem completou 15, 20 ou 25 anos de atividade especial até 13/11/2019 pode se aposentar pela regra antiga, **sem idade mínima e com 100% da média** dos 80% maiores salários (EC 103/2019, art. 3º)."
+      ]
+    },
+    {
+      "titulo": "Como provar a exposição",
+      "texto": [
+        [
+          "**Até 28/04/1995:** enquadramento pela categoria profissional prevista nos decretos da época, ou pela exposição.",
+          "**De 29/04/1995 a 31/12/2003:** formulários (SB-40, DSS-8030, DIRBEN-8030) e, desde 06/03/1997, laudo técnico.",
+          "**Desde 01/01/2004:** o [[ppp]], hoje emitido pelo eSocial."
+        ],
+        "No ruído, os limites foram 80 dB (até 05/03/1997), 90 dB (até 18/11/2003) e 85 dB (depois). Para o ruído, o EPI não afasta o direito (STF, Tema 555)."
+      ]
+    },
+    {
+      "titulo": "Conversão de tempo",
+      "texto": [
+        "Quem não tem tempo especial suficiente pode **converter** o período especial em comum, mas só até 13/11/2019 (EC 103/2019, art. 25, § 2º). Na atividade de 25 anos, o fator é 1,4 (homem) e 1,2 (mulher). O tempo convertido ajuda a cumprir as regras da [[ben:aposentadoria-por-tempo-de-contribuicao|aposentadoria por tempo de contribuição]]."
+      ]
+    },
+    {
+      "titulo": "Depois de aposentado",
+      "texto": [
+        "Quem recebe aposentadoria especial **não pode continuar em atividade especial**, sob pena de cancelamento (Lei 8.213/1991, art. 57, § 8º; STF, Tema 709). Pode trabalhar em atividade comum."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Peça o PPP a cada empresa onde houve exposição; se fechou, busque laudos de empresa similar ou de processos.",
+    "Confira no PPP os agentes, a intensidade, o responsável técnico e as datas.",
+    "No [[fonte:meuinss|Meu INSS]], peça \"Aposentadoria especial\" e anexe os PPPs e laudos.",
+    "Se o INSS não reconhecer algum período, avalie recurso com laudos ou perícia."
+  ],
+  "documentos": [
+    "PPP de cada período especial.",
+    "LTCAT ou outros laudos, se o PPP tiver falhas.",
+    "Formulários antigos (SB-40, DSS-8030) para períodos até 2003.",
+    "Carteiras de trabalho."
+  ],
+  "conferir_no_cnis": [
+    "Vínculos dos períodos especiais, com datas corretas.",
+    "Código de exposição da GFIP, quando aparece no extrato.",
+    "Pendências que tiram vínculos da contagem."
+  ],
+  "erros_comuns": [
+    "Achar que o adicional de insalubridade garante o tempo especial.",
+    "Aceitar PPP sem responsável técnico pelos registros ambientais.",
+    "Continuar na atividade especial depois de aposentado.",
+    "Não converter o tempo especial anterior a 2019 quando não há tempo para a especial."
+  ],
+  "exemplo": [
+    "Rafael é soldador desde 1999, exposto a ruído de 90 dB e fumos metálicos, com PPP. Em 13/11/2019 tinha 20 anos e 8 meses de atividade especial. Ele nasceu em 1975. Pela regra de pontos (art. 21), precisa de 25 anos especiais e 86 pontos: em 2024 tem 25 anos de especial e 49 anos de idade, ou 74 pontos; chega aos 86 pontos por volta de 2030, quando terá cerca de 55 anos de idade e 31 de atividade."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Enfermeiro e técnico de enfermagem têm direito?",
+      "resposta": "Podem ter, pela exposição a agentes biológicos, comprovada no PPP. Até 28/04/1995, a categoria era enquadrada diretamente."
+    },
+    {
+      "pergunta": "Vigilante tem atividade especial?",
+      "resposta": "O STJ reconheceu a possibilidade para vigilante, com ou sem arma de fogo, desde que comprovada a exposição a risco (Tema 1.031)."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 57 e 58"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 3º, 19, 21, 25 e 26"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 64 a 70 e Anexo IV"
+    },
+    {
+      "fonte": "inss-regras"
+    }
+  ],
+  "termos": [
+    "atividade-especial",
+    "ppp",
+    "direito-adquirido",
+    "tempo-de-contribuicao"
+  ],
+  "perguntas": [
+    "trabalho-insalubre-aposentadoria-especial",
+    "aposentado-que-continua-trabalhando"
+  ],
+  "legislacao": [
+    "aposentadoria-especial-arts-57-e-58-lei-8213",
+    "calculo-e-acumulacao-arts-23-a-29-ec-103"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "aposentadoria-por-tempo-de-contribuicao",
+    "aposentadoria-do-professor"
+  ]
+}

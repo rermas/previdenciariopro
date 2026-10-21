@@ -1,0 +1,138 @@
+{
+  "ordem": 3,
+  "nome": "Aposentadoria híbrida",
+  "titulo": "Aposentadoria híbrida: como somar tempo rural e urbano",
+  "resumo": "Guia da aposentadoria por idade híbrida: como somar trabalho rural e urbano para a carência, idade exigida, cálculo do valor e o que decidiu o STJ.",
+  "grupo": "aposentadorias",
+  "introducao": "A aposentadoria híbrida é a aposentadoria por idade de quem **trabalhou no campo e na cidade** e não completa a carência em nenhuma das duas atividades sozinha. Ela permite **somar os dois períodos**, com a idade da aposentadoria urbana (art. 48, § 3º, da [[fonte:lei8213|Lei 8.213/1991]]).",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Quem tem períodos rurais e urbanos que, somados, chegam a 180 meses."
+    },
+    {
+      "item": "Idade",
+      "valor": "62 anos (mulher) e 65 anos (homem), como na urbana."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 meses, somando atividade rural e contribuições urbanas."
+    },
+    {
+      "item": "Tempo rural antigo",
+      "valor": "Conta, mesmo sem contribuição e mesmo que distante do pedido (STJ, Tema 1.007)."
+    },
+    {
+      "item": "Valor",
+      "valor": "Calculado como na aposentadoria por idade; os meses rurais sem contribuição entram com o salário mínimo."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Como funciona a soma",
+      "texto": [
+        "O § 3º do art. 48 permite que o trabalhador rural que não cumpre a regra rural some períodos de outras categorias, desde que tenha a idade urbana. O § 4º manda considerar, nos meses rurais, o salário mínimo como salário de contribuição.",
+        "O STJ decidiu (Tema 1.007) que o tempo rural, **mesmo remoto e sem contribuição**, pode ser somado, e que não importa qual foi a última atividade antes do pedido."
+      ]
+    },
+    {
+      "titulo": "Prova do tempo rural",
+      "texto": [
+        "Valem as mesmas provas da [[ben:aposentadoria-por-idade-rural|aposentadoria rural]]: documentos da época em nome próprio ou da família, completados por testemunhas. O trabalho rural pode ser reconhecido a partir dos 12 anos de idade (TNU, Súmula 5)."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "Segue a regra da aposentadoria por idade: 60% da média mais 2% por ano acima de 15 (mulher) ou 20 anos (homem). Como os meses rurais entram com o salário mínimo, a média costuma ficar perto do mínimo."
+      ]
+    },
+    {
+      "titulo": "Rural, urbana ou híbrida: qual pedir",
+      "texto": [
+        [
+          "**Rural:** quem está no campo perto da idade e tem 15 anos de atividade rural; idade de 55 (mulher) e 60 anos (homem).",
+          "**Urbana:** quem tem 180 contribuições urbanas; idade de 62 e 65 anos.",
+          "**Híbrida:** quem não completa nenhuma das duas sozinha, mas soma 15 anos entre campo e cidade; idade urbana."
+        ],
+        "O INSS deve analisar a modalidade em que o segurado tem direito. Ainda assim, informe no pedido todos os períodos rurais e urbanos, para que nenhum fique de fora da soma."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Liste os períodos rurais e urbanos e some os meses.",
+    "Reúna as provas do período rural.",
+    "Peça a aposentadoria por idade no [[fonte:meuinss|Meu INSS]] e informe os períodos rurais na autodeclaração.",
+    "Acompanhe as exigências e, se negado, avalie recurso com as provas."
+  ],
+  "documentos": [
+    "Documentos rurais da época (certidões, notas, ITR, contratos, histórico escolar rural).",
+    "Carteiras de trabalho e carnês dos períodos urbanos.",
+    "Autodeclaração rural preenchida no pedido."
+  ],
+  "conferir_no_cnis": [
+    "Períodos urbanos e carência já reconhecida.",
+    "Cadastro de segurado especial, se houver.",
+    "Pendências em vínculos urbanos."
+  ],
+  "erros_comuns": [
+    "Achar que tempo rural antigo não serve: ele serve na híbrida.",
+    "Pedir pela regra rural tendo saído do campo há muitos anos.",
+    "Faltar prova material do período rural."
+  ],
+  "exemplo": [
+    "Raimundo trabalhou na lavoura com os pais de 1978 a 1986 (8 anos) e foi para a cidade, onde teve 9 anos de carteira assinada. Aos 65 anos, ele soma 17 anos, mais que os 15 exigidos, e pode ter a aposentadoria híbrida."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "A híbrida paga mais que a rural?",
+      "resposta": "Pode pagar um pouco mais se os salários urbanos forem maiores que o mínimo, mas em geral fica próxima do salário mínimo."
+    },
+    {
+      "pergunta": "Mulher se aposenta com 60 ou 62 na híbrida?",
+      "resposta": "Com a idade urbana: 62 anos desde 2023 (para quem completa a idade agora)."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 48, §§ 3º e 4º"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 18"
+    },
+    {
+      "fonte": "inss-aposentadorias"
+    }
+  ],
+  "termos": [
+    "segurado-especial",
+    "carencia",
+    "tempo-de-contribuicao"
+  ],
+  "perguntas": [
+    "trabalhei-na-roca-conta-para-aposentadoria",
+    "15-anos-de-contribuicao-aposenta"
+  ],
+  "legislacao": [
+    "tempo-de-contribuicao-art-55-lei-8213",
+    "carencia-arts-24-a-27-lei-8213"
+  ],
+  "artigos": [
+    "segurado-especial-cadastro-autodeclaracao-e-prova-rural",
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": [],
+  "relacionados": [
+    "aposentadoria-por-idade-rural",
+    "aposentadoria-por-idade"
+  ]
+}

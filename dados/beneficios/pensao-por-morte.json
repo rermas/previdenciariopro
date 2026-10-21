@@ -1,0 +1,166 @@
+{
+  "ordem": 12,
+  "nome": "Pensão por morte",
+  "titulo": "Pensão por morte do INSS: quem recebe, valor e duração",
+  "resumo": "Guia da pensão por morte do INSS: dependentes, prova da união estável, valor por cotas, duração para cônjuge, prazos para pedir com atrasados e acumulação.",
+  "grupo": "familia",
+  "introducao": "A pensão por morte é paga aos **dependentes** do segurado que falece. Não exige carência, mas exige que o falecido fosse segurado na data do óbito ou já tivesse direito a alguma aposentadoria. Desde a [[fonte:ec103|EC 103/2019]], o valor é calculado por **cotas**.",
+  "resumo_rapido": [
+    {
+      "item": "Quem recebe",
+      "valor": "Cônjuge, companheiro e filhos menores de 21 anos ou inválidos; na falta deles, pais; depois, irmãos."
+    },
+    {
+      "item": "Carência",
+      "valor": "Não exige."
+    },
+    {
+      "item": "Requisito do falecido",
+      "valor": "Qualidade de segurado no óbito ou direito a aposentadoria."
+    },
+    {
+      "item": "Valor",
+      "valor": "50% da aposentadoria + 10% por dependente, até 100%."
+    },
+    {
+      "item": "Início",
+      "valor": "Óbito, se pedida em até 90 dias (180 dias para filhos menores de 16); depois, a data do pedido."
+    },
+    {
+      "item": "Duração para cônjuge",
+      "valor": "De 4 meses a vitalícia, conforme contribuições, tempo de união e idade."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Dependentes",
+      "texto": [
+        "O art. 16 da [[fonte:lei8213|Lei 8.213/1991]] divide os [[dependentes]] em três classes; a primeira exclui as demais. Para cônjuge, companheiro e filhos, a dependência econômica é presumida. A união estável exige prova material produzida nos 24 meses anteriores ao óbito."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "A cota familiar é de 50% da aposentadoria que o segurado recebia, ou da que receberia por incapacidade permanente, mais 10% por dependente, até 100%. As cotas não revertem quando um dependente perde o direito. Com dependente inválido ou com deficiência grave, a pensão é de 100% até o teto."
+      ]
+    },
+    {
+      "titulo": "Duração para cônjuge ou companheiro",
+      "texto": [
+        [
+          "**4 meses:** se o falecido tinha menos de 18 contribuições ou a união tinha menos de 2 anos (salvo acidente ou doença profissional).",
+          "**Menos de 22 anos:** 3 anos.",
+          "**22 a 27 anos:** 6 anos.",
+          "**28 a 30 anos:** 10 anos.",
+          "**31 a 41 anos:** 15 anos.",
+          "**42 a 44 anos:** 20 anos.",
+          "**45 anos ou mais:** vitalícia."
+        ]
+      ]
+    },
+    {
+      "titulo": "Acumulação",
+      "texto": [
+        "Quem já tem aposentadoria e passa a ter pensão recebe o maior benefício por inteiro e parte do menor, pelas faixas do art. 24 da EC 103/2019. Veja a [[q:posso-receber-aposentadoria-e-pensao|pergunta sobre acumulação]]."
+      ]
+    },
+    {
+      "titulo": "Quando a pensão termina",
+      "texto": [
+        [
+          "com a morte do pensionista;",
+          "para o filho, aos 21 anos, salvo invalidez ou deficiência;",
+          "para o cônjuge ou companheiro, no fim do prazo da tabela de duração;",
+          "com o fim da invalidez ou da deficiência que dava direito."
+        ],
+        "Casar de novo ou iniciar nova união **não** faz o pensionista perder a pensão."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **60 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Reúna a certidão de óbito e os documentos dos dependentes.",
+    "Peça pelo [[fonte:srv-pensao-urbana|serviço do gov.br]] ou pelo Meu INSS, de preferência em até 90 dias.",
+    "Anexe as provas da união estável ou da dependência econômica, quando exigidas."
+  ],
+  "documentos": [
+    "Certidão de óbito.",
+    "Certidão de casamento ou provas de união estável.",
+    "Certidões de nascimento dos filhos.",
+    "Documentos do falecido (CTPS, carnês) se ele não era aposentado."
+  ],
+  "conferir_no_cnis": [
+    "Qualidade de segurado do falecido no óbito.",
+    "Número de contribuições (as 18 que afastam a pensão de 4 meses).",
+    "Benefício que ele recebia, base do cálculo."
+  ],
+  "erros_comuns": [
+    "Pedir depois de 90 dias e perder os atrasados desde o óbito.",
+    "Faltar prova material recente da união estável.",
+    "Não verificar se o falecido tinha direito a aposentadoria mesmo sem qualidade de segurado."
+  ],
+  "exemplo": [
+    "Jorge faleceu aposentado, recebendo R$ 4.000,00, deixando a esposa de 58 anos. A pensão é 50% + 10% = 60%, ou R$ 2.400,00, vitalícia. Se ela também for aposentada, recebe o maior benefício inteiro e parte do menor."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Ex-mulher que recebia pensão alimentícia tem direito?",
+      "resposta": "Sim. O ex-cônjuge com pensão alimentícia concorre com os demais dependentes da primeira classe."
+    },
+    {
+      "pergunta": "Filho universitário recebe até os 24 anos?",
+      "resposta": "Não no INSS. A pensão do filho vai até os 21 anos, salvo invalidez ou deficiência."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 16 e 74 a 79"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 23 e 24"
+    },
+    {
+      "fonte": "lei13135"
+    },
+    {
+      "fonte": "inss-pensao"
+    },
+    {
+      "fonte": "inss-valor-pensao"
+    },
+    {
+      "fonte": "srv-pensao-urbana"
+    }
+  ],
+  "termos": [
+    "pensao-por-morte",
+    "dependentes",
+    "qualidade-de-segurado",
+    "rmi"
+  ],
+  "perguntas": [
+    "uniao-estavel-pensao-por-morte",
+    "posso-receber-aposentadoria-e-pensao",
+    "parei-de-contribuir-ainda-tenho-direito"
+  ],
+  "legislacao": [
+    "pensao-por-morte-arts-74-a-79-lei-8213",
+    "calculo-e-acumulacao-arts-23-a-29-ec-103"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": [],
+  "relacionados": [
+    "auxilio-reclusao",
+    "salario-maternidade"
+  ]
+}

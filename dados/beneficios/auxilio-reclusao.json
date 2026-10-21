@@ -1,0 +1,147 @@
+{
+  "ordem": 13,
+  "nome": "Auxílio-reclusão",
+  "titulo": "Auxílio-reclusão: requisitos, baixa renda e valor em 2026",
+  "resumo": "Guia do auxílio-reclusão do INSS: dependentes de segurado de baixa renda preso em regime fechado, limite de R$ 1.980,38 em 2026, carência de 24 meses e valor.",
+  "grupo": "familia",
+  "introducao": "O auxílio-reclusão é pago aos **dependentes** do segurado de **baixa renda** preso em **regime fechado**. O benefício é da família, não do preso, e segue regras parecidas com as da pensão por morte, com limites próprios.",
+  "resumo_rapido": [
+    {
+      "item": "Quem recebe",
+      "valor": "Os dependentes, nas mesmas classes da pensão por morte."
+    },
+    {
+      "item": "Regime",
+      "valor": "Só regime fechado, desde a Lei 13.846/2019."
+    },
+    {
+      "item": "Baixa renda",
+      "valor": "Média dos 12 salários de contribuição anteriores à prisão de até R$ 1.980,38 (2026)."
+    },
+    {
+      "item": "Carência",
+      "valor": "24 contribuições."
+    },
+    {
+      "item": "Valor",
+      "valor": "Calculado como a pensão por morte, limitado a 1 salário mínimo."
+    },
+    {
+      "item": "Manutenção",
+      "valor": "Certidão de recolhimento prisional atualizada a cada 3 meses."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        "Pelo art. 80 da [[fonte:lei8213|Lei 8.213/1991]], o segurado precisa estar recolhido em regime fechado, ter qualidade de segurado na data da prisão e não receber remuneração da empresa, auxílio por incapacidade, pensão, salário-maternidade, aposentadoria ou abono de permanência. A carência de 24 contribuições foi incluída pela [[fonte:lei13846|Lei 13.846/2019]]."
+      ]
+    },
+    {
+      "titulo": "Baixa renda",
+      "texto": [
+        "A baixa renda é aferida pela média dos salários de contribuição dos 12 meses anteriores à prisão, sem 13º e 1/3 de férias. Em 2026, o limite é de [[fonte:inss-reclusao-limite|R$ 1.980,38]]. Se não houve salário nesses 12 meses, mas o preso tinha qualidade de segurado, ele é considerado de baixa renda."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "O valor é calculado como o da pensão por morte (cota de 50% + 10% por dependente), mas não pode passar de **um salário mínimo** (EC 103/2019, art. 27, § 1º)."
+      ]
+    },
+    {
+      "titulo": "Quando o benefício termina",
+      "texto": [
+        "O auxílio-reclusão acaba com a soltura, a progressão para o regime semiaberto ou aberto, a fuga (quando é suspenso) e quando o dependente perde a condição, como o filho que completa 21 anos. Para o cônjuge ou companheiro, a duração segue a mesma tabela da [[ben:pensao-por-morte|pensão por morte]].",
+        "Se o segurado falecer na prisão, o auxílio é convertido em pensão por morte para os dependentes, que passa a seguir as regras próprias da pensão."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **60 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Obtenha a certidão de recolhimento prisional, que informe o regime fechado.",
+    "Peça pelo [[fonte:meuinss|Meu INSS]] ou pela central 135, com os documentos dos dependentes.",
+    "Apresente nova certidão a cada 3 meses para manter o benefício."
+  ],
+  "documentos": [
+    "Certidão de recolhimento prisional.",
+    "Documentos dos dependentes (certidões, prova de união estável).",
+    "Documentos do segurado preso."
+  ],
+  "conferir_no_cnis": [
+    "Salários dos 12 meses anteriores à prisão.",
+    "Qualidade de segurado na data da prisão.",
+    "As 24 contribuições de carência."
+  ],
+  "erros_comuns": [
+    "Pedir com o preso em regime semiaberto.",
+    "Calcular a baixa renda com o último salário, e não com a média de 12 meses.",
+    "Deixar de apresentar a certidão trimestral."
+  ],
+  "exemplo": [
+    "Carlos foi preso em regime fechado em 03/2026. Nos 12 meses anteriores, a média dos salários foi de R$ 1.850,00, abaixo de R$ 1.980,38, e ele tinha 40 contribuições. A esposa e o filho recebem o auxílio, limitado a um salário mínimo (R$ 1.621,00)."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Se o preso fugir, o benefício continua?",
+      "resposta": "Não. O benefício é suspenso em caso de fuga e restabelecido se houver recaptura, observadas as regras."
+    },
+    {
+      "pergunta": "Se o preso passar ao semiaberto?",
+      "resposta": "O auxílio é encerrado, porque só cabe no regime fechado."
+    },
+    {
+      "pergunta": "Quem estava desempregado quando foi preso tem direito?",
+      "resposta": "Pode ter, se ainda estava no [[periodo-de-graca]] na data da prisão e tinha as 24 contribuições. Sem salário de contribuição nos 12 meses anteriores, o INSS considera o segurado de baixa renda, conforme a página oficial do valor limite."
+    },
+    {
+      "pergunta": "O preso que trabalha na prisão perde o benefício?",
+      "resposta": "Não. A remuneração do trabalho do preso em regime fechado não faz os dependentes perderem o auxílio-reclusão (Decreto 3.048/1999, art. 116)."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 25, IV, e 80"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 27"
+    },
+    {
+      "fonte": "lei13846"
+    },
+    {
+      "fonte": "inss-reclusao"
+    },
+    {
+      "fonte": "inss-reclusao-limite"
+    }
+  ],
+  "termos": [
+    "dependentes",
+    "carencia",
+    "qualidade-de-segurado",
+    "salario-de-contribuicao"
+  ],
+  "perguntas": [
+    "parei-de-contribuir-ainda-tenho-direito"
+  ],
+  "legislacao": [
+    "carencia-arts-24-a-27-lei-8213",
+    "pensao-por-morte-arts-74-a-79-lei-8213"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "pensao-por-morte",
+    "bpc-loas"
+  ]
+}

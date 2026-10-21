@@ -1,0 +1,144 @@
+{
+  "ordem": 2,
+  "nome": "Aposentadoria por idade rural",
+  "titulo": "Aposentadoria rural por idade: requisitos, provas e como pedir",
+  "resumo": "Guia da aposentadoria por idade rural do INSS: 55 e 60 anos, 15 anos de atividade rural, segurado especial, autodeclaração, provas aceitas e como pedir.",
+  "grupo": "aposentadorias",
+  "introducao": "A aposentadoria por idade rural tem **idade reduzida em cinco anos** para quem trabalha no campo. Para o [[segurado-especial]], que produz em regime de economia familiar, ela não exige contribuição mensal: exige a **prova da atividade rural**. A reforma de 2019 não mudou esses requisitos.",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Segurado especial (pequeno produtor, pescador artesanal, indígena), empregado rural e contribuinte individual rural."
+    },
+    {
+      "item": "Idade",
+      "valor": "55 anos (mulher) e 60 anos (homem)."
+    },
+    {
+      "item": "Atividade rural",
+      "valor": "15 anos (180 meses), ainda que de forma descontínua."
+    },
+    {
+      "item": "Período",
+      "valor": "Imediatamente anterior ao pedido ou à data em que completou a idade."
+    },
+    {
+      "item": "Valor",
+      "valor": "Um salário mínimo para o segurado especial que não contribui facultativamente."
+    },
+    {
+      "item": "Contribuição",
+      "valor": "O segurado especial contribui sobre a venda da produção, sem guia mensal."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        "O art. 48, §§ 1º e 2º, da [[fonte:lei8213|Lei 8.213/1991]] reduz a idade para 60 anos (homem) e 55 (mulher) e exige a comprovação da atividade rural no período imediatamente anterior ao requerimento ou ao implemento da idade, em número de meses igual à carência (180). O STJ firmou (Tema 642) que o trabalhador precisa estar no campo quando completa a idade, salvo se já tinha cumprido os requisitos antes.",
+        "Períodos curtos de trabalho urbano não impedem o direito, desde que não descaracterizem a condição de trabalhador rural."
+      ]
+    },
+    {
+      "titulo": "Como se prova a atividade",
+      "texto": [
+        "Desde a [[fonte:lei13846|Lei 13.846/2019]], a prova principal é o **cadastro do segurado especial no CNIS** e a **autodeclaração** ratificada por bases do governo (arts. 38-A e 38-B da Lei 8.213/1991). Enquanto o cadastro não estiver completo, valem documentos como:",
+        [
+          "notas fiscais de produtor rural e blocos de notas;",
+          "contrato de arrendamento, parceria ou comodato;",
+          "ITR, CCIR e escritura da terra;",
+          "declaração de aptidão ao Pronaf (CAF);",
+          "certidões de casamento e nascimento com a profissão de lavrador;",
+          "ficha de sindicato rural e histórico escolar de escola rural."
+        ],
+        "Testemunhas complementam, mas não substituem a prova material (Súmula 149 do STJ)."
+      ]
+    },
+    {
+      "titulo": "O que descaracteriza o segurado especial",
+      "texto": [
+        "Ter empregados permanentes, explorar área acima de quatro módulos fiscais, ou ter outra fonte de renda além das permitidas pelo art. 11, § 9º, da Lei 8.213/1991. Nesses casos, a pessoa pode ser empregado ou contribuinte individual rural, com outras regras."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Confira se há cadastro de segurado especial no CNIS e se ele cobre os 15 anos.",
+    "Reúna os documentos rurais em nome próprio e da família.",
+    "No [[fonte:meuinss|Meu INSS]], peça \"Aposentadoria por idade rural\" e preencha a autodeclaração.",
+    "Anexe os documentos e acompanhe as exigências."
+  ],
+  "documentos": [
+    "Documento de identificação e CPF.",
+    "Autodeclaração do segurado especial (preenchida no pedido).",
+    "Documentos rurais do período: notas de produtor, contratos, ITR, CAF/DAP, certidões.",
+    "Carteira de trabalho, se houve emprego rural."
+  ],
+  "conferir_no_cnis": [
+    "Cadastro de segurado especial e períodos declarados.",
+    "Pendências [[ind:PSE-PEN]] ou [[ind:PSE-NEG]], que tiram o período da contagem.",
+    "Vínculos urbanos que possam descaracterizar o período."
+  ],
+  "erros_comuns": [
+    "Pedir sem documentos do período imediatamente anterior à idade.",
+    "Apresentar só documentos antigos ou só testemunhas.",
+    "Não atualizar o cadastro do segurado especial no CNIS."
+  ],
+  "exemplo": [
+    "Dona Irene, 56 anos, planta hortaliças com o marido em um sítio arrendado desde 2005. Tem contratos de arrendamento renovados, notas de produtor e a CAF. Com mais de 15 anos de atividade rural até hoje, ela tem direito à aposentadoria rural de um salário mínimo."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Quem trabalhou na roça e foi para a cidade se aposenta como rural?",
+      "resposta": "Em regra, não pela regra rural, porque é preciso estar no campo perto da idade. Mas o tempo rural pode entrar na [[ben:aposentadoria-hibrida|aposentadoria híbrida]]."
+    },
+    {
+      "pergunta": "O segurado especial precisa pagar INSS?",
+      "resposta": "Não mensalmente. Ele contribui sobre a venda da produção. Pode contribuir também como facultativo, se quiser um benefício maior que o mínimo."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11, VII, 38-A, 38-B, 39 e 48"
+    },
+    {
+      "fonte": "lei13846"
+    },
+    {
+      "fonte": "inss-aposentadorias"
+    }
+  ],
+  "termos": [
+    "segurado-especial",
+    "carencia",
+    "cnis"
+  ],
+  "perguntas": [
+    "trabalhei-na-roca-conta-para-aposentadoria",
+    "perdi-a-qualidade-posso-aposentar-por-idade"
+  ],
+  "legislacao": [
+    "tempo-de-contribuicao-art-55-lei-8213",
+    "segurados-e-filiacao-arts-11-a-17-lei-8213"
+  ],
+  "artigos": [
+    "segurado-especial-cadastro-autodeclaracao-e-prova-rural",
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": [
+    "PSE-PEN",
+    "PSE-NEG"
+  ],
+  "relacionados": [
+    "aposentadoria-hibrida",
+    "aposentadoria-por-idade",
+    "salario-maternidade"
+  ]
+}

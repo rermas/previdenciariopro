@@ -1,0 +1,154 @@
+{
+  "ordem": 4,
+  "nome": "Aposentadoria por tempo de contribuição",
+  "titulo": "Aposentadoria por tempo de contribuição em 2026: regras e valor",
+  "resumo": "Guia da aposentadoria por tempo de contribuição após a reforma: direito adquirido, pontos, idade progressiva, pedágios de 50% e 100%, valor e como pedir.",
+  "grupo": "aposentadorias",
+  "introducao": "A aposentadoria por tempo de contribuição sem idade mínima **acabou** para quem não tinha os requisitos em 13/11/2019. Ela continua existindo em duas situações: para quem tem **[[direito-adquirido]]** e por meio das **[[regras-de-transicao]]** da [[fonte:ec103|EC 103/2019]]. Este guia reúne tudo em um só lugar.",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Quem era filiado ao INSS até 13/11/2019."
+    },
+    {
+      "item": "Tempo mínimo",
+      "valor": "30 anos (mulher) e 35 anos (homem), mais os requisitos de cada regra."
+    },
+    {
+      "item": "Carência",
+      "valor": "180 contribuições."
+    },
+    {
+      "item": "Regras",
+      "valor": "Direito adquirido, pontos, idade progressiva, pedágio de 50% e pedágio de 100%."
+    },
+    {
+      "item": "Valor",
+      "valor": "Depende da regra: de 60% + 2% por ano extra até 100% da média; no pedágio de 50%, com fator previdenciário."
+    },
+    {
+      "item": "Não conta",
+      "valor": "Plano simplificado (11%) e MEI (5%) sem complementação."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Direito adquirido",
+      "texto": [
+        "Quem tinha **30 anos (mulher) ou 35 anos (homem)** de contribuição em 13/11/2019 pode se aposentar a qualquer tempo pela regra antiga, sem idade mínima, com a média dos 80% maiores salários e o [[fator-previdenciario]] (ou sem ele, se tinha 86/96 pontos). O art. 3º da EC 103/2019 garante isso."
+      ]
+    },
+    {
+      "titulo": "As regras de transição",
+      "texto": [
+        [
+          "**[[regra-de-pontos|Pontos]] (art. 15):** idade + tempo de 93 (mulher) e 103 (homem) em 2026, subindo 1 por ano.",
+          "**[[idade-minima-progressiva|Idade progressiva]] (art. 16):** 59 anos e 6 meses (mulher) e 64 anos e 6 meses (homem) em 2026.",
+          "**[[pedagio|Pedágio de 50%]] (art. 17):** para quem estava a até 2 anos do tempo em 13/11/2019; sem idade, com fator previdenciário.",
+          "**Pedágio de 100% (art. 20):** 57 anos (mulher) ou 60 (homem) e o dobro do tempo que faltava; 100% da média."
+        ],
+        "As regras do professor e da pessoa com deficiência têm guias próprios: [[ben:aposentadoria-do-professor|professor]] e [[ben:aposentadoria-da-pessoa-com-deficiencia|pessoa com deficiência]]."
+      ]
+    },
+    {
+      "titulo": "Como o valor é calculado",
+      "texto": [
+        "Nas regras de pontos e idade progressiva, a renda é de 60% da média de 100% dos salários desde 07/1994, com 2% por ano acima de 15 (mulher) ou 20 anos (homem). No pedágio de 100%, é 100% da média. No pedágio de 50%, é a média multiplicada pelo fator previdenciário."
+      ]
+    },
+    {
+      "titulo": "O que entra no tempo",
+      "texto": [
+        "Vínculos, contribuições de 20%, tempo especial convertido até 13/11/2019, serviço militar, benefício por incapacidade intercalado e tempo rural anterior a 11/1991. Contribuições de 11% e 5% só entram se [[plano-simplificado|complementadas]]."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Emita o CNIS completo e corrija vínculos e salários.",
+    "Some os períodos que não estão no CNIS: especial, rural, militar.",
+    "Simule cada regra: data em que cumpre e valor estimado.",
+    "No [[fonte:meuinss|Meu INSS]], peça \"Aposentadoria por tempo de contribuição\"; o INSS analisa a regra mais vantajosa entre as que você cumpre.",
+    "Anexe PPP, certidões e documentos de vínculos fora do CNIS."
+  ],
+  "documentos": [
+    "Identificação e CPF.",
+    "Carteiras de trabalho e carnês.",
+    "PPP e laudos de atividade especial.",
+    "Certidão de serviço militar.",
+    "Documentos de tempo rural."
+  ],
+  "conferir_no_cnis": [
+    "Pendências que tiram vínculos da contagem.",
+    "Indicadores [[ind:IREC-LC123]] e [[ind:IREC-MEI]], que tiram competências desta aposentadoria.",
+    "Salários faltantes, que reduzem a média."
+  ],
+  "erros_comuns": [
+    "Ignorar o direito adquirido em 2019 e se aposentar por uma regra pior.",
+    "Contar meses de 11% ou de MEI sem complementar.",
+    "Não converter o tempo especial anterior a 13/11/2019.",
+    "Escolher o pedágio de 50% sem simular o fator previdenciário."
+  ],
+  "exemplo": [
+    "Márcio, 61 anos em 2026, tinha 33 anos de contribuição em 13/11/2019 e continuou trabalhando. Pelo pedágio de 100%, precisa de 35 + 2 = 37 anos de contribuição, que completou em 2023, e de 60 anos de idade, que completou em 2025: cumpre a regra em 2025 e recebe 100% da média. Pela regra de pontos, teria 61 + 39,9 ≈ 101 pontos em 2026, abaixo dos 103. O pedágio de 100% é a melhor opção."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Ainda existe aposentadoria só por tempo, sem idade?",
+      "resposta": "Só para quem tem direito adquirido até 13/11/2019 ou pelo pedágio de 50%, que é a única regra de transição sem idade mínima."
+    },
+    {
+      "pergunta": "O INSS escolhe a melhor regra?",
+      "resposta": "O INSS deve conceder o benefício mais vantajoso entre as regras cumpridas, mas vale conferir a carta de concessão e simular antes."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 3º, 15 a 20 e 26"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 52 a 56"
+    },
+    {
+      "fonte": "inss-regras"
+    },
+    {
+      "fonte": "srv-tempo"
+    }
+  ],
+  "termos": [
+    "regras-de-transicao",
+    "regra-de-pontos",
+    "pedagio",
+    "direito-adquirido",
+    "fator-previdenciario"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor",
+    "contribui-com-11-posso-aposentar-por-tempo",
+    "quanto-tempo-falta-para-me-aposentar"
+  ],
+  "legislacao": [
+    "regras-de-transicao-arts-15-a-21-ec-103",
+    "calculo-e-acumulacao-arts-23-a-29-ec-103",
+    "tempo-de-contribuicao-art-55-lei-8213"
+  ],
+  "artigos": [],
+  "indicadores": [
+    "IREC-LC123",
+    "IREC-MEI"
+  ],
+  "relacionados": [
+    "aposentadoria-especial",
+    "aposentadoria-do-professor",
+    "aposentadoria-por-idade"
+  ]
+}

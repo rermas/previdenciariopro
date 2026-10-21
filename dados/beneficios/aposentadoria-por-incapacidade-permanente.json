@@ -1,0 +1,137 @@
+{
+  "ordem": 8,
+  "nome": "Aposentadoria por incapacidade permanente",
+  "titulo": "Aposentadoria por invalidez (incapacidade permanente): guia",
+  "resumo": "Guia da aposentadoria por incapacidade permanente, antiga aposentadoria por invalidez: requisitos, perícia, valor de 60% ou 100%, acréscimo de 25% e revisão.",
+  "grupo": "incapacidade",
+  "introducao": "A aposentadoria por incapacidade permanente, chamada de **aposentadoria por invalidez** até 2019, é paga a quem fica **incapaz para qualquer trabalho**, sem possibilidade de reabilitação para outra atividade. Em geral, ela vem depois de um [[ben:auxilio-por-incapacidade-temporaria|auxílio por incapacidade temporária]].",
+  "resumo_rapido": [
+    {
+      "item": "Requisitos",
+      "valor": "Incapacidade total e permanente, qualidade de segurado na data de início da incapacidade e carência."
+    },
+    {
+      "item": "Carência",
+      "valor": "12 contribuições, dispensada em acidente e doenças graves."
+    },
+    {
+      "item": "Valor",
+      "valor": "60% da média + 2% por ano acima de 20 (homem) ou 15 anos (mulher); 100% se a incapacidade for por acidente de trabalho ou doença profissional."
+    },
+    {
+      "item": "Acréscimo",
+      "valor": "25% para quem precisa de ajuda permanente de outra pessoa, mesmo acima do teto."
+    },
+    {
+      "item": "Revisão",
+      "valor": "Perícias periódicas, com exceções por idade e tempo de benefício."
+    },
+    {
+      "item": "Trabalho",
+      "valor": "Voltar a trabalhar cancela o benefício."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        "Pelos arts. 42 a 47 da [[fonte:lei8213|Lei 8.213/1991]], a incapacidade deve ser **total** (para qualquer trabalho) e **permanente**, avaliada pela perícia. Não há direito se a doença já existia antes da filiação, salvo agravamento posterior.",
+        "A perícia leva em conta a idade, a escolaridade e a profissão: a jurisprudência admite a aposentadoria quando, pelas condições pessoais, a reabilitação é inviável."
+      ]
+    },
+    {
+      "titulo": "Valor",
+      "texto": [
+        "Desde a EC 103/2019, a regra geral é de 60% da média mais 2% por ano acima de 20 anos (homem) ou 15 anos (mulher). Quando a incapacidade decorre de **acidente de trabalho, doença profissional ou do trabalho**, o valor é de 100% da média (art. 26, § 3º, II)."
+      ]
+    },
+    {
+      "titulo": "Acréscimo de 25%",
+      "texto": [
+        "O art. 45 garante 25% a mais para quem precisa da assistência permanente de outra pessoa, como em casos de cegueira total, paralisia ou doença que exija cuidados contínuos. O acréscimo pode ultrapassar o teto e não passa para a pensão."
+      ]
+    },
+    {
+      "titulo": "Se a capacidade voltar",
+      "texto": [
+        "Se a perícia constatar a recuperação, o art. 47 da [[fonte:lei8213|Lei 8.213/1991]] prevê o encerramento imediato quando o benefício durou até 5 anos e o segurado pode voltar à mesma função. Nos demais casos, há **mensalidades de recuperação**: 6 meses com o valor integral, 6 meses com 50% e 6 meses com 25%, antes de o pagamento acabar."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **45 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Reúna laudos, exames e relatórios médicos atualizados.",
+    "Se já recebe auxílio, a conversão pode ocorrer na perícia de prorrogação.",
+    "Se não recebe, peça o benefício por incapacidade no [[fonte:meuinss|Meu INSS]] ou pela central 135.",
+    "Compareça à perícia com todos os documentos."
+  ],
+  "documentos": [
+    "Laudos com CID, histórico, tratamentos e limitações.",
+    "Exames de imagem e laboratoriais.",
+    "CAT, se for acidente de trabalho.",
+    "Documentos de identificação e carteira de trabalho."
+  ],
+  "conferir_no_cnis": [
+    "Qualidade de segurado e carência na data de início da incapacidade.",
+    "Benefícios por incapacidade anteriores.",
+    "Vínculos e salários para a média."
+  ],
+  "erros_comuns": [
+    "Ir à perícia sem documentos médicos detalhados.",
+    "Não informar a origem acidentária, que muda o valor para 100%.",
+    "Voltar a trabalhar e ter o benefício cancelado."
+  ],
+  "exemplo": [
+    "Paulo, 54 anos, pedreiro, com 26 anos de contribuição, teve AVC com sequelas graves. A perícia reconheceu incapacidade permanente e necessidade de ajuda de terceiros. Com média de R$ 2.500,00, o valor é 60% + 2% × 6 = 72%, ou R$ 1.800,00, mais 25%: R$ 2.250,00."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Aposentado por incapacidade pode ser chamado para nova perícia?",
+      "resposta": "Pode, salvo exceções legais, como quem tem 60 anos ou mais, ou 55 anos com 15 anos de benefício."
+    },
+    {
+      "pergunta": "O benefício é vitalício?",
+      "resposta": "Dura enquanto a incapacidade persistir. Se a perícia constatar recuperação, há regras de redução gradual."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 42 a 47 e 101"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 26, §§ 2º e 3º"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "termos": [
+    "aposentadoria-por-incapacidade-permanente",
+    "dii",
+    "carencia",
+    "qualidade-de-segurado",
+    "rmi"
+  ],
+  "perguntas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "aposentado-que-continua-trabalhando"
+  ],
+  "legislacao": [
+    "auxilio-por-incapacidade-arts-59-a-63-lei-8213",
+    "carencia-arts-24-a-27-lei-8213"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "auxilio-por-incapacidade-temporaria",
+    "auxilio-acidente"
+  ]
+}

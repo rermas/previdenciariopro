@@ -1,0 +1,142 @@
+{
+  "ordem": 14,
+  "nome": "BPC/LOAS",
+  "titulo": "BPC/LOAS em 2026: quem tem direito, renda e como pedir",
+  "resumo": "Guia do BPC/LOAS: um salário mínimo para idoso de 65 anos e pessoa com deficiência de baixa renda, critério de renda, CadÚnico, avaliação e como pedir.",
+  "grupo": "assistencial",
+  "introducao": "O Benefício de Prestação Continuada (BPC) garante **um salário mínimo por mês** ao idoso com 65 anos ou mais e à pessoa com deficiência que não tenham meios de se sustentar. É um benefício **assistencial**: não exige contribuição, mas também não paga 13º nem deixa pensão.",
+  "resumo_rapido": [
+    {
+      "item": "Quem tem direito",
+      "valor": "Idoso com 65 anos ou mais e pessoa com deficiência de longo prazo (2 anos ou mais)."
+    },
+    {
+      "item": "Renda",
+      "valor": "Renda familiar por pessoa de até 1/4 do salário mínimo (R$ 405,25 em 2026), com possibilidade de ampliação até 1/2 por regulamento."
+    },
+    {
+      "item": "Cadastro",
+      "valor": "Inscrição atualizada no CadÚnico e CPF de todos da família."
+    },
+    {
+      "item": "Valor",
+      "valor": "Um salário mínimo: R$ 1.621,00 em 2026."
+    },
+    {
+      "item": "Contribuição",
+      "valor": "Não exige."
+    },
+    {
+      "item": "Não tem",
+      "valor": "13º salário e pensão por morte."
+    }
+  ],
+  "secoes": [
+    {
+      "titulo": "Requisitos",
+      "texto": [
+        "O art. 20 da [[fonte:lei8742|LOAS]] exige idade de 65 anos, ou deficiência com impedimento de longo prazo, e renda familiar por pessoa igual ou inferior a 1/4 do salário mínimo. O STF já reconheceu que esse critério não é absoluto, e a lei admite outros elementos que comprovem a vulnerabilidade."
+      ]
+    },
+    {
+      "titulo": "O que entra na renda",
+      "texto": [
+        "Soma-se a renda de quem vive na mesma casa: cônjuge, pais, filhos e irmãos solteiros, enteados e menores tutelados. O BPC ou o benefício previdenciário de até 1 salário mínimo recebido por idoso ou pessoa com deficiência da família **não entra** no cálculo (art. 20, § 14)."
+      ]
+    },
+    {
+      "titulo": "Avaliação da deficiência",
+      "texto": [
+        "A pessoa com deficiência passa por perícia médica e avaliação social, que analisam o impedimento e as barreiras. A criança com deficiência também pode receber."
+      ]
+    },
+    {
+      "titulo": "BPC ou aposentadoria?",
+      "texto": [
+        "Quem tem contribuições deve verificar antes no CNIS se tem direito a alguma aposentadoria, que paga 13º e gera pensão. Veja os guias da [[ben:aposentadoria-por-idade|aposentadoria por idade]] e da [[ben:aposentadoria-da-pessoa-com-deficiencia|aposentadoria da pessoa com deficiência]]."
+      ]
+    },
+    {
+      "titulo": "O que não pode acumular",
+      "texto": [
+        "O BPC não pode ser acumulado com outro benefício da seguridade social, como aposentadoria ou pensão, salvo assistência médica e pensão especial de natureza indenizatória (art. 20, § 4º, da [[fonte:lei8742|LOAS]]). A remuneração de aprendiz da pessoa com deficiência não entra no cálculo da renda por até 2 anos.",
+        "Quem recebe BPC e completa os requisitos de uma aposentadoria pode trocar de benefício, o que costuma ser vantajoso por causa do 13º e da pensão por morte."
+      ]
+    },
+    {
+      "titulo": "Prazo de análise e pedido negado",
+      "texto": [
+        "Pelo acordo homologado pelo STF no RE 1.171.152, o INSS tem até **90 dias** para analisar este benefício, sem contar o tempo em que o pedido fica parado esperando o segurado cumprir uma [[exigencia]]. Se o prazo passar, veja [[q:inss-demorando-para-analisar|o que fazer quando o INSS demora]].",
+        "Se o pedido for negado, leia o motivo na carta de decisão. É possível recorrer em **30 dias** ao [[fonte:crps|Conselho de Recursos da Previdência Social]], fazer um novo pedido com os documentos que faltaram ou ir ao Juizado Especial Federal. O passo a passo está em [[q:inss-negou-o-pedido-o-que-fazer|o INSS negou meu pedido]]."
+      ]
+    }
+  ],
+  "como_pedir": [
+    "Atualize o CadÚnico no CRAS da sua cidade.",
+    "Peça o BPC pelo [[fonte:meuinss|Meu INSS]], pela central 135 ou pelo [[fonte:srv-bpc-pcd|serviço do gov.br]].",
+    "Para pessoa com deficiência, compareça à perícia e à avaliação social.",
+    "Mantenha o CadÚnico atualizado para evitar suspensão na revisão a cada 2 anos."
+  ],
+  "documentos": [
+    "CPF de todos os membros da família.",
+    "Comprovante de inscrição no CadÚnico.",
+    "Laudos médicos, para pessoa com deficiência.",
+    "Documento de identificação."
+  ],
+  "conferir_no_cnis": [
+    "Se há contribuições suficientes para aposentadoria.",
+    "Vínculos ativos da família que aumentem a renda."
+  ],
+  "erros_comuns": [
+    "Pedir com o CadÚnico desatualizado.",
+    "Esquecer que o benefício de 1 salário mínimo de outro idoso da casa não conta como renda.",
+    "Escolher o BPC quando há direito a aposentadoria."
+  ],
+  "exemplo": [
+    "Dona Maria, 67 anos, mora com o marido, de 70, aposentado com um salário mínimo, e não tem renda. A aposentadoria dele não entra no cálculo (§ 14), e a renda por pessoa considerada é zero. Com o CadÚnico atualizado, ela tem direito ao BPC."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Quem recebe BPC pode trabalhar?",
+      "resposta": "A pessoa com deficiência que começa a trabalhar pode passar a receber o auxílio-inclusão, de meio salário mínimo, em vez do BPC."
+    },
+    {
+      "pergunta": "O BPC é revisto?",
+      "resposta": "Sim, a cada 2 anos, para verificar se as condições continuam."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8742",
+      "dispositivo": "arts. 20 a 21-A"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 203, V"
+    },
+    {
+      "fonte": "inss-bpc"
+    },
+    {
+      "fonte": "srv-bpc-pcd"
+    }
+  ],
+  "termos": [
+    "bpc-loas",
+    "cnis",
+    "aposentadoria-programada"
+  ],
+  "perguntas": [
+    "15-anos-de-contribuicao-aposenta",
+    "perdi-a-qualidade-posso-aposentar-por-idade"
+  ],
+  "legislacao": [
+    "bpc-art-20-loas"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionados": [
+    "aposentadoria-da-pessoa-com-deficiencia",
+    "aposentadoria-por-idade"
+  ]
+}
