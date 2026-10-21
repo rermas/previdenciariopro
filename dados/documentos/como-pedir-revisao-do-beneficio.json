@@ -1,0 +1,106 @@
+{
+  "ordem": 11,
+  "grupo": "requerimentos",
+  "nome": "Como pedir revisão do benefício",
+  "titulo": "Revisão de benefício do INSS: quando pedir e passo a passo",
+  "resumo": "Como pedir a revisão de aposentadoria ou outro benefício no INSS: motivos, prazo de 10 anos, documentos, passo a passo no Meu INSS e atrasados de 5 anos.",
+  "introducao": "A revisão corrige um benefício **já concedido** que foi calculado com erro: tempo não contado, salários faltantes, tempo especial não reconhecido ou regra menos vantajosa. O prazo é de **10 anos** contados do mês seguinte ao primeiro pagamento, e os atrasados se limitam aos **5 anos** anteriores ao pedido.",
+  "checklist": [],
+  "passos": [
+    "Baixe a carta de concessão e a cópia do processo no Meu INSS.",
+    "Compare com o CNIS: períodos, salários e regra aplicada.",
+    "Reúna os documentos que provam o erro.",
+    "No [[fonte:meuinss|Meu INSS]], clique em \"Novo pedido\" e procure \"Revisão\".",
+    "Descreva o que deve ser revisto e anexe os documentos.",
+    "Acompanhe e responda às exigências."
+  ],
+  "secoes": [
+    {
+      "titulo": "Motivos comuns",
+      "texto": [
+        [
+          "Vínculo, período rural, militar ou especial não contado.",
+          "Salários de contribuição faltantes ou menores que os reais.",
+          "Direito adquirido ou regra mais vantajosa não aplicada.",
+          "Erro na data de início ou no tempo considerado.",
+          "Atividades concomitantes com salários não somados."
+        ]
+      ]
+    },
+    {
+      "titulo": "Prazos",
+      "texto": [
+        "A [[decadencia-e-prescricao|decadência]] de 10 anos está no art. 103 da [[fonte:lei8213|Lei 8.213/1991]]. Ela não se aplica ao benefício **negado**: nesse caso, um novo pedido pode ser feito a qualquer tempo (STF, ADI 6.096). A prescrição limita os atrasados aos últimos 5 anos."
+      ]
+    },
+    {
+      "titulo": "Risco de redução",
+      "texto": [
+        "Na revisão, o INSS reanalisa o benefício. Em regra, a revisão pedida pelo segurado não deveria reduzir o valor, mas, se o INSS encontrar irregularidade, pode corrigir dentro do prazo do art. 103-A. Por isso vale simular antes e pedir só o que está documentado."
+      ]
+    },
+    {
+      "titulo": "Revisão administrativa ou judicial",
+      "texto": [
+        "A revisão pode ser pedida ao INSS ou diretamente na Justiça, desde que o tema já tenha sido levado ao INSS, quando isso for exigido. No INSS, ela é gratuita e não precisa de advogado; na Justiça Federal, causas de até 60 salários mínimos vão ao Juizado Especial Federal.",
+        "Em qualquer caso, o prazo de 10 anos é o mesmo, e as diferenças são pagas com correção, limitadas aos 5 anos anteriores ao pedido."
+      ]
+    }
+  ],
+  "dicas": [
+    "Confira se o prazo de 10 anos ainda não passou.",
+    "Peça a revisão de um ponto bem documentado, e não \"revisão geral\".",
+    "Guarde a carta de concessão original."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Posso pedir revisão para incluir salários de antes de 07/1994?",
+      "resposta": "Não para a média. O STF considerou válida a regra que começa o cálculo em 07/1994; os salários anteriores contam só como tempo."
+    },
+    {
+      "pergunta": "A revisão pode ser pedida por procurador?",
+      "resposta": "Sim, com procuração com poderes para representar o segurado perante o INSS."
+    },
+    {
+      "pergunta": "A revisão demora mais que o pedido inicial?",
+      "resposta": "Pode demorar, porque o INSS reanalisa o processo. Pedidos bem documentados e com o ponto de revisão claro tendem a andar mais rápido."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 103 e 103-A"
+    },
+    {
+      "fonte": "srv-revisao"
+    },
+    {
+      "fonte": "inss-revisao-prazo"
+    }
+  ],
+  "termos": [
+    "decadencia-e-prescricao",
+    "rmi",
+    "salario-de-beneficio",
+    "direito-adquirido"
+  ],
+  "perguntas": [
+    "revisao-da-aposentadoria-prazo",
+    "salario-faltando-no-cnis-reduz-aposentadoria"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao",
+    "aposentadoria-por-idade"
+  ],
+  "legislacao": [
+    "decadencia-e-prescricao-art-103-lei-8213"
+  ],
+  "artigos": [
+    "como-comprovar-remuneracoes-no-cnis",
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "relacionados": [
+    "como-pedir-copia-do-processo",
+    "como-entrar-com-recurso-no-inss"
+  ]
+}

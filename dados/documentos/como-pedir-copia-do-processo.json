@@ -1,0 +1,97 @@
+{
+  "ordem": 12,
+  "grupo": "requerimentos",
+  "nome": "Como pedir cópia do processo no INSS",
+  "titulo": "Cópia do processo no INSS: para que serve e como pedir",
+  "resumo": "Como pedir a cópia do processo administrativo no Meu INSS, para que ela serve no recurso, na revisão e na ação judicial, e o que conferir nela.",
+  "introducao": "A **cópia do processo administrativo** mostra tudo o que o INSS analisou: documentos enviados, contagem de tempo, simulações, laudos de perícia e a fundamentação da decisão. É o documento mais útil para entender um indeferimento e preparar recurso, revisão ou ação judicial.",
+  "checklist": [],
+  "passos": [
+    "Acesse o [[fonte:meuinss|Meu INSS]] com a conta gov.br.",
+    "Clique em \"Novo pedido\" e procure \"Cópia de processo\".",
+    "Informe o número do benefício ou do protocolo.",
+    "Acompanhe o pedido; quando concluído, o arquivo fica disponível para download."
+  ],
+  "secoes": [
+    {
+      "titulo": "O que conferir na cópia",
+      "texto": [
+        [
+          "A contagem de tempo de contribuição: quais períodos foram aceitos e quais foram excluídos, e por quê.",
+          "O cálculo da carência.",
+          "Os salários usados na média.",
+          "O laudo da perícia médica, nos benefícios por incapacidade.",
+          "As exigências feitas e se foram respondidas.",
+          "O despacho com o motivo da decisão."
+        ]
+      ]
+    },
+    {
+      "titulo": "Para que serve",
+      "texto": [
+        "No recurso, permite apontar exatamente o erro. Na revisão, mostra a regra e os salários usados. Na ação judicial, é praticamente obrigatória para demonstrar o que foi pedido e negado no INSS, já que o STF exige o pedido administrativo prévio (Tema 350)."
+      ]
+    },
+    {
+      "titulo": "Como ler a contagem de tempo",
+      "texto": [
+        "A planilha de contagem lista cada período com data de início, data de fim e a decisão do servidor: computado, não computado ou computado só como tempo. Compare linha a linha com o extrato do CNIS e com a carteira de trabalho. Os erros mais comuns são vínculos sem data de saída considerados só até a última remuneração, períodos especiais contados como comuns e contribuições de autônomo excluídas da carência por terem sido pagas em atraso.",
+        "No despacho final, o servidor indica a regra analisada e o motivo do indeferimento. É esse motivo que o recurso precisa atacar, com o documento certo."
+      ]
+    }
+  ],
+  "dicas": [
+    "Peça a cópia logo após a decisão: o prazo de recurso é de 30 dias.",
+    "Leia a planilha de contagem de tempo com o CNIS ao lado."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Quem pode pedir a cópia?",
+      "resposta": "O próprio segurado, o dependente interessado, o procurador ou o representante legal."
+    },
+    {
+      "pergunta": "A cópia mostra o laudo da perícia?",
+      "resposta": "Sim, o processo inclui o resultado da perícia médica."
+    },
+    {
+      "pergunta": "A cópia do processo serve para entrar na Justiça?",
+      "resposta": "Sim. Ela mostra o pedido, os documentos e a decisão do INSS, o que comprova o requerimento administrativo prévio exigido pelo STF."
+    },
+    {
+      "pergunta": "A cópia do processo tem custo?",
+      "resposta": "O pedido é feito pelo Meu INSS e o arquivo é disponibilizado digitalmente para quem tem direito de acesso ao processo, como o próprio segurado, o procurador ou o representante legal."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "srv-copia-processo"
+    },
+    {
+      "fonte": "inss-copia-processo"
+    },
+    {
+      "fonte": "lei9784",
+      "dispositivo": "art. 3º, II"
+    }
+  ],
+  "termos": [
+    "exigencia",
+    "der"
+  ],
+  "perguntas": [
+    "inss-negou-o-pedido-o-que-fazer",
+    "revisao-da-aposentadoria-prazo"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao",
+    "auxilio-por-incapacidade-temporaria"
+  ],
+  "legislacao": [
+    "decadencia-e-prescricao-art-103-lei-8213"
+  ],
+  "artigos": [],
+  "relacionados": [
+    "como-entrar-com-recurso-no-inss",
+    "como-pedir-revisao-do-beneficio"
+  ]
+}

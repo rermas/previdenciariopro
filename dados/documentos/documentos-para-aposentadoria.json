@@ -1,0 +1,130 @@
+{
+  "ordem": 1,
+  "grupo": "documentos",
+  "nome": "Documentos para aposentadoria",
+  "titulo": "Documentos para aposentadoria no INSS: lista completa 2026",
+  "resumo": "Lista de documentos para pedir aposentadoria no INSS: identificação, carteiras de trabalho, carnês, PPP, certidões, prova rural e o que fazer com o CNIS.",
+  "introducao": "Para pedir aposentadoria, o INSS usa primeiro o que já está no [[cnis]]. Os documentos servem para **provar o que falta ou está errado** no extrato: vínculos ausentes, salários faltantes, tempo especial, rural ou militar. Quanto mais completa a documentação no pedido, menor a chance de [[exigencia]] e de indeferimento.",
+  "checklist": [
+    {
+      "titulo": "Sempre",
+      "itens": [
+        "Documento de identificação com foto e CPF.",
+        "Extrato do CNIS com vínculos, contribuições e remunerações, conferido antes do pedido."
+      ]
+    },
+    {
+      "titulo": "Para vínculos e salários",
+      "itens": [
+        "Todas as carteiras de trabalho, inclusive as antigas e as que estão rasuradas.",
+        "Ficha ou livro de registro de empregados, termo de rescisão (TRCT) e extrato do FGTS de vínculos que não aparecem ou aparecem incompletos.",
+        "Holerites ou declaração da empresa para salários faltantes.",
+        "Carnês, guias (GPS, DAS do MEI) e comprovantes de pagamento de contribuinte individual e facultativo."
+      ]
+    },
+    {
+      "titulo": "Para tempo especial",
+      "itens": [
+        "PPP de cada empresa com exposição a agentes nocivos.",
+        "LTCAT ou formulários antigos (SB-40, DSS-8030) para períodos até 2003."
+      ]
+    },
+    {
+      "titulo": "Para outros períodos",
+      "itens": [
+        "Certidão de tempo de serviço militar.",
+        "Certidão de Tempo de Contribuição (CTC) de regime próprio, se houve serviço público.",
+        "Documentos rurais da época, para tempo rural.",
+        "Sentença e documentos do processo trabalhista que reconheceu vínculo ou salário."
+      ]
+    },
+    {
+      "titulo": "Para o professor e a pessoa com deficiência",
+      "itens": [
+        "Declarações das escolas com cargo, função e nível de ensino.",
+        "Laudos e relatórios que mostrem a deficiência e desde quando ela existe."
+      ]
+    }
+  ],
+  "passos": [],
+  "secoes": [
+    {
+      "titulo": "Comece pelo CNIS",
+      "texto": [
+        "Antes de juntar papéis, emita o extrato do CNIS e marque o que precisa de prova: vínculos sem data de saída, meses sem remuneração, indicadores de pendência como [[ind:PEXT]] e períodos que não aparecem. Os documentos vão para esses pontos, não para o que o CNIS já mostra corretamente. O art. 29-A da [[fonte:lei8213|Lei 8.213/1991]] faz do CNIS a prova principal."
+      ]
+    },
+    {
+      "titulo": "Prova material e testemunhas",
+      "texto": [
+        "Para reconhecer tempo de contribuição, a lei exige **início de prova material contemporânea**, isto é, documento da época (art. 55, § 3º). Testemunhas ajudam a completar, mas não bastam sozinhas. Documentos produzidos depois, como declarações recentes de ex-patrões sem base em registros, têm pouco peso."
+      ]
+    },
+    {
+      "titulo": "Como enviar",
+      "texto": [
+        "No [[fonte:meuinss|Meu INSS]], os documentos são anexados no próprio pedido, em PDF ou foto legível. Digitalize frente e verso, todas as páginas usadas da carteira de trabalho (inclusive as de anotações gerais, férias e alterações salariais) e organize por período."
+      ]
+    }
+  ],
+  "dicas": [
+    "Nomeie os arquivos por período (\"CTPS 1995 a 1998 Empresa X\").",
+    "Envie a carteira inteira, não só a página do contrato.",
+    "Se um documento estiver em nome de outra pessoa, explique a relação.",
+    "Guarde o número do protocolo e as versões enviadas."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Preciso levar documentos originais à agência?",
+      "resposta": "Em regra, não: o pedido é feito pelo Meu INSS com cópias digitais. O INSS pode pedir os originais se houver dúvida."
+    },
+    {
+      "pergunta": "E se eu não tiver mais a carteira de trabalho?",
+      "resposta": "Use outros documentos da época: ficha de registro, FGTS, holerites, termo de rescisão. A empresa também pode emitir declaração com base nos registros dela."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 29-A e 55, § 3º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 19 e 62"
+    },
+    {
+      "fonte": "inss-aposentadorias"
+    }
+  ],
+  "termos": [
+    "cnis",
+    "atualizacao-do-cnis",
+    "ppp",
+    "tempo-de-contribuicao"
+  ],
+  "perguntas": [
+    "vinculo-nao-aparece-no-cnis",
+    "carteira-assinada-sem-cnis-vale",
+    "salario-faltando-no-cnis-reduz-aposentadoria"
+  ],
+  "beneficios": [
+    "aposentadoria-por-idade",
+    "aposentadoria-por-tempo-de-contribuicao",
+    "aposentadoria-especial"
+  ],
+  "legislacao": [
+    "cnis-art-29-a-lei-8213",
+    "tempo-de-contribuicao-art-55-lei-8213"
+  ],
+  "artigos": [
+    "documentos-para-comprovar-vinculo-de-emprego",
+    "como-comprovar-remuneracoes-no-cnis",
+    "como-baixar-o-cnis-em-pdf-com-remuneracoes"
+  ],
+  "relacionados": [
+    "como-pedir-atualizacao-do-cnis",
+    "documentos-para-comprovar-atividade-especial",
+    "documentos-para-comprovar-atividade-rural",
+    "como-pedir-certidao-de-tempo-de-contribuicao"
+  ]
+}

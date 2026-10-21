@@ -1,0 +1,129 @@
+{
+  "ordem": 3,
+  "grupo": "documentos",
+  "nome": "Documentos para auxílio por incapacidade",
+  "titulo": "Atestado para o INSS: o que deve constar e documentos do auxílio",
+  "resumo": "O que o atestado médico precisa ter para o INSS aceitar pelo Atestmed (até 90 dias), documentos para a perícia e como pedir o auxílio por incapacidade.",
+  "introducao": "No [[auxilio-por-incapacidade-temporaria|auxílio por incapacidade temporária]], o documento mais importante é o **atestado médico**. Desde 2026, pelo [[fonte:inss-atestmed|Atestmed]], o INSS pode conceder o benefício só pela análise do atestado, sem perícia presencial, quando o afastamento recomendado é de **até 90 dias**. Para isso, o atestado precisa estar completo.",
+  "checklist": [
+    {
+      "titulo": "O atestado deve ter",
+      "itens": [
+        "Nome completo do paciente.",
+        "Data de emissão.",
+        "CID ou o diagnóstico por extenso.",
+        "Prazo estimado de repouso ou afastamento.",
+        "Assinatura e carimbo do médico, com o número do CRM.",
+        "Letra legível (atestados digitais com assinatura válida são aceitos)."
+      ]
+    },
+    {
+      "titulo": "Documentos complementares",
+      "itens": [
+        "Exames que confirmem o diagnóstico (imagem, laboratoriais).",
+        "Laudos e relatórios de especialistas, com histórico e tratamento.",
+        "Receitas e comprovantes de internação ou cirurgia."
+      ]
+    },
+    {
+      "titulo": "Em caso de acidente",
+      "itens": [
+        "CAT (Comunicação de Acidente de Trabalho), se for acidente de trabalho.",
+        "Boletim de ocorrência ou registro do atendimento, em outros acidentes."
+      ]
+    },
+    {
+      "titulo": "Identificação",
+      "itens": [
+        "Documento com foto e CPF."
+      ]
+    }
+  ],
+  "passos": [],
+  "secoes": [
+    {
+      "titulo": "Atestmed ou perícia presencial",
+      "texto": [
+        "Se o afastamento recomendado for de até 90 dias e o atestado estiver completo, o pedido pode ser decidido por análise documental, feita remotamente por perito médico federal. Afastamentos mais longos, atestados incompletos e casos com dúvida vão para a perícia presencial. Veja [[doc:pericia-medica-do-inss-como-se-preparar|como se preparar para a perícia]]."
+      ]
+    },
+    {
+      "titulo": "Data de início da incapacidade",
+      "texto": [
+        "O atestado e os exames ajudam a fixar a [[dii]]. É nessa data que o INSS verifica a carência e a qualidade de segurado. Documentos antigos que mostrem quando a incapacidade começou podem ser decisivos, por exemplo para quem estava no limite do [[periodo-de-graca]]."
+      ]
+    },
+    {
+      "titulo": "Prazo do pedido",
+      "texto": [
+        "Para o empregado, a empresa paga os primeiros 15 dias e o INSS paga a partir do 16º; o pedido deve ser feito em até 30 dias do afastamento para não perder dias de benefício (art. 60 da [[fonte:lei8213|Lei 8.213/1991]])."
+      ]
+    },
+    {
+      "titulo": "Erros comuns no atestado",
+      "texto": [
+        [
+          "Atestado sem CID ou sem diagnóstico por extenso.",
+          "Prazo de afastamento ausente ou escrito de forma vaga (\"por tempo indeterminado\").",
+          "Assinatura sem carimbo ou sem número do CRM.",
+          "Foto cortada, desfocada ou com reflexo.",
+          "Data de emissão anterior ao início dos sintomas descritos."
+        ],
+        "Qualquer um desses problemas pode levar o pedido para a perícia presencial ou ao indeferimento. Peça ao médico que confira o atestado antes de sair do consultório."
+      ]
+    }
+  ],
+  "dicas": [
+    "Peça ao médico que escreva o prazo de afastamento em dias.",
+    "Fotografe o atestado com boa luz, sem cortes.",
+    "Envie também exames recentes, mesmo que o atestado pareça suficiente."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Atestado de 15 dias dá direito ao auxílio?",
+      "resposta": "Para o empregado, os primeiros 15 dias são pagos pela empresa; o INSS só paga se o afastamento passar de 15 dias."
+    },
+    {
+      "pergunta": "O INSS aceita atestado de qualquer médico?",
+      "resposta": "Aceita atestado de médico ou odontólogo com registro no conselho, da rede pública ou privada, desde que cumpra os requisitos."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 59 a 63"
+    },
+    {
+      "fonte": "inss-atestmed"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "termos": [
+    "auxilio-por-incapacidade-temporaria",
+    "dii",
+    "qualidade-de-segurado",
+    "carencia"
+  ],
+  "perguntas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "desempregado-tem-direito-a-auxilio-doenca"
+  ],
+  "beneficios": [
+    "auxilio-por-incapacidade-temporaria",
+    "aposentadoria-por-incapacidade-permanente",
+    "auxilio-acidente"
+  ],
+  "legislacao": [
+    "auxilio-por-incapacidade-arts-59-a-63-lei-8213"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "relacionados": [
+    "pericia-medica-do-inss-como-se-preparar",
+    "como-fazer-pedido-no-meu-inss",
+    "documentos-para-comprovar-atividade-especial"
+  ]
+}

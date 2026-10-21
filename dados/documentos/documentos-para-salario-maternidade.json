@@ -1,0 +1,115 @@
+{
+  "ordem": 4,
+  "grupo": "documentos",
+  "nome": "Documentos para salário-maternidade",
+  "titulo": "Documentos para salário-maternidade: parto, adoção e rural",
+  "resumo": "Documentos para pedir salário-maternidade no INSS: certidão de nascimento, atestado para afastamento antes do parto, adoção, natimorto e segurada especial.",
+  "introducao": "O [[salario-maternidade]] da empregada é pedido à empresa; nos demais casos, ao INSS. A documentação é simples, mas muda conforme o fato gerador: parto, afastamento antes do parto, adoção, natimorto ou aborto não criminoso, e conforme a categoria da segurada.",
+  "checklist": [
+    {
+      "titulo": "Parto",
+      "itens": [
+        "Certidão de nascimento da criança.",
+        "Documento de identificação e CPF da segurada."
+      ]
+    },
+    {
+      "titulo": "Afastamento antes do parto (até 28 dias)",
+      "itens": [
+        "Atestado médico com a data provável do parto e a data de início do afastamento."
+      ]
+    },
+    {
+      "titulo": "Adoção ou guarda",
+      "itens": [
+        "Termo de guarda judicial para fins de adoção ou nova certidão de nascimento após a adoção."
+      ]
+    },
+    {
+      "titulo": "Natimorto ou aborto não criminoso",
+      "itens": [
+        "Certidão de óbito do natimorto, ou atestado médico do aborto não criminoso."
+      ]
+    },
+    {
+      "titulo": "Segurada especial (rural)",
+      "itens": [
+        "Autodeclaração do segurado especial.",
+        "Documentos da atividade rural nos meses anteriores ao parto (notas de produtor, contrato de arrendamento, CAF/DAP)."
+      ]
+    }
+  ],
+  "passos": [],
+  "secoes": [
+    {
+      "titulo": "Quem pede onde",
+      "texto": [
+        "A empregada pede à empresa, que paga e compensa com o INSS. A doméstica, a contribuinte individual, a MEI, a facultativa, a segurada especial e a desempregada no período de graça pedem pelo [[fonte:meuinss|Meu INSS]] ou pela central 135. Desde 05/04/2024 não há carência para nenhuma categoria."
+      ]
+    },
+    {
+      "titulo": "Prazo",
+      "texto": [
+        "O pedido pode ser feito até 5 anos depois do parto, mas, quanto antes, mais rápido o pagamento. O prazo de análise do INSS para este benefício é de 30 dias."
+      ]
+    },
+    {
+      "titulo": "Empregada: o que entregar à empresa",
+      "texto": [
+        "A empregada não pede ao INSS: entrega à empresa o atestado médico (se o afastamento começar antes do parto) ou a certidão de nascimento. A empresa paga o salário-maternidade junto com a folha e compensa o valor com o INSS. Se a empresa estiver fechada ou se recusar, a empregada pode pedir diretamente ao INSS.",
+        "Se o contrato terminar durante a gravidez e a segurada estiver no período de graça, quem paga é o INSS: o pedido é feito no Meu INSS com a certidão de nascimento e os dados do último emprego."
+      ]
+    }
+  ],
+  "dicas": [
+    "Confira no CNIS se há qualidade de segurada na data do parto.",
+    "A desempregada deve informar a data de saída do último emprego.",
+    "Na adoção por casal, só um dos adotantes recebe."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Preciso de certidão de nascimento para pedir antes do parto?",
+      "resposta": "Não. Antes do parto, o atestado médico é suficiente; a certidão é enviada depois."
+    },
+    {
+      "pergunta": "MEI precisa de quantas contribuições?",
+      "resposta": "Nenhuma, para partos a partir de 05/04/2024, mas precisa ter qualidade de segurada."
+    },
+    {
+      "pergunta": "A segurada que adotou uma criança mais velha tem direito aos 120 dias?",
+      "resposta": "Sim. O salário-maternidade por adoção ou guarda para adoção é de 120 dias, qualquer que seja a idade da criança, e é pago a apenas um dos adotantes."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 71 a 73"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 93 a 103"
+    },
+    {
+      "fonte": "inss-maternidade-especial"
+    }
+  ],
+  "termos": [
+    "salario-maternidade",
+    "qualidade-de-segurado",
+    "segurado-especial"
+  ],
+  "perguntas": [
+    "parei-de-contribuir-ainda-tenho-direito"
+  ],
+  "beneficios": [
+    "salario-maternidade"
+  ],
+  "legislacao": [
+    "carencia-arts-24-a-27-lei-8213"
+  ],
+  "artigos": [],
+  "relacionados": [
+    "como-fazer-pedido-no-meu-inss",
+    "documentos-para-comprovar-atividade-rural"
+  ]
+}

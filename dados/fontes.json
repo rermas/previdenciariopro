@@ -194,5 +194,49 @@
   "srv-bpc-pcd": [
     "gov.br: solicitar BPC à pessoa com deficiência",
     "https://www.gov.br/pt-br/servicos/solicitar-beneficio-assistencial-a-pessoa-com-deficiencia"
+  ],
+  "srv-recurso": [
+    "gov.br: apresentar recurso ordinário ao INSS",
+    "https://www.gov.br/pt-br/servicos/apresentar-recurso-ordinario-inicial"
+  ],
+  "srv-revisao": [
+    "gov.br: solicitar revisão de benefício",
+    "https://www.gov.br/pt-br/servicos/solicitar-revisao-de-beneficio"
+  ],
+  "srv-copia-processo": [
+    "gov.br: solicitar cópia de processo no INSS",
+    "https://www.gov.br/pt-br/servicos/solicitar-copia-de-processo-no-inss"
+  ],
+  "inss-copia-processo": [
+    "INSS: para que serve a cópia de processo",
+    "https://www.gov.br/inss/pt-br/noticias/saiba-para-que-serve-a-copia-de-processo-do-inss"
+  ],
+  "inss-revisao-prazo": [
+    "INSS: prazo para pedir revisão é de dez anos",
+    "https://www.gov.br/inss/pt-br/noticias/prazo-para-pedir-revisao-de-beneficio-e-de-dez-anos"
+  ],
+  "inss-procuracao": [
+    "INSS: procuração",
+    "https://www.gov.br/inss/pt-br/saiba-mais/seus-direitos-e-deveres/procuracao/procuracao"
+  ],
+  "inss-cadastrar-procuracao": [
+    "INSS: cadastrar ou renovar procuração",
+    "https://www.gov.br/inss/pt-br/saiba-mais/seus-direitos-e-deveres/procuracao/cadastrar-ou-renovar-procuracao"
+  ],
+  "inss-representacao": [
+    "INSS: representação legal",
+    "https://www.gov.br/inss/pt-br/saiba-mais/seus-direitos-e-deveres/procuracao/representacao-legal"
+  ],
+  "inss-atualizacao-tempo": [
+    "INSS: atualização de tempo de contribuição",
+    "https://www.gov.br/inss/pt-br/saiba-mais/seus-direitos-e-deveres/atualizacao-de-tempo-de-contribuicao"
+  ],
+  "inss-atestmed": [
+    "INSS: novo Atestmed e análise documental",
+    "https://www.gov.br/inss/pt-br/assuntos/novo-atestmed-acelera-a-decisao-de-analise-de-beneficios-por-incapacidade-temporaria"
+  ],
+  "inss-abaixo-minimo": [
+    "INSS: remuneração inferior ao mínimo pendente de ajuste no CNIS",
+    "https://www.gov.br/inss/pt-br/noticias/acompanhe-o-seu-cnis-e-saiba-se-possui-remuneracao-inferior-ao-salario-minimo-pendente-de-ajuste"
   ]
 }

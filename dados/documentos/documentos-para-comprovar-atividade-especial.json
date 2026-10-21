@@ -1,0 +1,127 @@
+{
+  "ordem": 7,
+  "grupo": "documentos",
+  "nome": "Documentos para comprovar atividade especial",
+  "titulo": "Documentos para atividade especial: PPP, LTCAT e formulários",
+  "resumo": "Como provar atividade especial no INSS: PPP, LTCAT, formulários antigos por época, o que conferir no PPP e o que fazer se a empresa fechou.",
+  "introducao": "O tempo especial não aparece no CNIS: ele precisa ser **provado com documentos da empresa**. O documento exigido depende da época, e o [[ppp]] é o principal desde 2004. Um PPP mal preenchido é a causa mais comum de tempo especial negado.",
+  "checklist": [
+    {
+      "titulo": "Até 28/04/1995",
+      "itens": [
+        "Carteira de trabalho com a função, quando a categoria profissional estava nos decretos da época.",
+        "Formulário da época (SB-40, DSS-8030) ou PPP, para agentes nocivos."
+      ]
+    },
+    {
+      "titulo": "De 29/04/1995 a 31/12/2003",
+      "itens": [
+        "Formulário SB-40, DSS-8030 ou DIRBEN-8030, ou PPP.",
+        "Laudo técnico (LTCAT), obrigatório desde 06/03/1997."
+      ]
+    },
+    {
+      "titulo": "A partir de 01/01/2004",
+      "itens": [
+        "PPP assinado pela empresa, com responsável técnico pelos registros ambientais.",
+        "LTCAT, se o INSS pedir ou se o PPP tiver falhas."
+      ]
+    },
+    {
+      "titulo": "Complementares",
+      "itens": [
+        "Holerites com adicional de insalubridade ou periculosidade.",
+        "Laudos de processos trabalhistas sobre o mesmo local."
+      ]
+    }
+  ],
+  "passos": [],
+  "secoes": [
+    {
+      "titulo": "O que conferir no PPP",
+      "texto": [
+        [
+          "Períodos e cargos iguais aos da carteira e do CNIS.",
+          "Agentes nocivos descritos com intensidade ou concentração e técnica de medição.",
+          "Responsável pelos registros ambientais em cada período.",
+          "Informação sobre EPI eficaz (no ruído, o EPI não afasta o direito, STF Tema 555).",
+          "Assinatura do representante da empresa e data de emissão."
+        ]
+      ]
+    },
+    {
+      "titulo": "Empresa fechada ou recusa",
+      "texto": [
+        "Se a empresa fechou, use laudos de empresa similar, laudos de outros processos ou peça perícia judicial. Se ela se recusa a entregar o PPP, cabe reclamação na Justiça do Trabalho. A obrigação está no art. 58, § 4º, da [[fonte:lei8213|Lei 8.213/1991]]."
+      ]
+    },
+    {
+      "titulo": "Atividades que mais geram tempo especial",
+      "texto": [
+        [
+          "Exposição a ruído acima do limite da época (metalurgia, construção, indústria).",
+          "Agentes biológicos em hospitais, laboratórios e coleta de lixo.",
+          "Agentes químicos, como hidrocarbonetos, solventes e poeiras minerais.",
+          "Eletricidade acima de 250 volts, reconhecida pela jurisprudência.",
+          "Até 28/04/1995, categorias profissionais como motorista de caminhão e de ônibus, soldador e enfermeiro."
+        ],
+        "Em todos os casos, a prova é o documento da empresa adequado à época, completado por laudos quando necessário."
+      ]
+    }
+  ],
+  "dicas": [
+    "Peça o PPP na rescisão: é direito do trabalhador.",
+    "Confira se o PPP cobre todo o período, sem lacunas.",
+    "Guarde cópias de PPPs antigos; empresas fecham."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "O PPP precisa de carimbo?",
+      "resposta": "Precisa identificar a empresa e o representante legal que responde pelas informações. O PPP eletrônico, gerado a partir do eSocial, segue o formato próprio do sistema."
+    },
+    {
+      "pergunta": "Adicional de insalubridade no holerite prova o tempo especial?",
+      "resposta": "É um indício, mas não substitui o PPP e o laudo."
+    },
+    {
+      "pergunta": "Trabalhei em várias empresas. Preciso de um PPP de cada uma?",
+      "resposta": "Sim. Cada empresa emite o PPP do período em que você trabalhou nela. Se uma delas fechou, use laudos de empresa similar, laudos de processos trabalhistas sobre o mesmo local ou peça perícia na Justiça. Os períodos sem prova contam como tempo comum."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 57 e 58"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 64 a 70 e Anexo IV"
+    },
+    {
+      "fonte": "inss-aposentadorias"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "seção da aposentadoria especial"
+    }
+  ],
+  "termos": [
+    "ppp",
+    "atividade-especial"
+  ],
+  "perguntas": [
+    "trabalho-insalubre-aposentadoria-especial"
+  ],
+  "beneficios": [
+    "aposentadoria-especial",
+    "aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "legislacao": [
+    "aposentadoria-especial-arts-57-e-58-lei-8213"
+  ],
+  "artigos": [],
+  "relacionados": [
+    "documentos-para-aposentadoria",
+    "como-entrar-com-recurso-no-inss"
+  ]
+}

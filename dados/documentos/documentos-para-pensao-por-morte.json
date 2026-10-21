@@ -1,0 +1,125 @@
+{
+  "ordem": 2,
+  "grupo": "documentos",
+  "nome": "Documentos para pensão por morte",
+  "titulo": "Documentos para pensão por morte: lista e provas de união estável",
+  "resumo": "Documentos para pedir pensão por morte no INSS: certidão de óbito, documentos dos dependentes, provas de união estável e de dependência econômica.",
+  "introducao": "Na [[pensao-por-morte]], o INSS precisa confirmar duas coisas: que o falecido era segurado (ou tinha direito a aposentadoria) e que quem pede é [[dependentes|dependente]]. Os documentos giram em torno dessas duas provas. A mais delicada é a da **união estável**, que exige documento produzido nos 24 meses anteriores ao óbito.",
+  "checklist": [
+    {
+      "titulo": "Do falecido",
+      "itens": [
+        "Certidão de óbito.",
+        "Documento de identificação e CPF.",
+        "Carteiras de trabalho e carnês, se ele não era aposentado (para provar a qualidade de segurado)."
+      ]
+    },
+    {
+      "titulo": "Do cônjuge",
+      "itens": [
+        "Certidão de casamento atualizada, emitida depois do óbito.",
+        "Documento de identificação e CPF."
+      ]
+    },
+    {
+      "titulo": "Do companheiro ou companheira (união estável)",
+      "itens": [
+        "Pelo menos um documento da união produzido nos 24 meses anteriores ao óbito, e de preferência vários, de épocas diferentes.",
+        "Exemplos: declaração de imposto de renda com o companheiro como dependente, comprovantes de mesmo endereço, conta bancária conjunta, plano de saúde ou seguro com o companheiro como beneficiário, certidão de nascimento de filho em comum, escritura de união estável."
+      ]
+    },
+    {
+      "titulo": "Dos filhos",
+      "itens": [
+        "Certidão de nascimento e CPF.",
+        "Laudos, se o filho maior de 21 anos for inválido ou tiver deficiência."
+      ]
+    },
+    {
+      "titulo": "Dos pais e irmãos",
+      "itens": [
+        "Provas de dependência econômica do falecido, como recibos de despesas pagas por ele, conta conjunta ou declaração de imposto de renda."
+      ]
+    }
+  ],
+  "passos": [],
+  "secoes": [
+    {
+      "titulo": "Por que a data dos documentos importa",
+      "texto": [
+        "O art. 16, § 5º, da [[fonte:lei8213|Lei 8.213/1991]] exige início de prova material contemporânea da união estável e da dependência econômica, produzido em período **não superior a 24 meses** antes do óbito. Documentos antigos ajudam a mostrar a duração da união, que define por quanto tempo a pensão será paga; os recentes provam que ela existia na data da morte."
+      ]
+    },
+    {
+      "titulo": "Prazos",
+      "texto": [
+        "Pedida em até **90 dias** do óbito (ou **180 dias** para filhos menores de 16 anos), a pensão é paga desde a data do óbito. Depois disso, desde a data do pedido. Faça o pedido mesmo que faltem alguns documentos: eles podem ser enviados depois, na exigência."
+      ]
+    },
+    {
+      "titulo": "Situações especiais",
+      "texto": [
+        [
+          "**Filho inválido maior de 21 anos:** laudos que mostrem que a invalidez começou antes do óbito do segurado.",
+          "**Ex-cônjuge com pensão alimentícia:** sentença ou acordo de alimentos.",
+          "**Falecido sem qualidade de segurado:** documentos que provem que ele já tinha direito a alguma aposentadoria antes de perder a qualidade.",
+          "**Óbito por acidente:** boletim de ocorrência ou CAT, que afastam a pensão de apenas 4 meses."
+        ]
+      ]
+    }
+  ],
+  "dicas": [
+    "Junte documentos de anos diferentes para provar a duração da união.",
+    "Se houver ação de reconhecimento de união estável, junte a sentença.",
+    "Informe todos os dependentes conhecidos, inclusive filhos de outras relações."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "A declaração de testemunhas prova a união estável?",
+      "resposta": "Sozinha, não. A lei exige início de prova material; testemunhas completam os documentos."
+    },
+    {
+      "pergunta": "Preciso de advogado para pedir a pensão?",
+      "resposta": "Não. O pedido é feito pelo Meu INSS ou pela central 135. Em casos de disputa entre dependentes ou de prova difícil, a orientação jurídica ajuda."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 16 e 74"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 22"
+    },
+    {
+      "fonte": "inss-pensao"
+    },
+    {
+      "fonte": "srv-pensao-urbana"
+    }
+  ],
+  "termos": [
+    "pensao-por-morte",
+    "dependentes",
+    "qualidade-de-segurado"
+  ],
+  "perguntas": [
+    "uniao-estavel-pensao-por-morte",
+    "posso-receber-aposentadoria-e-pensao"
+  ],
+  "beneficios": [
+    "pensao-por-morte",
+    "auxilio-reclusao"
+  ],
+  "legislacao": [
+    "pensao-por-morte-arts-74-a-79-lei-8213"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "relacionados": [
+    "como-fazer-pedido-no-meu-inss",
+    "procuracao-e-representante-legal-no-inss"
+  ]
+}

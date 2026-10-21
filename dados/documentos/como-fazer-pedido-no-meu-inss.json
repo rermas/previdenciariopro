@@ -1,0 +1,107 @@
+{
+  "ordem": 8,
+  "grupo": "requerimentos",
+  "nome": "Como fazer um pedido no Meu INSS",
+  "titulo": "Como fazer um pedido no Meu INSS: passo a passo do requerimento",
+  "resumo": "Passo a passo para pedir um benefício no Meu INSS: acesso com conta gov.br, escolha do serviço, envio de documentos, protocolo, exigências e acompanhamento.",
+  "introducao": "Quase todos os benefícios e serviços do INSS são pedidos pelo **[[fonte:meuinss|Meu INSS]]**, no site ou no aplicativo, com a conta gov.br. Quem não tem acesso à internet pode usar a **central 135** ou ir a uma agência com agendamento. A data do pedido é a [[der]], que define desde quando o benefício é pago.",
+  "checklist": [],
+  "passos": [
+    "Acesse o Meu INSS (site ou aplicativo) com a conta gov.br.",
+    "Antes de pedir, emita o extrato do CNIS e confira vínculos, salários e pendências.",
+    "Clique em \"Novo pedido\" e digite o nome do serviço (por exemplo, \"aposentadoria\", \"salário-maternidade\", \"benefício por incapacidade\").",
+    "Confira e atualize os dados de contato, endereço e conta para pagamento.",
+    "Responda às perguntas do formulário e anexe os documentos em PDF ou foto legível.",
+    "Confirme o pedido e guarde o número do protocolo.",
+    "Acompanhe em \"Consultar pedidos\" e responda às exigências em até 30 dias."
+  ],
+  "secoes": [
+    {
+      "titulo": "A data do pedido importa",
+      "texto": [
+        "Na maioria dos benefícios, o pagamento começa na data do pedido. Esperar para \"juntar tudo\" pode custar meses de benefício. Se faltar algum documento, faça o pedido e envie o restante na exigência. Veja [[post:atrasados-do-beneficio-data-de-entrada-do-requerimento|como a DER define os atrasados]]."
+      ]
+    },
+    {
+      "titulo": "Exigências",
+      "texto": [
+        "Se o INSS precisar de algo, o pedido fica \"em exigência\". Pela [[fonte:in128|IN 128/2022]], com a redação da IN 212/2026, o segurado tem 30 dias para cumprir; sem resposta, o pedido é encerrado por desistência. Leia com atenção o que foi pedido e responda pelo próprio Meu INSS."
+      ]
+    },
+    {
+      "titulo": "Prazos de análise",
+      "texto": [
+        "O acordo homologado pelo STF (RE 1.171.152) fixou prazos máximos: 30 dias para o salário-maternidade, 45 para benefícios por incapacidade, 60 para pensão, auxílio-reclusão e auxílio-acidente e 90 para aposentadorias e BPC. Veja [[q:inss-demorando-para-analisar|o que fazer se o INSS demorar]]."
+      ]
+    },
+    {
+      "titulo": "Quem pode pedir por você",
+      "texto": [
+        "Um procurador ou representante legal pode fazer o pedido. Veja [[doc:procuracao-e-representante-legal-no-inss|procuração e representação legal]]."
+      ]
+    },
+    {
+      "titulo": "Pela central 135 ou na agência",
+      "texto": [
+        "Quem não usa internet pode fazer o pedido pela central 135, que funciona de segunda a sábado, das 7h às 22h (horário de Brasília). O atendente registra o requerimento e informa o protocolo e, se necessário, agenda o comparecimento à agência para entregar documentos, fazer perícia ou avaliação social.",
+        "Também é possível pedir ajuda em entidades conveniadas, sindicatos e prefeituras que atendem pelo Meu INSS. Em todos os casos, a data do pedido é a do registro do requerimento."
+      ]
+    }
+  ],
+  "dicas": [
+    "Mantenha telefone e e-mail atualizados para receber os avisos.",
+    "Envie arquivos legíveis e organizados por período.",
+    "Não faça vários pedidos iguais ao mesmo tempo."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Preciso ir à agência?",
+      "resposta": "Em regra, não. A agência é usada para perícias, avaliações sociais e quando o INSS convoca."
+    },
+    {
+      "pergunta": "Esqueci de anexar um documento. E agora?",
+      "resposta": "Aguarde a exigência ou, se o sistema permitir, anexe pelo próprio pedido em \"Consultar pedidos\"."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "meuinss"
+    },
+    {
+      "fonte": "in128",
+      "dispositivo": "com as alterações da IN 212/2026"
+    },
+    {
+      "fonte": "lei9784",
+      "dispositivo": "arts. 48 e 49"
+    }
+  ],
+  "termos": [
+    "der",
+    "exigencia",
+    "cnis"
+  ],
+  "perguntas": [
+    "inss-demorando-para-analisar",
+    "quanto-tempo-falta-para-me-aposentar"
+  ],
+  "beneficios": [
+    "aposentadoria-por-idade",
+    "auxilio-por-incapacidade-temporaria",
+    "pensao-por-morte"
+  ],
+  "legislacao": [
+    "cnis-art-29-a-lei-8213"
+  ],
+  "artigos": [
+    "exigencia-do-inss-prazo-e-como-responder",
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento",
+    "como-emitir-o-extrato-do-cnis"
+  ],
+  "relacionados": [
+    "como-pedir-atualizacao-do-cnis",
+    "como-entrar-com-recurso-no-inss",
+    "documentos-para-aposentadoria",
+    "documentos-para-pensao-por-morte"
+  ]
+}

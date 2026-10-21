@@ -1,0 +1,104 @@
+{
+  "ordem": 15,
+  "grupo": "requerimentos",
+  "nome": "Perícia médica do INSS",
+  "titulo": "Perícia médica do INSS: como se preparar e o que levar",
+  "resumo": "Como se preparar para a perícia médica do INSS: o que levar, como descrever as limitações, Atestmed para até 90 dias, resultado, prorrogação e recurso.",
+  "introducao": "A **perícia médica** avalia se há incapacidade para o trabalho e desde quando ela existe. É feita por perito médico federal, presencialmente, por telemedicina em alguns casos, ou só por análise documental pelo [[fonte:inss-atestmed|Atestmed]], quando o afastamento recomendado é de até 90 dias.",
+  "checklist": [],
+  "passos": [
+    "Agende pelo [[fonte:meuinss|Meu INSS]] ou pela central 135, ao pedir o benefício.",
+    "Separe documento com foto, atestados, laudos, exames, receitas e relatórios de internação.",
+    "Organize os documentos por data, do mais antigo ao mais recente.",
+    "Chegue com antecedência; leve acompanhante se precisar de ajuda.",
+    "Explique com objetividade as limitações no trabalho e no dia a dia.",
+    "Consulte o resultado no Meu INSS."
+  ],
+  "secoes": [
+    {
+      "titulo": "O que o perito avalia",
+      "texto": [
+        "O perito verifica a doença ou lesão, a relação com a atividade habitual, se a incapacidade é total ou parcial, temporária ou permanente, e fixa a [[dii|data de início da incapacidade]]. Leve documentos que mostrem a evolução: exames antigos ajudam a fixar a data de início."
+      ]
+    },
+    {
+      "titulo": "Como descrever as limitações",
+      "texto": [
+        "Fale do trabalho que você faz e do que não consegue mais fazer: carregar peso, ficar em pé, digitar, dirigir, concentrar-se. Descrições concretas pesam mais que o nome da doença."
+      ]
+    },
+    {
+      "titulo": "Depois do resultado",
+      "texto": [
+        "Se concedido, confira a data de cessação e peça prorrogação nos 15 dias anteriores, se continuar incapaz. Se negado, cabe [[doc:como-entrar-com-recurso-no-inss|recurso em 30 dias]] ou novo pedido com documentos novos. Benefícios por incapacidade também podem ser discutidos no Juizado Especial Federal, com perícia judicial."
+      ]
+    },
+    {
+      "titulo": "Documentos que mais ajudam",
+      "texto": [
+        [
+          "Relatório do médico assistente com histórico, tratamento, limitações e prognóstico.",
+          "Exames que confirmem o diagnóstico e mostrem a evolução.",
+          "Receitas e comprovantes de uso contínuo de medicamentos.",
+          "Comprovantes de internação, cirurgia ou fisioterapia.",
+          "No caso de acidente de trabalho, a CAT."
+        ],
+        "Atestados genéricos, sem descrição das limitações, têm pouco peso. O perito precisa entender por que a doença impede o trabalho que você faz."
+      ]
+    }
+  ],
+  "dicas": [
+    "Não falte: a ausência sem justificativa encerra o pedido.",
+    "Leve todos os exames, mesmo os antigos.",
+    "Anote os remédios que usa e os efeitos colaterais."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Posso remarcar a perícia?",
+      "resposta": "Sim, pelo Meu INSS ou pela central 135, dentro das regras de remarcação."
+    },
+    {
+      "pergunta": "A perícia pode ser feita em casa ou no hospital?",
+      "resposta": "Para quem está internado ou não pode se locomover, é possível pedir perícia hospitalar ou domiciliar, com comprovação."
+    },
+    {
+      "pergunta": "O que acontece se o perito disser que posso trabalhar?",
+      "resposta": "O benefício é negado ou encerrado. Você pode apresentar recurso em 30 dias, com laudos e exames que mostrem a incapacidade, fazer um novo pedido com documentos novos ou ir ao Juizado Especial Federal, onde haverá perícia judicial."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 59, 60 e 101"
+    },
+    {
+      "fonte": "inss-atestmed"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "termos": [
+    "dii",
+    "auxilio-por-incapacidade-temporaria",
+    "aposentadoria-por-incapacidade-permanente"
+  ],
+  "perguntas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "desempregado-tem-direito-a-auxilio-doenca"
+  ],
+  "beneficios": [
+    "auxilio-por-incapacidade-temporaria",
+    "aposentadoria-por-incapacidade-permanente",
+    "auxilio-acidente",
+    "bpc-loas"
+  ],
+  "legislacao": [
+    "auxilio-por-incapacidade-arts-59-a-63-lei-8213"
+  ],
+  "artigos": [],
+  "relacionados": [
+    "documentos-para-auxilio-por-incapacidade",
+    "como-entrar-com-recurso-no-inss"
+  ]
+}

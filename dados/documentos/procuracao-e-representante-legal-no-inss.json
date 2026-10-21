@@ -1,0 +1,100 @@
+{
+  "ordem": 14,
+  "grupo": "requerimentos",
+  "nome": "Procuração e representante legal no INSS",
+  "titulo": "Procuração no INSS: quem pode ser procurador e como cadastrar",
+  "resumo": "Regras da procuração no INSS: quem pode ser procurador, procuração pública ou particular, termo de responsabilidade, validade, cadastro e representação legal.",
+  "introducao": "Quem não pode ou não quer tratar pessoalmente com o INSS pode nomear um **procurador**. Quem é civilmente incapaz é representado pelo **representante legal** (pais, tutor, curador ou administrador provisório). As regras estão nas páginas de [[fonte:inss-procuracao|procuração]] e [[fonte:inss-representacao|representação legal]] do INSS.",
+  "checklist": [],
+  "passos": [
+    "Faça a procuração: particular (pode usar o modelo do INSS) ou pública, em cartório.",
+    "Garanta que ela tenha poderes específicos para representar perante o INSS.",
+    "O procurador assina o termo de responsabilidade.",
+    "Cadastre a procuração pelo Meu INSS ou com agendamento, conforme o caso.",
+    "Para receber pagamentos, comprove o motivo (ausência, doença contagiosa ou impossibilidade de locomoção)."
+  ],
+  "secoes": [
+    {
+      "titulo": "Quem pode ser procurador",
+      "texto": [
+        [
+          "Qualquer pessoa maior de 18 anos ou emancipada; o maior de 16 anos pode ser nomeado procurador.",
+          "Em regra, uma pessoa só pode ser procuradora de um segurado por vez, salvo parentes de primeiro grau e entidades filantrópicas.",
+          "Servidor público ativo só pode representar cônjuge, companheiro ou parentes até o segundo grau."
+        ]
+      ]
+    },
+    {
+      "titulo": "Pública ou particular",
+      "texto": [
+        "A procuração **pública**, feita em cartório, é obrigatória quando o outorgante ou o procurador não sabe ou não pode assinar. A **particular** pode ser feita pela própria pessoa, inclusive no modelo do INSS, com documento de identificação das duas partes; o INSS pode pedir reconhecimento de firma se houver dúvida sobre a assinatura."
+      ]
+    },
+    {
+      "titulo": "Validade",
+      "texto": [
+        "Para requerimentos, recursos e revisões, vale até o fim do procedimento. Para receber pagamentos de benefício ativo, vale **12 meses** e pode ser renovada nos 30 dias anteriores ao vencimento."
+      ]
+    },
+    {
+      "titulo": "Representação legal",
+      "texto": [
+        "Para o beneficiário civilmente incapaz, atuam os pais, o tutor, o curador ou o administrador provisório (herdeiros necessários, por 6 meses, com termo de compromisso). Atrasados de pessoa incapaz só são pagos com termo de tutela, curatela ou guarda, ainda que provisório."
+      ]
+    },
+    {
+      "titulo": "Procuração para quem mora no exterior",
+      "texto": [
+        "O beneficiário que vai viajar ou mora fora do país pode nomear procurador para receber o benefício, com declaração da ausência e, se estiver no exterior, atestado de vida com validade de até 90 dias na apresentação. A procuração para recebimento vale 12 meses e deve ser renovada.",
+        "Se a procuração for feita no exterior, ela deve seguir as regras de validade de documentos estrangeiros, como a apostila da Convenção da Haia ou o reconhecimento consular."
+      ]
+    }
+  ],
+  "dicas": [
+    "Escreva na procuração os poderes para \"representar perante o INSS, requerer benefícios, apresentar recursos e receber valores\", conforme o caso.",
+    "Guarde cópia do termo de responsabilidade."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Advogado precisa do termo de responsabilidade?",
+      "resposta": "O advogado atua com a procuração própria da advocacia e segue as regras de cadastro do INSS para advogados."
+    },
+    {
+      "pergunta": "Filho pode pedir benefício pelo pai idoso?",
+      "resposta": "Pode, com procuração do pai. Se o pai não tiver capacidade civil, é preciso curatela ou administração provisória."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "inss-procuracao"
+    },
+    {
+      "fonte": "inss-cadastrar-procuracao"
+    },
+    {
+      "fonte": "inss-representacao"
+    },
+    {
+      "fonte": "portaria991"
+    }
+  ],
+  "termos": [
+    "dependentes"
+  ],
+  "perguntas": [
+    "inss-negou-o-pedido-o-que-fazer"
+  ],
+  "beneficios": [
+    "bpc-loas",
+    "pensao-por-morte"
+  ],
+  "legislacao": [
+    "bpc-art-20-loas"
+  ],
+  "artigos": [],
+  "relacionados": [
+    "documentos-para-bpc",
+    "como-fazer-pedido-no-meu-inss",
+    "documentos-para-pensao-por-morte"
+  ]
+}

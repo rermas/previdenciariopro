@@ -15,6 +15,7 @@ assets/vendor/       pdf.js (hospedado aqui, nada vem de domínio externo)
 assets/fonts/        Atkinson Hyperlegible
 posts/*.html         texto de cada artigo do blog
 tests/cnis.test.js   testes da análise (node tests/cnis.test.js)
+dados/documentos/    um JSON por lista de documentos ou requerimento (teste: node tests/documentos.test.js)
 dados/transicao/     um JSON por regra de transição (teste: node tests/transicao.test.js)
 dados/beneficios/    um JSON por guia de benefício (teste: node tests/beneficios-guias.test.js)
 dados/glossario/     um JSON por termo do glossário (teste: node tests/glossario.test.js)
@@ -202,6 +203,10 @@ Sem o PDF, o botão "Lançar tempo manualmente" (em `/analise-cnis/`) abre uma l
 ## Indicadores do CNIS (Anexo V da Portaria DIRBEN/INSS 990/2022)
 
 `dados/indicadores.json` traz os 205 códigos do Anexo V (alterado pela Portaria DIRBEN/INSS 1.316/2025): descrição e esclarecimento oficiais e o efeito no reconhecimento de direitos (`impacto`). Ele é gerado por `python3 tools/indicadores_anexo_v.py AnexoV.pdf` (a classificação fica no script) e copiado para `assets/cnis.js` por `node tools/gerar-indicadores.js`. O site monta `/indicadores/` e uma página por código a partir dele.
+
+## Documentos e requerimentos
+
+`/documentos/` reúne listas de documentos por benefício e o passo a passo dos requerimentos (pedido no Meu INSS, atualização do CNIS, recurso, revisão, cópia do processo, CTC, procuração e perícia). Cada página é um arquivo `dados/documentos/{slug}.json` com `grupo` (`documentos` ou `requerimentos`), `checklist` (lista com caixas de seleção e botão de impressão), `passos` (também no JSON-LD `HowTo`), seções, dicas, perguntas frequentes, fontes oficiais e links. Vale a marcação do glossário e `[[doc:slug|texto]]`. Rode `node tests/documentos.test.js` depois de editar. Os nomes dos serviços no Meu INSS mudam com frequência: revise as páginas de requerimento quando o INSS reorganizar o aplicativo. A regra do Atestmed (análise documental de afastamentos de até 90 dias, desde 2026) aparece no guia do auxílio, na página do atestado e na da perícia.
 
 ## Regras de transição
 

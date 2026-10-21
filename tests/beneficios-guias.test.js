@@ -50,7 +50,7 @@ for (const [slug, g] of Object.entries(guias)) {
     assert.ok(!/[<>]/.test(s), ctx + 'HTML no texto');
     for (const m of s.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)) {
       const [tipo, alvo] = m[1].includes(':') ? m[1].split(':') : ['termo', m[1]];
-      const ok = { termo: termos, q: perguntas, leg: leis, ben: guias }[tipo]?.[alvo] || (tipo === 'post' && posts.has(alvo))
+      const ok = { termo: termos, q: perguntas, leg: leis, ben: guias, doc: lerDir('dados/documentos') }[tipo]?.[alvo] || (tipo === 'post' && posts.has(alvo))
         || (tipo === 'ind' && indicadores.has(alvo)) || (tipo === 'fonte' && fontes[alvo]);
       assert.ok(ok, ctx + 'link quebrado ' + m[1]);
     }

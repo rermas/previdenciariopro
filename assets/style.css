@@ -407,3 +407,13 @@ p { margin: 0 0 1rem; }
   .tabela-comparativa th[scope="row"], .tabela-comparativa td { border: 0; padding: 0.15rem 0; }
   .tabela-comparativa td::before { content: attr(data-rot) ": "; font-weight: 700; color: var(--tinta); }
 }
+
+/* Documentos e requerimentos */
+.check-tit { font-size: 1.02rem; margin: 1.2rem 0 0.4rem; }
+.artigo .checklist { list-style: none; padding-left: 0; }
+.checklist li { position: relative; padding-left: 1.7rem; }
+.checklist li::before { content: ""; position: absolute; left: 0; top: 0.32em; width: 1rem; height: 1rem; border: 2px solid var(--azul); border-radius: 3px; background: var(--branco); }
+@media print {
+  .topo, .rodape, .no-print, .anuncio, .migalha { display: none !important; }
+  .checklist li::before { border-color: #000; }
+}

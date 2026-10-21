@@ -1,7 +1,7 @@
 <?php
 /*
  * Análise CNIS: PHP puro, sem banco de dados, com um único roteador.
- * Rotas: /  /beneficios/  /beneficios/{slug}/  /regras-de-transicao/  /regras-de-transicao/{regra}/  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /legislacao/{tema}/  /privacidade/  /analise-cnis/  /sitemap.xml
+ * Rotas: /  /beneficios/  /beneficios/{slug}/  /documentos/  /documentos/{slug}/  /regras-de-transicao/  /regras-de-transicao/{regra}/  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /legislacao/{tema}/  /privacidade/  /analise-cnis/  /sitemap.xml
  */
 
 // ---------- Configuração ----------
@@ -303,6 +303,26 @@ const CAT_PERGUNTAS = [
     'cnis' => 'CNIS, vínculos e pendências', 'contribuicoes' => 'Contribuições', 'protecao' => 'Qualidade de segurado e carência',
     'aposentadoria' => 'Aposentadoria e tempo de contribuição', 'beneficios' => 'Pensão e acumulação de benefícios', 'processo' => 'Pedido, recurso e revisão',
 ];
+// Documentos e requerimentos: uma página por lista de documentos ou serviço do INSS em dados/documentos/{slug}.json,
+// com a marcação do glossário e [[doc:slug|texto]]. Teste: node tests/documentos.test.js
+const DOCUMENTOS_REVISADOS = '2026-10-21';
+const GRUPOS_DOCUMENTOS = ['documentos' => 'Documentos por benefício', 'requerimentos' => 'Requerimentos e serviços do INSS'];
+function documentos(): array {
+    static $l = null;
+    if ($l !== null) return $l;
+    $l = ler_pasta('documentos');
+    uasort($l, fn($a, $b) => ($a['ordem'] ?? 999) <=> ($b['ordem'] ?? 999));
+    return $l;
+}
+function lista_documentos(array $ds, bool $comResumo = true): void {
+    echo '<ul class="lista-gl">';
+    foreach ($ds as $slug => $d) echo '<li><a href="' . e(u('/documentos/' . $slug . '/')) . '">' . e($d['nome']) . '</a>' . ($comResumo ? ' <span>' . e($d['resumo']) . '</span>' : '') . '</li>';
+    echo '</ul>';
+}
+function documentos_que_citam(string $campo, string $valor): array {
+    return array_filter(documentos(), fn($d) => in_array($valor, $d[$campo] ?? [], true));
+}
+
 // Regras de transição da EC 103/2019: uma página por regra em dados/transicao/{slug}.json. As tabelas ano a ano são
 // calculadas por tabela_transicao() a partir de [base, passo por ano, limite]. Teste: node tests/transicao.test.js
 const TRANSICAO_REVISADA = '2026-10-21';
@@ -434,6 +454,7 @@ function gl_html(string $s): string {
             if (!isset($G[$alvo])) return $txt ?? $alvo;
             return '<a href="' . e(u('/glossario/' . $alvo . '/')) . '">' . ($txt ?? e(nome_termo($G[$alvo]))) . '</a>';
         }
+        if ($tipo === 'doc') { $D = documentos(); return isset($D[$alvo]) ? '<a href="' . e(u('/documentos/' . $alvo . '/')) . '">' . ($txt ?? e($D[$alvo]['nome'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'tr') { $T = transicao(); return isset($T[$alvo]) ? '<a href="' . e(u('/regras-de-transicao/' . $alvo . '/')) . '">' . ($txt ?? e($T[$alvo]['nome'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'ben') { $B = guias(); return isset($B[$alvo]) ? '<a href="' . e(u('/beneficios/' . $alvo . '/')) . '">' . ($txt ?? e($B[$alvo]['nome'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'leg') { $L = legislacao(); return isset($L[$alvo]) ? '<a href="' . e(u('/legislacao/' . $alvo . '/')) . '">' . ($txt ?? e($L[$alvo]['titulo'])) . '</a>' : ($txt ?? ''); }
@@ -548,7 +569,7 @@ function rodape(): void {
 <footer class="rodape">
   <div class="wrap">
     <p>Conteúdo informativo. Não substitui a orientação de um advogado previdenciário nem as informações oficiais do INSS.</p>
-    <p class="rodape-links"><a href="<?= e(u('/beneficios/')) ?>">Guias por benefício</a> <a href="<?= e(u('/regras-de-transicao/')) ?>">Regras de transição</a> <a href="<?= e(u('/blog/')) ?>">Blog</a> <a href="<?= e(u('/perguntas/')) ?>">Perguntas frequentes</a> <a href="<?= e(u('/glossario/')) ?>">Glossário</a> <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a> <a href="<?= e(u('/legislacao/')) ?>">Legislação</a></p>
+    <p class="rodape-links"><a href="<?= e(u('/beneficios/')) ?>">Guias por benefício</a> <a href="<?= e(u('/regras-de-transicao/')) ?>">Regras de transição</a> <a href="<?= e(u('/documentos/')) ?>">Documentos e requerimentos</a> <a href="<?= e(u('/blog/')) ?>">Blog</a> <a href="<?= e(u('/perguntas/')) ?>">Perguntas frequentes</a> <a href="<?= e(u('/glossario/')) ?>">Glossário</a> <a href="<?= e(u('/indicadores/')) ?>">Indicadores</a> <a href="<?= e(u('/legislacao/')) ?>">Legislação</a></p>
     <p><a href="<?= e(u('/privacidade/')) ?>">Política de privacidade</a> &copy; <?= date('Y') ?> <?= e(SITE_NOME) ?></p>
   </div>
 </footer>
@@ -668,6 +689,12 @@ if ($rota === '/') {
   </section>
 
   <section class="faixa">
+    <h2>Documentos e requerimentos</h2>
+    <p class="texto">O que levar para cada benefício e o passo a passo para pedir no Meu INSS, corrigir o CNIS, recorrer, pedir revisão, CTC e cópia do processo.</p>
+    <a class="mais" href="<?= e(u('/documentos/')) ?>">Ver documentos e requerimentos</a>
+  </section>
+
+  <section class="faixa">
     <h2>Regras de transição da reforma</h2>
     <p class="texto">Pontos, idade mínima progressiva, pedágios de 50% e 100%, aposentadoria por idade, especial e do professor, com as tabelas de cada ano.</p>
     <a class="mais" href="<?= e(u('/regras-de-transicao/')) ?>">Ver as regras de transição</a>
@@ -749,6 +776,10 @@ if ($rota === '/') {
     <h1><?= e($post['titulo']) ?></h1>
     <p class="meta">Publicado em <?= e(data_br($post['data'])) ?><?php if (!empty($post['revisado']) && $post['revisado'] !== $post['data']): ?>. Revisado em <?= e(data_br($post['revisado'])) ?>.<?php endif; ?></p>
     <?php readfile($arquivo); ?>
+    <?php $ds = documentos_que_citam('artigos', $post['slug']); if ($ds): ?>
+      <h2>Documentos e requerimentos</h2>
+      <?php lista_documentos($ds, false); ?>
+    <?php endif; ?>
     <?php $gs = guias_que_citam('artigos', $post['slug']); if ($gs): ?>
       <h2>Guias por benefício</h2>
       <?php lista_guias($gs, false); ?>
@@ -981,6 +1012,10 @@ if ($rota === '/') {
         <?php endforeach; ?>
       </ul>
     <?php endif; ?>
+    <?php $ds = documentos_que_citam('termos', $slug); if ($ds): ?>
+      <h2>Documentos e requerimentos</h2>
+      <?php lista_documentos($ds, false); ?>
+    <?php endif; ?>
     <?php $ls = legislacao_que_cita('termos', $slug); if ($ls): ?>
       <h2>Na legislação comentada</h2>
       <?php lista_legislacao($ls); ?>
@@ -996,6 +1031,114 @@ if ($rota === '/') {
     <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
     <?php anuncio(); ?>
     <a class="voltar" href="<?= e(u('/glossario/')) ?>">Todos os termos do glossário</a>
+  </article>
+</main>
+<?php
+    rodape();
+
+} elseif ($rota === '/documentos') {
+    $D = documentos();
+    $porGrupo = [];
+    foreach ($D as $slug => $d) $porGrupo[$d['grupo']][$slug] = $d;
+    $desc = 'Documentos para cada benefício do INSS e passo a passo dos requerimentos: pedido no Meu INSS, correção do CNIS, recurso, revisão, CTC, cópia do processo, procuração e perícia.';
+    topo('Documentos e requerimentos do INSS: listas e passo a passo | ' . SITE_NOME, $desc, '/documentos/', [
+        'jsonld' => ['@context' => 'https://schema.org', '@type' => 'CollectionPage', 'name' => 'Documentos e requerimentos do INSS', 'description' => $desc, 'url' => SITE_URL . '/documentos/',
+            'hasPart' => array_values(array_map(fn($s, $d) => ['@type' => 'Article', 'headline' => $d['titulo'], 'url' => SITE_URL . '/documentos/' . $s . '/'], array_keys($D), $D))],
+    ]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <h1>Documentos e requerimentos do INSS</h1>
+  <p class="lead texto">O que separar para cada benefício e como fazer, passo a passo, os pedidos mais comuns no Meu INSS. Documento certo no pedido evita exigências e indeferimentos.</p>
+  <p class="texto">As páginas se ligam aos <a href="<?= e(u('/beneficios/')) ?>">guias por benefício</a>, às <a href="<?= e(u('/perguntas/')) ?>">perguntas frequentes</a> e à <a href="<?= e(u('/legislacao/')) ?>">legislação comentada</a>, e citam as páginas oficiais do INSS no gov.br.</p>
+  <?php foreach (GRUPOS_DOCUMENTOS as $gr => $rot): if (empty($porGrupo[$gr])) continue; ?>
+    <h2 class="grupo-indic" id="g-<?= e($gr) ?>"><?= e($rot) ?></h2>
+    <?php lista_documentos($porGrupo[$gr]); ?>
+  <?php endforeach; ?>
+  <p class="meta texto">Revisado em <?= e(data_br(DOCUMENTOS_REVISADOS)) ?>. Os serviços do Meu INSS mudam de nome e de lugar com frequência: se não encontrar um serviço, use a busca de "Novo pedido" ou a central 135.</p>
+</main>
+<?php
+    rodape();
+
+} elseif (preg_match('#^/documentos/([a-z0-9-]+)$#', $rota, $m) && isset(documentos()[$m[1]])) {
+    $D = documentos();
+    $slug = $m[1];
+    $d = $D[$slug];
+    $caminho = '/documentos/' . $slug . '/';
+    $rev = $d['revisado'] ?? DOCUMENTOS_REVISADOS;
+    $faq = $d['perguntas_frequentes'] ?? [];
+    $artigos = array_filter(array_map('post_publicado', $d['artigos'] ?? []));
+    $grafo = [
+        ['@type' => 'Article', 'headline' => $d['titulo'], 'description' => $d['resumo'],
+         'datePublished' => $d['publicado'] ?? DOCUMENTOS_REVISADOS, 'dateModified' => $rev,
+         'author' => ['@type' => 'Organization', 'name' => SITE_NOME], 'mainEntityOfPage' => SITE_URL . $caminho],
+        ['@type' => 'FAQPage', 'url' => SITE_URL . $caminho, 'mainEntity' => array_map(fn($q) => ['@type' => 'Question', 'name' => $q['pergunta'],
+            'acceptedAnswer' => ['@type' => 'Answer', 'text' => texto_puro($q['resposta'])]], $faq)],
+        ['@type' => 'BreadcrumbList', 'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Documentos e requerimentos', 'item' => SITE_URL . '/documentos/'],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => $d['nome'], 'item' => SITE_URL . $caminho]]],
+    ];
+    if ($d['passos']) $grafo[] = ['@type' => 'HowTo', 'name' => $d['titulo'], 'step' => array_map(fn($p, $n) => ['@type' => 'HowToStep', 'position' => $n + 1, 'text' => texto_puro($p)], $d['passos'], array_keys($d['passos']))];
+    topo($d['titulo'] . ' | ' . SITE_NOME, $d['resumo'], $caminho, ['artigo' => true, 'jsonld' => ['@context' => 'https://schema.org', '@graph' => $grafo]]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <article class="artigo">
+    <p class="migalha"><a href="<?= e(u('/documentos/')) ?>">Documentos e requerimentos</a> › <a href="<?= e(u('/documentos/#g-' . $d['grupo'])) ?>"><?= e(GRUPOS_DOCUMENTOS[$d['grupo']] ?? '') ?></a></p>
+    <h1><?= e($d['titulo']) ?></h1>
+    <p class="meta">Revisado em <?= e(data_br($rev)) ?>.</p>
+    <p class="lead-artigo"><?= gl_html($d['introducao']) ?></p>
+    <?php if ($d['checklist']): ?>
+      <h2>Lista de documentos</h2>
+      <?php foreach ($d['checklist'] as $c): ?>
+        <h3 class="check-tit"><?= e($c['titulo']) ?></h3>
+        <ul class="checklist"><?php foreach ($c['itens'] as $it): ?><li><?= gl_html($it) ?></li><?php endforeach; ?></ul>
+      <?php endforeach; ?>
+      <p class="no-print"><button class="btn btn-leve" type="button" onclick="window.print()">Imprimir a lista</button></p>
+    <?php endif; ?>
+    <?php if ($d['passos']): ?>
+      <h2>Passo a passo</h2>
+      <ol class="passos"><?php foreach ($d['passos'] as $p): ?><li><?= gl_html($p) ?></li><?php endforeach; ?></ol>
+    <?php endif; ?>
+    <?php foreach ($d['secoes'] as $sec): ?>
+      <h2><?= e($sec['titulo']) ?></h2>
+      <?= gl_blocos($sec['texto']) ?>
+    <?php endforeach; ?>
+    <div class="exemplo"><h2>Dicas</h2><?= gl_blocos([$d['dicas']]) ?></div>
+    <h2>Perguntas frequentes</h2>
+    <?php foreach ($faq as $q): ?><h3 class="pergunta"><?= e($q['pergunta']) ?></h3><p><?= gl_html($q['resposta']) ?></p><?php endforeach; ?>
+    <?php $Q = perguntas(); $qs = array_intersect_key($Q, array_flip($d['perguntas'] ?? [])); if ($qs): ?>
+      <h3 class="pergunta">Mais perguntas sobre o tema</h3>
+      <?php lista_perguntas($qs, false); ?>
+    <?php endif; ?>
+    <h2>Fontes oficiais</h2>
+    <ul class="fontes-gl">
+      <?php foreach ($d['fontes'] as $f): $F = fontes_glossario()[$f['fonte']] ?? null; if (!$F) continue; ?>
+        <li><?= link_externo($F[1], e($F[0])) ?><?= !empty($f['dispositivo']) ? ', ' . e($f['dispositivo']) : '' ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <p class="dica">Os serviços do Meu INSS podem mudar de nome. Se não encontrar, use a busca em "Novo pedido" ou ligue para a central 135.</p>
+    <div class="no-print">
+    <?php $B = guias(); $gs = array_intersect_key($B, array_flip($d['beneficios'] ?? [])); if ($gs): ?>
+      <h2>Guias dos benefícios</h2>
+      <?php lista_guias($gs, false); ?>
+    <?php endif; ?>
+    <?php $L = legislacao(); $ls = array_intersect_key($L, array_flip($d['legislacao'] ?? [])); if ($ls): ?>
+      <h2>Legislação comentada</h2>
+      <?php lista_legislacao($ls); ?>
+    <?php endif; ?>
+    <?php $G = glossario(); $ts = array_intersect_key($G, array_flip($d['termos'] ?? [])); if ($ts): ?>
+      <h2>Termos do glossário</h2>
+      <p class="termos-gl"><?php foreach ($ts as $s => $t): ?><a href="<?= e(u('/glossario/' . $s . '/')) ?>"><?= e($t['termo']) ?></a><?php endforeach; ?></p>
+    <?php endif; ?>
+    <?php if ($artigos): ?>
+      <h2>Leia também no blog</h2>
+      <ul><?php foreach ($artigos as $p): ?><li><a href="<?= e(u('/blog/' . $p['slug'] . '/')) ?>"><?= e($p['titulo']) ?></a></li><?php endforeach; ?></ul>
+    <?php endif; ?>
+    <h2>Outros documentos e requerimentos</h2>
+    <?php lista_documentos(array_intersect_key($D, array_flip($d['relacionados'] ?? []))); ?>
+    </div>
+    <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
+    <?php anuncio(); ?>
+    <a class="voltar no-print" href="<?= e(u('/documentos/')) ?>">Todos os documentos e requerimentos</a>
   </article>
 </main>
 <?php
@@ -1178,6 +1321,7 @@ if ($rota === '/') {
     <ol class="passos"><?php foreach ($g['como_pedir'] as $p): ?><li><?= gl_html($p) ?></li><?php endforeach; ?></ol>
     <h2 id="s<?= ++$n ?>">Documentos</h2>
     <?= gl_blocos([$g['documentos']]) ?>
+    <?php $dsg = documentos_que_citam('beneficios', $slug); if ($dsg): ?><p class="dica">Lista completa e passo a passo: <?php $i = 0; foreach ($dsg as $dsl => $d): ?><?= $i++ ? ', ' : '' ?><a href="<?= e(u('/documentos/' . $dsl . '/')) ?>"><?= e($d['nome']) ?></a><?php endforeach; ?>.</p><?php endif; ?>
     <h2 id="s<?= ++$n ?>">O que conferir no CNIS</h2>
     <?= gl_blocos([$g['conferir_no_cnis']]) ?>
     <p class="dica">Veja <?php if (post_publicado('como-baixar-o-cnis-em-pdf-com-remuneracoes')): ?><a href="<?= e(u('/blog/como-baixar-o-cnis-em-pdf-com-remuneracoes/')) ?>">como baixar o CNIS em PDF</a> e <?php endif; ?>o que significa cada <a href="<?= e(u('/indicadores/')) ?>">indicador do extrato</a>.</p>
@@ -1197,6 +1341,10 @@ if ($rota === '/') {
       <?php endforeach; ?>
     </ul>
     <p class="dica">Os links levam aos textos oficiais no Planalto e às páginas do INSS no gov.br. As regras mudam: confira sempre a versão vigente.</p>
+    <?php $ds = documentos_que_citam('beneficios', $slug); if ($ds): ?>
+      <h2>Documentos e requerimentos</h2>
+      <?php lista_documentos($ds, false); ?>
+    <?php endif; ?>
     <?php $trs = transicao_que_cita('beneficios', $slug); if ($trs): ?>
       <h2>Regras de transição deste benefício</h2>
       <?php lista_transicao($trs); ?>
@@ -1318,6 +1466,10 @@ if ($rota === '/') {
           <li><a href="<?= e(u('/indicadores/' . slug_ind($k) . '/')) ?>"><code class="cod"><?= e($k) ?></code></a> <span><?= e(curto_ind($IND[$k])) ?></span></li>
         <?php endforeach; ?>
       </ul>
+    <?php endif; ?>
+    <?php $ds = documentos_que_citam('perguntas', $slug); if ($ds): ?>
+      <h2>Documentos e requerimentos</h2>
+      <?php lista_documentos($ds, false); ?>
     <?php endif; ?>
     <?php $trs = transicao_que_cita('perguntas', $slug); if ($trs): ?>
       <h2>Regras de transição</h2>
@@ -1453,6 +1605,10 @@ if ($rota === '/') {
         <?php endforeach; ?>
       </ul>
     <?php endif; ?>
+    <?php $ds = documentos_que_citam('legislacao', $slug); if ($ds): ?>
+      <h2>Documentos e requerimentos</h2>
+      <?php lista_documentos($ds, false); ?>
+    <?php endif; ?>
     <?php $trs = transicao_que_cita('legislacao', $slug); if ($trs): ?>
       <h2>Regras de transição em detalhe</h2>
       <?php lista_transicao($trs); ?>
@@ -1566,6 +1722,8 @@ if ($rota === '/') {
     $urls = [['/', null], ['/blog/', null], ['/glossario/', GLOSSARIO_REVISADO], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', LEGISLACAO_REVISADA], ['/privacidade/', null]];
     foreach (glossario() as $s => $t) $urls[] = ['/glossario/' . $s . '/', $t['revisado'] ?? GLOSSARIO_REVISADO];
     foreach (legislacao() as $s => $l) $urls[] = ['/legislacao/' . $s . '/', $l['revisado'] ?? LEGISLACAO_REVISADA];
+    $urls[] = ['/documentos/', DOCUMENTOS_REVISADOS];
+    foreach (documentos() as $s => $d) $urls[] = ['/documentos/' . $s . '/', $d['revisado'] ?? DOCUMENTOS_REVISADOS];
     $urls[] = ['/regras-de-transicao/', TRANSICAO_REVISADA];
     foreach (transicao() as $s => $r) $urls[] = ['/regras-de-transicao/' . $s . '/', $r['revisado'] ?? TRANSICAO_REVISADA];
     $urls[] = ['/beneficios/', GUIAS_REVISADOS];

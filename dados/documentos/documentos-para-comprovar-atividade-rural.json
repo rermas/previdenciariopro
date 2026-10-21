@@ -1,0 +1,114 @@
+{
+  "ordem": 6,
+  "grupo": "documentos",
+  "nome": "Documentos para comprovar atividade rural",
+  "titulo": "Documentos para comprovar atividade rural no INSS: lista oficial",
+  "resumo": "Quais documentos provam trabalho rural no INSS: lista do art. 106 da Lei 8.213/91, autodeclaração, documentos da família e testemunhas.",
+  "introducao": "O trabalho rural precisa ser provado para a [[ben:aposentadoria-por-idade-rural|aposentadoria rural]], para a [[ben:aposentadoria-hibrida|híbrida]] e para contar tempo rural antigo. Hoje a prova principal do [[segurado-especial]] é o cadastro no CNIS com a autodeclaração; os documentos da época continuam essenciais para períodos sem cadastro.",
+  "checklist": [
+    {
+      "titulo": "Lista do art. 106 da Lei 8.213/1991",
+      "itens": [
+        "Contrato de arrendamento, parceria ou comodato rural.",
+        "Declaração de aptidão ao Pronaf (DAP) ou Cadastro da Agricultura Familiar (CAF).",
+        "Bloco de notas do produtor rural e notas fiscais de entrada de mercadorias.",
+        "Documentos fiscais de venda da produção e comprovantes de contribuição sobre a comercialização.",
+        "Declaração de imposto de renda com indicação da renda rural.",
+        "Licença de ocupação ou documento de assentamento do Incra."
+      ]
+    },
+    {
+      "titulo": "Outros documentos aceitos como início de prova",
+      "itens": [
+        "Certidões de casamento e de nascimento dos filhos com a profissão de lavrador ou agricultor.",
+        "ITR, CCIR e escritura da terra.",
+        "Ficha de sindicato rural com pagamentos.",
+        "Histórico escolar de escola rural, ficha de posto de saúde, título de eleitor com profissão rural."
+      ]
+    },
+    {
+      "titulo": "No pedido",
+      "itens": [
+        "Autodeclaração do segurado especial, preenchida no Meu INSS."
+      ]
+    }
+  ],
+  "passos": [],
+  "secoes": [
+    {
+      "titulo": "Documentos em nome da família",
+      "texto": [
+        "Documentos em nome do pai, da mãe ou do cônjuge servem para os membros do grupo familiar que trabalhavam juntos. Por isso a certidão de casamento dos pais como lavradores é usada para provar o trabalho rural dos filhos desde os 12 anos."
+      ]
+    },
+    {
+      "titulo": "Testemunhas",
+      "texto": [
+        "A prova exclusivamente testemunhal não basta (art. 55, § 3º, da [[fonte:lei8213|Lei 8.213/1991]] e Súmula 149 do STJ). As testemunhas confirmam e estendem o período coberto pelos documentos, em justificação administrativa ou judicial."
+      ]
+    },
+    {
+      "titulo": "Cadastro no CNIS",
+      "texto": [
+        "Desde a [[fonte:lei13846|Lei 13.846/2019]], o segurado especial deve manter o cadastro atualizado no CNIS (arts. 38-A e 38-B). Períodos com cadastro e autodeclaração ratificada pelas bases do governo dispensam outros documentos."
+      ]
+    },
+    {
+      "titulo": "Justificação administrativa",
+      "texto": [
+        "Quando os documentos são poucos ou espaçados, o INSS pode fazer a **justificação administrativa**: ouve testemunhas indicadas pelo segurado para confirmar e completar o período coberto pelos documentos. Ela não substitui a prova material, mas permite estender o reconhecimento entre um documento e outro.",
+        "Leve testemunhas que conheciam o trabalho rural na época, de preferência vizinhos e pessoas que trabalharam na mesma região, e não parentes próximos."
+      ]
+    }
+  ],
+  "dicas": [
+    "Junte documentos espalhados ao longo do período, não só de um ano.",
+    "Prefira documentos com data e profissão.",
+    "Peça certidões de inteiro teor no cartório quando a profissão não aparecer na certidão comum."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Declaração do sindicato rural ainda vale?",
+      "resposta": "Sozinha, tem pouco peso hoje; vale como complemento a outros documentos da época."
+    },
+    {
+      "pergunta": "Posso provar atividade rural de quando era criança?",
+      "resposta": "A TNU admite o reconhecimento a partir dos 12 anos de idade, com documentos da família."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 38-A, 38-B, 55, § 3º, e 106"
+    },
+    {
+      "fonte": "lei13846"
+    },
+    {
+      "fonte": "inss-aposentadorias"
+    }
+  ],
+  "termos": [
+    "segurado-especial",
+    "tempo-de-contribuicao",
+    "cnis"
+  ],
+  "perguntas": [
+    "trabalhei-na-roca-conta-para-aposentadoria"
+  ],
+  "beneficios": [
+    "aposentadoria-por-idade-rural",
+    "aposentadoria-hibrida",
+    "salario-maternidade"
+  ],
+  "legislacao": [
+    "tempo-de-contribuicao-art-55-lei-8213"
+  ],
+  "artigos": [
+    "segurado-especial-cadastro-autodeclaracao-e-prova-rural"
+  ],
+  "relacionados": [
+    "documentos-para-aposentadoria",
+    "documentos-para-salario-maternidade"
+  ]
+}

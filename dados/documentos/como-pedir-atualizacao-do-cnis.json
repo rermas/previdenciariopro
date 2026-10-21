@@ -1,0 +1,122 @@
+{
+  "ordem": 9,
+  "grupo": "requerimentos",
+  "nome": "Como pedir a atualização do CNIS",
+  "titulo": "Como corrigir o CNIS: incluir vínculo, data ou salário",
+  "resumo": "Como pedir a atualização do CNIS para incluir vínculo, corrigir datas e salários ou tratar pendências: documentos, formulário RAC e o que muda no benefício.",
+  "introducao": "Vínculo faltando, data de saída errada, salário ausente ou pendência no extrato podem ser corrigidos com a **atualização do CNIS**. O art. 29-A, § 2º, da [[fonte:lei8213|Lei 8.213/1991]] garante esse pedido **a qualquer momento**, com documentos. Também é possível pedir a correção junto com o benefício.",
+  "checklist": [],
+  "passos": [
+    "Emita o extrato do CNIS com remunerações e anote cada erro (período, empresa, competência).",
+    "Reúna os documentos de prova de cada ponto.",
+    "Preencha o [[fonte:inss-rac|Requerimento de Atualização do CNIS (RAC)]], quando o INSS pedir ou para organizar o pedido.",
+    "Peça pelo Meu INSS, pela central 135 ou, se preferir, junto com o requerimento do benefício.",
+    "Acompanhe e responda às exigências; depois, emita o extrato de novo para conferir."
+  ],
+  "secoes": [
+    {
+      "titulo": "O que pode ser corrigido",
+      "texto": [
+        [
+          "Vínculo de emprego que não aparece.",
+          "Data de admissão ou de saída errada ou ausente.",
+          "Remunerações faltantes ou com valor diferente.",
+          "Recolhimentos com código ou NIT errado.",
+          "Pendências como [[ind:PEXT]], [[ind:PREM-EXT]] e [[ind:PDIV-DADOS-GFIP]].",
+          "Competências abaixo do mínimo (ajuste por complementação, utilização ou agrupamento, feito no Meu INSS)."
+        ]
+      ]
+    },
+    {
+      "titulo": "Documentos por tipo de correção",
+      "texto": [
+        [
+          "**Vínculo:** CTPS, ficha de registro, contrato, TRCT, extrato do FGTS.",
+          "**Salários:** holerites, declaração da empresa com base na folha, extrato do FGTS.",
+          "**Recolhimentos:** guias e comprovantes de pagamento.",
+          "**Datas:** CTPS, TRCT, guia do seguro-desemprego."
+        ]
+      ]
+    },
+    {
+      "titulo": "Precisa corrigir antes de pedir o benefício?",
+      "texto": [
+        "Não é obrigatório: segundo o [[fonte:inss-atualizacao-tempo|INSS]], a falta de atualização prévia não interfere no direito ao benefício, e os documentos podem ir no próprio pedido. Corrigir antes, porém, deixa o pedido mais rápido e evita exigências."
+      ]
+    },
+    {
+      "titulo": "Como saber se deu certo",
+      "texto": [
+        "Depois do acerto, emita o extrato de novo. O vínculo ou a remuneração corrigida deve aparecer sem o indicador de pendência; em vínculos extemporâneos, costuma aparecer um indicador de acerto, como [[ind:AEXT-VT]]. Se o INSS negar a correção, a decisão pode ser contestada no pedido do benefício, em recurso ou na Justiça.",
+        "Vale guardar o extrato antes e depois da correção. Ele serve para conferir a contagem de tempo quando o benefício for concedido e para uma eventual revisão."
+      ]
+    }
+  ],
+  "dicas": [
+    "Uma competência abaixo do mínimo pode ser ajustada pelo próprio segurado no Meu INSS.",
+    "Depois do acerto, confira se o indicador de pendência foi trocado por um de acerto."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "A empresa fechou. Ainda dá para incluir o vínculo?",
+      "resposta": "Sim, com os documentos que você tiver: carteira, FGTS, holerites, rescisão. Testemunhas ajudam como complemento."
+    },
+    {
+      "pergunta": "Quanto tempo leva?",
+      "resposta": "Depende do caso e da agência. Como a correção pode ir junto com o pedido do benefício, muita gente faz as duas coisas ao mesmo tempo."
+    },
+    {
+      "pergunta": "Posso corrigir o CNIS de um parente falecido?",
+      "resposta": "Sim, quando isso for necessário para a pensão por morte: os dependentes apresentam os documentos do falecido no pedido do benefício."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    },
+    {
+      "fonte": "inss-rac"
+    },
+    {
+      "fonte": "inss-atualizacao-tempo"
+    },
+    {
+      "fonte": "inss-abaixo-minimo"
+    }
+  ],
+  "termos": [
+    "atualizacao-do-cnis",
+    "cnis",
+    "extemporaneidade",
+    "contribuicao-abaixo-do-minimo"
+  ],
+  "perguntas": [
+    "vinculo-nao-aparece-no-cnis",
+    "vinculo-sem-data-de-saida-no-cnis",
+    "pext-no-cnis-perco-o-tempo",
+    "salario-faltando-no-cnis-reduz-aposentadoria"
+  ],
+  "beneficios": [
+    "aposentadoria-por-idade",
+    "aposentadoria-por-tempo-de-contribuicao"
+  ],
+  "legislacao": [
+    "cnis-art-29-a-lei-8213",
+    "portaria-990-anexo-v-indicadores-do-cnis"
+  ],
+  "artigos": [
+    "documentos-para-comprovar-vinculo-de-emprego",
+    "como-comprovar-remuneracoes-no-cnis",
+    "vinculo-extemporaneo-no-cnis"
+  ],
+  "relacionados": [
+    "documentos-para-aposentadoria",
+    "como-fazer-pedido-no-meu-inss",
+    "como-pedir-certidao-de-tempo-de-contribuicao"
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "ordem": 13,
+  "grupo": "requerimentos",
+  "nome": "Como pedir a CTC",
+  "titulo": "Certidão de Tempo de Contribuição (CTC): como pedir no INSS",
+  "resumo": "Como pedir a Certidão de Tempo de Contribuição (CTC) no Meu INSS para levar o tempo ao regime próprio: documentos, o que entra, o que fica de fora e revisão.",
+  "introducao": "A **[[ctc-contagem-reciproca|Certidão de Tempo de Contribuição]]** leva o tempo do INSS para um regime próprio de servidor público (ou de militar), na contagem recíproca. O pedido é feito pelo Meu INSS e exige que o CNIS esteja correto, porque períodos com pendência não são certificados.",
+  "checklist": [],
+  "passos": [
+    "Confira o CNIS e corrija vínculos, salários e pendências antes.",
+    "Complemente contribuições de 11% ou 5%, se quiser que esses períodos entrem.",
+    "No [[fonte:meuinss|Meu INSS]], clique em \"Novo pedido\" e procure \"Certidão de tempo de contribuição\".",
+    "Informe o órgão de destino e os períodos que deseja certificar.",
+    "Acompanhe o pedido e, com a CTC emitida, entregue-a ao órgão de pessoal para averbação."
+  ],
+  "secoes": [
+    {
+      "titulo": "O que entra e o que não entra",
+      "texto": [
+        [
+          "**Entra:** vínculos de emprego, contribuições de 20%, períodos indenizados.",
+          "**Só com complementação:** contribuições de 11% (plano simplificado) e 5% (MEI e baixa renda).",
+          "**Só com indenização:** tempo rural a partir de 11/1991 e atividade sem contribuição.",
+          "**Não entra:** tempo já usado em aposentadoria e períodos concomitantes com o serviço público."
+        ]
+      ]
+    },
+    {
+      "titulo": "Cuidados",
+      "texto": [
+        "Depois de usado no regime próprio, o período não volta a contar no INSS. A CTC pode ser revista ou cancelada enquanto não tiver sido utilizada. Quem recebe auxílio-acidente tem o benefício encerrado ao emitir CTC para regime próprio."
+      ]
+    },
+    {
+      "titulo": "Antes de pedir: a conferência do CNIS",
+      "texto": [
+        "A CTC é emitida a partir do CNIS. Vínculos com pendência, salários faltantes e recolhimentos com código errado atrasam ou reduzem a certidão. Antes do pedido, emita o extrato, procure indicadores de pendência e peça a [[doc:como-pedir-atualizacao-do-cnis|atualização do CNIS]] do que estiver errado.",
+        "Os períodos de 11% e de MEI só entram depois de complementados, e o tempo rural a partir de 11/1991 depois de indenizado. Faça esses pagamentos antes de pedir a CTC, para que a certidão já saia com eles."
+      ]
+    }
+  ],
+  "dicas": [
+    "Peça só os períodos que vai usar.",
+    "Confira com o órgão de destino o formato e os períodos aceitos antes de pedir."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "Quanto tempo o INSS leva para emitir a CTC?",
+      "resposta": "Depende da análise. Pedidos com CNIS completo e sem pendências tendem a ser mais rápidos."
+    },
+    {
+      "pergunta": "Tempo especial convertido entra na CTC?",
+      "resposta": "É um ponto discutido; o INSS tem regras próprias. Confirme a situação antes de pedir."
+    },
+    {
+      "pergunta": "A CTC serve para o regime próprio de qualquer ente?",
+      "resposta": "Sim: União, estados, Distrito Federal e municípios recebem a CTC do INSS para a contagem recíproca, cada um com seu procedimento de averbação."
+    },
+    {
+      "pergunta": "Posso pedir a CTC de parte do tempo e deixar o resto no INSS?",
+      "resposta": "Sim. Você escolhe os períodos a certificar. Os que não forem levados para o regime próprio continuam valendo no INSS."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 94 a 96"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 9º"
+    },
+    {
+      "fonte": "inss-ctc"
+    }
+  ],
+  "termos": [
+    "ctc-contagem-reciproca",
+    "plano-simplificado",
+    "indenizacao-de-periodo"
+  ],
+  "perguntas": [
+    "virei-servidor-publico-tempo-do-inss",
+    "contribui-com-11-posso-aposentar-por-tempo"
+  ],
+  "beneficios": [
+    "aposentadoria-por-tempo-de-contribuicao",
+    "auxilio-acidente"
+  ],
+  "legislacao": [
+    "indenizacao-art-45-a-lei-8212",
+    "tempo-de-contribuicao-art-55-lei-8213"
+  ],
+  "artigos": [
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "relacionados": [
+    "como-pedir-atualizacao-do-cnis",
+    "documentos-para-aposentadoria"
+  ]
+}

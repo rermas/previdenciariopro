@@ -1,0 +1,116 @@
+{
+  "ordem": 10,
+  "grupo": "requerimentos",
+  "nome": "Como entrar com recurso no INSS",
+  "titulo": "Recurso no INSS: prazo de 30 dias e como recorrer pelo Meu INSS",
+  "resumo": "Como recorrer de uma decisão do INSS: prazo de 30 dias, recurso ordinário ao CRPS pelo Meu INSS, documentos, recurso especial e quando ir à Justiça.",
+  "introducao": "Quem discorda de uma decisão do INSS (benefício negado, cessado ou com valor menor) pode apresentar **recurso ao Conselho de Recursos da Previdência Social (CRPS)**, órgão do Ministério da Previdência separado do INSS. O recurso é gratuito, feito pelo Meu INSS, e o prazo é de **30 dias** da ciência da decisão.",
+  "checklist": [],
+  "passos": [
+    "Leia a carta de decisão e anote o motivo do indeferimento.",
+    "Baixe a cópia do processo para ver o que o INSS considerou.",
+    "No [[fonte:meuinss|Meu INSS]], clique em \"Novo pedido\" e procure \"Recurso\" (recurso ordinário).",
+    "Informe o número do benefício ou do pedido negado.",
+    "Explique, de forma objetiva, por que a decisão está errada e anexe os documentos.",
+    "Acompanhe pelo Meu INSS; o recurso vai a uma Junta de Recursos do CRPS."
+  ],
+  "secoes": [
+    {
+      "titulo": "Prazo e etapas",
+      "texto": [
+        "O prazo do recurso ordinário é de 30 dias da ciência da decisão (Decreto 3.048/1999, art. 305). Antes de enviar ao CRPS, o INSS pode rever a própria decisão. Se a Junta de Recursos decidir contra, cabe recurso especial às Câmaras de Julgamento, também em 30 dias, nas matérias admitidas."
+      ]
+    },
+    {
+      "titulo": "Recurso, novo pedido ou Justiça?",
+      "texto": [
+        [
+          "**Recurso:** mantém a data do pedido original, o que preserva os atrasados.",
+          "**Novo pedido:** pode ser mais rápido se faltou só um documento, mas a nova data passa a valer.",
+          "**Justiça Federal:** causas de até 60 salários mínimos vão ao Juizado Especial Federal, onde não é preciso advogado na primeira instância ([[fonte:lei10259|Lei 10.259/2001]])."
+        ],
+        "Veja [[q:inss-negou-o-pedido-o-que-fazer|o que fazer quando o INSS nega]]."
+      ]
+    },
+    {
+      "titulo": "Como escrever o recurso",
+      "texto": [
+        "Seja objetivo: aponte o erro (por exemplo, \"o vínculo de 1998 a 2001 não foi contado\") e indique o documento que prova (a carteira de trabalho, página tal). Argumentos genéricos têm pouco efeito; documentos novos e bem identificados fazem diferença."
+      ]
+    },
+    {
+      "titulo": "Erros que derrubam o recurso",
+      "texto": [
+        [
+          "Perder o prazo de 30 dias: conte a partir da ciência da decisão, que aparece no Meu INSS.",
+          "Repetir o pedido sem explicar o erro da decisão.",
+          "Não juntar o documento que faltou no pedido original.",
+          "Recorrer de ponto que não foi decidido: o recurso discute a decisão, não fatos novos sem prova."
+        ],
+        "Se a decisão foi por falta de documento que você só conseguiu agora, compare: o recurso preserva a data do pedido original e os atrasados, mas pode levar mais tempo que um novo pedido."
+      ]
+    }
+  ],
+  "dicas": [
+    "Anote a data da ciência da decisão para não perder o prazo.",
+    "Junte documentos novos que não estavam no pedido.",
+    "Acompanhe o andamento no Meu INSS e responda a eventuais diligências."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "O recurso tem custo?",
+      "resposta": "Não. O recurso administrativo é gratuito e não exige advogado."
+    },
+    {
+      "pergunta": "Posso recorrer e entrar na Justiça ao mesmo tempo?",
+      "resposta": "Ao entrar com ação judicial sobre o mesmo pedido, o recurso administrativo costuma ser considerado renunciado. Escolha um caminho de cada vez."
+    },
+    {
+      "pergunta": "Recurso de benefício por incapacidade precisa de nova perícia?",
+      "resposta": "Pode haver nova avaliação médica no recurso. Leve laudos e exames atualizados e anteriores, que mostrem a data de início da incapacidade."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 303 a 305"
+    },
+    {
+      "fonte": "crps"
+    },
+    {
+      "fonte": "inss-recurso"
+    },
+    {
+      "fonte": "srv-recurso"
+    },
+    {
+      "fonte": "lei10259",
+      "dispositivo": "arts. 3º e 10"
+    }
+  ],
+  "termos": [
+    "der",
+    "decadencia-e-prescricao",
+    "exigencia"
+  ],
+  "perguntas": [
+    "inss-negou-o-pedido-o-que-fazer",
+    "revisao-da-aposentadoria-prazo"
+  ],
+  "beneficios": [
+    "aposentadoria-por-idade",
+    "auxilio-por-incapacidade-temporaria",
+    "bpc-loas"
+  ],
+  "legislacao": [
+    "decadencia-e-prescricao-art-103-lei-8213"
+  ],
+  "artigos": [
+    "exigencia-do-inss-prazo-e-como-responder"
+  ],
+  "relacionados": [
+    "como-pedir-copia-do-processo",
+    "como-pedir-revisao-do-beneficio"
+  ]
+}

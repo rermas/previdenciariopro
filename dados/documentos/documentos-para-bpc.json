@@ -1,0 +1,113 @@
+{
+  "ordem": 5,
+  "grupo": "documentos",
+  "nome": "Documentos para o BPC/LOAS",
+  "titulo": "Documentos para o BPC/LOAS: CadÚnico, renda e laudos",
+  "resumo": "Documentos para pedir o BPC/LOAS no INSS: CadÚnico atualizado, CPF da família, comprovantes de renda e laudos médicos para a pessoa com deficiência.",
+  "introducao": "No [[bpc-loas]], o INSS confere três coisas: idade ou deficiência, renda da família e cadastro no CadÚnico. A maior parte dos indeferimentos vem de **CadÚnico desatualizado** ou de renda informada de forma diferente da real.",
+  "checklist": [
+    {
+      "titulo": "Cadastro",
+      "itens": [
+        "Inscrição no CadÚnico feita ou atualizada nos últimos 2 anos, com todos os moradores da casa.",
+        "CPF de todos os membros da família."
+      ]
+    },
+    {
+      "titulo": "Identificação",
+      "itens": [
+        "Documento com foto do requerente e do representante legal, se houver."
+      ]
+    },
+    {
+      "titulo": "Pessoa com deficiência",
+      "itens": [
+        "Laudos, relatórios e exames que descrevam a deficiência, as limitações e desde quando existem.",
+        "Documentos escolares ou de terapias, no caso de crianças."
+      ]
+    },
+    {
+      "titulo": "Representação",
+      "itens": [
+        "Termo de curatela ou tutela, se o requerente for incapaz.",
+        "Procuração, se outra pessoa fizer o pedido."
+      ]
+    }
+  ],
+  "passos": [],
+  "secoes": [
+    {
+      "titulo": "O CadÚnico é obrigatório",
+      "texto": [
+        "O art. 20, § 12, da [[fonte:lei8742|LOAS]] exige a inscrição no CadÚnico. O cadastro é feito no CRAS do município. As informações de renda e composição familiar do CadÚnico são cruzadas com bases do governo, como o CNIS; divergências levam a exigências ou indeferimento."
+      ]
+    },
+    {
+      "titulo": "Renda familiar",
+      "texto": [
+        "Entram na conta os moradores da mesma casa: cônjuge, pais, filhos e irmãos solteiros, enteados e menores tutelados. Não entram o BPC ou o benefício previdenciário de até 1 salário mínimo de outro idoso ou pessoa com deficiência da família (art. 20, § 14)."
+      ]
+    },
+    {
+      "titulo": "Pessoa com deficiência: laudos que ajudam",
+      "texto": [
+        "A avaliação do BPC é biopsicossocial: além da doença, o INSS avalia como as limitações afetam a vida da pessoa. Laudos que descrevem apenas o diagnóstico ajudam pouco. Prefira relatórios que contem o histórico, os tratamentos já feitos, as limitações concretas (para andar, se comunicar, aprender, cuidar de si) e a previsão de duração, já que a lei exige impedimento de longo prazo, de pelo menos 2 anos.",
+        "Para crianças, relatórios da escola, de terapias e de acompanhamento médico mostram as barreiras no dia a dia."
+      ]
+    }
+  ],
+  "dicas": [
+    "Atualize o CadÚnico antes de pedir.",
+    "Informe a mesma composição familiar no CadÚnico e no pedido.",
+    "Para a avaliação social, descreva as barreiras do dia a dia."
+  ],
+  "perguntas_frequentes": [
+    {
+      "pergunta": "O BPC exige contribuição ao INSS?",
+      "resposta": "Não. Mas, se houver contribuições, vale verificar antes o direito a uma aposentadoria."
+    },
+    {
+      "pergunta": "Quem pode pedir pela pessoa com deficiência?",
+      "resposta": "O representante legal (pais, tutor, curador) ou um procurador."
+    },
+    {
+      "pergunta": "O BPC pode ser pedido para criança?",
+      "resposta": "Sim, para criança com deficiência de família de baixa renda. A avaliação considera as limitações próprias da idade."
+    },
+    {
+      "pergunta": "Quem mora sozinho conta só a própria renda?",
+      "resposta": "Sim. A renda familiar considera apenas as pessoas que vivem na mesma casa e estão na lista da lei; quem mora sozinho tem a renda dividida só por ele."
+    }
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8742",
+      "dispositivo": "art. 20"
+    },
+    {
+      "fonte": "inss-bpc"
+    },
+    {
+      "fonte": "srv-bpc-pcd"
+    }
+  ],
+  "termos": [
+    "bpc-loas",
+    "cnis"
+  ],
+  "perguntas": [
+    "15-anos-de-contribuicao-aposenta"
+  ],
+  "beneficios": [
+    "bpc-loas",
+    "aposentadoria-da-pessoa-com-deficiencia"
+  ],
+  "legislacao": [
+    "bpc-art-20-loas"
+  ],
+  "artigos": [],
+  "relacionados": [
+    "procuracao-e-representante-legal-no-inss",
+    "pericia-medica-do-inss-como-se-preparar"
+  ]
+}
