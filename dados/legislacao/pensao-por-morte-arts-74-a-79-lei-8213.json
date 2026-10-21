@@ -1,0 +1,83 @@
+{
+  "ordem": 74,
+  "titulo": "Pensão por morte na Lei 8.213/91 e na EC 103/2019 comentada",
+  "resumo": "Comentários aos arts. 74 a 79 da Lei 8.213/1991 e ao art. 23 da EC 103/2019: início da pensão, prova da união estável, duração para cônjuge e cálculo por cotas.",
+  "norma": "Lei 8.213/1991, arts. 16 e 74 a 79, e EC 103/2019, art. 23",
+  "grupo": "lei8213",
+  "introducao": "A [[pensao-por-morte]] combina regras da [[fonte:lei8213|Lei 8.213/1991]] (quem recebe, desde quando e por quanto tempo) com o art. 23 da [[fonte:ec103|EC 103/2019]] (quanto recebe). As mudanças das Leis 13.135/2015 e 13.846/2019 tornaram a prova e a duração os pontos mais sensíveis.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 16, § 5º",
+      "o_que_diz": "A prova de união estável e de dependência econômica exige início de prova material contemporânea, produzida em período não superior a 24 meses antes do óbito, não admitida a prova exclusivamente testemunhal, salvo força maior ou caso fortuito.",
+      "comentario": [
+        "Declaração de imposto de renda, comprovantes de mesmo endereço, conta conjunta e filho em comum são as provas mais usadas. Ver [[dependentes]]."
+      ]
+    },
+    {
+      "referencia": "Art. 74",
+      "o_que_diz": "A pensão é devida desde o óbito, se requerida em até 180 dias pelos filhos menores de 16 anos ou em até 90 dias pelos demais dependentes; depois desses prazos, desde o requerimento.",
+      "comentario": [
+        "Perder o prazo não tira o direito, mas reduz os atrasados. Por isso o pedido deve ser feito logo."
+      ]
+    },
+    {
+      "referencia": "Art. 77, § 2º, V",
+      "o_que_diz": "Para cônjuge ou companheiro, a pensão dura 4 meses se o óbito ocorrer sem 18 contribuições ou com menos de 2 anos de casamento ou união; nos demais casos, conforme a idade do beneficiário: de 3 anos (menos de 22) a vitalícia (45 anos ou mais), pela tabela atualizada por portaria.",
+      "comentario": [
+        "Os 4 meses não se aplicam se o óbito decorrer de acidente ou doença profissional. A tabela foi criada pela [[fonte:lei13135|Lei 13.135/2015]] e é atualizada conforme a expectativa de vida."
+      ]
+    },
+    {
+      "referencia": "EC 103/2019, art. 23",
+      "o_que_diz": "A pensão é uma cota familiar de 50% da aposentadoria recebida ou da que o segurado teria por incapacidade permanente, mais 10 pontos por dependente, até 100%. Com dependente inválido ou com deficiência grave, é de 100% até o teto.",
+      "comentario": [
+        "As cotas individuais não revertem aos demais quando um dependente perde o direito (art. 23, § 1º). Ver o comentário sobre [[leg:calculo-e-acumulacao-arts-23-a-29-ec-103|cálculo e acumulação na EC 103]]."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Não há carência, mas o falecido precisava ter qualidade de segurado no óbito ou direito a alguma aposentadoria.",
+    "O CNIS do falecido mostra as 18 contribuições e a qualidade de segurado.",
+    "Quem já recebe aposentadoria e passa a ter pensão sofre o redutor de acumulação do art. 24 da EC 103/2019."
+  ],
+  "exemplo": [
+    "Sônia, 39 anos, perdeu o marido após 6 anos de casamento; ele tinha 200 contribuições e não era aposentado. A pensão é de 60% (50% + 10% de uma dependente) da aposentadoria por incapacidade permanente que ele teria, e dura 15 anos, pela faixa de 31 a 41 anos. Ela pediu em 30 dias, então recebe desde o óbito."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 16, 74, 77 e 124"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 23 e 24"
+    },
+    {
+      "fonte": "lei13135"
+    },
+    {
+      "fonte": "inss-pensao"
+    },
+    {
+      "fonte": "inss-valor-pensao"
+    }
+  ],
+  "termos": [
+    "pensao-por-morte",
+    "dependentes",
+    "qualidade-de-segurado",
+    "rmi"
+  ],
+  "perguntas": [
+    "uniao-estavel-pensao-por-morte",
+    "posso-receber-aposentadoria-e-pensao"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "calculo-e-acumulacao-arts-23-a-29-ec-103",
+    "decadencia-e-prescricao-art-103-lei-8213"
+  ]
+}

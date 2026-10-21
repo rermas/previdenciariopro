@@ -8,9 +8,8 @@
     {
       "titulo": "Como o menor benefício é calculado",
       "texto": [
-        "Pelo art. 24, § 2º, da [[fonte:ec103|EC 103/2019]], somam-se as faixas do benefício menor:",
+        "A parcela do benefício menor até 1 salário mínimo é mantida por inteiro. Sobre o que passar disso, o art. 24, § 2º, da [[fonte:ec103|EC 103/2019]] aplica faixas cumulativas:",
         [
-          "100% do valor até 1 salário mínimo;",
           "60% do que passar de 1 até 2 salários mínimos;",
           "40% do que passar de 2 até 3 salários mínimos;",
           "20% do que passar de 3 até 4 salários mínimos;",

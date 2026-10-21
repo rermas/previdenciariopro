@@ -1,0 +1,81 @@
+{
+  "ordem": 2,
+  "titulo": "Art. 20 da LOAS comentado: requisitos do BPC",
+  "resumo": "Comentários aos arts. 20 e 21 da Lei 8.742/1993 (LOAS): requisitos do BPC para idoso e pessoa com deficiência, critério de renda, CadÚnico e revisão.",
+  "norma": "Lei 8.742/1993 (LOAS), arts. 20 e 21",
+  "grupo": "outras",
+  "introducao": "O art. 20 da [[fonte:lei8742|Lei Orgânica da Assistência Social]] regula o [[bpc-loas|Benefício de Prestação Continuada]], de um salário mínimo, para idosos e pessoas com deficiência de baixa renda. É assistência social, sem contribuição, mas é concedido e mantido pelo INSS.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 20, caput",
+      "o_que_diz": "Garante um salário mínimo mensal à pessoa com deficiência e ao idoso com 65 anos ou mais que comprovem não ter meios de prover a própria manutenção nem de tê-la provida pela família.",
+      "comentario": [
+        "Em 2026, o valor é de R$ 1.621,00. Não há 13º nem pensão por morte."
+      ]
+    },
+    {
+      "referencia": "Art. 20, §§ 2º e 10",
+      "o_que_diz": "Pessoa com deficiência é aquela com impedimento de longo prazo, de natureza física, mental, intelectual ou sensorial, que pode obstruir sua participação plena na sociedade; longo prazo é o de no mínimo 2 anos.",
+      "comentario": [
+        "A avaliação é biopsicossocial: perícia médica e avaliação social do INSS."
+      ]
+    },
+    {
+      "referencia": "Art. 20, §§ 3º e 11-A",
+      "o_que_diz": "O critério básico é renda familiar mensal por pessoa igual ou inferior a 1/4 do salário mínimo; o regulamento pode ampliar o limite para até 1/2 salário mínimo, considerando outros elementos de vulnerabilidade.",
+      "comentario": [
+        "O STF já reconheceu que o critério de 1/4 não é absoluto, e a lei passou a prever outros elementos de prova da miserabilidade."
+      ]
+    },
+    {
+      "referencia": "Art. 20, §§ 12 e 14",
+      "o_que_diz": "Exige inscrição no CPF e no CadÚnico; e exclui do cálculo da renda o BPC ou o benefício previdenciário de até 1 salário mínimo recebido por idoso acima de 65 anos ou pessoa com deficiência da família.",
+      "comentario": [
+        "O § 14 permite que um casal de idosos em que um já recebe aposentadoria de um salário mínimo tenha o BPC concedido ao outro."
+      ]
+    },
+    {
+      "referencia": "Art. 21",
+      "o_que_diz": "O benefício deve ser revisto a cada 2 anos para avaliar a continuidade das condições.",
+      "comentario": [
+        "Manter o CadÚnico atualizado evita suspensões."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Antes de pedir o BPC, confira no CNIS se a pessoa já tem direito a alguma aposentadoria, que paga 13º e gera pensão.",
+    "Renda de trabalho informal da família entra no cálculo; benefícios de 1 salário mínimo de idosos ou pessoas com deficiência, não.",
+    "O pedido é feito pelo Meu INSS ou pela central 135."
+  ],
+  "exemplo": [
+    "Seu Antônio, 67 anos, mora com a esposa, de 66, que recebe aposentadoria de um salário mínimo. Pelo § 14, essa aposentadoria não entra na renda familiar. Sem outras rendas, a renda por pessoa é zero e ele pode ter direito ao BPC."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8742",
+      "dispositivo": "arts. 20 e 21"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 203, V"
+    },
+    {
+      "fonte": "inss-bpc"
+    }
+  ],
+  "termos": [
+    "bpc-loas",
+    "cnis",
+    "aposentadoria-programada"
+  ],
+  "perguntas": [
+    "15-anos-de-contribuicao-aposenta",
+    "perdi-a-qualidade-posso-aposentar-por-idade"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "calculo-e-acumulacao-arts-23-a-29-ec-103",
+    "segurados-e-filiacao-arts-11-a-17-lei-8213"
+  ]
+}

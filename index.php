@@ -1,7 +1,7 @@
 <?php
 /*
  * Análise CNIS: PHP puro, sem banco de dados, com um único roteador.
- * Rotas: /  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /privacidade/  /analise-cnis/  /sitemap.xml
+ * Rotas: /  /blog/  /blog/{slug}/  /perguntas/  /perguntas/{slug}/  /glossario/  /glossario/{termo}/  /indicadores/  /indicadores/{codigo}/  /legislacao/  /legislacao/{tema}/  /privacidade/  /analise-cnis/  /sitemap.xml
  */
 
 // ---------- Configuração ----------
@@ -68,19 +68,32 @@ $POSTS = [
      'resumo' => 'O que fazer ao receber uma exigência, o que muda com a IN 212/2026 e como acompanhar o pedido.'],
 ];
 
-// Fontes oficiais. Os textos mudam: a versão vigente é a do site de origem.
+// Textos oficiais listados em /legislacao/ (chaves de dados/fontes.json) com uma linha sobre cada norma.
 $NORMAS = [
-    ['titulo' => 'Lei nº 8.213, de 24 de julho de 1991',
-     'texto' => 'Dispõe sobre os Planos de Benefícios da Previdência Social. É a base das regras de segurado, carência e benefícios.',
-     'url' => 'https://www.planalto.gov.br/ccivil_03/leis/L8213compilado.htm', 'fonte' => 'Planalto, texto compilado'],
-    ['titulo' => 'Decreto nº 3.048, de 6 de maio de 1999',
-     'texto' => 'Aprova o Regulamento da Previdência Social. Detalha, entre outros temas, a contagem de tempo e o cálculo dos benefícios.',
-     'url' => 'https://www.planalto.gov.br/ccivil_03/decreto/d3048.htm', 'fonte' => 'Planalto, texto compilado'],
-    ['titulo' => 'Instrução Normativa PRES/INSS nº 128, de 28 de março de 2022',
-     'texto' => 'Disciplina a aplicação das normas de direito previdenciário pelo INSS. Foi alterada depois de publicada, então confira a versão vigente.',
-     'url' => 'https://www.gov.br/inss/pt-br/centrais-de-conteudo/legislacao/instrucao-normativa/2022/instrucao-normativa-pres-inss-no-128-de-28-de-marco-de-2022', 'fonte' => 'gov.br/inss'],
+    'cf' => 'Base do sistema: arts. 194 a 204 tratam da seguridade social, e o art. 201 da Previdência.',
+    'ec103' => 'Reforma da Previdência: regras de transição, cálculo pela média de 100%, pensão e acumulação.',
+    'lei8213' => 'Planos de benefícios: segurados, carência, tempo de contribuição, CNIS e cada benefício.',
+    'lei8212' => 'Custeio: alíquotas, salário de contribuição, prazos de pagamento e indenização.',
+    'dec3048' => 'Regulamento da Previdência Social, que detalha a aplicação das duas leis.',
+    'lc150' => 'Trabalho doméstico, Simples Doméstico e presunção de recolhimento.',
+    'lc123' => 'MEI e a contribuição de 5% embutida no DAS.',
+    'lc142' => 'Aposentadoria da pessoa com deficiência, mantida pela EC 103/2019.',
+    'lei8742' => 'Lei Orgânica da Assistência Social, com o BPC.',
+    'lei10666' => 'Perda da qualidade de segurado nas aposentadorias e retenção de 11% pela empresa.',
+    'lei9876' => 'Fator previdenciário e início do período básico de cálculo em 07/1994.',
+    'in128' => 'Instrução Normativa PRES/INSS 128/2022, alterada depois (inclusive pela IN 212/2026): como o INSS aplica as normas.',
+    'portaria990' => 'Normas procedimentais do INSS sobre o CNIS.',
+    'anexov' => 'Relação oficial dos indicadores do extrato do CNIS.',
 ];
-const NORMAS_CONFERIDAS_EM = '07/10/2026';
+const NORMAS_CONFERIDAS_EM = '20/10/2026';
+
+// Legislação comentada: uma página por tema em dados/legislacao/{slug}.json, com a marcação do glossário e [[leg:slug|texto]].
+// Teste: node tests/legislacao.test.js
+const LEGISLACAO_REVISADA = '2026-10-20';
+const GRUPOS_LEGISLACAO = [
+    'lei8213' => 'Lei 8.213/1991: planos de benefícios', 'ec103' => 'Emenda Constitucional 103/2019: Reforma da Previdência',
+    'lei8212' => 'Lei 8.212/1991: custeio', 'outras' => 'Outras normas',
+];
 
 // Indicadores do CNIS: uma página por código em /indicadores/{codigo}/.
 // A lista, a descrição oficial, o esclarecimento e o efeito vêm de dados/indicadores.json (Anexo V da Portaria DIRBEN/INSS 990/2022,
@@ -290,6 +303,23 @@ const CAT_PERGUNTAS = [
     'cnis' => 'CNIS, vínculos e pendências', 'contribuicoes' => 'Contribuições', 'protecao' => 'Qualidade de segurado e carência',
     'aposentadoria' => 'Aposentadoria e tempo de contribuição', 'beneficios' => 'Pensão e acumulação de benefícios', 'processo' => 'Pedido, recurso e revisão',
 ];
+function legislacao(): array {
+    static $l = null;
+    if ($l !== null) return $l;
+    $l = ler_pasta('legislacao');
+    uasort($l, fn($a, $b) => ($a['ordem'] ?? 999) <=> ($b['ordem'] ?? 999));
+    return $l;
+}
+function lista_legislacao(array $ls): void {
+    echo '<ul class="lista-gl">';
+    foreach ($ls as $slug => $l) {
+        echo '<li><a href="' . e(u('/legislacao/' . $slug . '/')) . '">' . e($l['titulo']) . '</a> <span>' . e($l['norma']) . '</span></li>';
+    }
+    echo '</ul>';
+}
+function legislacao_que_cita(string $campo, string $valor): array {
+    return array_filter(legislacao(), fn($l) => in_array($valor, $l[$campo] ?? [], true));
+}
 function perguntas(): array {
     static $l = null;
     if ($l !== null) return $l;
@@ -332,6 +362,7 @@ function gl_html(string $s): string {
             if (!isset($G[$alvo])) return $txt ?? $alvo;
             return '<a href="' . e(u('/glossario/' . $alvo . '/')) . '">' . ($txt ?? e(nome_termo($G[$alvo]))) . '</a>';
         }
+        if ($tipo === 'leg') { $L = legislacao(); return isset($L[$alvo]) ? '<a href="' . e(u('/legislacao/' . $alvo . '/')) . '">' . ($txt ?? e($L[$alvo]['titulo'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'q') { $Q = perguntas(); return isset($Q[$alvo]) ? '<a href="' . e(u('/perguntas/' . $alvo . '/')) . '">' . ($txt ?? e($Q[$alvo]['pergunta'])) . '</a>' : ($txt ?? ''); }
         if ($tipo === 'post') return post_publicado($alvo) ? '<a href="' . e(u('/blog/' . $alvo . '/')) . '">' . ($txt ?? $alvo) . '</a>' : ($txt ?? '');
         if ($tipo === 'ind') return '<a href="' . e(u('/indicadores/' . slug_ind(html_entity_decode($alvo)) . '/')) . '"><code class="cod">' . $alvo . '</code></a>';
@@ -578,10 +609,10 @@ if ($rota === '/') {
   </section>
 
   <section class="faixa">
-    <h2>Legislação de referência</h2>
+    <h2>Legislação comentada</h2>
     <div class="texto">
-      <p>Lei 8.213/91, Decreto 3.048/99 e IN PRES/INSS 128/2022, com links para as fontes oficiais.</p>
-      <a class="mais" href="<?= e(u('/legislacao/')) ?>">Ver a legislação</a>
+      <p>Lei 8.213/91, Lei 8.212/91, EC 103/2019, LC 150, LOAS e Portaria 990 comentadas artigo por artigo, com exemplos e links para os textos oficiais.</p>
+      <a class="mais" href="<?= e(u('/legislacao/')) ?>">Ver a legislação comentada</a>
     </div>
   </section>
 </main>
@@ -631,6 +662,10 @@ if ($rota === '/') {
     <h1><?= e($post['titulo']) ?></h1>
     <p class="meta">Publicado em <?= e(data_br($post['data'])) ?><?php if (!empty($post['revisado']) && $post['revisado'] !== $post['data']): ?>. Revisado em <?= e(data_br($post['revisado'])) ?>.<?php endif; ?></p>
     <?php readfile($arquivo); ?>
+    <?php $ls = legislacao_que_cita('artigos', $post['slug']); if ($ls): ?>
+      <h2>Legislação comentada sobre o tema</h2>
+      <?php lista_legislacao($ls); ?>
+    <?php endif; ?>
     <?php $qs = perguntas_que_citam('artigos', $post['slug']); if ($qs): ?>
       <h2>Perguntas frequentes sobre o tema</h2>
       <?php lista_perguntas($qs, false); ?>
@@ -733,7 +768,7 @@ if ($rota === '/') {
       <ul><?php foreach ($conf as $c): ?><li><?= e($c) ?></li><?php endforeach; ?></ul>
     <?php endif; ?>
     <h2>Base normativa</h2>
-    <p><?= !empty($i['base']) ? e($i['base']) . ' ' : '' ?>Portaria DIRBEN/INSS 990/2022, <a href="https://portalin.inss.gov.br/assets/anexos/pt990/AnexoV.pdf" target="_blank" rel="noopener noreferrer">Anexo V</a> (relação dos indicadores do CNIS). Veja os links oficiais em <a href="<?= e(u('/legislacao/')) ?>">Legislação</a>; os textos mudam, então confira a versão vigente.</p>
+    <p><?= !empty($i['base']) ? e($i['base']) . ' ' : '' ?>Portaria DIRBEN/INSS 990/2022, <a href="https://portalin.inss.gov.br/assets/anexos/pt990/AnexoV.pdf" target="_blank" rel="noopener noreferrer">Anexo V</a> (relação dos indicadores do CNIS). Veja o <a href="<?= e(u('/legislacao/portaria-990-anexo-v-indicadores-do-cnis/')) ?>">comentário à Portaria 990 e ao Anexo V</a> e os demais textos em <a href="<?= e(u('/legislacao/')) ?>">Legislação</a>; os textos mudam, então confira a versão vigente.</p>
     <?php $qs = perguntas_que_citam('indicadores', $cod); if ($qs): ?>
       <h2>Perguntas frequentes</h2>
       <?php lista_perguntas($qs, false); ?>
@@ -849,6 +884,10 @@ if ($rota === '/') {
         <?php endforeach; ?>
       </ul>
     <?php endif; ?>
+    <?php $ls = legislacao_que_cita('termos', $slug); if ($ls): ?>
+      <h2>Na legislação comentada</h2>
+      <?php lista_legislacao($ls); ?>
+    <?php endif; ?>
     <?php $qs = perguntas_que_citam('termos', $slug); if ($qs): ?>
       <h2>Perguntas frequentes sobre <?= e(nome_termo($t)) ?></h2>
       <?php lista_perguntas($qs, false); ?>
@@ -951,6 +990,10 @@ if ($rota === '/') {
         <?php endforeach; ?>
       </ul>
     <?php endif; ?>
+    <?php $ls = legislacao_que_cita('perguntas', $slug); if ($ls): ?>
+      <h2>Na legislação comentada</h2>
+      <?php lista_legislacao($ls); ?>
+    <?php endif; ?>
     <?php $rel = array_intersect_key($Q, array_flip($q['relacionadas'] ?? [])); if ($rel): ?>
       <h2>Outras perguntas</h2>
       <?php lista_perguntas($rel); ?>
@@ -964,21 +1007,123 @@ if ($rota === '/') {
     rodape();
 
 } elseif ($rota === '/legislacao') {
-    topo('Legislação previdenciária | ' . SITE_NOME, 'Links oficiais para a Lei 8.213/91, o Decreto 3.048/99 e a IN PRES/INSS 128/2022.', '/legislacao/');
+    $L = legislacao();
+    $porGrupo = [];
+    foreach ($L as $slug => $l) $porGrupo[$l['grupo']][$slug] = $l;
+    $F = fontes_glossario();
+    $desc = 'Legislação previdenciária comentada: Lei 8.213/91, Lei 8.212/91, EC 103/2019, LC 150, LOAS e Portaria 990, artigo por artigo, com exemplos e links oficiais.';
+    topo('Legislação previdenciária comentada artigo por artigo | ' . SITE_NOME, $desc, '/legislacao/', [
+        'jsonld' => ['@context' => 'https://schema.org', '@type' => 'CollectionPage', 'name' => 'Legislação previdenciária comentada', 'description' => $desc, 'url' => SITE_URL . '/legislacao/',
+            'hasPart' => array_values(array_map(fn($s, $l) => ['@type' => 'Article', 'headline' => $l['titulo'], 'url' => SITE_URL . '/legislacao/' . $s . '/'], array_keys($L), $L))],
+    ]);
     ?>
 <main id="conteudo" class="wrap pagina">
-  <h1>Legislação previdenciária</h1>
-  <p class="lead texto">As normas usadas como referência nos guias. Os links levam às fontes oficiais.</p>
+  <h1>Legislação previdenciária comentada</h1>
+  <p class="lead texto">Os artigos que mais pesam na análise do CNIS e no pedido de benefícios, explicados em linguagem simples: o que a norma diz, o comentário, o efeito prático e um exemplo.</p>
+  <p class="texto">Cada página traz o link para o texto oficial no Planalto ou no gov.br e se liga ao <a href="<?= e(u('/glossario/')) ?>">glossário</a>, às <a href="<?= e(u('/perguntas/')) ?>">perguntas frequentes</a> e aos <a href="<?= e(u('/indicadores/')) ?>">indicadores do CNIS</a>. O resumo do que cada artigo diz não substitui a leitura do texto vigente.</p>
+  <nav class="sumario-indic" aria-label="Normas comentadas">
+    <?php foreach (GRUPOS_LEGISLACAO as $g => $rot): if (empty($porGrupo[$g])) continue; ?>
+      <a href="#g-<?= e($g) ?>"><?= e($rot) ?> (<?= count($porGrupo[$g]) ?>)</a>
+    <?php endforeach; ?>
+    <a href="#textos-oficiais">Textos oficiais</a>
+  </nav>
+  <?php foreach (GRUPOS_LEGISLACAO as $g => $rot): if (empty($porGrupo[$g])) continue; ?>
+    <h2 class="grupo-indic" id="g-<?= e($g) ?>"><?= e($rot) ?></h2>
+    <?php lista_legislacao($porGrupo[$g]); ?>
+  <?php endforeach; ?>
+  <h2 class="grupo-indic" id="textos-oficiais">Textos oficiais</h2>
   <ul class="normas">
-    <?php foreach ($NORMAS as $n): ?>
+    <?php foreach ($NORMAS as $k => $txt): if (!isset($F[$k])) continue; ?>
       <li>
-        <a href="<?= e($n['url']) ?>" target="_blank" rel="noopener noreferrer"><?= e($n['titulo']) ?></a>
-        <p><?= e($n['texto']) ?></p>
-        <p class="fonte">Fonte: <?= e($n['fonte']) ?>.</p>
+        <?= link_externo($F[$k][1], e($F[$k][0])) ?>
+        <p><?= e($txt) ?></p>
+        <p class="fonte">Fonte: <?= e(parse_url($F[$k][1], PHP_URL_HOST)) ?>.</p>
       </li>
     <?php endforeach; ?>
   </ul>
-  <p class="meta texto">Links conferidos em <?= NORMAS_CONFERIDAS_EM ?>. As normas podem ter sido alteradas desde então, e esta lista não substitui a leitura do texto vigente.</p>
+  <p class="meta texto">Comentários revisados em <?= e(data_br(LEGISLACAO_REVISADA)) ?>; links conferidos em <?= NORMAS_CONFERIDAS_EM ?>. As normas podem ter sido alteradas desde então.</p>
+</main>
+<?php
+    rodape();
+
+} elseif (preg_match('#^/legislacao/([a-z0-9-]+)$#', $rota, $m) && isset(legislacao()[$m[1]])) {
+    $L = legislacao();
+    $slug = $m[1];
+    $l = $L[$slug];
+    $caminho = '/legislacao/' . $slug . '/';
+    $rev = $l['revisado'] ?? LEGISLACAO_REVISADA;
+    $artigos = array_filter(array_map('post_publicado', $l['artigos'] ?? []));
+    $F0 = fontes_glossario()[$l['fontes'][0]['fonte']] ?? null;
+    topo($l['titulo'] . ' | ' . SITE_NOME, $l['resumo'], $caminho, [
+        'artigo' => true,
+        'jsonld' => ['@context' => 'https://schema.org', '@graph' => [
+            ['@type' => 'Article', 'headline' => $l['titulo'], 'description' => $l['resumo'],
+             'datePublished' => $l['publicado'] ?? LEGISLACAO_REVISADA, 'dateModified' => $rev,
+             'author' => ['@type' => 'Organization', 'name' => SITE_NOME], 'mainEntityOfPage' => SITE_URL . $caminho]
+             + ($F0 ? ['about' => ['@type' => 'Legislation', 'name' => $F0[0], 'url' => $F0[1]]] : []),
+            ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Legislação comentada', 'item' => SITE_URL . '/legislacao/'],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => $l['titulo'], 'item' => SITE_URL . $caminho]]],
+        ]],
+    ]);
+    ?>
+<main id="conteudo" class="wrap pagina">
+  <article class="artigo">
+    <p class="migalha"><a href="<?= e(u('/legislacao/')) ?>">Legislação comentada</a> › <a href="<?= e(u('/legislacao/#g-' . $l['grupo'])) ?>"><?= e(GRUPOS_LEGISLACAO[$l['grupo']] ?? '') ?></a></p>
+    <h1><?= e($l['titulo']) ?></h1>
+    <p class="meta"><?= e($l['norma']) ?>. Revisado em <?= e(data_br($rev)) ?>.</p>
+    <p class="lead-artigo"><?= gl_html($l['introducao']) ?></p>
+    <?php if (count($l['dispositivos']) > 3): ?>
+      <nav class="indice-leg" aria-label="Dispositivos comentados"><p>Nesta página:</p><ul>
+        <?php foreach ($l['dispositivos'] as $n => $d): ?><li><a href="#d<?= $n + 1 ?>"><?= e($d['referencia']) ?></a></li><?php endforeach; ?>
+      </ul></nav>
+    <?php endif; ?>
+    <?php foreach ($l['dispositivos'] as $n => $d): ?>
+      <section class="dispositivo" id="d<?= $n + 1 ?>">
+        <h2><?= e($d['referencia']) ?></h2>
+        <div class="oficial"><p class="resposta-rot">O que diz</p><p><?= gl_html($d['o_que_diz']) ?></p></div>
+        <p class="resposta-rot comentario-rot">Comentário</p>
+        <?= gl_blocos($d['comentario']) ?>
+      </section>
+    <?php endforeach; ?>
+    <h2>Na prática</h2>
+    <?= gl_blocos([$l['na_pratica']]) ?>
+    <div class="exemplo"><h2>Exemplo</h2><?= gl_blocos($l['exemplo']) ?><p class="dica">Exemplo fictício, só para ilustrar a regra.</p></div>
+    <h2>Texto oficial e fontes</h2>
+    <ul class="fontes-gl">
+      <?php foreach ($l['fontes'] as $f): $F = fontes_glossario()[$f['fonte']] ?? null; if (!$F) continue; ?>
+        <li><?= link_externo($F[1], e($F[0])) ?><?= !empty($f['dispositivo']) ? ', ' . e($f['dispositivo']) : '' ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <p class="dica">"O que diz" resume o dispositivo em linguagem simples; para citar ou decidir, leia o texto oficial vigente.</p>
+    <?php $G = glossario(); $ts = array_intersect_key($G, array_flip($l['termos'] ?? [])); if ($ts): ?>
+      <h2>Termos do glossário</h2>
+      <p class="termos-gl"><?php foreach ($ts as $s => $t): ?><a href="<?= e(u('/glossario/' . $s . '/')) ?>"><?= e($t['termo']) ?></a><?php endforeach; ?></p>
+    <?php endif; ?>
+    <?php $Q = perguntas(); $qs = array_intersect_key($Q, array_flip($l['perguntas'] ?? [])); if ($qs): ?>
+      <h2>Perguntas frequentes</h2>
+      <?php lista_perguntas($qs, false); ?>
+    <?php endif; ?>
+    <?php if ($artigos): ?>
+      <h2>Leia também no blog</h2>
+      <ul><?php foreach ($artigos as $p): ?><li><a href="<?= e(u('/blog/' . $p['slug'] . '/')) ?>"><?= e($p['titulo']) ?></a></li><?php endforeach; ?></ul>
+    <?php endif; ?>
+    <?php if (!empty($l['indicadores'])): $IND = indicadores(); ?>
+      <h2>Indicadores do CNIS relacionados</h2>
+      <ul class="lista-indic">
+        <?php foreach ($l['indicadores'] as $k): if (!isset($IND[$k])) continue; ?>
+          <li><a href="<?= e(u('/indicadores/' . slug_ind($k) . '/')) ?>"><code class="cod"><?= e($k) ?></code></a> <span><?= e(curto_ind($IND[$k])) ?></span></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
+    <?php $rel = array_intersect_key($L, array_flip($l['relacionadas'] ?? [])); if ($rel): ?>
+      <h2>Outras normas comentadas</h2>
+      <?php lista_legislacao($rel); ?>
+    <?php endif; ?>
+    <p class="aviso-fim">Conteúdo informativo. Cada caso depende dos documentos e da legislação aplicável, e a orientação de um advogado previdenciário não é substituída por este texto.</p>
+    <?php anuncio(); ?>
+    <a class="voltar" href="<?= e(u('/legislacao/')) ?>">Toda a legislação comentada</a>
+  </article>
 </main>
 <?php
     rodape();
@@ -1073,8 +1218,9 @@ if ($rota === '/') {
 
 } elseif ($rota === '/sitemap.xml') {
     header('Content-Type: application/xml; charset=utf-8');
-    $urls = [['/', null], ['/blog/', null], ['/glossario/', GLOSSARIO_REVISADO], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', null], ['/privacidade/', null]];
+    $urls = [['/', null], ['/blog/', null], ['/glossario/', GLOSSARIO_REVISADO], ['/indicadores/', INDICADORES_REVISADOS], ['/legislacao/', LEGISLACAO_REVISADA], ['/privacidade/', null]];
     foreach (glossario() as $s => $t) $urls[] = ['/glossario/' . $s . '/', $t['revisado'] ?? GLOSSARIO_REVISADO];
+    foreach (legislacao() as $s => $l) $urls[] = ['/legislacao/' . $s . '/', $l['revisado'] ?? LEGISLACAO_REVISADA];
     $urls[] = ['/perguntas/', PERGUNTAS_REVISADAS];
     foreach (perguntas() as $s => $q) $urls[] = ['/perguntas/' . $s . '/', $q['revisado'] ?? PERGUNTAS_REVISADAS];
     foreach (array_keys(indicadores()) as $k) $urls[] = ['/indicadores/' . slug_ind($k) . '/', INDICADORES_REVISADOS];

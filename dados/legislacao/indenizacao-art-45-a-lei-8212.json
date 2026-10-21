@@ -1,0 +1,72 @@
+{
+  "ordem": 45,
+  "titulo": "Art. 45-A da Lei 8.212/91 comentado: indenização de período",
+  "resumo": "Comentários ao art. 45-A da Lei 8.212/1991: quando o período sem contribuição precisa ser indenizado, como o INSS calcula, juros, multa e prova da atividade.",
+  "norma": "Lei 8.212/1991, art. 45-A",
+  "grupo": "lei8212",
+  "introducao": "O art. 45-A da [[fonte:lei8212|Lei 8.212/1991]] permite ao contribuinte individual **pagar pelo tempo em que trabalhou sem contribuir**, mesmo depois do prazo de decadência da cobrança. É também a regra usada para indenizar tempo rural e períodos destinados à contagem recíproca.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 45-A, caput",
+      "o_que_diz": "O contribuinte individual que quiser contar, para benefícios do Regime Geral ou contagem recíproca, período de atividade remunerada alcançado pela decadência deve indenizar o INSS.",
+      "comentario": [
+        "A decadência para cobrar contribuições é de 5 anos. Passado esse prazo, o débito não é mais cobrado, mas o segurado pode pagar voluntariamente para ter o tempo."
+      ]
+    },
+    {
+      "referencia": "Art. 45-A, § 1º",
+      "o_que_diz": "A base de cálculo é a média aritmética dos maiores salários de contribuição, corrigidos, correspondentes a 80% de todo o período contributivo desde 07/1994, ou a remuneração vigente no regime próprio, conforme o caso, observados o piso e o teto.",
+      "comentario": [
+        "Para quem tem salários altos desde 1994, a indenização pode ficar cara. Peça o cálculo antes de decidir."
+      ]
+    },
+    {
+      "referencia": "Art. 45-A, § 2º",
+      "o_que_diz": "Sobre os valores incidem juros de mora de 0,5% ao mês, capitalizados anualmente, limitados a 50%, e multa de 10%.",
+      "comentario": [
+        "O teto de 50% nos juros favorece quem indeniza períodos muito antigos."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "O INSS só calcula com prova do exercício da atividade no período: notas, contratos, registros em prefeitura ou conselho.",
+    "Período indenizado conta como tempo de contribuição, mas em regra não como carência.",
+    "O tempo rural a partir de 11/1991 também é indenizado para entrar na aposentadoria por tempo de contribuição (Lei 8.213/1991, art. 55, § 2º, e art. 96, IV)."
+  ],
+  "exemplo": [
+    "Fernando foi eletricista autônomo de 2008 a 2012, com alvará da prefeitura, e nunca recolheu. Pelo art. 45-A, ele pede ao INSS o cálculo dos 5 anos; o valor considera a média dos 80% maiores salários dele desde 1994, com juros de até 50% e multa de 10%."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 45-A"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 55, § 2º, e 96, IV"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 122"
+    }
+  ],
+  "termos": [
+    "indenizacao-de-periodo",
+    "contribuicao-em-atraso",
+    "ctc-contagem-reciproca",
+    "segurado-especial"
+  ],
+  "perguntas": [
+    "posso-pagar-inss-atrasado",
+    "trabalhei-na-roca-conta-para-aposentadoria",
+    "virei-servidor-publico-tempo-do-inss"
+  ],
+  "artigos": [
+    "indenizacao-de-periodos-sem-contribuicao"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "contribuicoes-arts-21-e-28-lei-8212",
+    "tempo-de-contribuicao-art-55-lei-8213"
+  ]
+}

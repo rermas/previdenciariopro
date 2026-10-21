@@ -1,0 +1,97 @@
+{
+  "ordem": 23,
+  "titulo": "EC 103/2019, arts. 23 a 29 comentados: cálculo e acumulação",
+  "resumo": "Comentários aos arts. 3º e 23 a 29 da EC 103/2019: direito adquirido, pensão, acumulação com redutor, média de 100% e contribuição abaixo do mínimo.",
+  "norma": "Emenda Constitucional 103/2019, arts. 3º, 23 a 26 e 29",
+  "grupo": "ec103",
+  "introducao": "Além das regras de transição, a [[fonte:ec103|EC 103/2019]] mudou **como os benefícios são calculados** e **o que acontece quando há mais de um**. Esses artigos valem para quase todos os benefícios concedidos depois de 13/11/2019.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 3º",
+      "o_que_diz": "Assegura a concessão de aposentadoria e pensão, a qualquer tempo, a quem cumpriu os requisitos até a entrada em vigor da emenda, pelas regras então vigentes.",
+      "comentario": [
+        "É o [[direito-adquirido]]. Quem tinha 30/35 anos de contribuição em 13/11/2019 pode se aposentar sem idade mínima e com a média dos 80% maiores salários."
+      ]
+    },
+    {
+      "referencia": "Art. 24, §§ 1º e 2º",
+      "o_que_diz": "Permite acumular pensão com aposentadoria ou duas pensões de regimes diferentes, recebendo o valor integral do benefício mais vantajoso e uma parte de cada um dos demais, apurada cumulativamente por faixas: 60% do que exceder 1 salário mínimo até 2; 40% do que exceder 2 até 3; 20% do que exceder 3 até 4; 10% do que exceder 4.",
+      "comentario": [
+        "A parcela do benefício menor até 1 salário mínimo é preservada, porque as faixas só incidem sobre o que passa dele. O redutor não se aplica se todos os requisitos foram cumpridos antes da emenda (§ 4º)."
+      ]
+    },
+    {
+      "referencia": "Art. 25, § 2º",
+      "o_que_diz": "Reconhece a conversão de tempo especial em comum cumprido até a entrada em vigor da emenda, vedada para o tempo posterior.",
+      "comentario": [
+        "A conversão continua útil para atingir regras de transição com o tempo especial anterior a 13/11/2019. Ver [[atividade-especial]]."
+      ]
+    },
+    {
+      "referencia": "Art. 26, caput e §§ 2º e 5º",
+      "o_que_diz": "O salário de benefício passa a ser a média de 100% dos salários de contribuição desde 07/1994, e a aposentadoria corresponde a 60% dessa média, com 2 pontos por ano que exceder 20 anos de contribuição; para as mulheres, o acréscimo começa após 15 anos.",
+      "comentario": [
+        "A média sem descarte dos 20% menores reduziu o valor da maioria dos benefícios. Ver [[salario-de-beneficio]] e [[rmi]]."
+      ]
+    },
+    {
+      "referencia": "Art. 26, § 6º",
+      "o_que_diz": "Permite excluir da média as contribuições que reduzam o valor, desde que mantido o tempo mínimo exigido; o tempo excluído não pode ser usado para nenhum outro fim, nem para o acréscimo de 2% por ano.",
+      "comentario": [
+        "O [[descarte-de-contribuicoes]] é mais vantajoso em regras com coeficiente fixo, como o pedágio de 100%."
+      ]
+    },
+    {
+      "referencia": "Art. 29",
+      "o_que_diz": "O segurado cuja remuneração somada no mês fique abaixo do limite mínimo pode complementar a contribuição, usar o excedente de outra competência ou agrupar contribuições inferiores ao mínimo.",
+      "comentario": [
+        "Sem esse ajuste, a competência não conta. No CNIS, aparece o indicador [[ind:PSC-MEN-SM-EC103]]. Ver [[contribuicao-abaixo-do-minimo]]."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Confira se o benefício foi calculado com a média de 100% ou, havendo direito adquirido, com a regra anterior mais vantajosa.",
+    "Na acumulação, o segurado pode escolher qual benefício recebe por inteiro.",
+    "Competências de 2019 em diante abaixo do mínimo precisam de ajuste antes do pedido."
+  ],
+  "exemplo": [
+    "Em 2026, Lourdes recebe aposentadoria de R$ 2.500,00 e passa a ter pensão de R$ 3.000,00. Ela mantém a pensão (maior) por inteiro e, da aposentadoria, recebe R$ 1.621,00 + 60% de R$ 879,00 = R$ 2.148,40. O total é de R$ 5.148,40."
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 3º, 23 a 26 e 29"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19-E"
+    },
+    {
+      "fonte": "inss-valor-pensao"
+    }
+  ],
+  "termos": [
+    "direito-adquirido",
+    "salario-de-beneficio",
+    "descarte-de-contribuicoes",
+    "contribuicao-abaixo-do-minimo",
+    "rmi"
+  ],
+  "perguntas": [
+    "posso-receber-aposentadoria-e-pensao",
+    "contribuicao-abaixo-do-minimo-conta",
+    "vale-a-pena-contribuir-pelo-teto"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo"
+  ],
+  "indicadores": [
+    "PSC-MEN-SM-EC103",
+    "IAGRUP-SM-EC103"
+  ],
+  "relacionadas": [
+    "regras-de-transicao-arts-15-a-21-ec-103",
+    "pensao-por-morte-arts-74-a-79-lei-8213",
+    "bpc-art-20-loas"
+  ]
+}

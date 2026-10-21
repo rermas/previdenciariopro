@@ -1,0 +1,92 @@
+{
+  "ordem": 15,
+  "titulo": "EC 103/2019, arts. 15 a 21 comentados: regras de transição",
+  "resumo": "Comentários aos arts. 15 a 21 da EC 103/2019: regra de pontos, idade progressiva, pedágios de 50% e 100%, aposentadoria por idade e especial na transição.",
+  "norma": "Emenda Constitucional 103/2019, arts. 15 a 21",
+  "grupo": "ec103",
+  "introducao": "Os arts. 15 a 21 da [[fonte:ec103|EC 103/2019]] criaram as [[regras-de-transicao]] para quem **já era filiado ao INSS em 13/11/2019** e ainda não tinha direito à aposentadoria. Cada artigo é uma porta de entrada diferente, e o segurado pode usar a que for mais vantajosa.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 15 (pontos)",
+      "o_que_diz": "Exige 30 anos de contribuição (mulher) ou 35 (homem) e a soma de idade e tempo de contribuição de 86 (mulher) ou 96 (homem) pontos em 2019, com acréscimo de 1 ponto por ano a partir de 2020, até 100 e 105.",
+      "comentario": [
+        "Em 2026, são 93 e 103 pontos. O professor tem 5 pontos e 5 anos a menos. Ver [[regra-de-pontos]]."
+      ]
+    },
+    {
+      "referencia": "Art. 16 (idade progressiva)",
+      "o_que_diz": "Exige 30/35 anos de contribuição e idade de 56 (mulher) ou 61 (homem) em 2019, com acréscimo de 6 meses por ano a partir de 2020, até 62 e 65.",
+      "comentario": [
+        "Em 2026, 59 anos e 6 meses (mulher) e 64 anos e 6 meses (homem). Ver [[idade-minima-progressiva]]."
+      ]
+    },
+    {
+      "referencia": "Art. 17 (pedágio de 50%)",
+      "o_que_diz": "Para quem tinha, em 13/11/2019, mais de 28 (mulher) ou 33 anos (homem) de contribuição: exige 30/35 anos mais 50% do tempo que faltava, sem idade mínima, e aplica o fator previdenciário.",
+      "comentario": [
+        "É a única regra de transição com [[fator-previdenciario]], que pode reduzir bastante o valor para quem se aposenta jovem."
+      ]
+    },
+    {
+      "referencia": "Art. 18 (idade)",
+      "o_que_diz": "Mantém a aposentadoria por idade para os filiados até a reforma: 60 anos (mulher), com acréscimo de 6 meses por ano até 62 em 2023, e 65 anos (homem), com 15 anos de contribuição.",
+      "comentario": [
+        "Para o homem filiado antes da reforma, bastam 15 anos de contribuição; o filiado depois precisa de 20 (art. 19)."
+      ]
+    },
+    {
+      "referencia": "Art. 20 (pedágio de 100%)",
+      "o_que_diz": "Exige 57 anos (mulher) ou 60 (homem), 30/35 anos de contribuição e um período adicional igual ao que faltava em 13/11/2019. O valor é de 100% da média.",
+      "comentario": [
+        "Costuma ser a regra de maior valor para quem já tem a idade. Ver [[pedagio]]."
+      ]
+    },
+    {
+      "referencia": "Art. 21 (especial)",
+      "o_que_diz": "Para a atividade especial, exige 15, 20 ou 25 anos de efetiva exposição e soma de idade e tempo de 66, 76 ou 86 pontos.",
+      "comentario": [
+        "Diferentemente do art. 15, os pontos da especial não sobem com o tempo."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Para cada regra, anote a data em que os requisitos são cumpridos e o valor estimado.",
+    "O tempo do CNIS precisa estar completo: um vínculo faltando pode atrasar a data em anos.",
+    "O [[fonte:inss-simulador|simulador do INSS]] ajuda, mas usa só os dados do cadastro."
+  ],
+  "exemplo": [
+    "Elisa tinha 27 anos de contribuição e 52 anos de idade em 13/11/2019. Pelo pedágio de 50%, não se enquadra (tinha menos de 28 anos). Pelo pedágio de 100%, precisa de 30 + 3 = 33 anos de contribuição e 57 anos de idade, o que ela atinge em 2025 e 2024, respectivamente: cumpre a regra em 2025, com 100% da média."
+  ],
+  "fontes": [
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 15 a 21"
+    },
+    {
+      "fonte": "inss-regras"
+    },
+    {
+      "fonte": "inss-simulador"
+    }
+  ],
+  "termos": [
+    "regras-de-transicao",
+    "regra-de-pontos",
+    "idade-minima-progressiva",
+    "pedagio",
+    "fator-previdenciario"
+  ],
+  "perguntas": [
+    "qual-regra-de-transicao-e-melhor",
+    "quanto-tempo-falta-para-me-aposentar",
+    "15-anos-de-contribuicao-aposenta"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "calculo-e-acumulacao-arts-23-a-29-ec-103",
+    "aposentadoria-especial-arts-57-e-58-lei-8213"
+  ]
+}

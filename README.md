@@ -17,7 +17,8 @@ posts/*.html         texto de cada artigo do blog
 tests/cnis.test.js   testes da análise (node tests/cnis.test.js)
 dados/glossario/     um JSON por termo do glossário (teste: node tests/glossario.test.js)
 dados/perguntas/     um JSON por pergunta frequente (teste: node tests/perguntas.test.js)
-dados/fontes.json    links oficiais citados no glossário e nas perguntas
+dados/legislacao/    um JSON por tema da legislação comentada (teste: node tests/legislacao.test.js)
+dados/fontes.json    links oficiais citados no glossário, nas perguntas e na legislação
 .htaccess            HTTPS, URLs limpas, bloqueio de posts/ e tests/
 ```
 
@@ -207,6 +208,10 @@ Sem o PDF, o botão "Lançar tempo manualmente" (em `/analise-cnis/`) abre uma l
 ## Perguntas frequentes
 
 `/perguntas/` reúne as perguntas por situação (CNIS, contribuições, qualidade de segurado, aposentadoria, benefícios e processo) e `/perguntas/{slug}/` mostra cada uma: resposta curta no topo (25 a 75 palavras, usada também no JSON-LD `FAQPage`), seções, exemplo, fundamento legal, termos do glossário, artigos, indicadores e outras perguntas. Cada pergunta é um arquivo `dados/perguntas/{slug}.json` com a mesma marcação do glossário, mais `[[q:slug|texto]]` para outra pergunta. As fontes oficiais vêm de `dados/fontes.json`. Rode `node tests/perguntas.test.js` depois de criar ou editar: ele confere títulos, resumos, tamanho da resposta curta, links e perguntas sem link de entrada. As páginas de termos, artigos e indicadores listam automaticamente as perguntas que os citam.
+
+## Legislação comentada
+
+`/legislacao/` é o hub: lista as páginas comentadas por norma (Lei 8.213/91, EC 103/2019, Lei 8.212/91 e outras) e os textos oficiais (array `$NORMAS` no `index.php`, com links de `dados/fontes.json`). Cada tema é um arquivo `dados/legislacao/{slug}.json` com `ordem` (posição no hub), `norma`, `introducao`, `dispositivos` (referência, "o que diz" em linguagem simples e comentário), `na_pratica`, `exemplo`, fontes e links para termos, perguntas, artigos e indicadores. Vale a marcação do glossário e `[[leg:slug|texto]]`. O "o que diz" é paráfrase, não citação literal: ao alterar, confira o texto vigente no Planalto. Rode `node tests/legislacao.test.js` depois de editar. Termos do glossário, perguntas e artigos listam automaticamente as páginas de legislação que os citam.
 
 Na análise, por padrão:
 - `vinculo` no cabeçalho do vínculo (PEXT, PDIV-DADOS-GFIP, PEMP-CAD, PVIN-IRREG, PVIN-REC-PROC-TRAB, PRPSE, AEXT-IND...): o vínculo fica fora do tempo e da carência. PEXT com AEXT-VT/VTJ/VTR e PDIV com ADIV não excluem;

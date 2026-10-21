@@ -1,0 +1,83 @@
+{
+  "ordem": 57,
+  "titulo": "Arts. 57 e 58 da Lei 8.213/91 comentados: atividade especial",
+  "resumo": "Comentários aos arts. 57 e 58 da Lei 8.213/1991: aposentadoria especial, agentes nocivos, PPP, laudo, conversão de tempo e mudanças da EC 103/2019.",
+  "norma": "Lei 8.213/1991, arts. 57 e 58",
+  "grupo": "lei8213",
+  "introducao": "Os arts. 57 e 58 da [[fonte:lei8213|Lei 8.213/1991]] tratam da **aposentadoria especial** e da prova da exposição a agentes nocivos. A [[fonte:ec103|EC 103/2019]] mudou os requisitos e proibiu a conversão de tempo especial depois de 13/11/2019, mas o texto da lei continua sendo a base da prova.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 57, caput e § 3º",
+      "o_que_diz": "Concede a aposentadoria especial ao segurado que trabalhou 15, 20 ou 25 anos sujeito a condições especiais que prejudiquem a saúde, exigindo prova de exposição permanente, não ocasional nem intermitente.",
+      "comentario": [
+        "Depois da reforma, quem se filiou após 13/11/2019 precisa também de idade mínima (55, 58 ou 60 anos); quem já era filiado usa a regra de pontos de 66, 76 ou 86 (EC 103/2019, arts. 19 e 21)."
+      ]
+    },
+    {
+      "referencia": "Art. 57, § 5º",
+      "o_que_diz": "Permite converter o tempo especial em comum, com os fatores do regulamento.",
+      "comentario": [
+        "A conversão vale só para o tempo até 13/11/2019 (EC 103/2019, art. 25, § 2º). Na atividade de 25 anos, o fator é 1,4 para homens e 1,2 para mulheres."
+      ]
+    },
+    {
+      "referencia": "Art. 57, § 8º",
+      "o_que_diz": "O aposentado especial que continuar ou voltar a trabalhar em atividade especial tem o benefício cancelado.",
+      "comentario": [
+        "O STF confirmou a regra (Tema 709). A pessoa pode continuar trabalhando, mas em atividade não especial."
+      ]
+    },
+    {
+      "referencia": "Art. 58, caput e § 1º",
+      "o_que_diz": "A relação dos agentes nocivos é definida pelo Poder Executivo, e a prova é feita por formulário baseado em laudo técnico de condições ambientais (LTCAT), expedido por médico do trabalho ou engenheiro de segurança.",
+      "comentario": [
+        "A lista está no Anexo IV do [[fonte:dec3048|Decreto 3.048/1999]]. Até 28/04/1995 bastava o enquadramento pela categoria profissional."
+      ]
+    },
+    {
+      "referencia": "Art. 58, § 4º",
+      "o_que_diz": "A empresa deve elaborar e manter atualizado o perfil profissiográfico das atividades do trabalhador e entregar cópia na rescisão.",
+      "comentario": [
+        "É o [[ppp]], principal prova a partir de 2004 e hoje emitido pelo eSocial."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "O CNIS não comprova tempo especial: a prova é o PPP e o laudo.",
+    "Adicional de insalubridade não garante tempo especial automaticamente.",
+    "No ruído, o EPI não descaracteriza a atividade especial (STF, Tema 555)."
+  ],
+  "exemplo": [
+    "Vítor trabalhou de 1998 a 2022 exposto a ruído de 92 dB, com PPP. De 1998 a 13/11/2019 (cerca de 22 anos), o tempo pode ser convertido com fator 1,4. O período posterior conta como especial para a aposentadoria especial, mas não pode ser convertido."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 57 e 58"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 64 a 70 e Anexo IV"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 19, 21 e 25"
+    }
+  ],
+  "termos": [
+    "atividade-especial",
+    "ppp",
+    "tempo-de-contribuicao",
+    "direito-adquirido"
+  ],
+  "perguntas": [
+    "trabalho-insalubre-aposentadoria-especial",
+    "aposentado-que-continua-trabalhando"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "tempo-de-contribuicao-art-55-lei-8213",
+    "regras-de-transicao-arts-15-a-21-ec-103"
+  ]
+}

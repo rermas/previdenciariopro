@@ -1,0 +1,87 @@
+{
+  "ordem": 3,
+  "titulo": "Portaria DIRBEN/INSS 990/2022 comentada: indicadores do CNIS",
+  "resumo": "Comentários à Portaria DIRBEN/INSS 990/2022 e ao Anexo V: como o INSS classifica os indicadores do CNIS, o que impede o cômputo e como tratar as pendências.",
+  "norma": "Portaria DIRBEN/INSS 990/2022, Anexo V",
+  "grupo": "outras",
+  "introducao": "A [[fonte:portaria990|Portaria DIRBEN/INSS 990/2022]] reúne as normas procedimentais do INSS sobre o CNIS. Seu [[fonte:anexov|Anexo V]], alterado pela Portaria DIRBEN/INSS 1.316/2025, lista os **indicadores** que aparecem no extrato e explica o efeito de cada um. É a chave para ler as siglas ao lado de vínculos e remunerações.",
+  "dispositivos": [
+    {
+      "referencia": "Anexo V: estrutura",
+      "o_que_diz": "Os códigos são divididos em pendências (iniciados por P), indicadores (I) e acertos (A), agrupados por tipo de informação: vínculos, remunerações, recolhimentos, segurado especial, NIT e Darf. Cada código tem descrição e esclarecimento.",
+      "comentario": [
+        "O site organiza os 205 códigos pelo efeito no reconhecimento de direitos na página de [[indicadores-do-cnis|indicadores]]."
+      ]
+    },
+    {
+      "referencia": "Pendências que impedem o cômputo",
+      "o_que_diz": "O próprio anexo esclarece, em vários códigos, que a informação não será considerada para reconhecimento de direitos até o tratamento: por exemplo, vínculo extemporâneo, remuneração fora do período do vínculo ou divergência de dados da GFIP.",
+      "comentario": [
+        "Exemplos: [[ind:PEXT]], [[ind:PREM-FVIN]] e [[ind:PDIV-DADOS-GFIP]]. Algumas tiram o vínculo inteiro, outras só a competência marcada."
+      ]
+    },
+    {
+      "referencia": "Acertos",
+      "o_que_diz": "Os códigos iniciados por A registram tratamentos já feitos pelo INSS, como a confirmação de vínculo extemporâneo.",
+      "comentario": [
+        "Um acerto como [[ind:AEXT-VT]] faz o PEXT deixar de impedir o cômputo."
+      ]
+    },
+    {
+      "referencia": "Indicadores informativos",
+      "o_que_diz": "Muitos indicadores apenas descrevem a origem ou uma característica do dado, como o plano simplificado ou o agrupamento de competências.",
+      "comentario": [
+        "Eles não tiram o período da contagem, mas podem limitar o uso, como o [[ind:IREC-LC123]], fora da aposentadoria por tempo de contribuição."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Emita o extrato completo e anote cada indicador ao lado de vínculos e remunerações.",
+    "Trate primeiro as pendências que impedem o cômputo, com documentos da época.",
+    "O fundamento legal do tratamento é o art. 29-A da Lei 8.213/1991 e o art. 19 do Decreto 3.048/1999."
+  ],
+  "exemplo": [
+    "O extrato de Rosana mostra PEXT em um vínculo de 2003 e PREM-FVIN em uma remuneração de 2010. Pelo Anexo V, o vínculo inteiro de 2003 e a competência de 2010 ficam fora até o tratamento. Ela junta a CTPS para o primeiro e o termo de rescisão com a data correta para o segundo."
+  ],
+  "fontes": [
+    {
+      "fonte": "portaria990"
+    },
+    {
+      "fonte": "anexov"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    }
+  ],
+  "termos": [
+    "indicadores-do-cnis",
+    "extemporaneidade",
+    "atualizacao-do-cnis",
+    "cnis"
+  ],
+  "perguntas": [
+    "pext-no-cnis-perco-o-tempo",
+    "vinculo-sem-data-de-saida-no-cnis"
+  ],
+  "artigos": [
+    "vinculo-extemporaneo-no-cnis",
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": [
+    "PEXT",
+    "PREM-FVIN",
+    "PDIV-DADOS-GFIP",
+    "AEXT-VT",
+    "IREC-LC123"
+  ],
+  "relacionadas": [
+    "cnis-art-29-a-lei-8213",
+    "contribuicoes-arts-21-e-28-lei-8212"
+  ]
+}

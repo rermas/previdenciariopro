@@ -1,0 +1,67 @@
+{
+  "ordem": 103,
+  "titulo": "Art. 103 da Lei 8.213/91 comentado: decadência e prescrição",
+  "resumo": "Comentários aos arts. 103 e 103-A da Lei 8.213/1991: prazo de 10 anos para revisar benefício, prescrição de 5 anos dos atrasados e o que decidiu o STF.",
+  "norma": "Lei 8.213/1991, arts. 103 e 103-A",
+  "grupo": "lei8213",
+  "introducao": "O art. 103 da [[fonte:lei8213|Lei 8.213/1991]] fixa **até quando** o segurado pode pedir a revisão de um benefício e **quanto dos atrasados** pode cobrar. O art. 103-A trata do prazo do próprio INSS para anular seus atos.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 103, caput",
+      "o_que_diz": "É de 10 anos o prazo de decadência para revisar o ato de concessão, indeferimento, cancelamento ou cessação de benefício, contado do dia primeiro do mês seguinte ao recebimento da primeira prestação ou da ciência da decisão de indeferimento.",
+      "comentario": [
+        "O STF (ADI 6.096) declarou inconstitucional a decadência sobre o **indeferimento**, cancelamento e cessação: o direito ao benefício em si não se perde, e um novo pedido pode ser feito a qualquer tempo. A decadência continua valendo para a revisão do cálculo de benefício concedido."
+      ]
+    },
+    {
+      "referencia": "Art. 103, parágrafo único",
+      "o_que_diz": "Prescrevem em 5 anos as prestações vencidas, ressalvado o direito dos menores, incapazes e ausentes.",
+      "comentario": [
+        "A [[decadencia-e-prescricao|prescrição]] não apaga o direito: só limita os atrasados aos últimos 5 anos antes do pedido ou da ação."
+      ]
+    },
+    {
+      "referencia": "Art. 103-A",
+      "o_que_diz": "O INSS tem 10 anos para anular atos que favoreçam o beneficiário, contados da data do ato, salvo comprovada má-fé.",
+      "comentario": [
+        "Depois desse prazo, o INSS não pode revisar para reduzir ou cancelar o benefício, a menos que prove má-fé."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Antes de pedir revisão, baixe o processo de concessão no Meu INSS e compare com o CNIS.",
+    "Erros comuns: vínculo não contado, salários faltantes, tempo especial ignorado e regra de cálculo menos vantajosa.",
+    "O prazo de 10 anos começa no mês seguinte ao primeiro pagamento, não na data da concessão."
+  ],
+  "exemplo": [
+    "Davi recebeu o primeiro pagamento da aposentadoria em 07/2017. O prazo de revisão vai de 01/08/2017 a 31/07/2027. Se ele pedir em 2026 e ganhar, recebe as diferenças dos 5 anos anteriores ao pedido."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 103 e 103-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 347"
+    }
+  ],
+  "termos": [
+    "decadencia-e-prescricao",
+    "rmi",
+    "der",
+    "dib"
+  ],
+  "perguntas": [
+    "revisao-da-aposentadoria-prazo",
+    "inss-negou-o-pedido-o-que-fazer"
+  ],
+  "artigos": [
+    "atrasados-do-beneficio-data-de-entrada-do-requerimento"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "cnis-art-29-a-lei-8213",
+    "pensao-por-morte-arts-74-a-79-lei-8213"
+  ]
+}

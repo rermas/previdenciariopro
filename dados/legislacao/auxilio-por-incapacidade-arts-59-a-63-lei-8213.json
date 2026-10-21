@@ -1,0 +1,83 @@
+{
+  "ordem": 59,
+  "titulo": "Arts. 59 a 63 da Lei 8.213/91 comentados: auxílio por incapacidade",
+  "resumo": "Comentários aos arts. 59 a 63 da Lei 8.213/1991: requisitos do auxílio por incapacidade temporária, doença preexistente, início, prazo estimado e valor de 91%.",
+  "norma": "Lei 8.213/1991, arts. 59 a 63",
+  "grupo": "lei8213",
+  "introducao": "Os arts. 59 a 63 da [[fonte:lei8213|Lei 8.213/1991]] regulam o [[auxilio-por-incapacidade-temporaria|auxílio por incapacidade temporária]], o antigo auxílio-doença. Eles definem quem tem direito, a partir de quando, por quanto tempo e quanto recebe.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 59, caput e § 1º",
+      "o_que_diz": "O auxílio é devido ao segurado que, cumprida a carência quando exigida, ficar incapacitado para o trabalho ou atividade habitual por mais de 15 dias consecutivos. Não é devido a quem se filiou já portador da doença ou lesão, salvo incapacidade por progressão ou agravamento.",
+      "comentario": [
+        "A perícia fixa a [[dii]] (início da incapacidade) e a DID (início da doença). Se a DII for anterior à filiação, não há direito; se o agravamento for posterior, há."
+      ]
+    },
+    {
+      "referencia": "Art. 60",
+      "o_que_diz": "Para o empregado, o benefício começa no 16º dia de afastamento; para os demais segurados, na data do início da incapacidade. Se pedido mais de 30 dias depois do afastamento, começa na data do requerimento. A empresa paga os primeiros 15 dias ao empregado.",
+      "comentario": [
+        "Para quem está desempregado ou é contribuinte individual, não há os 15 dias da empresa: o benefício começa na DII, se o pedido for feito a tempo."
+      ]
+    },
+    {
+      "referencia": "Art. 60, §§ 8º e 9º",
+      "o_que_diz": "Sempre que possível, o ato de concessão fixa um prazo estimado de duração; na falta dele, o benefício cessa em 120 dias, salvo pedido de prorrogação.",
+      "comentario": [
+        "É a chamada \"alta programada\". Quem continua incapaz deve pedir a prorrogação pelo Meu INSS antes da data de cessação."
+      ]
+    },
+    {
+      "referencia": "Art. 61",
+      "o_que_diz": "O valor é de 91% do salário de benefício.",
+      "comentario": [
+        "Desde 2015, o art. 29, § 10, limita o valor à média dos últimos 12 salários de contribuição, para evitar benefício maior que o salário recente."
+      ]
+    },
+    {
+      "referencia": "Art. 62",
+      "o_que_diz": "O segurado sem condições de voltar à atividade habitual deve passar por reabilitação profissional; o benefício se mantém até a reabilitação ou a conversão em aposentadoria por incapacidade permanente.",
+      "comentario": [
+        "A reabilitação é um serviço do INSS, que também atende o aposentado que volta a trabalhar."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "A carência é de 12 contribuições (art. 25, I), dispensada em acidentes e doenças graves (arts. 26 e 151).",
+    "É preciso ter qualidade de segurado na DII; confira o período de graça.",
+    "O período de auxílio conta como tempo e carência se for intercalado com contribuições."
+  ],
+  "exemplo": [
+    "Joel, empregado, ficou afastado por hérnia de disco a partir de 02/03/2026. A empresa pagou até 16/03, e o INSS paga a partir de 17/03. A perícia fixou 90 dias. Como ainda não melhorou, ele pediu a prorrogação 10 dias antes da data de cessação."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 59 a 63 e 29, § 10"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 71 a 80"
+    },
+    {
+      "fonte": "inss-auxilio"
+    }
+  ],
+  "termos": [
+    "auxilio-por-incapacidade-temporaria",
+    "dii",
+    "carencia",
+    "qualidade-de-segurado"
+  ],
+  "perguntas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "desempregado-tem-direito-a-auxilio-doenca",
+    "auxilio-doenca-conta-para-aposentadoria"
+  ],
+  "artigos": [],
+  "indicadores": [],
+  "relacionadas": [
+    "qualidade-de-segurado-art-15-lei-8213",
+    "carencia-arts-24-a-27-lei-8213"
+  ]
+}

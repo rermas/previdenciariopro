@@ -1,0 +1,89 @@
+{
+  "ordem": 24,
+  "titulo": "Arts. 24 a 27 da Lei 8.213/91 comentados: carência",
+  "resumo": "Comentários aos arts. 24 a 27 da Lei 8.213/1991: carência de cada benefício, benefícios sem carência, o que conta como contribuição e a tabela do art. 142.",
+  "norma": "Lei 8.213/1991, arts. 24 a 27 e 142",
+  "grupo": "lei8213",
+  "introducao": "A carência é o número mínimo de contribuições mensais exigido para cada benefício. Os arts. 24 a 27 da [[fonte:lei8213|Lei 8.213/1991]] dizem **quantas** são, **quando são dispensadas** e **quais contribuições contam**. É o requisito mais afetado por pagamentos em atraso e por pendências no CNIS.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 24",
+      "o_que_diz": "Define carência como o número mínimo de contribuições mensais indispensáveis para o benefício, consideradas a partir do primeiro dia dos meses de suas competências.",
+      "comentario": [
+        "A carência conta **meses**, não dias. Um mês com um único dia de vínculo vale uma contribuição inteira, se o salário de contribuição atingir o mínimo."
+      ]
+    },
+    {
+      "referencia": "Art. 25",
+      "o_que_diz": "Fixa a carência: 12 contribuições para auxílio por incapacidade temporária e aposentadoria por incapacidade permanente; 180 para as aposentadorias programadas; 10 para o salário-maternidade da contribuinte individual, facultativa e segurada especial; 24 para o auxílio-reclusão.",
+      "comentario": [
+        "Para o salário-maternidade, o STF (ADIs 2.110 e 2.111) afastou a exigência de carência; o INSS aplica a dispensa a fatos geradores a partir de 05/04/2024. O auxílio-reclusão passou a exigir 24 contribuições com a [[fonte:lei13846|Lei 13.846/2019]]."
+      ]
+    },
+    {
+      "referencia": "Art. 26",
+      "o_que_diz": "Dispensa a carência na pensão por morte, no salário-família, no auxílio-acidente, nos benefícios por incapacidade decorrentes de acidente de qualquer natureza, de doença profissional ou do trabalho e das doenças graves da lista oficial, e no salário-maternidade da empregada, doméstica e avulsa.",
+      "comentario": [
+        "A lista de doenças graves está no art. 151 e em portaria conjunta dos Ministérios. A doença precisa ter surgido depois da filiação."
+      ]
+    },
+    {
+      "referencia": "Art. 27",
+      "o_que_diz": "Diz quais contribuições contam: para empregado, doméstico e avulso, desde a filiação; para contribuinte individual, especial e facultativo, a partir da primeira contribuição paga sem atraso, não contando as anteriores pagas em atraso.",
+      "comentario": [
+        "É a regra mais importante para quem recolhe por conta própria: guias atrasadas de meses anteriores à primeira paga em dia contam como tempo, mas não como carência. Ver [[contribuicao-em-atraso]]."
+      ]
+    },
+    {
+      "referencia": "Art. 142",
+      "o_que_diz": "Tabela progressiva de carência para quem se inscreveu até 24/07/1991, conforme o ano em que completou os requisitos.",
+      "comentario": [
+        "A tabela chegou a 180 contribuições em 2011, então hoje só importa para quem completou a idade antes disso e ainda não se aposentou."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Desde a EC 103/2019, competência abaixo do salário mínimo só conta como carência depois de ajustada ([[ind:PSC-MEN-SM-EC103]]).",
+    "Benefício por incapacidade intercalado com contribuições conta como carência (STF, Tema 1.125).",
+    "Pendências do CNIS que impedem o cômputo tiram a competência ou o vínculo da carência até o tratamento."
+  ],
+  "exemplo": [
+    "Lia é contribuinte individual. Começou a trabalhar em 01/2020, mas a primeira guia paga em dia foi a de 01/2021. Em 2022 ela quitou 2020 inteiro. Pelo art. 27, II, os 12 meses de 2020 contam como tempo, mas a carência começa em 01/2021."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 24 a 27, 142 e 151"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 26 a 30"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 29"
+    }
+  ],
+  "termos": [
+    "carencia",
+    "contribuicao-em-atraso",
+    "competencia",
+    "salario-maternidade"
+  ],
+  "perguntas": [
+    "quantas-contribuicoes-para-auxilio-doenca",
+    "posso-pagar-inss-atrasado",
+    "15-anos-de-contribuicao-aposenta"
+  ],
+  "artigos": [
+    "aposentadoria-por-idade-regras-e-carencia",
+    "contribuicoes-em-atraso-contribuinte-individual-e-facultativo"
+  ],
+  "indicadores": [
+    "PSC-MEN-SM-EC103"
+  ],
+  "relacionadas": [
+    "qualidade-de-segurado-art-15-lei-8213",
+    "tempo-de-contribuicao-art-55-lei-8213"
+  ]
+}

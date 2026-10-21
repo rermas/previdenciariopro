@@ -1,0 +1,83 @@
+{
+  "ordem": 11,
+  "titulo": "Lei 8.213/91, arts. 11 a 17 comentados: segurados e filiação",
+  "resumo": "Comentários aos arts. 11 a 17 da Lei 8.213/1991: quem é segurado obrigatório e facultativo, filiação, inscrição e dependentes, com exemplos e reflexo no CNIS.",
+  "norma": "Lei 8.213/1991, arts. 11 a 17",
+  "grupo": "lei8213",
+  "introducao": "Os arts. 11 a 17 da [[fonte:lei8213|Lei 8.213/1991]] definem **quem é protegido** pela Previdência Social: os segurados obrigatórios, os facultativos, os dependentes, e como cada um entra no sistema. É a primeira coisa a conferir em qualquer análise, porque a categoria muda a forma de contribuir, o que conta como carência e quais benefícios são devidos.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 11",
+      "o_que_diz": "Lista os segurados obrigatórios em cinco grupos: empregado (inciso I), empregado doméstico (II), contribuinte individual (V), trabalhador avulso (VI) e segurado especial (VII). O § 3º mantém como segurado obrigatório o aposentado que volta a trabalhar.",
+      "comentario": [
+        "A categoria não é escolha da pessoa: decorre da atividade exercida. Quem trabalha por conta própria é [[contribuinte-individual]], ainda que recolha com código de facultativo.",
+        "Para o empregado, o doméstico e o avulso, quem recolhe é o empregador; para o contribuinte individual por conta própria, é o próprio segurado. Essa diferença explica por que um mês sem pagamento conta para um e não para o outro."
+      ]
+    },
+    {
+      "referencia": "Art. 13",
+      "o_que_diz": "Permite a filiação como facultativo de quem não exerce atividade que o torne segurado obrigatório.",
+      "comentario": [
+        "O [[fonte:dec3048|Decreto 3.048/1999]] (art. 11) fixa a idade mínima de 16 anos e veda o pagamento de meses anteriores à inscrição. Ver [[segurado-facultativo]]."
+      ]
+    },
+    {
+      "referencia": "Arts. 15 e 16",
+      "o_que_diz": "O art. 15 trata da manutenção da qualidade de segurado sem contribuições (período de graça); o art. 16 define os dependentes em três classes.",
+      "comentario": [
+        "O art. 15 é comentado em página própria: [[leg:qualidade-de-segurado-art-15-lei-8213|qualidade de segurado e período de graça]]. Sobre o art. 16, veja [[dependentes]]."
+      ]
+    },
+    {
+      "referencia": "Art. 17",
+      "o_que_diz": "Trata da inscrição do segurado e dos dependentes, a cargo do INSS, e do cadastro do segurado especial.",
+      "comentario": [
+        "Inscrição é o cadastro; [[filiacao-e-inscricao|filiação]] é o vínculo jurídico. Para o segurado obrigatório, a filiação existe desde o primeiro dia de trabalho, mesmo sem inscrição."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "No [[cnis]], empregados e domésticos aparecem com o empregador; contribuintes individuais e facultativos, como \"recolhimentos\"; o segurado especial, em cadastro próprio.",
+    "Recolhimento com código de facultativo por quem trabalha pode ser questionado pelo INSS. A pendência [[ind:PREC-FACULTCONC]] aponta facultativo concomitante com atividade.",
+    "Quem tem duas atividades é segurado em cada uma, e as remunerações se somam até o teto."
+  ],
+  "exemplo": [
+    "Ana é professora com carteira assinada e dá aulas particulares por conta própria. Pelo art. 11, ela é segurada obrigatória como empregada (inciso I) e como contribuinte individual (inciso V). Se recolher as aulas particulares como facultativa, o INSS pode não validar esses meses, porque a categoria correta é a de contribuinte individual."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11 a 17"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 9º a 22"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 12"
+    }
+  ],
+  "termos": [
+    "segurado-obrigatorio",
+    "segurado-facultativo",
+    "contribuinte-individual",
+    "filiacao-e-inscricao",
+    "dependentes"
+  ],
+  "perguntas": [
+    "dona-de-casa-pode-contribuir",
+    "aposentado-que-continua-trabalhando"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis"
+  ],
+  "indicadores": [
+    "PREC-FACULTCONC"
+  ],
+  "relacionadas": [
+    "qualidade-de-segurado-art-15-lei-8213",
+    "contribuicoes-arts-21-e-28-lei-8212",
+    "empregado-domestico-lei-complementar-150"
+  ]
+}

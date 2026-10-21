@@ -1,0 +1,80 @@
+{
+  "ordem": 1,
+  "titulo": "LC 150/2015 comentada: empregado doméstico e Previdência",
+  "resumo": "Comentários à Lei Complementar 150/2015: quem é empregado doméstico, o Simples Doméstico, a presunção de recolhimento desde 06/2015 e os benefícios incluídos.",
+  "norma": "Lei Complementar 150/2015",
+  "grupo": "outras",
+  "introducao": "A [[fonte:lc150|Lei Complementar 150/2015]] regulamentou o trabalho doméstico depois da EC 72/2013. Para a Previdência, ela trouxe três mudanças centrais: o **recolhimento unificado** pelo eSocial, a **presunção de recolhimento** em favor do doméstico e a inclusão do **auxílio-acidente**.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 1º",
+      "o_que_diz": "Empregado doméstico é quem presta serviços de forma contínua, subordinada, onerosa e pessoal, de finalidade não lucrativa, à pessoa ou à família, no âmbito residencial, por mais de 2 dias por semana.",
+      "comentario": [
+        "Até 2 dias por semana na mesma casa, a pessoa é diarista e, para o INSS, [[contribuinte-individual]]. Ver [[empregado-domestico]]."
+      ]
+    },
+    {
+      "referencia": "Arts. 31 a 35 (Simples Doméstico)",
+      "o_que_diz": "Instituem o regime unificado de pagamento dos tributos, contribuições e FGTS do empregador doméstico, por documento único gerado no eSocial.",
+      "comentario": [
+        "O DAE do eSocial reúne a contribuição do empregado, a do empregador, o seguro de acidente e o FGTS. O registro no eSocial alimenta o CNIS."
+      ]
+    },
+    {
+      "referencia": "Alteração do art. 34 da Lei 8.213/1991",
+      "o_que_diz": "A LC 150 incluiu o empregado doméstico entre os segurados cujos salários de contribuição são considerados ainda que não recolhidos.",
+      "comentario": [
+        "Na prática, desde a competência 06/2015 o mês trabalhado conta para o doméstico mesmo que o empregador não pague a guia. Antes disso, o INSS pode exigir prova do recolhimento ou do vínculo; o CNIS pode mostrar [[ind:PREC-LC150-DOM]] ou [[ind:PREC-PMIG-DOM]]."
+      ]
+    },
+    {
+      "referencia": "Alteração do art. 18 da Lei 8.213/1991",
+      "o_que_diz": "O empregado doméstico passou a ter direito ao auxílio-acidente.",
+      "comentario": [
+        "Antes da LC 150, o auxílio-acidente era restrito a empregado, avulso e segurado especial."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Confira se o vínculo doméstico aparece no CNIS com remunerações; se não, junte CTPS, recibos e extratos do eSocial.",
+    "Períodos domésticos anteriores a 06/2015 com recolhimento irregular merecem atenção especial.",
+    "O doméstico tem salário-maternidade sem carência, pago diretamente pelo INSS."
+  ],
+  "exemplo": [
+    "Joana trabalha como cuidadora 4 dias por semana na casa de uma família desde 2017, registrada no eSocial. Em 2020, o empregador deixou 5 guias sem pagar. Pela LC 150, esses meses contam para Joana; a cobrança é feita ao empregador."
+  ],
+  "fontes": [
+    {
+      "fonte": "lc150",
+      "dispositivo": "arts. 1º e 31 a 35"
+    },
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 11, II, 18 e 34"
+    },
+    {
+      "fonte": "lei8212",
+      "dispositivo": "art. 24"
+    }
+  ],
+  "termos": [
+    "empregado-domestico",
+    "contribuinte-individual",
+    "salario-de-contribuicao"
+  ],
+  "perguntas": [
+    "empresa-nao-recolheu-o-inss",
+    "vinculo-nao-aparece-no-cnis"
+  ],
+  "artigos": [
+    "empregado-domestico-como-comprovar-vinculo-e-contribuicao"
+  ],
+  "indicadores": [
+    "PREC-LC150-DOM",
+    "PREC-PMIG-DOM"
+  ],
+  "relacionadas": [
+    "segurados-e-filiacao-arts-11-a-17-lei-8213",
+    "contribuicoes-arts-21-e-28-lei-8212"
+  ]
+}

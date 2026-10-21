@@ -1,0 +1,97 @@
+{
+  "ordem": 29,
+  "titulo": "Art. 29-A da Lei 8.213/91 comentado: o CNIS como prova",
+  "resumo": "Comentários ao art. 29-A da Lei 8.213/1991 e ao art. 19 do Decreto 3.048/1999: o CNIS como prova, a correção a qualquer tempo e o dado extemporâneo.",
+  "norma": "Lei 8.213/1991, art. 29-A, e Decreto 3.048/1999, art. 19",
+  "grupo": "lei8213",
+  "introducao": "O art. 29-A da [[fonte:lei8213|Lei 8.213/1991]] faz do [[cnis]] a **base oficial** para o INSS reconhecer vínculos, tempo e salários. Ao mesmo tempo, garante ao segurado o direito de corrigir o cadastro e fixa quando o INSS pode exigir prova. Entender o artigo ajuda a ler o extrato e a prever as exigências.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 29-A, caput",
+      "o_que_diz": "O INSS usará as informações do CNIS sobre vínculos e remunerações para calcular o salário de benefício e comprovar filiação, tempo de contribuição e relação de emprego.",
+      "comentario": [
+        "Na prática, o que está no CNIS sem pendência é aceito sem outros documentos. O que não está precisa ser provado."
+      ]
+    },
+    {
+      "referencia": "Art. 29-A, § 2º",
+      "o_que_diz": "O segurado pode pedir, a qualquer momento, a inclusão, exclusão ou retificação das informações do CNIS, com documentos que comprovem os dados divergentes.",
+      "comentario": [
+        "Não é preciso esperar a aposentadoria: a [[atualizacao-do-cnis]] pode ser pedida pelo Meu INSS assim que o erro for notado."
+      ]
+    },
+    {
+      "referencia": "Art. 29-A, § 3º",
+      "o_que_diz": "A aceitação de vínculos e remunerações inseridos extemporaneamente depende de comprovação, conforme o regulamento.",
+      "comentario": [
+        "É a base legal dos indicadores [[ind:PEXT]] e [[ind:PREM-EXT]]: a informação existe, mas precisa ser confirmada com documentos da época. Ver [[extemporaneidade]]."
+      ]
+    },
+    {
+      "referencia": "Art. 29-A, § 5º",
+      "o_que_diz": "Havendo dúvida sobre a regularidade de um vínculo e sem informações de remunerações, o INSS exigirá os documentos que serviram de base à anotação, sob pena de exclusão do período.",
+      "comentario": [
+        "Vínculo \"vazio\", sem salários, é o caso típico de exigência. A carteira de trabalho e o extrato do FGTS costumam resolver."
+      ]
+    },
+    {
+      "referencia": "Decreto 3.048/1999, art. 19",
+      "o_que_diz": "Dá aos dados do CNIS valor de prova de filiação, tempo e salários de contribuição, e regula a inclusão de informações e a exigência de documentos.",
+      "comentario": [
+        "O regulamento foi atualizado pelo [[fonte:dec10410|Decreto 10.410/2020]]. Os procedimentos do INSS estão na [[fonte:portaria990|Portaria DIRBEN/INSS 990/2022]], cujo Anexo V lista os indicadores do extrato."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Antes de pedir benefício, emita o extrato e procure vínculos sem remuneração, sem data de saída ou com indicadores de pendência.",
+    "Documentos contemporâneos (CTPS, FGTS, holerites, TRCT) são os que mais pesam.",
+    "Depois do acerto, o extrato passa a mostrar indicadores de acerto, como [[ind:AEXT-VT]]."
+  ],
+  "exemplo": [
+    "O CNIS de Marta tem um vínculo de 2004 a 2007 sem nenhuma remuneração. Com base no art. 29-A, § 5º, o INSS exigiu documentos no pedido de aposentadoria. Ela apresentou a CTPS e o extrato do FGTS, e o período foi mantido."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 29-A"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 19"
+    },
+    {
+      "fonte": "portaria990"
+    },
+    {
+      "fonte": "anexov"
+    },
+    {
+      "fonte": "inss-extrato"
+    }
+  ],
+  "termos": [
+    "cnis",
+    "atualizacao-do-cnis",
+    "extemporaneidade",
+    "indicadores-do-cnis"
+  ],
+  "perguntas": [
+    "pext-no-cnis-perco-o-tempo",
+    "vinculo-nao-aparece-no-cnis",
+    "salario-faltando-no-cnis-reduz-aposentadoria"
+  ],
+  "artigos": [
+    "o-que-e-o-cnis",
+    "vinculo-extemporaneo-no-cnis",
+    "como-comprovar-remuneracoes-no-cnis"
+  ],
+  "indicadores": [
+    "PEXT",
+    "PREM-EXT",
+    "AEXT-VT"
+  ],
+  "relacionadas": [
+    "portaria-990-anexo-v-indicadores-do-cnis",
+    "tempo-de-contribuicao-art-55-lei-8213"
+  ]
+}

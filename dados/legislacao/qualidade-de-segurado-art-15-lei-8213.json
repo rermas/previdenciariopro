@@ -1,0 +1,89 @@
+{
+  "ordem": 15,
+  "titulo": "Art. 15 da Lei 8.213/91 comentado: qualidade de segurado",
+  "resumo": "Comentários ao art. 15 da Lei 8.213/1991 sobre período de graça e perda da qualidade de segurado, com o art. 27-A e a Lei 10.666/2003, prazos e exemplos.",
+  "norma": "Lei 8.213/1991, art. 15 e art. 27-A",
+  "grupo": "lei8213",
+  "introducao": "O art. 15 da [[fonte:lei8213|Lei 8.213/1991]] é a regra que decide se a pessoa **ainda está protegida** depois de parar de contribuir. Ele é decisivo nos benefícios por incapacidade, no salário-maternidade e na pensão por morte, em que a [[qualidade-de-segurado]] é exigida na data do fato gerador.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 15, I a VI",
+      "o_que_diz": "Mantém a qualidade de segurado, sem contribuições: sem limite para quem recebe benefício (exceto auxílio-acidente); por 12 meses após cessarem as contribuições do segurado obrigatório; por 12 meses após a segregação por doença ou o livramento do preso; por 3 meses após o licenciamento do militar; e por 6 meses para o facultativo.",
+      "comentario": [
+        "O prazo de 12 meses conta a partir do mês seguinte à última contribuição ou ao fim da atividade. Para o facultativo, o prazo menor de 6 meses costuma ser esquecido."
+      ]
+    },
+    {
+      "referencia": "Art. 15, §§ 1º e 2º",
+      "o_que_diz": "Prorrogam o prazo de 12 meses: mais 12 meses para quem pagou mais de 120 contribuições sem perder a qualidade, e mais 12 meses para o desempregado que comprove a situação por registro no órgão do Ministério do Trabalho.",
+      "comentario": [
+        "Somadas, as prorrogações chegam a 36 meses. A jurisprudência aceita outros meios de prova do desemprego além do registro, como o recebimento de seguro-desemprego."
+      ]
+    },
+    {
+      "referencia": "Art. 15, § 4º",
+      "o_que_diz": "A perda da qualidade ocorre no dia seguinte ao fim do prazo para recolher a contribuição do mês imediatamente posterior ao término do período de graça.",
+      "comentario": [
+        "O Decreto 3.048/1999 (art. 14) traduz isso como o **dia 16 do segundo mês** depois do fim do período de graça. É essa data que se compara com a data do fato gerador."
+      ]
+    },
+    {
+      "referencia": "Art. 27-A",
+      "o_que_diz": "Quem perde a qualidade e volta a se filiar precisa cumprir, a partir da nova filiação, metade da carência para auxílio por incapacidade, aposentadoria por incapacidade, salário-maternidade e auxílio-reclusão.",
+      "comentario": [
+        "Para o auxílio por incapacidade, são 6 contribuições depois do retorno para aproveitar as anteriores."
+      ]
+    },
+    {
+      "referencia": "Lei 10.666/2003, art. 3º",
+      "o_que_diz": "A perda da qualidade não é considerada para as aposentadorias por tempo de contribuição e especial; na aposentadoria por idade, também não, desde que o segurado tenha a carência exigida.",
+      "comentario": [
+        "Por isso, contribuições antigas nunca se perdem para a aposentadoria. A regra está na [[fonte:lei10666|Lei 10.666/2003]]."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Vínculo sem data de saída no CNIS dificulta o cálculo do período de graça; corrija a data antes do pedido.",
+    "Contribuições pagas em atraso depois do fato gerador não recuperam a qualidade para aquele evento.",
+    "Benefícios recebidos aparecem no CNIS e mantêm a qualidade durante todo o período."
+  ],
+  "exemplo": [
+    "Rui contribuiu até 08/2025 e tem 90 contribuições. O período de graça vai até 08/2026, e a qualidade se perde em 16/10/2026. Se ele comprovar desemprego, ganha mais 12 meses: a perda passa para 16/10/2027."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "arts. 15 e 27-A"
+    },
+    {
+      "fonte": "lei10666",
+      "dispositivo": "art. 3º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "arts. 13 e 14"
+    },
+    {
+      "fonte": "inss-qualidade"
+    }
+  ],
+  "termos": [
+    "qualidade-de-segurado",
+    "periodo-de-graca",
+    "carencia",
+    "dii"
+  ],
+  "perguntas": [
+    "parei-de-contribuir-ainda-tenho-direito",
+    "desempregado-tem-direito-a-auxilio-doenca",
+    "perdi-a-qualidade-posso-aposentar-por-idade"
+  ],
+  "artigos": [
+    "qualidade-de-segurado-e-periodo-de-graca"
+  ],
+  "indicadores": [],
+  "relacionadas": [
+    "carencia-arts-24-a-27-lei-8213",
+    "auxilio-por-incapacidade-arts-59-a-63-lei-8213"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "ordem": 55,
+  "titulo": "Art. 55 da Lei 8.213/91 comentado: tempo de contribuição",
+  "resumo": "Comentários ao art. 55 da Lei 8.213/1991: o que conta como tempo, serviço militar, benefício intercalado, tempo rural e prova material.",
+  "norma": "Lei 8.213/1991, art. 55",
+  "grupo": "lei8213",
+  "introducao": "O art. 55 da [[fonte:lei8213|Lei 8.213/1991]] lista **o que conta como tempo de serviço ou de contribuição** além dos vínculos e recolhimentos comuns, e exige **início de prova material** para reconhecer períodos. É a base de boa parte das discussões sobre tempo rural, militar e vínculos sem registro.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 55, I e II",
+      "o_que_diz": "Conta como tempo o serviço militar, obrigatório ou voluntário, e o período em que o segurado recebeu auxílio por incapacidade ou aposentadoria por incapacidade entre períodos de atividade.",
+      "comentario": [
+        "O serviço militar exige certidão da Força. O benefício por incapacidade só conta se for **intercalado**, isto é, seguido de nova contribuição; o STF estendeu o cômputo à carência (Tema 1.125)."
+      ]
+    },
+    {
+      "referencia": "Art. 55, § 2º",
+      "o_que_diz": "O tempo de trabalhador rural anterior à vigência da lei conta independentemente de contribuição, exceto para efeito de carência.",
+      "comentario": [
+        "Vale para atividade rural até 10/1991. A partir de 11/1991, o tempo rural só entra na aposentadoria por tempo de contribuição se for indenizado. A TNU admite o trabalho rural a partir dos 12 anos (Súmula 5)."
+      ]
+    },
+    {
+      "referencia": "Art. 55, § 3º",
+      "o_que_diz": "A comprovação do tempo só produz efeito com início de prova material contemporânea dos fatos; não se admite prova exclusivamente testemunhal, salvo força maior ou caso fortuito.",
+      "comentario": [
+        "Testemunhas completam, mas não substituem documentos. A sentença trabalhista vale como prova quando baseada em documentos da época. O STJ tem a mesma orientação na Súmula 149, para o trabalho rural."
+      ]
+    },
+    {
+      "referencia": "Art. 55, § 4º",
+      "o_que_diz": "O período de contribuição com alíquota reduzida (plano simplificado) não conta para a aposentadoria por tempo de contribuição sem a complementação.",
+      "comentario": [
+        "Vale para os 11% do [[plano-simplificado]] e os 5% do MEI e do facultativo de baixa renda. Ver [[aliquotas-de-contribuicao]]."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "Períodos concomitantes contam uma vez só no tempo de contribuição.",
+    "Desde a EC 103/2019, a Constituição veda a contagem de tempo fictício (art. 201, § 14).",
+    "Tempo especial convertido em comum só até 13/11/2019 (EC 103/2019, art. 25, § 2º)."
+  ],
+  "exemplo": [
+    "Zeca serviu o Exército por 1 ano, trabalhou na roça com os pais por 5 anos antes de 1991 e teve 30 anos de carteira assinada, com 1 ano de auxílio por incapacidade intercalado. Pelo art. 55, ele soma 1 + 5 + 30 = 36 anos de tempo de contribuição, já incluído o auxílio, mas os 6 anos de serviço militar e rural não entram na carência."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8213",
+      "dispositivo": "art. 55"
+    },
+    {
+      "fonte": "cf",
+      "dispositivo": "art. 201, § 14"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "art. 25, § 2º"
+    },
+    {
+      "fonte": "dec3048",
+      "dispositivo": "art. 62"
+    }
+  ],
+  "termos": [
+    "tempo-de-contribuicao",
+    "segurado-especial",
+    "plano-simplificado",
+    "atividades-concomitantes"
+  ],
+  "perguntas": [
+    "trabalhei-na-roca-conta-para-aposentadoria",
+    "tempo-de-servico-militar-conta",
+    "auxilio-doenca-conta-para-aposentadoria",
+    "carteira-assinada-sem-cnis-vale"
+  ],
+  "artigos": [
+    "documentos-para-comprovar-vinculo-de-emprego",
+    "segurado-especial-cadastro-autodeclaracao-e-prova-rural"
+  ],
+  "indicadores": [
+    "IREC-LC123"
+  ],
+  "relacionadas": [
+    "carencia-arts-24-a-27-lei-8213",
+    "aposentadoria-especial-arts-57-e-58-lei-8213"
+  ]
+}

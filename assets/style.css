@@ -369,6 +369,16 @@ p { margin: 0 0 1rem; }
 /* Perguntas frequentes */
 .resposta { padding: 0.8rem 1.1rem; }
 .resposta p { margin: 0; font-size: 1.06rem; line-height: 1.65; }
-.resposta .resposta-rot { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--azul-texto, var(--azul)); margin-bottom: 0.35rem; }
+.resposta-rot { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--azul-texto, var(--azul)); margin-bottom: 0.35rem; }
 .faixa .lista-gl { margin-bottom: 1rem; }
 .rodape-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; }
+
+/* Legislação comentada */
+.lead-artigo { font-size: 1.08rem; line-height: 1.7; }
+.indice-leg { margin: 1.2rem 0 0.4rem; padding: 0.8rem 1.1rem; border: 1px solid var(--linha); border-radius: 8px; background: var(--branco); }
+.indice-leg p { margin: 0 0 0.3rem; font-weight: 700; font-size: 0.92rem; }
+.indice-leg ul { margin: 0; padding-left: 1.1rem; }
+.indice-leg li { margin-bottom: 0.15rem; }
+.dispositivo .oficial p { margin: 0; }
+.dispositivo .oficial .resposta-rot { margin-bottom: 0.3rem; }
+.comentario-rot { margin: 1rem 0 0.2rem; }

@@ -1,0 +1,100 @@
+{
+  "ordem": 21,
+  "titulo": "Lei 8.212/91 comentada: alíquotas, salário de contribuição e prazo",
+  "resumo": "Comentários aos arts. 21, 28, 30 e 33 da Lei 8.212/1991: alíquotas do autônomo e do facultativo, plano simplificado, salário de contribuição e prazo.",
+  "norma": "Lei 8.212/1991, arts. 21, 28, 30 e 33",
+  "grupo": "lei8212",
+  "introducao": "A [[fonte:lei8212|Lei 8.212/1991]] é a lei de **custeio**: diz quanto cada segurado paga, sobre qual base e até quando. Suas regras definem se uma competência do CNIS vale para todos os benefícios ou só para alguns.",
+  "dispositivos": [
+    {
+      "referencia": "Art. 21, caput",
+      "o_que_diz": "A contribuição do contribuinte individual e do facultativo é de 20% sobre o salário de contribuição.",
+      "comentario": [
+        "É o plano completo, que conta para todos os benefícios, inclusive aposentadoria por tempo de contribuição e CTC."
+      ]
+    },
+    {
+      "referencia": "Art. 21, §§ 2º e 4º",
+      "o_que_diz": "Permitem alíquotas reduzidas sobre o salário mínimo: 11% para o contribuinte individual que trabalha por conta própria, sem relação com empresa, e para o facultativo (plano simplificado); 5% para o MEI e para o facultativo sem renda própria que se dedique ao trabalho doméstico na própria residência, de família de baixa renda inscrita no CadÚnico, com renda mensal de até 2 salários mínimos.",
+      "comentario": [
+        "As alíquotas reduzidas excluem a aposentadoria por tempo de contribuição. No CNIS, aparecem com [[ind:IREC-LC123]], [[ind:IREC-MEI]] ou [[ind:IREC-FBR]]. Ver [[plano-simplificado]] e [[mei]]."
+      ]
+    },
+    {
+      "referencia": "Art. 21, § 3º",
+      "o_que_diz": "Quem contribuiu com alíquota reduzida e quiser contar o período para aposentadoria por tempo de contribuição ou contagem recíproca deve complementar a diferença para 20%, com juros moratórios.",
+      "comentario": [
+        "A complementação é de 9% (para quem pagou 11%) ou 15% (para quem pagou 5%) sobre o salário mínimo de cada competência."
+      ]
+    },
+    {
+      "referencia": "Art. 28",
+      "o_que_diz": "Define o salário de contribuição: para o empregado, a remuneração total do mês; para o contribuinte individual, a remuneração auferida; com piso no salário mínimo e teto no limite máximo, reajustado anualmente. O § 9º lista as parcelas que não integram a base, como férias indenizadas e vale-transporte.",
+      "comentario": [
+        "Em 2026, o teto é de R$ 8.475,55. O § 7º inclui o 13º salário na base de contribuição, mas ele não entra no cálculo do benefício. Ver [[salario-de-contribuicao]] e [[teto-do-inss]]."
+      ]
+    },
+    {
+      "referencia": "Art. 30, II",
+      "o_que_diz": "O contribuinte individual e o facultativo recolhem até o dia 15 do mês seguinte à competência.",
+      "comentario": [
+        "O pagamento depois disso é [[contribuicao-em-atraso]], com reflexo na carência para quem ainda não tem contribuição em dia."
+      ]
+    },
+    {
+      "referencia": "Art. 33, § 5º",
+      "o_que_diz": "O desconto da contribuição do segurado é sempre presumido feito, e a empresa responde pelo recolhimento.",
+      "comentario": [
+        "É a regra que protege o empregado quando a empresa não repassa o INSS: o mês conta para ele. Ver também o art. 34 da Lei 8.213/1991."
+      ]
+    }
+  ],
+  "na_pratica": [
+    "O código da guia e o indicador do CNIS mostram a alíquota usada.",
+    "Desde a EC 103/2019, o empregado paga alíquotas progressivas de 7,5% a 14% (art. 28 da emenda).",
+    "Competências abaixo do mínimo precisam de ajuste (EC 103/2019, art. 29)."
+  ],
+  "exemplo": [
+    "Pedro pagou 11% sobre o salário mínimo de 2021 a 2025 como autônomo. Pelo art. 21, § 3º, para usar esses 5 anos na regra de pontos, ele deve complementar 9% sobre o mínimo de cada mês, com juros. Para a aposentadoria por idade, não precisa complementar."
+  ],
+  "fontes": [
+    {
+      "fonte": "lei8212",
+      "dispositivo": "arts. 21, 28, 30 e 33"
+    },
+    {
+      "fonte": "ec103",
+      "dispositivo": "arts. 28 e 29"
+    },
+    {
+      "fonte": "lc123",
+      "dispositivo": "art. 18-A"
+    }
+  ],
+  "termos": [
+    "aliquotas-de-contribuicao",
+    "plano-simplificado",
+    "salario-de-contribuicao",
+    "teto-do-inss",
+    "contribuicao-em-atraso"
+  ],
+  "perguntas": [
+    "contribui-com-11-posso-aposentar-por-tempo",
+    "dona-de-casa-pode-contribuir",
+    "empresa-nao-recolheu-o-inss",
+    "vale-a-pena-contribuir-pelo-teto"
+  ],
+  "artigos": [
+    "complementacao-de-contribuicao-abaixo-do-minimo",
+    "contribuicoes-em-atraso-contribuinte-individual-e-facultativo"
+  ],
+  "indicadores": [
+    "IREC-LC123",
+    "IREC-MEI",
+    "IREC-FBR"
+  ],
+  "relacionadas": [
+    "indenizacao-art-45-a-lei-8212",
+    "segurados-e-filiacao-arts-11-a-17-lei-8213"
+  ]
+}

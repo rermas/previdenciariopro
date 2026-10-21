@@ -130,5 +130,17 @@
   "lei10259": [
     "Lei nº 10.259/2001 (Juizados Especiais Federais)",
     "https://www.planalto.gov.br/ccivil_03/leis/leis_2001/l10259.htm"
+  ],
+  "portaria990": [
+    "Portaria DIRBEN/INSS nº 990/2022 (normas procedimentais do CNIS)",
+    "https://portalin.inss.gov.br/portaria990"
+  ],
+  "dec10410": [
+    "Decreto nº 10.410/2020 (atualiza o Regulamento após a EC 103)",
+    "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10410.htm"
+  ],
+  "lei13846": [
+    "Lei nº 13.846/2019 (pente-fino e mudanças em prova e carência)",
+    "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13846.htm"
   ]
 }
