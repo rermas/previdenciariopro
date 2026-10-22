@@ -722,17 +722,17 @@ console.log('pendências do Anexo V ok');
     '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT-EXPCAD) 02/2015 24/03/2015 180,00 900,00 PREC-FBR(FBR-AUT-PENDCAD)'), HOJE);
   assert.match(msgs(completo), /FBR-AUT-EXPCAD \([^)]*atualização bienal[^)]*\) em 1 competência\(s\): 01\/2015/);
   assert.match(msgs(completo), /FBR-AUT-PENDCAD \([^)]*cadastro no CadÚnico\) em 1 competência\(s\): 02\/2015/);
-  assert.ok(!/PDF corta o motivo/.test(msgs(completo)), 'motivo completo: sem aviso de corte');
+  assert.ok(!/legenda do extrato/.test(msgs(completo)), 'motivo completo: sem aviso de corte');
   const cortado = CNIS.analisar(texto(cab, 'Contribuições',
     '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT 02/2015 24/03/2015 180,00 900,00 PREC-FBR(FBR-AUT',
     ...legenda('FBR-AUT-EXPCAD', 'FBR-AUT-PENDCAD')), HOJE);
   assert.match(msgs(cortado), /PREC-FBR \([^)]*\) em 2 competência\(s\): 01\/2015 a 02\/2015/);
-  assert.match(msgs(cortado), /PDF corta o motivo[^|]*FBR-AUT-EXPCAD[^|]*e FBR-AUT-PENDCAD[^|]*não diz qual vale para cada competência/);
+  assert.match(msgs(cortado), /A legenda do extrato traz FBR-AUT-EXPCAD[^|]*e FBR-AUT-PENDCAD[^|]*não diz qual vale para cada competência/);
   const unico = CNIS.analisar(texto(cab, 'Contribuições',
     '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT', ...legenda('FBR-AUT-EXPCAD')), HOJE);
   assert.match(msgs(unico), /legenda do extrato traz apenas FBR-AUT-EXPCAD[^|]*que é o motivo/);
   const semLegenda = CNIS.analisar(texto(cab, 'Contribuições', '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT'), HOJE);
-  assert.match(msgs(semLegenda), /PDF corta o motivo[^|]*Veja o motivo na tela do CNIS/);
+  assert.match(msgs(semLegenda), /Veja o motivo na tela do CNIS/);
   console.log('facultativo de baixa renda (motivo) ok');
 }
 

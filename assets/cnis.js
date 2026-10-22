@@ -877,10 +877,9 @@
     function notaFbr(codigos) {
       if (!fbrCortado || codigos.some(function (c) { return /^FBR-AUT-/.test(c); })) return '';
       var guia = { 'FBR-AUT-EXPCAD': 'atualizar o CadÚnico (só contam os recolhimentos feitos depois da atualização) ou complementar para 11% ou 20%', 'FBR-AUT-PENDCAD': 'fazer o cadastro no CadÚnico (só contam os recolhimentos feitos depois dele) ou complementar para 11% ou 20%' };
-      var txt = ' O PDF corta o motivo no parêntese ("PREC-FBR(FBR-AUT…"), então o código completo não aparece nas competências.';
-      if (!fbrLegenda.length) return txt + ' Veja o motivo na tela do CNIS (Meu INSS) ou peça o extrato completo.';
+      if (!fbrLegenda.length) return ' Veja o motivo na tela do CNIS (Meu INSS) ou peça o extrato completo.';
       var l = fbrLegenda.map(function (c) { return c + ' (' + descDe(c).replace(/^recolhimento de segurado Facultativo de Baixa Renda /, '') + (guia[c] ? '; para regularizar: ' + guia[c] : '') + ')'; });
-      return txt + (fbrLegenda.length === 1 ? ' A legenda do extrato traz apenas ' + l[0] + ', que é o motivo.' : ' A legenda do extrato traz ' + l.slice(0, -1).join(', ') + ' e ' + l[l.length - 1] + '; o extrato não diz qual vale para cada competência.');
+      return (fbrLegenda.length === 1 ? ' A legenda do extrato traz apenas ' + l[0] + ', que é o motivo.' : ' A legenda do extrato traz ' + l.slice(0, -1).join(', ') + ' e ' + l[l.length - 1] + '; o extrato não diz qual vale para cada competência.');
     }
     planejarPendencias(lido, nascimento);
     var itens = [], validos = [], faltantes = [];
