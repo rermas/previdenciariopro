@@ -1830,7 +1830,7 @@
         return [c.nome, String(c.exigido), String(c.faltamValidas), String(c.faltamTodas)];
       })));
       sc.appendChild(el('p', 'dica', r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo e ' + r.carencia.todas + ' com qualquer remuneração.' +
-        (r.carencia.mesesSalMat ? ' Os dois números incluem ' + r.carencia.mesesSalMat + ' mês(es) de salário-maternidade (o de saída sempre; o de entrada só se o benefício começou no dia 1).' : '') +
+        (r.carencia.mesesSalMat ? ' Os dois números incluem ' + r.carencia.mesesSalMat + ' mês(es) de salário-maternidade.' : '') +
         (r.carencia.mesesAntes94 ? ' Há ' + r.carencia.mesesAntes94 + ' mês(es) de vínculo antes de 07/1994 sem remuneração no CNIS, que podem contar se comprovados.' : '')));
     } else {
       sc.appendChild(el('p', 'vazio-msg', 'Não avaliada: o documento não traz remunerações nem recolhimentos.'));
