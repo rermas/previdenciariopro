@@ -712,3 +712,16 @@ console.log('lançamento manual ok');
   assert.deepEqual(Object.keys(CNIS.INDICADORES).sort(), dados.indicadores.map((x) => x.cod).sort(), 'rode node tools/gerar-indicadores.js');
 }
 console.log('pendências do Anexo V ok');
+
+// Todo estado do mapa de competências (classe .c-xxx no CSS) precisa de rótulo; senão o tooltip mostra "undefined".
+{
+  const fs = require('fs'), path = require('path');
+  const js = fs.readFileSync(path.join(__dirname, '..', 'assets', 'cnis.js'), 'utf8');
+  const css = fs.readFileSync(path.join(__dirname, '..', 'assets', 'style.css'), 'utf8');
+  const rot = js.match(/var ROTULO_MAPA = \{([^}]*)\}/)[1];
+  const chaves = new Set([...rot.matchAll(/(?:^|,)\s*'?([a-z0-9-]+)'?\s*:/g)].map((m) => m[1]));
+  const estados = new Set([...css.matchAll(/\.c-([a-z0-9-]+)/g)].map((m) => m[1]));
+  estados.delete('vazio');
+  for (const e of estados) require('node:assert/strict').ok(chaves.has(e), 'rótulo ausente no mapa: ' + e);
+  console.log('rótulos do mapa ok (' + estados.size + ' estados)');
+}

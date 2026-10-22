@@ -1544,7 +1544,7 @@
     return s;
   }
 
-  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'segurado especial (rural)', ruralemp: 'empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento' };
+  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'segurado especial (rural)', ruralemp: 'empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento', pend: 'pendência que impede o cômputo (Anexo V)' };
 
   function desenharMapa(mapa, valores, vinculosPorMes) {
     valores = valores || {};
@@ -1566,7 +1566,7 @@
         var k = y * 12 + m, est = mapa[k];
         var td = el('td', 'c-' + (est || 'vazio'));
         var vs = valores[k];
-        td.title = pad(m + 1) + '/' + y + (est ? ': ' + ROTULO_MAPA[est] : '');
+        td.title = pad(m + 1) + '/' + y + (est ? ': ' + (ROTULO_MAPA[est] || est) : '');
         if (vs && vs.length) {
           // Um valor por vínculo; o mesmo vínculo com várias remunerações na competência já vem somado.
           vs.forEach(function (x) { td.appendChild(el('span', 'valor', formatarValor(x.valor))); });
