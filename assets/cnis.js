@@ -42,7 +42,7 @@
     "FBR-AUT-EXPCAD": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda sem atualização bienal no CadÚnico", "competencia"],
     "FBR-AUT-FACULTCONC": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda concomitante com filiação incompatível (segurado obrigatório)", "competencia"],
     "FBR-AUT-OBITO": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com óbito anterior à competência de referência ou à data do pagamento", "competencia"],
-    "FBR-AUT-PENDCAD": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda sem cadastro no CadÚnico", "competencia"],
+    "FBR-AUT-PENDCAD": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com indicação de invalidação por ausência de cadastro no CadÚnico", "competencia"],
     "FBR-AUT-PENDPROCES": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda pendente de processamento no CadÚnico", "competencia"],
     "FBR-AUT-RENPES": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com renda pessoal informada no CadÚnico", "competencia"],
     "FBR-AUT-RENSUP": ["atencao", "recolhimento de segurado Facultativo de Baixa Renda com renda familiar superior a 2 salários mínimos", "competencia"],
