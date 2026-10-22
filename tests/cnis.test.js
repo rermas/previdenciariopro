@@ -776,6 +776,22 @@ console.log('pendências do Anexo V ok');
   console.log('salário-maternidade ok');
 }
 
+// ---------- Resumo sem remunerações: meses dos vínculos contados aparecem no mapa; vínculo com pendência cobre até a última remuneração ----------
+{
+  const N = '123.45678.90-1';
+  const r = CNIS.analisar(texto(
+    `1 ${N} 11.111.111/0001-11 EMPRESA A Empregado 01/06/2010 04/2011 PEXT`,
+    `2 ${N} 22.222.222/0001-22 EMPRESA B Empregado 01/05/2012 06/2012`
+  ), HOJE);
+  assert.equal(r.mapa[CNIS.mesDe(2012, 5)], 'semrem');
+  assert.equal(r.mapa[CNIS.mesDe(2012, 6)], 'semrem');
+  assert.equal(r.mapa[CNIS.mesDe(2012, 7)], undefined, 'depois da última remuneração não pinta');
+  assert.equal(r.mapa[CNIS.mesDe(2011, 4)], 'pend', 'vínculo com PEXT sem data de fim vai até a última remuneração (04/2011)');
+  assert.equal(r.mapa[CNIS.mesDe(2011, 5)], undefined);
+  assert.equal(r.mapa[CNIS.mesDe(2010, 6)], 'pend');
+  console.log('resumo sem remunerações: mapa ok');
+}
+
 // Todo estado do mapa de competências (classe .c-xxx no CSS) precisa de rótulo; senão o tooltip mostra "undefined".
 {
   const fs = require('fs'), path = require('path');

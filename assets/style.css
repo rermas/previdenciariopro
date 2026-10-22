@@ -163,6 +163,7 @@ p { margin: 0 0 1rem; }
 .c-okci { background: #7fd3ab; }
 .c-okfac { background: #c8f0de; }
 .c-rural { background: #d8bd96; }
+.c-semrem { background: repeating-linear-gradient(135deg, #2fa070 0 3px, #bfe8d4 3px 6px); }
 .c-ruralemp { background: #b98a55; }
 .c-parcial { background: var(--ambar); }
 .c-falta { background: var(--coral); }

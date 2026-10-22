@@ -990,7 +990,7 @@
         item.excluidoPendencia = pl.inteiro.slice();
         excluidos.vinculos.push({ seq: v.seq, rotulo: rotulo, codigos: pl.inteiro.slice(), tipo: 'inteiro', de: v.inicio, ate: v.fim });
         var remsX = v.remuneracoes.filter(function (r) { return r.valor > 0; }).map(function (r) { return r.mes; });
-        var fimX = v.fim ? mesDe(v.fim.y, v.fim.m) : (remsX.length ? Math.max.apply(null, remsX) : mesDe(v.inicio.y, v.inicio.m));
+        var fimX = v.fim ? mesDe(v.fim.y, v.fim.m) : (remsX.length ? Math.max.apply(null, remsX) : (semLeitura && v.ultRemun !== undefined && v.ultRemun >= mesDe(v.inicio.y, v.inicio.m) ? v.ultRemun : mesDe(v.inicio.y, v.inicio.m)));
         for (var kx = mesDe(v.inicio.y, v.inicio.m); kx <= Math.min(fimX, hojeMes); kx++) { mesesPend[kx] = true; origem(kx, v, pl.inteiro); }
         nova('atencao', rotulo, 'Vínculo com pendência que impede o cômputo: ' + listaCodigos(pl.inteiro) + '. O INSS não computa o vínculo para reconhecimento de direitos enquanto a pendência não for tratada (Portaria DIRBEN/INSS 990/2022, Anexo V). Ele ficou fora do tempo contado e da carência; em "Verificar direito" dá para simular como regularizado.');
         return;
@@ -1459,6 +1459,10 @@
         if ((est === undefined || est === 'falta' || est === 'pre94' || est === 'ok' || est === 'okci' || est === 'okfac' || est === 'parcial') && soRural) mapa[kr] = /especial/i.test(v.tipo || '') ? 'rural' : 'ruralemp';
       }
     });
+    // Extrato sem remunerações (só o resumo "Relações Previdenciárias"): os meses dos vínculos contados aparecem com cor própria, pois não há valores para pintar.
+    if (semLeitura) validos.forEach(function (v) {
+      for (var ks = mesDe(v.inicio.y, v.inicio.m); ks <= mesDe(v.fimContado.y, v.fimContado.m); ks++) if (mapa[ks] === undefined) mapa[ks] = 'semrem';
+    });
     // Meses em benefício por incapacidade temporária ou salário-maternidade: cor própria, com tom mais claro nos meses de entrada e de saída.
     var tipoBen = function (t) {
       if (/MATERNIDADE/i.test(t || '')) return 'bensm';
@@ -1607,7 +1611,7 @@
     return s;
   }
 
-  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'segurado especial (rural)', ruralemp: 'empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento', pend: 'pendência que impede o cômputo (Anexo V)' };
+  var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'segurado especial (rural)', ruralemp: 'empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento', pend: 'pendência que impede o cômputo (Anexo V)', semrem: 'vínculo contado, sem remunerações no extrato (resumo)' };
 
   function desenharMapa(mapa, valores, vinculosPorMes, origemPend) {
     origemPend = origemPend || {};
@@ -1657,7 +1661,7 @@
     box.appendChild(t);
     var leg = el('ul', 'legenda');
     var presentes = {}; Object.keys(mapa).forEach(function (k) { presentes[mapa[k]] = true; });
-    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['rural', 'Segurado especial'], ['ruralemp', 'Empregado rural'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento'], ['pend', 'Pendência que impede o cômputo (Anexo V)']].forEach(function (x) {
+    [['ok', 'Com remuneração (empregado)'], ['okci', 'Recolhimento de contribuinte individual'], ['okfac', 'Recolhimento de facultativo'], ['rural', 'Segurado especial'], ['ruralemp', 'Empregado rural'], ['parcial', 'Falta em um dos vínculos'], ['falta', 'Sem remuneração'], ['pre94', 'Sem remuneração antes de 07/1994'], ['abaixoemp', 'Empregado abaixo do mínimo (desde 11/2019)'], ['abaixoci', 'Contribuinte individual ou facultativo abaixo do mínimo'], ['beninc', 'Benefício por incapacidade temporária'], ['beninc-e', 'Incapacidade: mês de entrada ou saída'], ['bensm', 'Salário-maternidade'], ['bensm-e', 'Salário-maternidade: mês de entrada ou saída'], ['segdes', 'Seguro-desemprego/SINE sem recolhimento'], ['pend', 'Pendência que impede o cômputo (Anexo V)'], ['semrem', 'Vínculo contado, extrato sem remunerações']].forEach(function (x) {
       if ((/^ben/.test(x[0]) || x[0] === 'segdes' || x[0] === 'okci' || x[0] === 'okfac' || x[0] === 'rural') && !presentes[x[0]]) return;
       var li = el('li'); li.appendChild(el('i', 'c-' + x[0])); li.appendChild(document.createTextNode(x[1])); leg.appendChild(li);
     });
