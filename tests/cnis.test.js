@@ -749,7 +749,7 @@ console.log('pendências do Anexo V ok');
   const com = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 01/06/2015 28/09/2015 2 - CESSADO`, HOJE);
   assert.equal(com.resumo.diasSalMat, 120, '01/06 a 28/09/2015 = 120 dias fora dos vínculos');
   assert.equal(com.resumo.diasTotal, sem.resumo.diasTotal + 120, 'entra no tempo contado');
-  assert.equal(com.resumo.mesesSalMat, 3, 'só meses inteiros: junho, julho e agosto (setembro termina no dia 28)');
+  assert.equal(com.resumo.mesesSalMat, 4, 'junho (começa no dia 1), julho, agosto e setembro (mês de saída conta sempre)');
   assert.equal(com.carencia.validas, sem.carencia.validas + com.resumo.mesesSalMat);
   assert.match(CNIS.resumoEmTexto(com), /Inclui salário-maternidade fora dos vínculos: /);
   // Dentro do vínculo, o período já conta: não soma duas vezes.
@@ -760,9 +760,14 @@ console.log('pendências do Anexo V ok');
   const dois = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 01/06/2015 28/09/2015 2 - CESSADO\n3 ${N} 2234567890 Benefício 80 - SALARIO MATERNIDADE 01/06/2018 28/09/2018 2 - CESSADO`, HOJE);
   assert.equal(dois.resumo.qtdSalMat, 2);
   assert.equal(dois.resumo.diasSalMat, 240);
-  assert.equal(dois.resumo.mesesSalMat, 6, 'três meses inteiros em cada benefício');
-  assert.match(CNIS.resumoEmTexto(dois), /Competências com remuneração: 3 \+ 6 mês\(es\) inteiro\(s\) de salário-maternidade/);
+  assert.equal(dois.resumo.mesesSalMat, 8, 'quatro meses em cada benefício');
+  assert.match(CNIS.resumoEmTexto(dois), /Competências com remuneração: 3 \+ 8 mês\(es\) de salário-maternidade/);
   assert.match(CNIS.resumoEmTexto(dois), /Inclui 2 benefícios de salário-maternidade/);
+  // Entrada no meio do mês: o mês de entrada não conta sem recolhimento; o de saída conta.
+  const meio = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 15/06/2015 11/10/2015 2 - CESSADO`, HOJE);
+  assert.equal(meio.resumo.mesesSalMat, 4, 'julho, agosto, setembro e outubro (saída); junho parcial não conta');
+  const meioComRec = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 15/06/2015 11/10/2015 2 - CESSADO\n3 ${N} 22.222.222/0001-22 B Empregado 01/06/2015 14/06/2015\n06/2015 500,00`, HOJE);
+  assert.ok(meioComRec.carencia.todas >= meio.carencia.todas + 1, 'com remuneração em junho, o mês passa a contar como remunerado');
   console.log('salário-maternidade ok');
 }
 
