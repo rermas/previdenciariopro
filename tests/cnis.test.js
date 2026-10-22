@@ -751,6 +751,11 @@ console.log('pendências do Anexo V ok');
   assert.equal(com.resumo.diasTotal, sem.resumo.diasTotal + 120, 'entra no tempo contado');
   assert.equal(com.resumo.mesesSalMat, 4, 'junho (começa no dia 1), julho, agosto e setembro (mês de saída conta sempre)');
   assert.equal(com.carencia.validas, sem.carencia.validas + com.resumo.mesesSalMat);
+  sem.carencia.linhas.forEach((l, i) => {
+    assert.equal(com.carencia.linhas[i].faltamValidas, Math.max(0, l.exigido - sem.carencia.validas - com.resumo.mesesSalMat), 'a tabela de carência considera o salário-maternidade');
+    assert.equal(com.carencia.linhas[i].faltamTodas, Math.max(0, l.exigido - sem.carencia.todas - com.resumo.mesesSalMat));
+  });
+  assert.equal(sem.carencia.linhas[0].faltamValidas - com.carencia.linhas[0].faltamValidas, com.resumo.mesesSalMat);
   assert.match(CNIS.resumoEmTexto(com), /Inclui salário-maternidade fora dos vínculos: /);
   // Dentro do vínculo, o período já conta: não soma duas vezes.
   const dentro = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 01/02/2015 28/03/2015 2 - CESSADO`, HOJE);

@@ -1386,7 +1386,7 @@
       carencia = {
         validas: validas + mesesSalMat, todas: todas + mesesSalMat, mesesSalMat: mesesSalMat, excluidasBeneficio: Object.keys(totais).filter(function (k) { return exclBen[k]; }).length, mesesAntes94: Object.keys(antes94).length,
         linhas: CARENCIAS.map(function (c) {
-          return { nome: c[0], exigido: c[1], faltamValidas: Math.max(0, c[1] - validas), faltamTodas: Math.max(0, c[1] - todas) };
+          return { nome: c[0], exigido: c[1], faltamValidas: Math.max(0, c[1] - validas - mesesSalMat), faltamTodas: Math.max(0, c[1] - todas - mesesSalMat) };
         })
       };
     }
@@ -1574,7 +1574,7 @@
       });
     }
     if (r.carencia) {
-      l.push('', 'Carência: ' + r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo; ' + r.carencia.todas + ' com qualquer remuneração.');
+      l.push('', 'Carência: ' + r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo; ' + r.carencia.todas + ' com qualquer remuneração' + (r.carencia.mesesSalMat ? ' (inclui ' + r.carencia.mesesSalMat + ' mês(es) de salário-maternidade)' : '') + '.');
       if (r.carencia.excluidasBeneficio) l.push('- ' + r.carencia.excluidasBeneficio + ' competência(s) com remuneração dentro de benefício por incapacidade pago por inteiro não foram contadas como carência (conta só o mês de início, se depois do dia 1, e o de saída, se antes do último dia).');
       r.carencia.linhas.forEach(function (c) { l.push('- ' + c.nome + ' (' + c.exigido + '): faltam ' + c.faltamValidas + ' (' + c.faltamTodas + ' contando todas)'); });
       if (r.vinculos.some(function (v) { return /especial/i.test(v.tipo || v.texto || v.nome || ''); })) l.push('- Observação: o tempo de segurado especial não entra nas contagens acima. Ele só soma como carência na aposentadoria por idade híbrida (art. 48, § 3º); nos demais benefícios conta apenas se o segurado especial for o último vínculo antes do fato gerador ou do requerimento.');
@@ -1830,6 +1830,7 @@
         return [c.nome, String(c.exigido), String(c.faltamValidas), String(c.faltamTodas)];
       })));
       sc.appendChild(el('p', 'dica', r.carencia.validas + ' competência(s) com valor igual ou acima do mínimo e ' + r.carencia.todas + ' com qualquer remuneração.' +
+        (r.carencia.mesesSalMat ? ' Os dois números incluem ' + r.carencia.mesesSalMat + ' mês(es) de salário-maternidade (o de saída sempre; o de entrada só se o benefício começou no dia 1).' : '') +
         (r.carencia.mesesAntes94 ? ' Há ' + r.carencia.mesesAntes94 + ' mês(es) de vínculo antes de 07/1994 sem remuneração no CNIS, que podem contar se comprovados.' : '')));
     } else {
       sc.appendChild(el('p', 'vazio-msg', 'Não avaliada: o documento não traz remunerações nem recolhimentos.'));
