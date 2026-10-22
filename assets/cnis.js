@@ -869,6 +869,19 @@
     var mNasc = /Data\s+de\s+Nascimento:?\s*(\d{2}\/\d{2}\/\d{4})/i.exec(texto);
     var nascimento = mNasc ? dataDe(mNasc[1]) : null;
     var excluidos = { vinculos: [], competencias: [] }, mesesPend = {};
+    // O PDF do Portal CNIS corta a célula em "PREC-FBR(FBR-AUT" (sem o motivo). A legenda no fim do extrato lista os motivos que aparecem nele.
+    var fbrCortado = /PREC-FBR\s*\(\s*FBR-AUT(?![-A-Z0-9_])/.test(texto);
+    var fbrLegenda = [];
+    var iLeg = texto.search(/Legenda\s+de\s+Indicadores/i);
+    if (fbrCortado && iLeg >= 0) (texto.slice(iLeg).match(/FBR-AUT-[A-Z]+/g) || []).forEach(function (c) { if (INDICADORES[c] && fbrLegenda.indexOf(c) < 0) fbrLegenda.push(c); });
+    function notaFbr(codigos) {
+      if (!fbrCortado || codigos.some(function (c) { return /^FBR-AUT-/.test(c); })) return '';
+      var guia = { 'FBR-AUT-EXPCAD': 'atualizar o CadÚnico (só contam os recolhimentos feitos depois da atualização) ou complementar para 11% ou 20%', 'FBR-AUT-PENDCAD': 'fazer o cadastro no CadÚnico (só contam os recolhimentos feitos depois dele) ou complementar para 11% ou 20%' };
+      var txt = ' O PDF corta o motivo no parêntese ("PREC-FBR(FBR-AUT…"), então o código completo não aparece nas competências.';
+      if (!fbrLegenda.length) return txt + ' Veja o motivo na tela do CNIS (Meu INSS) ou peça o extrato completo.';
+      var l = fbrLegenda.map(function (c) { return c + ' (' + descDe(c).replace(/^recolhimento de segurado Facultativo de Baixa Renda /, '') + (guia[c] ? '; para regularizar: ' + guia[c] : '') + ')'; });
+      return txt + (fbrLegenda.length === 1 ? ' A legenda do extrato traz apenas ' + l[0] + ', que é o motivo.' : ' A legenda do extrato traz ' + l.slice(0, -1).join(', ') + ' e ' + l[l.length - 1] + '; o extrato não diz qual vale para cada competência.');
+    }
     planejarPendencias(lido, nascimento);
     var itens = [], validos = [], faltantes = [];
     var ok = {}, falta = {}, pre94 = {}, valores = {};
@@ -1053,7 +1066,7 @@
         var porCod = {};
         perdidos.forEach(function (k) { excluidosPend[k].forEach(function (c) { (porCod[c] = porCod[c] || []).push(k); }); });
         Object.keys(porCod).forEach(function (c) {
-          nova('atencao', rotulo, c + ' (' + descDe(c) + ') em ' + porCod[c].length + ' competência(s): ' + textoFaixas(porCod[c], 4) + '. A competência não é computada para reconhecimento de direitos enquanto a pendência não for tratada (Portaria DIRBEN/INSS 990/2022, Anexo V); ficou fora do tempo e da carência.');
+          nova('atencao', rotulo, c + ' (' + descDe(c) + ') em ' + porCod[c].length + ' competência(s): ' + textoFaixas(porCod[c], 4) + '. A competência não é computada para reconhecimento de direitos enquanto a pendência não for tratada (Portaria DIRBEN/INSS 990/2022, Anexo V); ficou fora do tempo e da carência.' + (c === 'PREC-FBR' ? notaFbr(Object.keys(porCod)) : ''));
         });
       }
       item.mesesTC = {};

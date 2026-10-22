@@ -713,6 +713,29 @@ console.log('lançamento manual ok');
 }
 console.log('pendências do Anexo V ok');
 
+// ---------- Facultativo de baixa renda: PREC-FBR com o motivo (FBR-AUT-...) completo ou cortado pelo PDF ----------
+{
+  const cab = `5 ${NIT} RECOLHIMENTO Facultativo 01/01/2015 31/03/2015`;
+  const legenda = (...c) => ['Legenda de Indicadores', ...c.map((x) => `${x} Recolhimento de segurado Facultativo de Baixa Renda`)];
+  const msgs = (a) => a.pendencias.map((q) => q.msg).join(' | ');
+  const completo = CNIS.analisar(texto(cab, 'Contribuições',
+    '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT-EXPCAD) 02/2015 24/03/2015 180,00 900,00 PREC-FBR(FBR-AUT-PENDCAD)'), HOJE);
+  assert.match(msgs(completo), /FBR-AUT-EXPCAD \([^)]*atualização bienal[^)]*\) em 1 competência\(s\): 01\/2015/);
+  assert.match(msgs(completo), /FBR-AUT-PENDCAD \([^)]*cadastro no CadÚnico\) em 1 competência\(s\): 02\/2015/);
+  assert.ok(!/PDF corta o motivo/.test(msgs(completo)), 'motivo completo: sem aviso de corte');
+  const cortado = CNIS.analisar(texto(cab, 'Contribuições',
+    '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT 02/2015 24/03/2015 180,00 900,00 PREC-FBR(FBR-AUT',
+    ...legenda('FBR-AUT-EXPCAD', 'FBR-AUT-PENDCAD')), HOJE);
+  assert.match(msgs(cortado), /PREC-FBR \([^)]*\) em 2 competência\(s\): 01\/2015 a 02\/2015/);
+  assert.match(msgs(cortado), /PDF corta o motivo[^|]*FBR-AUT-EXPCAD[^|]*e FBR-AUT-PENDCAD[^|]*não diz qual vale para cada competência/);
+  const unico = CNIS.analisar(texto(cab, 'Contribuições',
+    '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT', ...legenda('FBR-AUT-EXPCAD')), HOJE);
+  assert.match(msgs(unico), /legenda do extrato traz apenas FBR-AUT-EXPCAD[^|]*que é o motivo/);
+  const semLegenda = CNIS.analisar(texto(cab, 'Contribuições', '01/2015 20/02/2015 180,00 900,00 PREC-FBR(FBR-AUT'), HOJE);
+  assert.match(msgs(semLegenda), /PDF corta o motivo[^|]*Veja o motivo na tela do CNIS/);
+  console.log('facultativo de baixa renda (motivo) ok');
+}
+
 // Todo estado do mapa de competências (classe .c-xxx no CSS) precisa de rótulo; senão o tooltip mostra "undefined".
 {
   const fs = require('fs'), path = require('path');
