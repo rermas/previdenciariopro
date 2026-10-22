@@ -756,6 +756,13 @@ console.log('pendências do Anexo V ok');
   const dentro = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 01/02/2015 28/03/2015 2 - CESSADO`, HOJE);
   assert.equal(dentro.resumo.diasSalMat, 0);
   assert.equal(dentro.resumo.diasTotal, sem.resumo.diasTotal);
+  // Mais de um salário-maternidade: dias e meses somam, sem contar duas vezes o mesmo mês.
+  const dois = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 01/06/2015 28/09/2015 2 - CESSADO\n3 ${N} 2234567890 Benefício 80 - SALARIO MATERNIDADE 01/06/2018 28/09/2018 2 - CESSADO`, HOJE);
+  assert.equal(dois.resumo.qtdSalMat, 2);
+  assert.equal(dois.resumo.diasSalMat, 240);
+  assert.equal(dois.resumo.mesesSalMat, 6, 'três meses inteiros em cada benefício');
+  assert.match(CNIS.resumoEmTexto(dois), /Competências com remuneração: 3 \+ 6 mês\(es\) inteiro\(s\) de salário-maternidade/);
+  assert.match(CNIS.resumoEmTexto(dois), /Inclui 2 benefícios de salário-maternidade/);
   console.log('salário-maternidade ok');
 }
 
