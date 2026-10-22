@@ -741,6 +741,24 @@ console.log('pendências do Anexo V ok');
   console.log('facultativo de baixa renda (motivo) ok');
 }
 
+// ---------- Salário-maternidade tem contribuição: conta como tempo e como carência (meses inteiros), sem repetir o que o vínculo já cobre ----------
+{
+  const N = '123.45678.90-1';
+  const base = `1 ${N} 11.111.111/0001-11 A Empregado 01/01/2015 31/03/2015\nContribuições\n01/2015 1.000,00 02/2015 1.000,00 03/2015 1.000,00`;
+  const sem = CNIS.analisar(base, HOJE);
+  const com = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 01/06/2015 28/09/2015 2 - CESSADO`, HOJE);
+  assert.equal(com.resumo.diasSalMat, 120, '01/06 a 28/09/2015 = 120 dias fora dos vínculos');
+  assert.equal(com.resumo.diasTotal, sem.resumo.diasTotal + 120, 'entra no tempo contado');
+  assert.equal(com.resumo.mesesSalMat, 3, 'só meses inteiros: junho, julho e agosto (setembro termina no dia 28)');
+  assert.equal(com.carencia.validas, sem.carencia.validas + com.resumo.mesesSalMat);
+  assert.match(CNIS.resumoEmTexto(com), /Inclui salário-maternidade fora dos vínculos: /);
+  // Dentro do vínculo, o período já conta: não soma duas vezes.
+  const dentro = CNIS.analisar(base + `\n2 ${N} 1234567890 Benefício 80 - SALARIO MATERNIDADE 01/02/2015 28/03/2015 2 - CESSADO`, HOJE);
+  assert.equal(dentro.resumo.diasSalMat, 0);
+  assert.equal(dentro.resumo.diasTotal, sem.resumo.diasTotal);
+  console.log('salário-maternidade ok');
+}
+
 // Todo estado do mapa de competências (classe .c-xxx no CSS) precisa de rótulo; senão o tooltip mostra "undefined".
 {
   const fs = require('fs'), path = require('path');

@@ -1336,7 +1336,40 @@
       });
     })();
     if (diasBenInc > 0) {
-      nova('info', '', 'Benefício por incapacidade (auxílio por incapacidade temporária) intercalado com atividade soma ' + formatarDuracao(diasBenInc) + ' (' + diasBenInc + ' dias) fora dos vínculos. Esse período está incluído no "Tempo contado" acima (' + formatarDuracao(diasUnicos + diasBenInc) + '; só os vínculos somam ' + formatarDuracao(diasUnicos) + ') e conta como tempo de contribuição (Lei 8.213, art. 55, II). Como carência, depende do benefício e da data do requerimento.');
+      nova('info', '', 'Benefício por incapacidade (auxílio por incapacidade temporária) intercalado com atividade soma ' + formatarDuracao(diasBenInc) + ' (' + diasBenInc + ' dias) fora dos vínculos. Esse período está incluído no "Tempo contado" acima (só os vínculos somam ' + formatarDuracao(diasUnicos) + ') e conta como tempo de contribuição (Lei 8.213, art. 55, II). Como carência, depende do benefício e da data do requerimento.');
+    }
+
+    // Salário-maternidade: sobre ele incide contribuição (é salário de contribuição, Lei 8.212/91, art. 28, §2º), então conta como tempo e como carência.
+    // Soma só o que os vínculos ainda não cobrem; na carência entram os meses inteiros em benefício que não têm remuneração nem recolhimento.
+    var diasSalMat = 0, mesesSalMat = 0;
+    (function () {
+      var uni = [];
+      segs.forEach(function (sg) {
+        if (uni.length && sg[0] <= uni[uni.length - 1][1] + 1) uni[uni.length - 1][1] = Math.max(uni[uni.length - 1][1], sg[1]);
+        else uni.push([sg[0], sg[1]]);
+      });
+      var sm = [];
+      bens.forEach(function (b) {
+        if (b.indeferido || !b.inicio || !/MATERNIDADE/i.test(b.texto || '')) return;
+        var f = b.fim ? b.fim.ord : Math.min(hojeOrd, b.inicio.ord + 119);
+        if (f >= b.inicio.ord) sm.push([b.inicio.ord, f]);
+      });
+      sm.sort(function (x, y) { return x[0] - y[0]; });
+      var mu = [];
+      sm.forEach(function (x) { if (mu.length && x[0] <= mu[mu.length - 1][1] + 1) mu[mu.length - 1][1] = Math.max(mu[mu.length - 1][1], x[1]); else mu.push([x[0], x[1]]); });
+      var cont = {};
+      mu.forEach(function (x) {
+        var d = x[1] - x[0] + 1;
+        uni.forEach(function (u) { var i = Math.max(x[0], u[0]), f = Math.min(x[1], u[1]); if (f >= i) d -= f - i + 1; });
+        diasSalMat += Math.max(0, d);
+        var a = mesDe(dataDeOrd(x[0]).y, dataDeOrd(x[0]).m), z = mesDe(dataDeOrd(x[1]).y, dataDeOrd(x[1]).m);
+        for (var km = a; km <= z; km++) {
+          if (x[0] <= ordemDe(Math.floor(km / 12), (km % 12) + 1, 1) && x[1] >= ultimoDiaDoMes(km) && !ok[km] && !exclBen[km] && !cont[km]) { cont[km] = true; mesesSalMat++; }
+        }
+      });
+    })();
+    if (diasSalMat > 0) {
+      nova('info', '', 'Salário-maternidade soma ' + formatarDuracao(diasSalMat) + ' (' + diasSalMat + ' dias) fora dos períodos já contados pelos vínculos. Sobre ele há contribuição previdenciária (é salário de contribuição, Lei 8.212/91, art. 28, §2º), por isso está incluído no "Tempo contado" (' + formatarDuracao(diasUnicos + diasBenInc + diasSalMat) + ') e os meses inteiros em benefício entram na carência.');
     }
 
     var carencia = null;
@@ -1348,7 +1381,7 @@
       });
       var todas = Object.keys(ok).filter(function (k) { return !exclBen[k]; }).length;
       carencia = {
-        validas: validas, todas: todas, excluidasBeneficio: Object.keys(totais).filter(function (k) { return exclBen[k]; }).length, mesesAntes94: Object.keys(antes94).length,
+        validas: validas + mesesSalMat, todas: todas + mesesSalMat, mesesSalMat: mesesSalMat, excluidasBeneficio: Object.keys(totais).filter(function (k) { return exclBen[k]; }).length, mesesAntes94: Object.keys(antes94).length,
         linhas: CARENCIAS.map(function (c) {
           return { nome: c[0], exigido: c[1], faltamValidas: Math.max(0, c[1] - validas), faltamTodas: Math.max(0, c[1] - todas) };
         })
@@ -1476,9 +1509,11 @@
         competencias: Object.keys(ok).length,
         diasUnicos: diasUnicos,
         diasBenInc: diasBenInc,
+        mesesSalMat: mesesSalMat,
         diasBrutos: diasBrutos,
-        diasTotal: diasUnicos + diasBenInc,
-        duracao: formatarDuracao(diasUnicos + diasBenInc),
+        diasTotal: diasUnicos + diasBenInc + diasSalMat,
+        diasSalMat: diasSalMat,
+        duracao: formatarDuracao(diasUnicos + diasBenInc + diasSalMat),
         duracaoVinculos: formatarDuracao(diasUnicos),
         mesesSemRemuneracao: mesesSem,
         mesesAnteriores94: mesesAnt,
@@ -1514,6 +1549,7 @@
     l.push('Análise do CNIS (pontos de atenção para conferência, não é parecer)');
     l.push('Vínculos: ' + s.totalVinculos + ' | Tempo contado: ' + s.duracao + ' (' + s.diasTotal + ' dias)');
     if (s.foraPendencias) l.push('Fora da contagem por pendências do Anexo V: ' + s.foraPendencias.duracao + ' (' + s.foraPendencias.dias + ' dias). Se forem regularizadas, o tempo contado passa a ' + s.foraPendencias.regularizado + ' (' + s.foraPendencias.diasRegularizado + ' dias)');
+    if (s.diasSalMat) l.push('Inclui salário-maternidade fora dos vínculos: ' + formatarDuracao(s.diasSalMat) + ' (' + s.diasSalMat + ' dias)');
     if (s.diasBenInc) l.push('Inclui benefício por incapacidade intercalado com atividade: ' + formatarDuracao(s.diasBenInc) + ' (' + s.diasBenInc + ' dias). Só vínculos: ' + s.duracaoVinculos + ' (' + s.diasUnicos + ' dias)');
     l.push('Competências com remuneração: ' + s.competencias + ' | Meses sem remuneração: ' + s.mesesSemRemuneracao);
     if (r.vinculos.length) {
@@ -1669,7 +1705,7 @@
 
     var figs = el('dl', 'figuras');
     [
-      [s.duracao, 'Tempo contado (' + s.diasTotal + ' dias)' + (s.diasBenInc ? '. Inclui ' + formatarDuracao(s.diasBenInc) + ' de benefício por incapacidade intercalado; só vínculos: ' + s.duracaoVinculos : '')],
+      [s.duracao, 'Tempo contado (' + s.diasTotal + ' dias)' + ((s.diasBenInc || s.diasSalMat) ? '. Inclui ' + [s.diasBenInc ? formatarDuracao(s.diasBenInc) + ' de benefício por incapacidade intercalado' : '', s.diasSalMat ? formatarDuracao(s.diasSalMat) + ' de salário-maternidade' : ''].filter(Boolean).join(' e ') + '; só vínculos: ' + s.duracaoVinculos : '')],
       [s.semRemuneracoes ? '-' : String(s.competencias), 'Competências com remuneração'],
       [s.semRemuneracoes ? '-' : String(s.mesesSemRemuneracao), 'Meses sem remuneração nos vínculos'],
       [String(s.erros + s.atencoes), 'Pontos de atenção']
