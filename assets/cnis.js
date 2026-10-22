@@ -869,6 +869,9 @@
     var mNasc = /Data\s+de\s+Nascimento:?\s*(\d{2}\/\d{2}\/\d{4})/i.exec(texto);
     var nascimento = mNasc ? dataDe(mNasc[1]) : null;
     var excluidos = { vinculos: [], competencias: [] }, mesesPend = {};
+    // Quem causou a pendência de cada competência (nome, tipo e códigos), para o texto do mapa.
+    var origemPend = {};
+    function origem(k, v, cods) { (origemPend[k] = origemPend[k] || []).push({ seq: v.seq, nome: v.nome, tipo: v.tipo, codigos: cods }); }
     // O PDF do Portal CNIS corta a célula em "PREC-FBR(FBR-AUT" (sem o motivo). A legenda no fim do extrato lista os motivos que aparecem nele.
     var fbrCortado = /PREC-FBR\s*\(\s*FBR-AUT(?![-A-Z0-9_])/.test(texto);
     var fbrLegenda = [];
@@ -988,7 +991,7 @@
         excluidos.vinculos.push({ seq: v.seq, rotulo: rotulo, codigos: pl.inteiro.slice(), tipo: 'inteiro', de: v.inicio, ate: v.fim });
         var remsX = v.remuneracoes.filter(function (r) { return r.valor > 0; }).map(function (r) { return r.mes; });
         var fimX = v.fim ? mesDe(v.fim.y, v.fim.m) : (remsX.length ? Math.max.apply(null, remsX) : mesDe(v.inicio.y, v.inicio.m));
-        for (var kx = mesDe(v.inicio.y, v.inicio.m); kx <= Math.min(fimX, hojeMes); kx++) mesesPend[kx] = true;
+        for (var kx = mesDe(v.inicio.y, v.inicio.m); kx <= Math.min(fimX, hojeMes); kx++) { mesesPend[kx] = true; origem(kx, v, pl.inteiro); }
         nova('atencao', rotulo, 'Vínculo com pendência que impede o cômputo: ' + listaCodigos(pl.inteiro) + '. O INSS não computa o vínculo para reconhecimento de direitos enquanto a pendência não for tratada (Portaria DIRBEN/INSS 990/2022, Anexo V). Ele ficou fora do tempo contado e da carência; em "Verificar direito" dá para simular como regularizado.');
         return;
       }
@@ -1001,8 +1004,8 @@
         if (partes.length) {
           var codsC = pl.motivos.filter(function (m) { return m.tipo !== 'sem-remuneracao'; }).map(function (m) { return m.cod; });
           excluidos.vinculos.push({ seq: v.seq, rotulo: rotulo, codigos: codsC, tipo: 'corte', partes: partes });
-          if (ni !== v.inicio) for (var kc1 = mesDe(v.inicio.y, v.inicio.m); kc1 < mesDe(ni.y, ni.m); kc1++) mesesPend[kc1] = true;
-          if (nf !== v.fim) for (var kc2 = mesDe(nf.y, nf.m) + 1; kc2 <= mesDe(v.fim.y, v.fim.m); kc2++) mesesPend[kc2] = true;
+          if (ni !== v.inicio) for (var kc1 = mesDe(v.inicio.y, v.inicio.m); kc1 < mesDe(ni.y, ni.m); kc1++) { mesesPend[kc1] = true; origem(kc1, v, codsC); }
+          if (nf !== v.fim) for (var kc2 = mesDe(nf.y, nf.m) + 1; kc2 <= mesDe(v.fim.y, v.fim.m); kc2++) { mesesPend[kc2] = true; origem(kc2, v, codsC); }
           var porque = pl.motivos.some(function (m) { return m.tipo === 'mandato'; }) ? 'O mandato eletivo até 18/09/2004 não conta como segurado empregado; de 02/1998 a 09/2004 pode contar como facultativo, com opção e recolhimento.'
             : pl.motivos.some(function (m) { return m.tipo === 'idade-minima'; }) ? 'Períodos anteriores à idade mínima permitida na época não são considerados pelos sistemas de benefícios, salvo tratamento específico.'
             : 'O trecho alterado por processo trabalhista precisa ser comprovado (IN PRES/INSS 128/2022, arts. 172 e seguintes). Como o extrato não mostra as datas anteriores, foi deixado de fora o período sem remuneração no início ou no fim do vínculo.';
@@ -1060,7 +1063,7 @@
       item.codigosIndicadores = Object.keys(indic).concat(Object.keys(excluidosPend).reduce(function (l, k) { return l.concat(excluidosPend[k]); }, [])).filter(function (c, i, a) { return a.indexOf(c) === i; });
       item.mesesPendentes = {};
       var perdidos = Object.keys(excluidosPend).map(Number).filter(function (k) { return !presentes[k]; }).sort(function (a, b) { return a - b; });
-      perdidos.forEach(function (k) { item.mesesPendentes[k] = excluidosPend[k]; mesesPend[k] = true; excluidos.competencias.push({ seq: v.seq, rotulo: rotulo, mes: k, codigos: excluidosPend[k] }); });
+      perdidos.forEach(function (k) { item.mesesPendentes[k] = excluidosPend[k]; mesesPend[k] = true; origem(k, v, excluidosPend[k]); excluidos.competencias.push({ seq: v.seq, rotulo: rotulo, mes: k, codigos: excluidosPend[k] }); });
       if (perdidos.length) {
         var porCod = {};
         perdidos.forEach(function (k) { excluidosPend[k].forEach(function (c) { (porCod[c] = porCod[c] || []).push(k); }); });
@@ -1465,6 +1468,7 @@
       carencia: carencia,
       mesesBenIncapacidade: exclBen,
       vinculosPorMes: vinculosPorMes,
+      origemPend: origemPend,
       lacunas: lacunas,
       resumo: {
         totalVinculos: itens.length,
@@ -1558,7 +1562,8 @@
 
   var ROTULO_MAPA = { ok: 'com remuneração', okci: 'recolhimento de contribuinte individual', okfac: 'recolhimento de facultativo', rural: 'segurado especial (rural)', ruralemp: 'empregado rural', parcial: 'remuneração em um vínculo e faltando em outro', falta: 'sem remuneração', pre94: 'sem remuneração, anterior a 07/1994', abaixoemp: 'empregado: valor abaixo do salário mínimo (desde 11/2019)', abaixoci: 'contribuinte individual ou facultativo: valor abaixo do salário mínimo', beninc: 'em benefício por incapacidade temporária', 'beninc-e': 'benefício por incapacidade temporária: mês de entrada ou de saída', bensm: 'em salário-maternidade', 'bensm-e': 'salário-maternidade: mês de entrada ou de saída', segdes: 'seguro-desemprego/SINE, sem remuneração nem recolhimento', pend: 'pendência que impede o cômputo (Anexo V)' };
 
-  function desenharMapa(mapa, valores, vinculosPorMes) {
+  function desenharMapa(mapa, valores, vinculosPorMes, origemPend) {
+    origemPend = origemPend || {};
     valores = valores || {};
     vinculosPorMes = vinculosPorMes || {};
     var ks = Object.keys(mapa).map(Number);
@@ -1587,6 +1592,14 @@
           td.appendChild(el('span', 'so-leitor', ROTULO_MAPA[est]));
           var vm = vinculosPorMes[k];
           if (vm && vm.length) td.title += ' - ' + vm.map(function (x) { return 'Seq. ' + x.seq + ' ' + x.nome; }).join('; ') + (k < INICIO_PBC ? ' (valores anteriores a 07/1994 não são exibidos)' : '');
+        }
+        // Pendência do Anexo V: diz de qual vínculo ou recolhimento ela vem e o código.
+        var op = est === 'pend' && origemPend[k];
+        if (op && op.length) {
+          var quem = op.map(function (x) { return 'Seq. ' + x.seq + ' ' + x.nome + (x.tipo ? ' (' + x.tipo + ')' : '') + ': ' + x.codigos.join(', '); }).join('; ');
+          td.title = pad(m + 1) + '/' + y + ': ' + ROTULO_MAPA.pend + ' - ' + quem;
+          var sl = td.querySelector('.so-leitor');
+          if (sl) sl.textContent = ROTULO_MAPA.pend + ' - ' + quem;
         }
         tr.appendChild(td);
       }
@@ -1681,7 +1694,7 @@
     acoes.appendChild(bCopiar); acoes.appendChild(bRel); acoes.appendChild(bImp);
     saida.appendChild(acoes);
 
-    var mapa = desenharMapa(r.mapa, r.valores, r.vinculosPorMes);
+    var mapa = desenharMapa(r.mapa, r.valores, r.vinculosPorMes, r.origemPend);
     if (mapa) {
       var sm = sec('Mapa de competências', 'Cada quadrado é um mês e mostra o valor lançado. Com mais de um vínculo na competência, aparece um valor por vínculo (passe o mouse para ver quais); no mesmo vínculo, os lançamentos são somados. Em recolhimentos, é o salário de contribuição.');
       sm.classList.add('sec-mapa');
