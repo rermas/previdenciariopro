@@ -417,3 +417,4 @@ p { margin: 0 0 1rem; }
   .topo, .rodape, .no-print, .anuncio, .migalha { display: none !important; }
   .checklist li::before { border-color: #000; }
 }
+.nota-pendencias { margin: 0 0 1.2rem; padding: .7rem .9rem; border-left: 4px solid var(--coral); background: #fbece8; font-size: .95rem; }

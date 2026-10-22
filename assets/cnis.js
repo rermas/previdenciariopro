@@ -1495,7 +1495,12 @@
       }
     };
     // Para a simulação poder considerar as pendências regularizadas, sem reler o extrato.
-    if (excluir && (excluidos.vinculos.length || excluidos.competencias.length)) res.semExclusao = analisar(texto, hoje, { incluirPendentes: true });
+    if (excluir && (excluidos.vinculos.length || excluidos.competencias.length)) {
+      res.semExclusao = analisar(texto, hoje, { incluirPendentes: true });
+      // Quanto tempo as pendências deixaram de fora da contagem (diferença entre a conta com e sem a exclusão).
+      var difDias = res.semExclusao.resumo.diasTotal - res.resumo.diasTotal;
+      if (difDias > 0) res.resumo.foraPendencias = { dias: difDias, duracao: formatarDuracao(difDias), regularizado: res.semExclusao.resumo.duracao, diasRegularizado: res.semExclusao.resumo.diasTotal };
+    }
     return res;
   }
 
@@ -1508,6 +1513,7 @@
     var s = r.resumo, l = [];
     l.push('Análise do CNIS (pontos de atenção para conferência, não é parecer)');
     l.push('Vínculos: ' + s.totalVinculos + ' | Tempo contado: ' + s.duracao + ' (' + s.diasTotal + ' dias)');
+    if (s.foraPendencias) l.push('Fora da contagem por pendências do Anexo V: ' + s.foraPendencias.duracao + ' (' + s.foraPendencias.dias + ' dias). Se forem regularizadas, o tempo contado passa a ' + s.foraPendencias.regularizado + ' (' + s.foraPendencias.diasRegularizado + ' dias)');
     if (s.diasBenInc) l.push('Inclui benefício por incapacidade intercalado com atividade: ' + formatarDuracao(s.diasBenInc) + ' (' + s.diasBenInc + ' dias). Só vínculos: ' + s.duracaoVinculos + ' (' + s.diasUnicos + ' dias)');
     l.push('Competências com remuneração: ' + s.competencias + ' | Meses sem remuneração: ' + s.mesesSemRemuneracao);
     if (r.vinculos.length) {
@@ -1674,6 +1680,12 @@
       figs.appendChild(d);
     });
     saida.appendChild(figs);
+    if (s.foraPendencias) {
+      var fp = el('p', 'nota-pendencias');
+      fp.appendChild(el('strong', null, 'Fora da contagem por pendências do Anexo V: ' + s.foraPendencias.duracao + ' (' + s.foraPendencias.dias + ' dias). '));
+      fp.appendChild(document.createTextNode('Se forem regularizadas, o tempo contado passa a ' + s.foraPendencias.regularizado + ' (' + s.foraPendencias.diasRegularizado + ' dias). A diferença já desconta períodos que se sobrepõem a outros vínculos.'));
+      saida.appendChild(fp);
+    }
 
     var acoes = el('div', 'acoes sem-impressao');
     var bCopiar = el('button', 'btn btn-leve', 'Copiar resumo');

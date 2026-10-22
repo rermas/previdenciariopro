@@ -165,6 +165,9 @@ assert.ok(txt.indexOf('Seq. 1 -') < txt.indexOf('Seq. 3 -') && txt.indexOf('Seq.
   assert.equal(rx.resumo.vinculosExcluidos, 1);
   assert.equal(rx.mapa[CNIS.mesDe(2020, 3)], 'pend', 'março/2020 só tinha o vínculo pendente');
   assert.match(rx.pendencias.map((p) => p.msg).join(' | '), /Vínculo com pendência que impede o cômputo: PEXT/);
+  assert.equal(rx.resumo.foraPendencias.dias, rx.semExclusao.resumo.diasTotal - rx.resumo.diasTotal, 'tempo fora da contagem = diferença entre as duas contas');
+  assert.ok(rx.resumo.foraPendencias.dias > 0 && /\d/.test(rx.resumo.foraPendencias.duracao));
+  assert.match(CNIS.resumoEmTexto(rx), /Fora da contagem por pendências do Anexo V: .* Se forem regularizadas, o tempo contado passa a/);
   const op = rx.origemPend[CNIS.mesDe(2020, 3)];
   assert.ok(op && op.length === 1 && op[0].seq === 5 && op[0].codigos.includes('PEXT') && op[0].nome, 'mês pendente informa o vínculo e o código');
   assert.ok(rx.semExclusao && rx.semExclusao.resumo.diasUnicos === 1263, 'guarda a conta com a pendência regularizada');
