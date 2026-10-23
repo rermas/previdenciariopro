@@ -130,6 +130,15 @@ const perdaInc2 = vinculo([2015, 1], [2017, 12], '31/12/2017') + '\n' + vinculo(
 r = incap(perdaInc2, base);
 assert.equal(r.carencia.status, 'nao_cumprida', 'só 4 contribuições depois do retorno');
 
+// Depois do retorno só contam competências com valor igual ou acima do mínimo; as abaixo dele entram uma vez, se complementadas (não em dobro)
+const perdaBaixo = vinculo([2015, 1], [2017, 12], '31/12/2017') + '\n' + vinculo([2022, 8], [2023, 1], '31/01/2023', '500,00').replace(/^1 /, '2 ');
+r = incap(perdaBaixo, base);
+assert.match(r.carencia.linhas.join(' '), /Depois do retorno: \*\*0\*\*/, 'competências abaixo do mínimo não contam depois do retorno sem complementação');
+assert.equal(r.carencia.status, 'nao_cumprida', 'sem complementar, a carência depois do retorno não é cumprida');
+r = incap(perdaBaixo, Object.assign({}, base, { compEmp: true }));
+assert.match(r.carencia.linhas.join(' '), /Depois do retorno: \*\*6\*\*/, 'complementadas: 6 competências, sem contar duas vezes');
+assert.equal(r.carencia.status, 'cumprida', '6 complementadas atendem a metade (6)');
+
 // Sem qualidade de segurado: a carência mostra as regras possíveis, sem avaliar a pessoa
 const semQ = vinculo([2010, 1], [2012, 12], '31/12/2012');
 r = reclusao(semQ, par);

@@ -78,7 +78,7 @@
     var compl = base.carencia && base.carencia.complementos ? base.carencia.complementos : { empBaixo: [], ciBaixo: [], empSem: [] };
     var extra = base.carencia && base.carencia.extra ? base.carencia.extra : 0;
     var retorno = perda ? sq.perdas[sq.perdas.length - 1].retorno : undefined;
-    var depois = sq.total + (perda ? D.contarComplementos(compl, resp, retorno) : 0);
+    var depois = perda ? D.validasDepois(analise, retorno, mesOrd(data)) + D.contarComplementos(compl, resp, retorno) : sq.total;
     var ok = total >= exigida && (!perda || depois >= metade);
     var linhas = ['Contribuições válidas do CNIS até ' + rotMes(mesOrd(data)) + ' (competências desde 07/1994 com valor igual ou acima do salário mínimo, mais meses de vínculo anteriores a 07/1994): **' + total + '**. Exigidas: **' + exigida + '**.'];
     if (extra) linhas.push('Estão incluídas **' + extra + '** competência(s) complementada(s) até o salário mínimo ou com vínculo comprovado, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');

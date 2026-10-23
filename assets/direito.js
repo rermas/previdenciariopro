@@ -135,6 +135,21 @@
     return { total: streak, ultima: prev, perdas: perdas, presumidos: mesesSeq.filter(function (k) { return presum[k]; }).length };
   }
 
+  // Contribuições válidas (valor igual ou acima do mínimo) depois do retorno ao RGPS, para a regra da metade/um terço após perda da qualidade.
+  // Competência abaixo do mínimo só entra se for complementada (contarComplementos), então não pode ser contada aqui também.
+  function validasDepois(analise, aPartirDe, ateMes) {
+    var n = 0;
+    Object.keys(analise.valores).forEach(function (ks) {
+      var k = +ks;
+      if (k < aPartirDe || k > ateMes || (analise.mesesBenIncapacidade && analise.mesesBenIncapacidade[k])) return;
+      var tot = analise.valores[k].reduce(function (t, x) { return t + x.valor; }, 0);
+      var m = C.minimoDe(k);
+      var soCI = analise.valores[k].every(function (x) { return /individual|aut[ôo]nomo|facultativ/i.test(x.tipo || ''); });
+      if (m !== null && (tot + 0.004 >= m || (!soCI && k < EC103))) n++;
+    });
+    return n;
+  }
+
   // ---------- Verificação do salário-maternidade ----------
 
   var DOCS_INCONSISTENCIA = {
@@ -620,11 +635,12 @@
       var depoisPerda = sqFg.perdas.length > 0;
       var ok10 = validasAte >= CARENCIA;
       var retornoMes = depoisPerda ? sqFg.perdas[sqFg.perdas.length - 1].retorno : undefined;
-      var okTerco = !depoisPerda || sqFg.total + contarComplementos(compl, respCar, retornoMes) >= exigidaNoRetorno(CARENCIA, fgOrd).n;
+      var depoisRet = depoisPerda ? validasDepois(analise, retornoMes, fgMes) : 0;
+      var okTerco = !depoisPerda || depoisRet + contarComplementos(compl, respCar, retornoMes) >= exigidaNoRetorno(CARENCIA, fgOrd).n;
       cl.push('Fato gerador em ' + rotulo(fgD) + ', antes de 05/04/2024: para ' + CLASSES[classeCar].toLowerCase() + ' a carência é de ' + CARENCIA + ' contribuições mensais (art. 25, III, da Lei 8.213/91). A dispensa para essas categorias vale só a partir de 05/04/2024. Empregada, doméstica e avulsa não têm carência em nenhuma data.');
       cl.push('Competências do CNIS de 07/1994 até ' + rotuloMes(fgMes) + ' com valor igual ou acima do salário mínimo' + (extraCar ? ', mais ' + extraCar + ' complementada(s) ou comprovada(s) a pedido' : '') + ': ' + validasAte + '.');
       if (extraCar) cl.push('Foram contadas ' + extraCar + ' competência(s) como contribuição de um salário mínimo, conforme as respostas: confira se a complementação foi (ou será) recolhida e se o vínculo está documentado.');
-      if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver, depois do retorno, ao menos ' + exigidaNoRetorno(CARENCIA, fgOrd).n + ' contribuições, regra vigente no fato gerador: ' + exigidaNoRetorno(CARENCIA, fgOrd).rotulo + '. Depois do retorno: ' + sqFg.total + '.');
+      if (depoisPerda) cl.push('Houve perda da qualidade no histórico (depois de ' + rotuloMes(sqFg.perdas[sqFg.perdas.length - 1].apos) + '): ao recuperá-la, só contam as contribuições anteriores se houver, depois do retorno, ao menos ' + exigidaNoRetorno(CARENCIA, fgOrd).n + ' contribuições, regra vigente no fato gerador: ' + exigidaNoRetorno(CARENCIA, fgOrd).rotulo + '. Depois do retorno (valor igual ou acima do mínimo' + (contarComplementos(compl, respCar, retornoMes) ? ', mais ' + contarComplementos(compl, respCar, retornoMes) + ' complementada(s) ou comprovada(s)' : '') + '): ' + (depoisRet + contarComplementos(compl, respCar, retornoMes)) + '.');
       cl.push('Parto antecipado reduz a carência em igual número de meses da antecipação (art. 25, parágrafo único): não aplicado aqui.');
       if (ok10 && okTerco) { res.carencia.status = 'cumprida'; res.carencia.rotulo = extraCar ? 'Cumprida, com as premissas informadas' : 'Cumprida pelos dados do CNIS'; }
       else { res.carencia.status = 'nao_cumprida'; res.carencia.rotulo = 'Não cumprida pelos dados do CNIS'; doc('Guias de recolhimento e provas de atividade que completem a carência, se não constarem do CNIS'); }
@@ -1333,7 +1349,7 @@
     return sec;
   }
 
-  var api = { comExtras: comExtras, itemExtra: itemExtra, linhaBenIncapacidade: linhaBenIncapacidade, linhaRetorno: linhaRetorno, condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
+  var api = { validasDepois: validasDepois, comExtras: comExtras, itemExtra: itemExtra, linhaBenIncapacidade: linhaBenIncapacidade, linhaRetorno: linhaRetorno, condicionarCarencia: condicionarCarencia, exigidaNoRetorno: exigidaNoRetorno, mesesRurais: mesesRurais, linhaRural: linhaRural, complementosEm: complementosEm, contarComplementos: contarComplementos, perguntasCarencia: perguntasCarencia, perguntasUI: perguntasUI, util: { lista: lista, dinheiro: function (n) { return dinheiro(n); } }, salarioMaternidade: salarioMaternidade, montar: montar, vencimento: vencimento, ultimoDiaDaQualidade: ultimoDiaDaQualidade, sequencia: sequencia, classeDe: classeDe, NORMAS: NORMAS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DIREITO = api;
 })(typeof window !== 'undefined' ? window : globalThis);
